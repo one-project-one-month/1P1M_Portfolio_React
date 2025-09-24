@@ -1,4 +1,60 @@
-# React + Vite
+# Portfolio Website
+
+A **React-based frontend application** where users can register and create their portfolios, which are then displayed on the **Speakers Page**. Built using modern tools and practices including **React, Redux Toolkit, React Hook Form, Tailwind CSS, ShadCN**, and a **feature-based folder structure**.
+
+---
+
+## 🚀 Features
+
+- **Home Page**
+  - Landing page with hero section and other content sections.
+  - Responsive design with Tailwind CSS.
+- **Speakers Page**
+  - Displays all registered speaker portfolios.
+  - Dynamic grid/list layout with cards.
+- **Portfolio Registration**
+  - Users can register and create their portfolios.
+  - Form built with **React Hook Form** and validation.
+- **State Management**
+  - Uses **Redux Toolkit** to manage global state for speakers.
+- **Reusable UI Components**
+  - Built with **ShadCN** and Tailwind CSS for consistent styling.
+- **Feature-Based Architecture**
+  - Organized by features for scalability and maintainability.
+  - Example:
+    ```
+    src/
+      features/
+        speakers/
+          components/
+          redux/
+          pages/
+        portfolio/
+          components/
+          redux/
+          pages/
+      common/
+        components/
+        utils/
+        constants/
+    ```
+
+---
+
+## 🛠️ Technologies Used
+
+- **Frontend Framework:** React (with Hooks & Functional Components)
+- **State Management:** Redux Toolkit
+- **Form Handling:** React Hook Form
+- **Styling:** Tailwind CSS, ShadCN components
+- **JavaScript:** ES6+
+- **Routing:** React Router DOM
+
+---
+
+## ⚡ Project Structure (Feature-Based)
+
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
