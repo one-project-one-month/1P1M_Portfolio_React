@@ -78,13 +78,11 @@ git checkout dev
 git pull origin dev
 ```
 
-### 2. **Create a new feature branch**
+### 2. **switch branch**
 
 ```bash
-git switch -c ft/corporate-banking-001
+git switch ft/001
 ```
-
-> ✅ corporate keyword is only for repository that starts with corporate, If repo name starts with "user", branch name should be ft/user-banking-001
 
 ### 3. **Make your changes**
 
@@ -104,7 +102,7 @@ git commit -m "your commit-message"
 ### 5. **Push your branch**
 
 ```bash
-git push origin ft/corporate-banking-001
+git push origin ft/smth-001
 ```
 
 ### ✅ Once done
