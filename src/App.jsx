@@ -1,21 +1,13 @@
 import React from 'react'
-<<<<<<< Updated upstream
-=======
+
 import Button from './app/components/ui/Button'
 import Background from './app/components/ui/Background'
 import FormBackground from './app/components/ui/FormBackground'
 import FormField from './app/components/ui/FormFields'
 import RegisterPage from './app/features/auth/pages/RegisterPage'
->>>>>>> Stashed changes
 
 
 function App() {
-
-<<<<<<< Updated upstream
-  return (
-<div>hello</div>
-  )
-=======
   return <>
   <Background className='h-[100vh]'>
   <div>hello</div>
@@ -45,15 +37,12 @@ function App() {
       </FormBackground>
     </div>
 
-  <RegisterPage />
-
       <h1>good</h1>
 
   </Background>
 
 
   </>
->>>>>>> Stashed changes
 }
 
 export default App
