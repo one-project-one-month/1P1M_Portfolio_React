@@ -2,14 +2,14 @@ import React from 'react';
 import FormBackground from './FormBackground';
 import Button from './Button';
 
-const FormWrapper = ({ title, subtitle, children, onSubmit }) => (
-        <form onSubmit={onSubmit} className='text-white font-sans text-sm font-semibold leading-8'>
+const FormWrapper = ({ title, subtitle, children, onSubmit, className }) => (
+        <form onSubmit={onSubmit} className={`text-white font-sans text-sm font-semibold leading-8 ${className}`}>
             <div className="text-2xl text-center space-y-2">
             <h2 className='text-2xl'>{title}</h2>
             {subtitle && <p className='text-sm text-[#99A1AF]'>{subtitle}</p>}
             </div>
             {children}
-            <Button type="submit" className='w-full' variant="primary" size="primary">Continue</Button>
+            <Button type="submit" className='w-full cursor-pointer' variant="primary" size="primary">Continue</Button>
         </form>
 );
 

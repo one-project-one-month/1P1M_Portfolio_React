@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import FormField from './FormFields';
 
-const TextField = forwardRef(({ label, placeholder, type = 'text', name, id, error }, ref) => (
-  <div className='relative text-white font-sans text-sm font-semibold leading-8 mb-8'>
+const TextField = forwardRef(({ label, placeholder, type = 'text', name, id, error, className }, ref) => (
+  <div className='relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8'>
     <label className='inline-block mb-1' htmlFor={id}>{label}</label>
     <FormField
       ref={ref}
@@ -10,9 +10,9 @@ const TextField = forwardRef(({ label, placeholder, type = 'text', name, id, err
       name={name}
       id={id}
       placeholder={placeholder}
-      className='w-full px-3 py-2 rounded bg-[#222] text-white outline-none'
+      className={`w-full px-3 py-2 rounded bg-[#222] text-white outline-none ${className}`}
     />
-    <span className='absolute top-12 right-4 cursor-pointer font-md text-sm text-[#9C39FC]'>Edit</span>
+    <span className='absolute top-13 right-4 cursor-pointer font-md text-sm text-[#9C39FC]'>Edit</span>
     {error && <span className='absolute left-0 -bottom-6 text-sm text-[#FB2C36] ms-2'>{error}</span>}
   </div>
 ));

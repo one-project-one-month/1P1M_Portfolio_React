@@ -6,32 +6,67 @@ import FormWrapper from '../../../components/ui/FormWrapper'
 import TextField from '../../../components/ui/TextField'
 import PasswordField from '../../../components/ui/PasswordField'
 
-const RegisterForm = ({className =""}) => {
+const RegisterForm = ({className=""}) => {
+
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [cmfPasswordError, setcmfPasswordError] = useState("");
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const cfmpasswordRef = useRef();
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const email = emailRef.current.value.trim();
+        const password = passwordRef.current.value.trim();
+        const confirmPassword = cfmpasswordRef.current.value.trim();
+
+
         // to check valid data here 
 
-        const data = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-            confirmPassword: cfmpasswordRef.current.value
-        };
+        if(!email){
+          setEmailError("Enter your Email");
+        }else{
+          setEmailError("");
+        }
 
-        console.log("Form Data:", data);
+        if(!password){
+          setPasswordError("Enter your Password");
+        }else{
+          setPasswordError("")
+        }
+
+        if( !confirmPassword ){
+          setcmfPasswordError("Confirm your Password");
+        }else if(confirmPassword !== password && password){
+          setcmfPasswordError("Passwords do not match ");
+        }else{
+          setcmfPasswordError("")
+        }
+
+        if(!emailError && !passwordError &&  !cmfPasswordError ){
+            const data = {
+              email,
+              password,
+              confirmPassword
+          };
+          setEmailError("");
+          setPasswordError("");
+          setcmfPasswordError("");
+
+          console.log("Form Data:", data);
+        }
+
     };
 
   return (
 
-    <FormWrapper title="Register Your Account" subtitle="subtitle" onSubmit={handleSubmit}>
-        <TextField ref={emailRef} type='email' name='regemail' id="regemail" label="Email" placeholder="nora@gmail.com"  error=""/>
-        <PasswordField ref={passwordRef} name='password' id="password" label="Password" placeholder="Enter your password" />
-        <PasswordField ref={cfmpasswordRef} name='cfmpassword' id="cfmpassword" label="Confirm Password" placeholder="Confirm your password" error="" />
+    <FormWrapper className="" title="Register Your Account" subtitle="subtitle" onSubmit={handleSubmit}>
+        <TextField ref={emailRef} type='email' name='regemail' id="regemail" label="Email" placeholder="nora@gmail.com"  error={`${emailError ? emailError :""}`}/>
+        <PasswordField ref={passwordRef} name='password' id="password" label="Password" placeholder="Enter your password" error={`${passwordError ? passwordError :""}`} />
+        <PasswordField ref={cfmpasswordRef} name='cfmpassword' id="cfmpassword" label="Confirm Password" placeholder="Confirm your password" error={`${ cmfPasswordError ? cmfPasswordError  :""}`} />
     </FormWrapper>
   )
 }
