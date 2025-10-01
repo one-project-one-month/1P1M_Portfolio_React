@@ -1,47 +1,11 @@
 import React from 'react'
-import Button from './app/components/ui/Button'
-import Background from './app/components/ui/Background'
-import FormBackground from './app/components/ui/FormBackground'
-import FormField from './app/components/ui/FormFields'
+import LoginForm from './app/features/auth/components/LoginForm'
 
 
 function App() {
 
   return <>
-  <Background className='h-[100vh]'>
-  <div>hello</div>
-  <div className='p-10 space-x-4 space-y-4'>
-  <Button variant="primary" size="primary">Continue</Button>
-  <Button variant="primary" size="primary">Verify</Button>
-  <Button variant="secondary" size="secondary" className='text-sm font-bold text-center text-[#F9FAFB]'>Create</Button>
-  <Button variant="black_small_button" size="black_small_button" className='text-sm text-[#F9FAFB] font-bold text-center'>Cancel</Button>
-  <Button variant="white_button" size="white_button">Register Your Account</Button>
-  <Button variant="black_button" size="black_button">Set up your profile</Button>
-
-  </div>
-
-   <div className="flex items-center justify-center h-[768px]">
-      <FormBackground className="flex flex-col items-center gap-6">
-        <h2 className="text-white text-2xl font-bold">Sign In</h2>
-
-        <FormField placeholder="Email" type="email" />
-        <FormField placeholder="Password" type="password" />
-        <FormField placeholder="Confirm Password" type="password" />
-
-        <FormField placeholder="Confirm Password" type="password" />
-        <FormField placeholder="Confirm Password" type="password" />
-        <FormField placeholder="Confirm Password" type="password" />
-        <Button variant="primary" size="primary">Login</Button>
-
-      </FormBackground>
-    </div>
-
-
-      <h1>good</h1>
-
-  </Background>
-
-
+      <LoginForm></LoginForm>
   </>
 }
 
