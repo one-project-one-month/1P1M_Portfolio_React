@@ -1,7 +1,17 @@
+import { LoginPage } from "@/constants/lazyload";
+
 const authRouter = [
   {
     path: "login",
-    element: <div>Hello auth</div>,
+    element: <LoginPage />,
+  },
+  {
+    path: "auth/callback",
+    element: <LoginPage />,
+  },
+  {
+    path: "login/oauth2/code/github",
+    element: <LoginPage />,
   },
   {
     path: "register",

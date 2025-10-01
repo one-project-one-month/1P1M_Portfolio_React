@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import { MainLayout } from "../constants/lazyload";
-import authRouter from "./authRouter";
+import { MainLayout } from "@/constants/lazyload";
+import authRouter from "@/routes/authRouter";
 
 const router = createBrowserRouter([
   {
