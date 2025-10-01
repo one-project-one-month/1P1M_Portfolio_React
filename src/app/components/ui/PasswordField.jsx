@@ -19,8 +19,8 @@ const PasswordField = forwardRef(({ label, placeholder, name, id, error }, ref) 
   const [show, setShow] = useState(false);
 
   return (
-    <div className='relative text-sm mb-8'>
-      <label className='inline-block mb-1'>{label}</label>
+    <div className='relative text-white font-sans text-sm font-semibold leading-8 mb-8'>
+      <label className='inline-block'>{label}</label>
       <FormField
         ref={ref}
         type={show ? 'text' : 'password'}
@@ -29,7 +29,7 @@ const PasswordField = forwardRef(({ label, placeholder, name, id, error }, ref) 
         placeholder={placeholder}
         className='w-full px-3 py-2 rounded bg-[#222] text-white outline-none'
       />
-      <span className='absolute top-10 right-4 cursor-pointer text-white' onClick={() => setShow(!show)}>
+      <span className='absolute top-12 right-4 cursor-pointer text-white' onClick={() => setShow(!show)}>
         <EyeIcon open={show} />
       </span>
       {error && <span className='absolute left-0 -bottom-6 text-sm text-[#FB2C36] mt-1 block'>{error}</span>}

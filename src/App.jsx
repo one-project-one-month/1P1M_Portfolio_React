@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Button from './app/components/ui/Button'
 import Background from './app/components/ui/Background'
 import FormBackground from './app/components/ui/FormBackground'
@@ -8,6 +7,7 @@ import RegisterPage from './app/features/auth/pages/RegisterPage'
 
 
 function App() {
+
   return <>
   <Background className='h-[100vh]'>
   <div>hello</div>
@@ -37,10 +37,12 @@ function App() {
       </FormBackground>
     </div>
 
+
       <h1>good</h1>
 
   </Background>
 
+<RegisterPage />
 
   </>
 }

@@ -8,9 +8,6 @@ import PasswordField from '../../../components/ui/PasswordField'
 
 const RegisterForm = ({className =""}) => {
 
-    const [openPassword, setOpenPassword] = useState(false);
-    const [openConfirm, setOpenConfirm] = useState(false);
-
     const emailRef = useRef();
     const passwordRef = useRef();
     const cfmpasswordRef = useRef();
