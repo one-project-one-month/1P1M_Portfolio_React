@@ -3,7 +3,6 @@ import Button from './app/components/ui/Button'
 import Background from './app/components/ui/Background'
 import FormBackground from './app/components/ui/FormBackground'
 import FormField from './app/components/ui/FormFields'
-import OtpDemo from './app/components/OtpDemo'
 
 
 function App() {
@@ -42,9 +41,6 @@ function App() {
 
 
   </Background>
-
-  <OtpDemo />
-
 
   </>
 }
