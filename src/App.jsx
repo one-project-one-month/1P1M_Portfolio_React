@@ -3,6 +3,8 @@ import Button from './app/components/ui/Button'
 import Background from './app/components/ui/Background'
 import FormBackground from './app/components/ui/FormBackground'
 import FormField from './app/components/ui/FormFields'
+import RegisterPage from './app/features/auth/pages/RegisterPage'
+import LoginForm from './app/features/auth/components/LoginForm'
 
 
 function App() {
@@ -39,9 +41,11 @@ function App() {
 
       <h1>good</h1>
 
-
   </Background>
 
+<RegisterPage />
+
+      <LoginForm></LoginForm>
   </>
 }
 
