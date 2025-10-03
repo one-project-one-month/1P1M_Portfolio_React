@@ -59,7 +59,7 @@ const submit=(e)=>{
                </button>
 
                   {/* hidden file input */}
-                 <input onChange={handleFileChange} type="file" className="w-10 h-14 bg-amber-50" ref={fileRef} hidden />
+                 <input onChange={handleFileChange} type="file" accept="image/png, image/jpeg, image/jpg" className="w-10 h-14 bg-amber-50" ref={fileRef} hidden />
 
                {/* form field start */}
                <FormField type="text" placeholder={`Enter your name`} className="w-full"/>
