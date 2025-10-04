@@ -8,3 +8,7 @@ export const MainLayout = PageLoader(
 export const LoginPage = PageLoader(
   lazy(() => import("@/features/auth/pages/LoginPage"))
 );
+
+export const RegisterPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/RegisterPage"))
+);

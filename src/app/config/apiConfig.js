@@ -23,6 +23,8 @@ export const getApiEndpoint = (endpoint) => {
 
 export const API_ENDPOINTS = {
   GITHUB_EXCHANGE: "/portfolio/api/v1/auth/users/exchangeGitHub",
+  GOOGLE_EXCHANGE: "/portfolio/api/v1/auth/users/exchangeGoogle",
   LOGIN: "/portfolio/api/v1/auth/users/login",
   REGISTER: "/portfolio/api/v1/auth/users/register",
+  CHECK_EMAIL: "/portfolio/api/v1/auth/users/checkEmail",
 };

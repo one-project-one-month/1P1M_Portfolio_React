@@ -29,11 +29,17 @@ apiClient.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
 
+    console.log("=== AXIOS INTERCEPTOR ERROR ===");
+    console.log("Status:", status);
+    console.log("Error:", error);
+
     if (status === 401) {
       console.error("Authentication error:", error);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "/login";
+      // TEMPORARILY DISABLE AUTOMATIC REDIRECT
+      console.log("Would redirect to /login but disabled for debugging");
+      // window.location.href = "/login";
     }
 
     return Promise.reject(error);
