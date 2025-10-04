@@ -10,10 +10,11 @@ const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), svgr()],
   resolve: {
     alias: {
-      "@": "/src", // this tells Vite that @ refers to the src folder
+      "@": path.resolve(__dirname, "./src/app"),
+      "~": path.resolve(__dirname, "./src"),
     },
   },
 });
