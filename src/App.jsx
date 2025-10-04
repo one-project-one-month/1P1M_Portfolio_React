@@ -61,13 +61,9 @@ function App() {
 
 
 
-      <DevProfilePage/>
+ 
 
-
-
-
-
-     
+    
   </>
 }
 
