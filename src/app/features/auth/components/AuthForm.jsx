@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FormFields";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { googleIconUrl, githubIconUrl } from "@/assets/icons/iconUrls";
+import GitHubSignIn from "./GitHubSignIn";
+import GoogleSignIn from "./GoogleSignIn";
 import {
   exchangeGithubCode,
   exchangeGoogleCode,
@@ -10,7 +11,7 @@ import {
   checkEmailExists,
 } from "@/services/authService";
 
-function LoginForm() {
+function AuthForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -20,38 +21,7 @@ function LoginForm() {
   const [showPasswordField, setShowPasswordField] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [githubLoading, setGithubLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
 
-  // Google OAuth URL
-  const googleOAuthUrl =
-    "https://accounts.google.com/o/oauth2/v2/auth" +
-    "?client_id=686561903051-a857ngoihbsfo2u5g1b3e9dh9uiljshb.apps.googleusercontent.com" +
-    "&redirect_uri=http://localhost:5173/callback" +
-    "&response_type=code" +
-    "&scope=openid%20email%20profile" +
-    "&access_type=offline" +
-    "&prompt=consent";
-
-  // GitHub OAuth URL
-  const githubOAuthUrl =
-    "https://github.com/login/oauth/authorize?client_id=Ov23liwQG9sDezMQsqtO&redirect_uri=http://localhost:5173/login/oauth2/code/github&scope=user:email";
-
-  // Handle Google authentication
-  const handleGoogleLogin = () => {
-    console.log("=== GOOGLE LOGIN INITIATED ===");
-    setGoogleLoading(true);
-    window.location.href = googleOAuthUrl;
-  };
-
-  // Handle GitHub authentication
-  const handleGithubLogin = () => {
-    console.log("=== GITHUB LOGIN INITIATED ===");
-    setGithubLoading(true);
-    window.location.href = githubOAuthUrl;
-  };
-
-  // Check for OAuth codes in URL - for both Google and GitHub
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const code = searchParams.get("code");
@@ -60,17 +30,11 @@ function LoginForm() {
       console.log("=== OAuth code received ===", code);
       console.log("Current pathname:", location.pathname);
 
-      // Handle Google OAuth callback
       if (location.pathname === "/callback") {
         console.log("=== GOOGLE OAuth callback detected ===");
-        setGoogleLoading(true);
-
-        // Exchange the code for access token and user data
         exchangeGoogleCode(code)
           .then((data) => {
             console.log("Google authentication successful!", data);
-
-            // Store user data and token in localStorage
             if (data.user) {
               localStorage.setItem("user", JSON.stringify(data.user));
             }
@@ -78,42 +42,27 @@ function LoginForm() {
               localStorage.setItem("token", data.token);
             }
 
-            // Show success message
             alert("Google authentication successful!");
-
-            // Redirect to dashboard or home page
             navigate("/dashboard");
           })
           .catch((error) => {
             console.error("Google authentication failed:", error);
-            // Show error message
             alert(
               "Google authentication failed: " +
                 (error.message || "Unknown error")
             );
 
-            // Navigate back to login on error
             navigate("/login");
           })
-          .finally(() => {
-            setGoogleLoading(false);
-          });
-      }
-
-      // Handle GitHub OAuth callback
-      else if (
+          .finally(() => {});
+      } else if (
         location.pathname === "/auth/callback" ||
         location.pathname === "/login/oauth2/code/github"
       ) {
         console.log("=== GITHUB OAuth callback detected ===");
-        setGithubLoading(true);
-
-        // Exchange the code for access token and user data using the specified endpoint
         exchangeGithubCode(code)
           .then((data) => {
             console.log("GitHub authentication successful!", data);
-
-            // Store user data and token in localStorage
             if (data.user) {
               localStorage.setItem("user", JSON.stringify(data.user));
             }
@@ -121,23 +70,17 @@ function LoginForm() {
               localStorage.setItem("token", data.token);
             }
 
-            // Show success message
             alert("GitHub authentication successful!");
-
-            // Redirect to dashboard or home page
             navigate("/dashboard");
           })
           .catch((error) => {
             console.error("GitHub authentication failed:", error);
-            // Show error message
             alert(
               "GitHub authentication failed: " +
                 (error.message || "Unknown error")
             );
           })
-          .finally(() => {
-            setGithubLoading(false);
-          });
+          .finally(() => {});
       }
     }
   }, [location.pathname, location.search, navigate]);
@@ -171,7 +114,6 @@ function LoginForm() {
     setEmailError(validateEmail(email));
   };
 
-  // Function to check if email exists using the real API
   const checkEmailExistsInSystem = async (email) => {
     console.log("=== STARTING EMAIL CHECK API CALL ===");
     console.log("Email to check:", email);
@@ -181,7 +123,6 @@ function LoginForm() {
       const response = await checkEmailExists(email);
       console.log("API response received:", response);
 
-      // API returns { exists: true/false } or similar
       const exists = response.exists || response.emailExists || false;
       console.log("Email exists result:", exists);
 
@@ -193,9 +134,8 @@ function LoginForm() {
       console.error("Error data:", error.response?.data);
       console.error("Error message:", error.message);
 
-      // Don't throw error - handle gracefully to prevent page reload
       console.log("Handling error gracefully to prevent reload");
-      return false; // Assume email doesn't exist if API fails
+      return false;
     }
   };
 
@@ -236,7 +176,6 @@ function LoginForm() {
           console.log(
             "Login completed successfully - NO NAVIGATION FOR TESTING"
           );
-          //navigate("/dashboard");
         } catch (error) {
           console.error("Login failed:", error);
           console.error("Login error details:", {
@@ -272,7 +211,6 @@ function LoginForm() {
           } else {
             console.log("Email not registered - navigating to register page");
 
-            // Navigate to register page
             navigate("/register");
           }
         } catch (error) {
@@ -423,7 +361,6 @@ function LoginForm() {
 
             console.log("=== BUTTON CLICKED - CALLING API ===");
 
-            // Call handleSubmit without the event parameter since we're not using a form
             await handleSubmit();
           }}
         >
@@ -473,77 +410,9 @@ function LoginForm() {
               <div className="bg-white/20 h-px flex-1"></div>
             </div>
 
-            <button
-              type="button"
-              className="flex items-center justify-center gap-2 bg-[#121827] text-white w-full rounded-lg py-3 border border-[#2D3748] cursor-pointer hover:bg-[#1A202C] transition-colors"
-              onClick={handleGoogleLogin}
-              disabled={googleLoading}
-            >
-              {googleLoading ? (
-                <svg
-                  className="animate-spin h-5 w-5 text-white mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                <img src={googleIconUrl} alt="Google" className="w-5 h-5" />
-              )}
-              <span className="font-sans font-medium text-sm leading-5 tracking-normal text-center align-middle">
-                <span className="text-[#6A7282]">Sign in with </span>
-                <span>Google</span>
-              </span>
-            </button>
+            <GoogleSignIn />
 
-            <button
-              type="button"
-              className="flex items-center justify-center gap-2 bg-[#121827] text-white w-full rounded-lg py-3 border border-[#2D3748] cursor-pointer"
-              onClick={handleGithubLogin}
-              disabled={githubLoading}
-            >
-              {githubLoading ? (
-                <svg
-                  className="animate-spin h-5 w-5 text-white mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                <img src={githubIconUrl} alt="GitHub" className="w-5 h-5" />
-              )}
-              <span className="font-sans font-medium text-sm leading-5 tracking-normal text-center align-middle">
-                <span className="text-[#6A7282]">Sign in with </span>
-                <span>GitHub</span>
-              </span>
-            </button>
+            <GitHubSignIn />
           </>
         )}
       </div>
@@ -563,4 +432,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default AuthForm;

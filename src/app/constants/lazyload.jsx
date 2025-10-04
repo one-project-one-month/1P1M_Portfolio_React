@@ -5,10 +5,6 @@ export const MainLayout = PageLoader(
   lazy(() => import("@/components/core/layouts/MainLayout"))
 );
 
-export const LoginPage = PageLoader(
-  lazy(() => import("@/features/auth/pages/LoginPage"))
-);
-
-export const RegisterPage = PageLoader(
-  lazy(() => import("@/features/auth/pages/RegisterPage"))
+export const AuthPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/AuthPage"))
 );

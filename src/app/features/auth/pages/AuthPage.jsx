@@ -1,18 +1,18 @@
 import React from "react";
 import Background from "@/components/ui/Background";
 import FormBackground from "@/components/ui/FormBackground";
-import LoginForm from "@/features/auth/components/LoginForm";
+import AuthForm from "@/features/auth/components/AuthForm";
 
-function LoginPage() {
+function AuthPage() {
   return (
     <Background>
       <div className="flex items-center justify-center h-screen">
         <FormBackground>
-          <LoginForm />
+          <AuthForm />
         </FormBackground>
       </div>
     </Background>
   );
 }
 
-export default LoginPage;
+export default AuthPage;
