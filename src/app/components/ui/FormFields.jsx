@@ -6,7 +6,7 @@ function FormField({ placeholder, type = "text", className = "", ...props }) {
       type={type}
       placeholder={placeholder}
       className={`
-        w-[449px] h-12 rounded-lg px-4 py-3
+        h-12 rounded-lg px-4 py-3
         bg-[#FFFFFF17] border border-[#FFFFFF26] 
         text-white 
         placeholder:font-sans placeholder:font-normal placeholder:text-sm placeholder:leading-5 
