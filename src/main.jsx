@@ -15,10 +15,14 @@ import "./index.css"
 // );
 
 import { createRoot } from "react-dom/client";
+import router from "./app/routes/router";
+import { RouterProvider } from "react-router-dom";
+
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
+    {/* <App /> */}
   </StrictMode>
 );
 
