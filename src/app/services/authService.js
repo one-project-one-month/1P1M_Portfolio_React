@@ -53,3 +53,30 @@ export const loginWithEmailPassword = async (email, password) => {
     throw error.response?.data || error;
   }
 };
+
+export const sendOtpCode = async (email) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.SEND_OTP, {
+      email,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error sending OTP code:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const verifyOtpCode = async (email, otpCode) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.VERIFY_OTP, {
+      email,
+      otpCode,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying OTP code:", error);
+    throw error.response?.data || error;
+  }
+};

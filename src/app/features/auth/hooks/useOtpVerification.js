@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { sendOtpCode, verifyOtpCode } from '../../../services/authService';
 
 export const useOtpVerification = (email) => {
   const [otpData, setOtpData] = useState({
@@ -90,13 +91,11 @@ export const useOtpVerification = (email) => {
     }));
   }, []);
 
-  // API calls - replace these with actual API endpoints
   const verifyOtp = useCallback(async (otp) => {
     setVerifying(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const isValid = otp === '123456';
-      return isValid;
+      const response = await verifyOtpCode(email, otp);
+      return response.success === 1 || response.code === 200;
     } catch (error) {
       console.error('OTP verification error:', error);
       return false;
@@ -108,8 +107,9 @@ export const useOtpVerification = (email) => {
   const resendOtp = useCallback(async () => {
     setResending(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      return true;
+      const response = await sendOtpCode(email);
+      // Check if OTP was sent successfully
+      return response.success === 1 || response.code === 200;
     } catch (error) {
       console.error('OTP resend error:', error);
       throw error;
