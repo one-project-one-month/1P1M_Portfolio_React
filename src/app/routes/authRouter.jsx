@@ -1,9 +1,10 @@
 import { AuthPage } from "@/constants/lazyload";
+import {LoginPage } from "@/constants/lazyload";
 
 const authRouter = [
   {
     path: "login",
-    element: <div>Login Page</div>,
+    element: <LoginPage />,
   },
   {
     path: "auth/callback",
