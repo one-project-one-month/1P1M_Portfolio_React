@@ -26,4 +26,6 @@ export const API_ENDPOINTS = {
   GOOGLE_EXCHANGE: "/portfolio/api/v1/auth/users/exchangeGoogle",
   LOGIN: "/portfolio/api/v1/auth/users/login",
   CHECK_EMAIL: "/portfolio/api/v1/auth/users/checkEmail",
+  SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
+  VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
 };
