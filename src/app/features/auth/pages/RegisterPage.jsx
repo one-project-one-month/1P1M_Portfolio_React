@@ -33,7 +33,7 @@ const RegisterPage = () => {
                 <div className="w-full max-w-md lg:max-w-lg">
                     <FormBackground className='h-auto shadow shadow-[#fff]/20'>
                         <RegisterForm />
-                        <div className="flex text-sm text-[#99A1AF]">
+                        <div className="flex text-sm text-[#99A1AF] mt-8">
                             <div className="w-1/2 border-r border-[#FFFFFF17]"><a href='javascript:void(0);' className='text-center cursor-pointer block'>Terms of Use</a></div>
                             <div className="w-1/2 border-l border-[#FFFFFF17]"><a href='javascript:void(0);' className="text-center cursor-pointer block">Privacy Policy</a></div>
                         </div>

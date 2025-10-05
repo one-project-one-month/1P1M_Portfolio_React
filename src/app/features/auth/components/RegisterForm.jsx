@@ -11,53 +11,86 @@ const RegisterForm = ({className=""}) => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [cmfPasswordError, setcmfPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [serverError, setServerError] = useState("");
 
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const cfmpasswordRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const cfmpasswordRef = useRef();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        const email = emailRef.current.value.trim();
-        const password = passwordRef.current.value.trim();
-        const confirmPassword = cfmpasswordRef.current.value.trim();
+    const email = emailRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
+    const confirmPassword = cfmpasswordRef.current.value.trim();
 
+    // Validate inputs
+    let valid = true;
+    if (!email) {
+      setEmailError("Enter your Email");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
 
-        // to check valid data here 
+    if (!password) {
+      setPasswordError("Enter your Password");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
 
-        if(!email){
-          setEmailError("Enter your Email");
-        }else{
-          setEmailError("");
+    if (!confirmPassword) {
+      setcmfPasswordError("Confirm your Password");
+      valid = false;
+    } else if (confirmPassword !== password) {
+      setcmfPasswordError("Passwords do not match");
+      valid = false;
+    } else {
+      setcmfPasswordError("");
+    }
+
+    if (!valid) return;
+
+    // Reset states
+    setServerError("");
+    setSuccessMsg("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          password_confirmation: confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMsg("Registration successful! You can now log in.");
+        console.log("Success:", data);
+      } else {
+        if (data.errors) {
+          setServerError(Object.values(data.errors).flat().join(" "));
+        } else {
+          setServerError(data.message || "Registration failed. Try again.");
         }
-
-        if(!password){
-          setPasswordError("Enter your Password");
-        }else{
-          setPasswordError("")
-        }
-
-        if( !confirmPassword ){
-          setcmfPasswordError("Confirm your Password");
-        }else if(confirmPassword !== password && password){
-          setcmfPasswordError("Passwords do not match ");
-        }else{
-          setcmfPasswordError("")
-        }
-
-        if(!emailError && !passwordError &&  !cmfPasswordError ){
-            const data = {
-              email,
-              password,
-              confirmPassword
-          };
-          setEmailError("");
-          setPasswordError("");
-          setcmfPasswordError("");
-
-          console.log("Form Data:", data);
-        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setServerError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
 
     };
 
