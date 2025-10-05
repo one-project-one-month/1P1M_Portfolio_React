@@ -18,9 +18,14 @@ export const DevProfilePage = lazy(() =>
 );
 
 
-<<<<<<< Updated upstream
-=======
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
 )
->>>>>>> Stashed changes
+
+export const ForgotPasswordPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
+);
+
+export const ResetPasswordPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/ResetPasswordPage"))
+);

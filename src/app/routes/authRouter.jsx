@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-import { AuthPage } from "@/constants/lazyload";
-import {LoginPage } from "@/constants/lazyload";
-=======
-import { AuthPage, OtpPage } from "@/constants/lazyload";
-
->>>>>>> Stashed changes
+import { LoginPage, ResetPasswordPage } from "@/constants/lazyload";
+import { AuthPage, OtpPage, ForgotPasswordPage } from "@/constants/lazyload";
 
 const authRouter = [
   {
@@ -27,6 +22,14 @@ const authRouter = [
     path: "otp-verify",
     element: <OtpPage />,
   },
+  {
+    path: "forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "reset-password",
+    element: <ResetPasswordPage />,
+  }
 ];
 
 export default authRouter;
