@@ -1,6 +1,8 @@
-import Button from '../../../components/ui/Button';
-import OtpInput from '../../../components/ui/OtpInput';
-import { useOtpVerification } from '../hooks';
+import Button from '@/components/ui/Button';
+import OtpInput from '@/components/ui/OtpInput';
+import { useOtpVerification } from '@/features/auth/hooks/useOtpVerification';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 function OtpForm({ 
   email = "nora@gmail.com", 
@@ -29,33 +31,56 @@ function OtpForm({
     isVerifying,
   } = otpData;
 
+  // Send OTP automatically when component mounts
+  useEffect(() => {
+    const sendInitialOtp = async () => {
+      try {
+        toast.loading('Sending OTP code...', { id: 'initial-otp' });
+        await resendOtp();
+        startResendTimer();
+        toast.success('OTP sent successfully! Check your email.', { id: 'initial-otp' });
+      } catch (error) {
+        console.error('Failed to send initial OTP:', error);
+        toast.error('Failed to send OTP. Please try resending.', { id: 'initial-otp' });
+        setError('Failed to send OTP. Please try resending.');
+      }
+    };
+
+    sendInitialOtp();
+  }, [email]); // Only run when email changes
+
   const handleOtpChange = (value) => {
     updateOtpValue(value);
   };
 
   const handleVerify = async () => {
-    console.log('Verifying OTP:', otpValue);
     if (otpValue.length !== 6) {
+      toast.error('Please enter a complete 6-digit code.');
       return;
     }
 
     try {
+      toast.loading('Verifying OTP code...', { id: 'verify-otp' });
       const isValid = await verifyOtp(otpValue);
       
       if (isValid) {
+        toast.success('OTP verified successfully!', { id: 'verify-otp' });
         onVerifySuccess?.();
       } else {
+        toast.error('Invalid OTP code. Please try again.', { id: 'verify-otp' });
         setError('Please enter the valid code.');
         incrementAttempts();
         
         const newAttempts = attempts + 1;
         if (newAttempts >= MAX_ATTEMPTS) {
+          toast.error('Maximum attempts reached. Redirecting to signup...');
           setTimeout(() => {
             onBackToSignup?.();
           }, 1000);
         }
       }
     } catch (error) {
+      toast.error('Verification failed. Please try again.', { id: 'verify-otp' });
       setError('Please enter the valid code.');
       incrementAttempts();
     }
@@ -65,11 +90,20 @@ function OtpForm({
     if (isResendDisabled) return;
     
     try {
-      await resendOtp();
-      startResendTimer();
-      updateOtpValue('');
+      toast.loading('Resending OTP code...', { id: 'resend-otp' });
+      const success = await resendOtp();
+      if (success) {
+        startResendTimer();
+        updateOtpValue('');
+        toast.success('OTP resent successfully! Check your email.', { id: 'resend-otp' });
+      } else {
+        toast.error('Failed to resend OTP. Please try again.', { id: 'resend-otp' });
+        setError('Failed to resend OTP. Please try again.');
+      }
     } catch (error) {
       console.error('Failed to resend OTP:', error);
+      toast.error('Failed to resend OTP. Please try again.', { id: 'resend-otp' });
+      setError('Failed to resend OTP. Please try again.');
     }
   };
 
@@ -84,7 +118,7 @@ function OtpForm({
   }
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6 ">
       {/* Header */}
       <div className="text-center">
         <h2 className="text-white text-3xl font-semibold mb-2">
