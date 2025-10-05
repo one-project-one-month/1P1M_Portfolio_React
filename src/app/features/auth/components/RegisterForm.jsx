@@ -1,24 +1,39 @@
-import React, { useRef, useState } from 'react'
-import FormBackground from '../../../components/ui/FormBackground'
-import FormField from '../../../components/ui/FormFields'
-import Button from '../../../components/ui/Button'
+import React, { useEffect, useRef, useState } from 'react'
 import FormWrapper from '../../../components/ui/FormWrapper'
 import TextField from '../../../components/ui/TextField'
 import PasswordField from '../../../components/ui/PasswordField'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { checkEmailExists, signupWithEmail } from '@/services/authService'
+import toast from 'react-hot-toast'
 
-const RegisterForm = ({className=""}) => {
+const RegisterForm = () => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [cmfPasswordError, setcmfPasswordError] = useState("");
+  const [cmfPasswordError, setCmfPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
   const [serverError, setServerError] = useState("");
 
   const emailRef = useRef();
   const passwordRef = useRef();
   const cfmpasswordRef = useRef();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const emailFromAuth = location.state?.email || "";
+
+  // Email check function
+  const checkEmailExistsInSystem = async (email) => {
+    try {
+      const response = await checkEmailExists(email);
+      return response?.data || false;
+    } catch (error) {
+      console.error("Email check error:", error);
+      return false;
+    }
+  };
+
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,78 +41,73 @@ const RegisterForm = ({className=""}) => {
     const password = passwordRef.current.value.trim();
     const confirmPassword = cfmpasswordRef.current.value.trim();
 
-    // Validate inputs
+    // Reset errors
+    setEmailError("");
+    setPasswordError("");
+    setCmfPasswordError("");
+    setServerError("");
+  
+
+    // Validation
     let valid = true;
+
     if (!email) {
       setEmailError("Enter your Email");
       valid = false;
-    } else {
-      setEmailError("");
     }
-
     if (!password) {
       setPasswordError("Enter your Password");
       valid = false;
-    } else {
-      setPasswordError("");
     }
-
     if (!confirmPassword) {
-      setcmfPasswordError("Confirm your Password");
+      setCmfPasswordError("Confirm your Password");
       valid = false;
     } else if (confirmPassword !== password) {
-      setcmfPasswordError("Passwords do not match");
+      setCmfPasswordError("Passwords do not match");
       valid = false;
-    } else {
-      setcmfPasswordError("");
     }
 
     if (!valid) return;
 
-    // Reset states
-    setServerError("");
-    setSuccessMsg("");
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          password_confirmation: confirmPassword,
-        }),
-      });
+      // Check if email exists
+      const emailExists = await checkEmailExistsInSystem(email);
+      if (emailExists) {
+        toast.removeAll();
+        toast.error("Email already exists");
+        setLoading(false);
+        return;
+      }
 
-      const data = await response.json();
+      // Proceed to register
+      const response = await signupWithEmail(email, password, confirmPassword);
 
-      if (response.ok) {
-        setSuccessMsg("Registration successful! You can now log in.");
-        console.log("Success:", data);
+      // Handle success
+      if (response?.status !== "success" || response?.user) {
+        toast.success("Registration successful! Proceeding...");
+        navigate("/otp-verify", { state: { email } });
       } else {
-        if (data.errors) {
-          setServerError(Object.values(data.errors).flat().join(" "));
-        } else {
-          setServerError(data.message || "Registration failed. Try again.");
-        }
+        const message = response?.message || "Registration failed. Please try again.";
+        setServerError(message);
+        toast.removeAll()
+        toast.error(serverError);
+        
       }
     } catch (error) {
-      console.error("Error:", error);
-      setServerError("Something went wrong. Please try again.");
+      console.error("Register error:", error);
+      toast.removeAll();
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
-
-    };
+  };
 
   return (
 
-    <FormWrapper className="" title="Register Your Account" subtitle="subtitle" onSubmit={handleSubmit}>
-        <TextField ref={emailRef} type='email' name='regemail' id="regemail" label="Email" placeholder="nora@gmail.com"  error={`${emailError ? emailError :""}`}/>
+    <FormWrapper className="" title="Register Your Account" subtitle="subtitle" onSubmit={handleSubmit} loading={loading}>
+        <TextField ref={emailRef} type='email' name='regemail' id="regemail" label="Email" value={emailFromAuth}  placeholder="nora@gmail.com"  error={`${emailError ? emailError :""}`}/>
         <PasswordField ref={passwordRef} name='password' id="password" label="Password" placeholder="Enter your password" error={`${passwordError ? passwordError :""}`} />
         <PasswordField ref={cfmpasswordRef} name='cfmpassword' id="cfmpassword" label="Confirm Password" placeholder="Confirm your password" error={`${ cmfPasswordError ? cmfPasswordError  :""}`} />
     </FormWrapper>

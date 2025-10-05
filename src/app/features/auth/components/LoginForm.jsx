@@ -3,10 +3,13 @@ import Button from "../../../components/ui/Button";
 import FormBackground from "../../../components/ui/FormBackground";
 import TextField from "@/components/ui/TextField";       // ⬅️ use TextField
 import PasswordField from "@/components/ui/PasswordField"; // ⬅️ use PasswordField
+import { useLocation } from "react-router-dom";
 
 function LoginForm() {
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  
+ const location = useLocation();
+  const emailFromAuth = location.state?.email || "";
 
   return (
 
@@ -31,7 +34,7 @@ function LoginForm() {
                 id="email"
                 name="email"
                 placeholder="Enter your email here"
-                value={email}
+                value={emailFromAuth}
                 onChange={(e) => setEmail(e.target.value)}
                 className='relative w-full text-white font-sans text-sm font-semibold leading-8'
               />

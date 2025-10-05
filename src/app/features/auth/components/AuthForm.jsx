@@ -174,7 +174,7 @@ function AuthForm() {
             navigate("/login");
           } else {
             console.log("Email not registered - navigating to register page");
-            navigate("/register");
+            navigate("/register", { state: { email } });
           }
         } catch (error) {
           console.error("Error in email check flow:", error);
