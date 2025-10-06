@@ -18,9 +18,14 @@ export const DevProfilePage = lazy(() =>
 );
 
 
-<<<<<<< Updated upstream
-=======
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
 )
->>>>>>> Stashed changes
+
+export const AdminLayout=PageLoader(
+  lazy(()=>import("@/components/core/layouts/AdminLayout"))
+)
+
+export const RegisterListPage=PageLoader(
+  lazy(()=>import("@/features/admin/pages/RegisterListPage"))
+)
