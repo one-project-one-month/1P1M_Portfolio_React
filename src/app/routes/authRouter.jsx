@@ -1,4 +1,6 @@
+import ProjectCard from "@/components/ui/ProjectCard";
 import { AuthPage, OtpPage, RegisterPage, LoginPage } from "@/constants/lazyload";
+
 
 const authRouter = [
   {
@@ -24,7 +26,7 @@ const authRouter = [
   {
     path: "otp-verify",
     element: <OtpPage />,
-  },
+  }
 ];
 
 export default authRouter;
