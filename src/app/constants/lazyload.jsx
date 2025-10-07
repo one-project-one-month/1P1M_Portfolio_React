@@ -19,7 +19,7 @@ export const DevProfilePage = lazy(() =>
 
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
-)
+);
 
 export const ForgotPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
@@ -29,11 +29,14 @@ export const ResetPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ResetPasswordPage"))
 );
 
-export const AdminLayout=PageLoader(
-  lazy(()=>import("@/components/core/layouts/AdminLayout"))
-)
+export const AdminLayout = PageLoader(
+  lazy(() => import("@/components/core/layouts/AdminLayout"))
+);
 
-export const RegisterListPage=PageLoader(
-  lazy(()=>import("@/features/admin/pages/RegisterListPage"))
-)
+export const RegisterListPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/RegisterListPage"))
+);
 
+export const ProjectCreateFormPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
+);
