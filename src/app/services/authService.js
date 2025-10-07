@@ -98,3 +98,4 @@ export const signupWithEmail = async (email, password, cfmpassword) => {
     };
   }
 };
+
