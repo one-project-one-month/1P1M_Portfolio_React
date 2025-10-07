@@ -18,9 +18,7 @@ export const DevProfilePage = lazy(() =>
 );
 
 
-<<<<<<< Updated upstream
-=======
+
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
 )
->>>>>>> Stashed changes

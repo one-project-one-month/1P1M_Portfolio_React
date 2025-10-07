@@ -1,10 +1,6 @@
-<<<<<<< Updated upstream
-import { AuthPage } from "@/constants/lazyload";
-import {LoginPage } from "@/constants/lazyload";
-=======
-import { AuthPage, OtpPage } from "@/constants/lazyload";
 
->>>>>>> Stashed changes
+import { AuthPage, OtpPage, LoginPage } from "@/constants/lazyload";
+
 
 const authRouter = [
   {
