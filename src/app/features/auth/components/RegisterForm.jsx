@@ -10,13 +10,13 @@ const RegisterForm = () => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [cmfPasswordError, setCmfPasswordError] = useState("");
+  // const [cmfPasswordError, setCmfPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  const cfmpasswordRef = useRef();
+  // const cfmpasswordRef = useRef();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,12 +39,12 @@ const RegisterForm = () => {
 
     const email = emailRef.current.value.trim();
     const password = passwordRef.current.value.trim();
-    const confirmPassword = cfmpasswordRef.current.value.trim();
+    // const confirmPassword = cfmpasswordRef.current.value.trim();
 
     // Reset errors
     setEmailError("");
     setPasswordError("");
-    setCmfPasswordError("");
+    // setCmfPasswordError("");
     setServerError("");
   
 
@@ -59,13 +59,14 @@ const RegisterForm = () => {
       setPasswordError("Enter your Password");
       valid = false;
     }
-    if (!confirmPassword) {
-      setCmfPasswordError("Confirm your Password");
-      valid = false;
-    } else if (confirmPassword !== password) {
-      setCmfPasswordError("Passwords do not match");
-      valid = false;
-    }
+
+    // if (!confirmPassword) {
+    //   setCmfPasswordError("Confirm your Password");
+    //   valid = false;
+    // } else if (confirmPassword !== password) {
+    //   setCmfPasswordError("Passwords do not match");
+    //   valid = false;
+    // }
 
     if (!valid) return;
 
@@ -81,20 +82,9 @@ const RegisterForm = () => {
         return;
       }
 
-      // Proceed to register
-      const response = await signupWithEmail(email, password, confirmPassword);
-
-      // Handle success
-      if (response?.status !== "success" || response?.user) {
-        toast.success("Registration successful! Proceeding...");
-        navigate("/otp-verify", { state: { email } });
-      } else {
-        const message = response?.message || "Registration failed. Please try again.";
-        setServerError(message);
-        toast.removeAll()
-        toast.error(serverError);
-        
-      }
+       toast.success("OTP has been sent to your email.");
+        navigate("/otp-verify", { state: { email, password } });
+      
     } catch (error) {
       console.error("Register error:", error);
       toast.removeAll();
@@ -109,7 +99,7 @@ const RegisterForm = () => {
     <FormWrapper className="" title="Register Your Account" subtitle="subtitle" onSubmit={handleSubmit} loading={loading}>
         <TextField ref={emailRef} type='email' name='regemail' id="regemail" label="Email" value={emailFromAuth}  placeholder="nora@gmail.com"  error={`${emailError ? emailError :""}`}/>
         <PasswordField ref={passwordRef} name='password' id="password" label="Password" placeholder="Enter your password" error={`${passwordError ? passwordError :""}`} />
-        <PasswordField ref={cfmpasswordRef} name='cfmpassword' id="cfmpassword" label="Confirm Password" placeholder="Confirm your password" error={`${ cmfPasswordError ? cmfPasswordError  :""}`} />
+        {/* <PasswordField ref={cfmpasswordRef} name='cfmpassword' id="cfmpassword" label="Confirm Password" placeholder="Confirm your password" error={`${ cmfPasswordError ? cmfPasswordError  :""}`} /> */}
     </FormWrapper>
   )
 }
