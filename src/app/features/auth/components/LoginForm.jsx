@@ -74,6 +74,10 @@ function LoginForm() {
       const data = await loginWithEmailPassword(email, password);
       console.log("Login success:", data);
 
+      if (data.success === 0 || data.code >= 400) {
+        throw new Error(data.message || "Login failed. Please try again.");
+      }
+
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
@@ -88,14 +92,7 @@ function LoginForm() {
     }
   };
 
-  // Simple onChange handlers - just update the state, no validation
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
 
   return (
     <>
@@ -148,6 +145,11 @@ function LoginForm() {
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
+          {!showEmailError && !showPasswordError && error && (
+            <p className="text-red-500 text-xs mt-3 absolute bottom-[60px] left-[30%]">
+              {error}
+            </p>
+          )}
         </div>
 
         {/* Forgot password */}
