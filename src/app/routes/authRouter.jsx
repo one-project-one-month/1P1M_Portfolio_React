@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 
-import { AuthPage, OtpPage,LoginPage } from "@/constants/lazyload";
-
-=======
 import { AuthPage, OtpPage, LoginPage, ResetPasswordPage, ForgotPasswordPage   } from "@/constants/lazyload";
->>>>>>> develop
+
 
 const authRouter = [
   {

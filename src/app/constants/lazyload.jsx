@@ -25,11 +25,7 @@ export const ForgotPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
 );
 
-<<<<<<< HEAD
-export const RegisterListPage=PageLoader(
-  lazy(()=>import("@/features/admin/pages/RegisterListPage"))
-)
-=======
+
 export const ResetPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ResetPasswordPage"))
 );
@@ -45,4 +41,4 @@ export const RegisterListPage = PageLoader(
 export const ProjectCreateFormPage = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
 );
->>>>>>> develop
+
