@@ -3,12 +3,15 @@ import OtpInput from '@/components/ui/OtpInput';
 import { useOtpVerification } from '@/features/auth/hooks/useOtpVerification';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 function OtpForm({ 
-  email = "nora@gmail.com", 
+  // email = "nora@gmail.com", 
   onVerifySuccess, 
   onBackToSignup 
 }) {
+  const location = useLocation();
+  const email = location.state?.email
   const {
     otpData,
     MAX_ATTEMPTS,

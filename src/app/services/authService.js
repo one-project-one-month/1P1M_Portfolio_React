@@ -80,3 +80,22 @@ export const verifyOtpCode = async (email, otpCode) => {
     throw error.response?.data || error;
   }
 };
+
+export const signupWithEmail = async (email, password, cfmpassword) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.REGISTER, {
+      email,
+      password,
+      password_confirmation: cfmpassword,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error signup :", error);
+
+    throw error.response?.data || {
+      message: "Network or server error. Please try again.",
+    };
+  }
+};
+
