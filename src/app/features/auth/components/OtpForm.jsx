@@ -12,6 +12,8 @@ function OtpForm({
 }) {
   const location = useLocation();
   const email = location.state?.email
+  const password = location.state?.password
+
   const {
     otpData,
     MAX_ATTEMPTS,
@@ -68,7 +70,19 @@ function OtpForm({
       
       if (isValid) {
         toast.success('OTP verified successfully!', { id: 'verify-otp' });
-        onVerifySuccess?.();
+
+        toast.loading('Creating your account...', { id: 'signup' });
+        
+        const signupResponse = await signupWithEmail(email, password);
+
+        if (signupResponse?.user || signupResponse?.status === 'success') {
+          toast.success('Signup successful! Redirecting...', { id: 'signup' });
+          onVerifySuccess?.();
+          navigate('/login');
+        } else {
+          toast.error('Signup failed. Please try again.', { id: 'signup' });
+        }
+
       } else {
         toast.error('Invalid OTP code. Please try again.', { id: 'verify-otp' });
         setError('Please enter the valid code.');
