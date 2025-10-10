@@ -171,10 +171,10 @@ function AuthForm() {
 
           if (emailExists) {
             console.log("Email exists - navigating to login page");
-            navigate("/login");
+            navigate("/login", { state: { email } });
           } else {
             console.log("Email not registered - navigating to register page");
-            navigate("/register");
+            navigate("/register", { state: { email } });
           }
         } catch (error) {
           console.error("Error in email check flow:", error);

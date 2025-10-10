@@ -3,12 +3,17 @@ import OtpInput from '@/components/ui/OtpInput';
 import { useOtpVerification } from '@/features/auth/hooks/useOtpVerification';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 function OtpForm({ 
-  email = "nora@gmail.com", 
+  // email = "nora@gmail.com", 
   onVerifySuccess, 
   onBackToSignup 
 }) {
+  const location = useLocation();
+  const email = location.state?.email
+  const password = location.state?.password
+
   const {
     otpData,
     MAX_ATTEMPTS,
@@ -65,7 +70,19 @@ function OtpForm({
       
       if (isValid) {
         toast.success('OTP verified successfully!', { id: 'verify-otp' });
-        onVerifySuccess?.();
+
+        toast.loading('Creating your account...', { id: 'signup' });
+        
+        const signupResponse = await signupWithEmail(email, password);
+
+        if (signupResponse?.user || signupResponse?.status === 'success') {
+          toast.success('Signup successful! Redirecting...', { id: 'signup' });
+          onVerifySuccess?.();
+          navigate('/login');
+        } else {
+          toast.error('Signup failed. Please try again.', { id: 'signup' });
+        }
+
       } else {
         toast.error('Invalid OTP code. Please try again.', { id: 'verify-otp' });
         setError('Please enter the valid code.');
