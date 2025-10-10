@@ -37,7 +37,9 @@ function Pagination({ totalItems = 30, itemsPerPage = 3, onPageChange }) {
         const newDisplay = [...prevDisplay];
         if (
           newDisplay[0] === totalPage - 4 &&
-          JSON.stringify(newDisplay) !== JSON.stringify([6, 7, 8, 9, 10])
+          JSON.stringify(newDisplay) !== JSON.stringify(
+            Array.from({ length: 5 }, (_, i) => totalPage - 4 + i)
+          )
         ) {
           newDisplay.splice(3, 1);
           newDisplay.splice(3, 0, nextPage + 1);
