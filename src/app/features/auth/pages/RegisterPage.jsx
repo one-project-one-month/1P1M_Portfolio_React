@@ -3,8 +3,11 @@ import RegisterForm from '../components/RegisterForm'
 import FormBackground from '../../../components/ui/FormBackground'
 import Background from '../../../components/ui/Background'
 import Button from '../../../components/ui/Button'
+import { Link } from 'react-router-dom'
 
 const RegisterPage = () => {
+
+    
   return (
     <Background className='h-screen flex items-center justify-center mx-auto'>
 
@@ -33,9 +36,14 @@ const RegisterPage = () => {
                 <div className="w-full max-w-md lg:max-w-lg">
                     <FormBackground className='h-auto shadow shadow-[#fff]/20'>
                         <RegisterForm />
-                        <div className="flex text-sm text-[#99A1AF]">
-                            <div className="w-1/2 border-r border-[#FFFFFF17]"><a href='javascript:void(0);' className='text-center cursor-pointer block'>Terms of Use</a></div>
-                            <div className="w-1/2 border-l border-[#FFFFFF17]"><a href='javascript:void(0);' className="text-center cursor-pointer block">Privacy Policy</a></div>
+                        <div className="flex justify-center gap-8 text-white/60 mt-6">
+                            <Link to="/terms" className="hover:text-white transition-colors ">
+                                Terms of Use
+                            </Link>
+                            <span className="text-white/20">|</span>
+                            <Link to="/privacy" className="hover:text-white transition-colors ">
+                                Privacy Policy
+                            </Link>
                         </div>
                     </FormBackground>
                 </div>

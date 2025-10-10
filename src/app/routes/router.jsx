@@ -1,8 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import { DevProfilePage, MainLayout,AdminLayout,RegisterListPage  } from "../constants/lazyload";
+import {
+  DevProfilePage,
+  MainLayout,
+  AdminLayout,
+  RegisterListPage,
+  ProjectCreateFormPage,
+} from "../constants/lazyload";
 import authRouter from "./authRouter";
-
-
 
 const router = createBrowserRouter([
   {
@@ -10,11 +14,13 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [{ path: "setup-profile", element: <DevProfilePage /> }],
   },
-  {path:"/admin",
-    element:<AdminLayout/>,
-    children:[
-      {index:true,element:<RegisterListPage/>}
-      ]
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <RegisterListPage /> },
+      { path: "create-project", element: <ProjectCreateFormPage /> },
+    ],
   },
   ...authRouter,
 ]);
