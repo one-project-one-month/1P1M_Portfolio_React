@@ -15,7 +15,6 @@ function App() {
             <FormField placeholder="Email" type="email" />
             <FormField placeholder="Password" type="password" />
             <FormField placeholder="Confirm Password" type="password" />
-
             <FormField placeholder="Confirm Password" type="password" />
             <FormField placeholder="Confirm Password" type="password" />
             <FormField placeholder="Confirm Password" type="password" />
@@ -27,6 +26,9 @@ function App() {
       </Background>
     </>
   );
+ 
+
+    
 }
 
 export default App;

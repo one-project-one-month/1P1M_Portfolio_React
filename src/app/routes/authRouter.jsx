@@ -1,12 +1,17 @@
-import {LoginPage } from "@/constants/lazyload";
-import { AuthPage, OtpPage } from "@/constants/lazyload";
 
 
+
+
+import { AuthPage, OtpPage, LoginPage, ResetPasswordPage, ForgotPasswordPage, RegisterPage   } from "@/constants/lazyload";
 
 const authRouter = [
   {
     path: "login",
     element: <LoginPage />,
+  },
+  {
+    path: "register",
+    element: <RegisterPage />,
   },
   {
     path: "auth/callback",
@@ -24,6 +29,14 @@ const authRouter = [
     path: "otp-verify",
     element: <OtpPage />,
   },
+  {
+    path: "forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "reset-password",
+    element: <ResetPasswordPage />,
+  }
 ];
 
 export default authRouter;
