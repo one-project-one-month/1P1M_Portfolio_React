@@ -81,12 +81,11 @@ export const verifyOtpCode = async (email, otpCode) => {
   }
 };
 
-export const signupWithEmail = async (email, password, cfmpassword) => {
+export const signupWithEmail = async (email, password) => {
   try {
     const response = await apiClient.post(API_ENDPOINTS.REGISTER, {
       email,
       password,
-      password_confirmation: cfmpassword,
     });
 
     return response.data;
@@ -98,3 +97,4 @@ export const signupWithEmail = async (email, password, cfmpassword) => {
     };
   }
 };
+

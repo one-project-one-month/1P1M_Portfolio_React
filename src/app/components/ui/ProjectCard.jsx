@@ -14,14 +14,25 @@ const ProjectCard = ({title, img, description, likestate, likecount}) =>{
     }
 
     return (
-        <div className="w-[420px] h-[370px] bg-[#030712] flex flex-col gap-4 border border-white/20 text-white text-center rounded-[10px] p-[10px]">
-            <div className="w-full min-h-[152px] rounded-[8px] bg-gray-500 overflow-hidden">
-                <img src={img} className="w-full object-cover" alt={title} />
-            </div>
+        <div className="w-[420px] h-[370px] bg-[#030712] flex flex-col gap-4 border border-white/20 text-white text-center rounded-[10px] p-[10px]">    
             <div className="h-full flex flex-col items-center">
                 <div className="w-ful h-full">
-                    <h2 className="text-[24px] font-[600] mb-4">{title || "Project Name"}</h2>
-                    <p className="text-wrap h-full truncate">{description || "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat, necessitatibus!"}</p>
+                    <h2 className="text-2xl font-[600] mb-4">{title || "Project Name"}</h2>
+                    <p className="text-wrap text-sm">{description || "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat, necessitatibus!"}</p>
+                </div>
+                <div className="flex justify-center gap-4">
+                    <Button type="submit" className='cursor-pointer bg-[#B58400] px-6' variant="primary" size="secondary" disabled={loading}
+                        onClick={async (e) => { 
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("=== BUTTON CLICKED - CALLING API ===");
+                            await onSubmit(e);
+                        }}
+                    >
+                        <div className="flex items-center justify-center">
+                            Mobile
+                        </div>
+                    </Button>
                 </div>
                 <div className="flex gap-[24px] mt-4">
                     <Button type="submit" className='w-[121px] h-[34px] cursor-pointer' variant="primary" size="secondary" disabled={loading}
