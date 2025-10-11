@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { sendOtpCode, verifyOtpCode } from '../../../services/authService';
+import { useState, useEffect, useCallback } from "react";
+import { sendOtpCode, verifyOtpCode } from "../../../services/authService";
 
 export const useOtpVerification = (email) => {
   const [otpData, setOtpData] = useState({
-    value: '',
+    value: "",
     attempts: 0,
     hasError: false,
-    errorMessage: '',
+    errorMessage: "",
     isResendDisabled: false,
     resendTimer: 0,
     isVerifying: false,
@@ -17,10 +17,10 @@ export const useOtpVerification = (email) => {
   const RESEND_COOLDOWN = 60;
 
   const startResendTimer = useCallback(() => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
       isResendDisabled: true,
-      resendTimer: RESEND_COOLDOWN
+      resendTimer: RESEND_COOLDOWN,
     }));
   }, []);
 
@@ -28,81 +28,85 @@ export const useOtpVerification = (email) => {
     let timer;
     if (otpData.resendTimer > 0) {
       timer = setTimeout(() => {
-        setOtpData(prev => ({
+        setOtpData((prev) => ({
           ...prev,
-          resendTimer: prev.resendTimer - 1
+          resendTimer: prev.resendTimer - 1,
         }));
       }, 1000);
     } else if (otpData.resendTimer === 0 && otpData.isResendDisabled) {
-      setOtpData(prev => ({
+      setOtpData((prev) => ({
         ...prev,
-        isResendDisabled: false
+        isResendDisabled: false,
       }));
     }
     return () => clearTimeout(timer);
   }, [otpData.resendTimer, otpData.isResendDisabled]);
 
   const updateOtpValue = useCallback((value) => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
       value,
       hasError: false,
-      errorMessage: ''
+      errorMessage: "",
     }));
   }, []);
 
   const setError = useCallback((message) => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
       hasError: true,
-      errorMessage: message
+      errorMessage: message,
     }));
   }, []);
 
   const incrementAttempts = useCallback(() => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
       attempts: prev.attempts + 1,
-      value: ''
+      value: "",
     }));
   }, []);
 
   const resetAttempts = useCallback(() => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
       attempts: 0,
-      value: '',
+      value: "",
       hasError: false,
-      errorMessage: ''
+      errorMessage: "",
     }));
   }, []);
 
   const setVerifying = useCallback((isVerifying) => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
-      isVerifying
+      isVerifying,
     }));
   }, []);
 
   const setResending = useCallback((isResending) => {
-    setOtpData(prev => ({
+    setOtpData((prev) => ({
       ...prev,
-      isResending
+      isResending,
     }));
   }, []);
 
-  const verifyOtp = useCallback(async (otp) => {
-    setVerifying(true);
-    try {
-      const response = await verifyOtpCode(email, otp);
-      return response.success === 1 || response.code === 200;
-    } catch (error) {
-      console.error('OTP verification error:', error);
-      return false;
-    } finally {
-      setVerifying(false);
-    }
-  }, [email]);
+  const verifyOtp = useCallback(
+    async (otp) => {
+      setVerifying(true);
+      try {
+        const response = await verifyOtpCode(email, otp);
+        console.log("OTP verification response:", response);
+        return response.success === 1 || response.code === 200;
+      } catch (error) {
+        console.error("OTP verification error:", error);
+        return false;
+      } finally {
+        setVerifying(false);
+      }
+    },
+    [email]
+  );
 
   const resendOtp = useCallback(async () => {
     setResending(true);
@@ -111,7 +115,7 @@ export const useOtpVerification = (email) => {
       // Check if OTP was sent successfully
       return response.success === 1 || response.code === 200;
     } catch (error) {
-      console.error('OTP resend error:', error);
+      console.error("OTP resend error:", error);
       throw error;
     } finally {
       setResending(false);
@@ -119,7 +123,9 @@ export const useOtpVerification = (email) => {
   }, [email]);
 
   const formatTimer = useCallback((seconds) => {
-    return `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+    return `${Math.floor(seconds / 60)}:${(seconds % 60)
+      .toString()
+      .padStart(2, "0")}`;
   }, []);
 
   return {
