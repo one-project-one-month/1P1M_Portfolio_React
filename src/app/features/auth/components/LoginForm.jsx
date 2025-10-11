@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Button from "../../../components/ui/Button";
 import FormBackground from "../../../components/ui/FormBackground";
-import TextField from "@/components/ui/TextField";      
-import PasswordField from "@/components/ui/PasswordField"; 
+import TextField from "@/components/ui/TextField";
+import PasswordField from "@/components/ui/PasswordField";
 import { loginWithEmailPassword } from "@/services/authService";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [password, setPassword] = useState("");
@@ -14,8 +14,8 @@ function LoginForm() {
 
   const navigate = useNavigate();
 
-  const [emailErrorMsg, setEmailErrorMsg] = useState("");  
-  const [passwordErrorMsg, setPasswordErrorMsg] = useState(""); 
+  const [emailErrorMsg, setEmailErrorMsg] = useState("");
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
 
@@ -25,8 +25,7 @@ function LoginForm() {
   console.log(showPasswordError);
   console.log(email);
   console.log(password);
-  
- 
+
   //validation
   const validateEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -48,8 +47,6 @@ function LoginForm() {
     return "";
   };
 
-
-
   const handleLogin = async () => {
     // Run validation only when login button is clicked
     const emailErr = validateEmail(email);
@@ -59,7 +56,6 @@ function LoginForm() {
     setEmailErrorMsg(emailErr);
     setPasswordErrorMsg(passwordErr);
 
-    
     // Show/hide errors based on validation results
     setShowEmailError(!!emailErr);
     setShowPasswordError(!!passwordErr);
@@ -78,12 +74,12 @@ function LoginForm() {
         throw new Error(data.message || "Login failed. Please try again.");
       }
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
+      if (data?.data.token) {
+        localStorage.setItem("token", data?.data.token);
       }
 
-      alert("Login successful!");
-      navigate("/");
+      // alert("Login successful!");
+      navigate("/setup-profile");
     } catch (err) {
       console.error("Login failed:", err);
       setError(err.message || "Login failed");
@@ -91,8 +87,6 @@ function LoginForm() {
       setLoading(false);
     }
   };
-
-
 
   return (
     <>
@@ -118,9 +112,13 @@ function LoginForm() {
               placeholder="Enter your email here"
               value={email}
               onChange={(value) => setEmail(value)}
-              className='relative w-full text-white font-sans text-sm font-semibold leading-8'
+              className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
-            {showEmailError && <p className="text-red-500 text-xs absolute bottom-[15px]">{emailErrorMsg}</p>}
+            {showEmailError && (
+              <p className="text-red-500 text-xs absolute bottom-[15px]">
+                {emailErrorMsg}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -133,7 +131,11 @@ function LoginForm() {
               value={password}
               onChange={(value) => setPassword(value)}
             />
-            {showPasswordError && <p className="text-red-500 text-xs absolute bottom-[15px]">{passwordErrorMsg}</p>}
+            {showPasswordError && (
+              <p className="text-red-500 text-xs absolute bottom-[15px]">
+                {passwordErrorMsg}
+              </p>
+            )}
           </div>
 
           {/* Login Button */}
@@ -153,12 +155,12 @@ function LoginForm() {
         </div>
 
         {/* Forgot password */}
-        <a
-          href="#"
+        <NavLink
+          to={"/forgot-password"}
           className="font-sans text-sm text-[#99A1AF] w-full text-center font-semibold mt-4"
         >
           Forget password?
-        </a>
+        </NavLink>
       </FormBackground>
     </>
   );
