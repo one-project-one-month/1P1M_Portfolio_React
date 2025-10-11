@@ -18,6 +18,8 @@ const router = createBrowserRouter([
       children: [
         { index: true, element: <RegisterListPage /> },
         { path: "create-project", element: <ProjectCreateFormPage /> },
+        { path: "ideas", element: <ProjectListPage /> },
+
     ],
   },
   ...authRouter,
