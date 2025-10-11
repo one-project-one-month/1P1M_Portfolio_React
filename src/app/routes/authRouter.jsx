@@ -1,4 +1,6 @@
 import { AuthPage, OtpPage, LoginPage, ResetPasswordPage, ForgotPasswordPage, RegisterPage } from "@/constants/lazyload";
+import DevListPage from "../features/user/pages/DevListPage";
+
 
 const authRouter = [
   {
@@ -32,6 +34,16 @@ const authRouter = [
   {
     path: "reset-password",
     element: <ResetPasswordPage />,
+  },
+  {
+    path: "user",
+    children: [
+      {
+        path: "dev-list", // Final path: /user/dev-list
+        element: <DevListPage />
+      },
+    ]
+
   }
 ];
 

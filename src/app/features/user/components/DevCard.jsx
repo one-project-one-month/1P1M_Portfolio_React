@@ -1,7 +1,17 @@
 import React from "react";
 import CopyIcon from "@/assets/icons/Copy.png";
+import Button from "../../../components/ui/Button";
 
 export default function DevCard({ member, copyToClipboard }) {
+    const handleVisitProfile = () => {
+        const profileLink = member.profileUrl || `/user/profile/${member.telegram.replace('@', '')}`;
+        window.open(profileLink, "_blank");
+    };
+    const handleInvite = () => {
+        const inviteLink = member.inviteUrl || `/invite?dev=${member.telegram.replace('@', '')}`;
+        window.open(inviteLink, "_blank");
+    };
+
     return (
         <div className="bg-[#030712] rounded-2xl p-5 w-[420px] h-[225px]">
             <div className="flex items-start gap-4 mb-6">
@@ -51,15 +61,25 @@ export default function DevCard({ member, copyToClipboard }) {
                 </div>
 
                 <div className="flex flex-1 justify-center gap-3 max-w-sm">
-                    <button className="flex-1 py-2 border-2 border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+                    <Button
+                        variant="white_button"
+                        size="secondary"
+                        className="flex-1 py-2 hover:bg-[#fffff4] transition-colors"
+                        onClick={handleVisitProfile}
+                    >
                         Visit Profile
-                    </button>
-                    <button className="flex-1 py-2 bg-[#9C39FC] text-white rounded-lg hover:bg-[#8A2BE2] transition-colors">
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="primary"
+                        className="lex-1 py-2  hover:bg-[#8A2BE2] transition-colors"
+                        onClick={handleInvite}
+                    >
                         Invite
-                    </button>
+                    </Button>
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

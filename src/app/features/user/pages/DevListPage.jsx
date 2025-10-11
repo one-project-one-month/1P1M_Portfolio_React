@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import DevCard from "../components/DevCard";
-import Pagination from "../components/Pagination";
 import SearchIcon from "@/assets/icons/search.png";
 import FilterIcon from "@/assets/icons/filter.png";
 import GitHubIcon from "@/assets/icons/GitHub.png";
@@ -9,6 +8,7 @@ import FacebookIcon from "@/assets/icons/Facebook.png";
 import CopyIcon from "@/assets/icons/Copy.png";
 import { getDevProfiles } from "@/services/devProfileService";
 import Background from "@/components/ui/Background";
+import Pagination from "../../../components/ui/Pagination";
 
 // Sample mock data
 const teamMembers = [
@@ -34,6 +34,7 @@ const teamMembers = [
             { name: "Facebook", icon: FacebookIcon, url: "https://facebook.com/" },
         ],
     },
+    // ... (ကျန်တဲ့ member data များ)
     {
         name: "Ko Thura Aung",
         role: "Mid-level Java Developer",
@@ -89,7 +90,6 @@ const teamMembers = [
             { name: "Facebook", icon: FacebookIcon, url: "https://facebook.com/" },
         ],
     },
-
 ];
 
 export default function DevListPage() {
@@ -130,9 +130,8 @@ export default function DevListPage() {
 
     return (
         <Background>
-            <div className="w-[1296px] mx-auto py-6">
-                <div className="max-w-[1400px] mx-auto">
-                    {/* Header */}
+            <div className="w-[1296px] mx-auto py-6 min-h-screen flex flex-col">
+                <div className="max-w-[1400px] mx-auto flex-grow w-full">
                     <div className="flex items-center justify-between mb-2">
                         <div>
                             <h1 className="text-5xl font-bold text-[#FFFFFF]">Profiles</h1>
@@ -168,7 +167,7 @@ export default function DevListPage() {
                     </div>
 
                     {/* Cards Grid */}
-                    <div className="w-full  py-3">
+                    <div className="w-full py-3">
                         <div className="max-w-[1400px] mx-auto">
                             {/* Cards Grid */}
                             <div className="grid grid-cols-3 gap-6">
@@ -176,20 +175,19 @@ export default function DevListPage() {
                                     <DevCard key={index} member={member} copyToClipboard={copyToClipboard} />
                                 ))}
                             </div>
-
-
                         </div>
                     </div>
-                    {/* Pagination Wrapper */}
-                    <div className=" w-full flex justify-center items-center ">
-                        <Pagination
-                            totalPages={totalPages}
-                            currentPage={currentPage}
-                            onPageChange={setCurrentPage}
-                        />
-                    </div>
-
                 </div>
+
+
+                <div className="w-full flex justify-center items-center mt-auto">
+                    <Pagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                    />
+                </div>
+
             </div>
         </Background>
     );
