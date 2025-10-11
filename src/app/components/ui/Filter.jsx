@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
 
-function Filter({ placeholder, menuList = [], className = "", onChange }) {
+function Filter({ placeholder, menuList = [], className = "", onChange,icon }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const dropdownRef = useRef(null);
@@ -33,6 +33,10 @@ function Filter({ placeholder, menuList = [], className = "", onChange }) {
           ${className}`}
         onClick={() => setIsOpen(!isOpen)}
       >
+          <span>
+            <img  src={icon}/>
+            </span>  
+
         <span className={`${selected ? "text-white" : "text-white font-bold text-sm"}`}>
           {selected ? selected.name : placeholder}
         </span>
@@ -43,7 +47,7 @@ function Filter({ placeholder, menuList = [], className = "", onChange }) {
 
       {isOpen && (
         <ul
-          className="absolute z-10 mt-1 w-full  border-[#FFFFFF26] rounded-lg shadow-lg"
+          className="absolute z-10 mt-1 w-full bg-[#090E23] border-[#FFFFFF26] rounded-lg shadow-lg"
         >
           {menuList.map((item) => (
             <li

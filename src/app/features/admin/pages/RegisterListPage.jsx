@@ -1,14 +1,39 @@
+import { filterIconUrl } from "@/assets/icons/iconUrls";
 import Filter from "@/components/ui/Filter";
 import SearchInput from "@/components/ui/SearchInput";
 import TechStack from "@/constants/TechStack";
+import RegisterList from "../components/RegisterList";
+import Pagination from "@/components/ui/Pagination";
+import { useState } from "react";
+
+
 
 
 
 function RegisterListPage(){
+
+const [role,setRole]=useState('All')
+
+ const [page, setPage] = useState(1);
+  const totalPages = 12;
+
+const handleTechStackFilter=(selectedItem)=>{
+  console.log(selectedItem.name);
+  setRole(selectedItem.name)
+  
+  
+}
+
+
+
+    const filterList=[{id:1,name:"Newest"},{id:2,name:"Oldest"}]
     return(
-      <div className="flex w-full justify-between items-center ">
+    <div className="flex flex-col relative">
+    
+    
+      <div className="flex w-full justify-between items-center  text-white ">
         {/* Title & Searchbar */}
-          <div className="flex items-center gap-x-14 w-7/12  justify-between">
+          <div className="flex items-center  w-7/12  justify-between">
                 <div className="text-5xl font-bold underline-offset-8 text-white">
                 Registered
                 <div className="max-w-32 mt-3.5 h-1.5 bg-yellow-500"/>
@@ -18,19 +43,18 @@ function RegisterListPage(){
 
 
           {/* Filter & total count */}
-
-          <div className="flex items-center justify-end gap-x-20 text-white w-full ">
+          <div className="flex items-center justify-end gap-x-20 text-white w-5/12 ">
                 <div >
-                    Total Count-200
+                    Total Count-40
                 </div>
 
                 <div>
-                    <Filter className="w-96" menuList={TechStack} placeholder={"ROLE"}/>
+                    <Filter onChange={handleTechStackFilter} className="w-96"  menuList={TechStack} placeholder={"ROLE"}/>
                 </div>
 
 
                 <div>
-                    Filter2
+                    <Filter icon={filterIconUrl} menuList={filterList} placeholder={`Filter`} />
                 </div>
 
           </div>
@@ -38,6 +62,13 @@ function RegisterListPage(){
 
 
       </div>
+
+      <RegisterList role={role}/>
+     <div className="-bottom-16 absolute  left-0 right-0  flex justify-center">
+
+       <Pagination currentPage={page} total={totalPages}  />
+     </div>
+    </div>
     )
 }
 
