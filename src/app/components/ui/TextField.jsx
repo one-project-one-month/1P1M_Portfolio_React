@@ -2,12 +2,13 @@ import React, { forwardRef, useState } from 'react';
 import FormField from './FormFields';
 
 
-const TextField = forwardRef(({ label, placeholder, type = 'text', name, id, value: propValue, error, className = "", }, ref) => {
+const TextField = forwardRef(({ label, onChange, placeholder, type = 'text', name, id, value: propValue, error, className = "", }, ref) => {
 
   const [value, setValue] = useState(propValue || "");
 
     const handleChange = (e) => {
       setValue(e.target.value);
+      if (onChange) onChange(e.target.value);
     };
 
  return (<div className='relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8'>
