@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { DevProfilePage, MainLayout,AdminLayout,RegisterListPage,ProjectListPage,ProjectCreateFormPage } from "../constants/lazyload";
+import { DevProfilePage, MainLayout,AdminLayout,RegisterListPage,ProjectListPage,ProjectCreateFormPage, ProjectListPageAdmin } from "../constants/lazyload";
 
 
 import authRouter from "./authRouter";
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       children: [
         { index: true, element: <RegisterListPage /> },
         { path: "create-project", element: <ProjectCreateFormPage /> },
-        { path: "ideas", element: <ProjectListPage /> },
+        { path: "ideas", element: <ProjectListPageAdmin /> },
 
     ],
   },
