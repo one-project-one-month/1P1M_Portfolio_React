@@ -3,7 +3,7 @@ import Button from './Button'
 
 const Title = ({
   title = "Page Title",
-  onCreate,
+  onCreate = false,
   showSearch = true,
   showFilter = true,
   searchPlaceholder = "Search...",
@@ -35,7 +35,7 @@ const Title = ({
 
   return (
     
-    <div className='flex w-full justify-between items-center gap-8 py-10'>
+    <div className='w-full flex justify-between items-center gap-8 py-10'>
 
       <div className="flex w-2/3 h-11 justify-between items-center gap-8">
         <div className='relative text-nowrap'>
@@ -60,14 +60,16 @@ const Title = ({
       </div>
 
       <div className="flex justify-center items-center gap-4">
-        <Button
-          variant='primary'
-          size="primary"
-          className='h-[44px]'
-          onClick={onCreate}
-        >
-          Create
-        </Button>
+        {onCreate && (
+          <Button
+            variant='primary'
+            size="primary"
+            className='h-[44px]'
+            onClick={onCreate}
+          >
+            Create
+          </Button>
+        )}
 
         {showFilter && (
           <div ref={menuRef} className="relative text-[#F9FAFB] select-none">
@@ -102,6 +104,7 @@ const Title = ({
           </div>
         )}
       </div>
+      
     </div>
   )
 }

@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Button from "./Button";
 
-const ProjectCard = ({title, projectid, description, submittedByProfile, likestate, likecount, viewcount = 0, postBy, tag, status = false}) =>{
+const ProjectCardAdmin = ({
+    projectId,
+    title,
+    description,
+    submittedByProfile,
+    postBy,
+    likeCount = 0,
+    viewCount = 0,
+    liked = false,
+    status, 
+    tags = [],
+    showActions = true,
+    onLike,
+    onApprove,
+    onReject,
+    actionLoading = false,
+}) =>{
 
-    const [likes, setLikes] = useState(Number(likecount));
-    const [liked, setLiked] = useState(likestate);
+    const [isLiked, setIsLiked] = useState(liked);
+    const [likes, setLikes] = useState(likeCount);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleLike = () => {
-        setLiked((prev) => !prev);
-        setLikes((prev) => (liked ? prev - 1 : prev + 1));
-        // call like api increase
-        console.log(liked ? `LIKED TO ${projectid}` : `LIKED TO ${projectid}`);
+        const newLikeState = !isLiked;
+        setIsLiked(newLikeState);
+        setLikes(newLikeState ? likes + 1 : likes - 1);
+        onLike && onLike(projectId, newLikeState);
     };
 
     const formatCount = (num) => {
-        if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + "M";
-        if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + "k";
+        if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + "M";
+        if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + "k";
         return num;
     };
 
     return (
-        <div className="w-[406px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">    
+        <div className="w-[406px] h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">    
             <div className="h-full flex flex-col gap-[14px] items-center">
 
                 <div className="w-ful h-full">
@@ -114,7 +131,7 @@ const ProjectCard = ({title, projectid, description, submittedByProfile, likesta
                         7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
                         <circle cx="12" cy="12" r="3" fill="currentColor" />
                     </svg>
-                    <p>{formatCount(viewcount)}</p>
+                    <p>{formatCount(viewCount)}</p>
                 </div>
                 {status && (
                     <div className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${status === 1 ? 'bg-[#9AE600] text-[#364153]' : status === 2 ? 'bg-[#155DFC] text-[#F9FAFB]' : 'bg-[#79716B] text-[#F9FAFB]'}`}>
@@ -123,8 +140,45 @@ const ProjectCard = ({title, projectid, description, submittedByProfile, likesta
                 )}
             </div>
 
+            {/* button */}
+            <div className="flex justify-center items-center gap-8">
+                <Button variant="black_button" size="primary" onClick={()=>setIsModalOpen(true)}>Reject</Button>
+                <Button variant="primary" size="primary" onClick={()=> onApprove && onApprove(projectId)}>
+                    {actionLoading && (
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    )}
+                    Approve
+                </Button>
+            </div>
+
+            {/* reject model box */}
+
+            {isModalOpen && (
+                <div className="w-full h-screen absolute left-0 top-0 flex justify-center items-center bg-slate-950/20 ">
+                    <div className="w-[410px] border border-[#99A1AF] bg-black rounded-3xl space-y-5 px-16 py-8">
+                        <h1 className="text-2xl font-semibold">Are you sure to reject ?</h1>
+                        <p className="text-[#99A1AF] ">The project idea will be rejected. Are you really want to reject it?</p>
+                        <div className="flex justify-center items-center gap-8">
+                            <Button variant="black_button" size="primary" className="bg-black border-[#6A7282] text-[#99A1AF]" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
+                            <Button variant="primary" size="primary" className="bg-[#C10007]/70 hover:bg-[#C10007]/100" onClick={()=>{if(onReject) onReject(projectId) ;  setIsModalOpen(false)}}>
+                                {actionLoading && (
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                )}
+                                Reject
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
 
-export default ProjectCard;
+export default ProjectCardAdmin;
