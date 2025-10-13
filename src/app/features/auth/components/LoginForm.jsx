@@ -12,8 +12,6 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   const [emailErrorMsg, setEmailErrorMsg] = useState("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
   const [showEmailError, setShowEmailError] = useState(false);
@@ -47,6 +45,9 @@ function LoginForm() {
     return "";
   };
 
+  //Edit button 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     // Run validation only when login button is clicked
     const emailErr = validateEmail(email);
@@ -79,7 +80,17 @@ function LoginForm() {
       }
 
       // alert("Login successful!");
-      navigate("/setup-profile");
+      const isNewUser = data?.data?.isNewUser; 
+      if (isNewUser) {
+        // Redirect new user to setup page or welcome screen
+        navigate("/setup-profile");
+        console.log("New user")
+      } else {
+        // Redirect existing user to dashboard or home page
+        navigate("/dashboard");
+        console.log("old user")
+      }
+
     } catch (err) {
       console.error("Login failed:", err);
       setError(err.message || "Login failed");
@@ -114,8 +125,14 @@ function LoginForm() {
               onChange={(value) => setEmail(value)}
               className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
+            <span
+              onClick={() => navigate("/auth/callback")}
+              className="absolute text-[#9C39FC] cursor-pointer top-[42%] right-[5%] font-medium font-sans leading-5"
+            >
+              Edit
+            </span>
             {showEmailError && (
-              <p className="text-red-500 text-xs absolute bottom-[15px]">
+              <p className="text-red-500 text-xs absolute bottom-[15px] ">
                 {emailErrorMsg}
               </p>
             )}
@@ -148,7 +165,7 @@ function LoginForm() {
             {loading ? "Logging in..." : "Login"}
           </Button>
           {!showEmailError && !showPasswordError && error && (
-            <p className="text-red-500 text-xs mt-3 absolute bottom-[60px] left-[30%]">
+            <p className="text-red-500 text-xs mt-3 absolute bottom-[60px] left-[40%]">
               {error}
             </p>
           )}
