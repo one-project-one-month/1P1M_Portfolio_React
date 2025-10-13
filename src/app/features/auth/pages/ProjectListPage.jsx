@@ -6,9 +6,10 @@ import React, { useEffect, useState } from "react";
 const ProjectListPage = () =>{
     const [curPage, setCurPage] = useState(1);
     const [projects, setProjects] = useState([]);
-    const [totalPages, setTotalPages] = useState(1);
+    const [totalPages, setTotalPages] = useState(99);
     const [loading, setLoading] = useState(false);    
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filter, setFilter] = useState("Newest");
 
     // const fetchProjects = async (page = 1) => {
     //     try {
@@ -34,9 +35,33 @@ const ProjectListPage = () =>{
     //     fetchProjects(curPage);
     // }, [curPage]);
 
+    const handleCreate = () => {
+        alert("Create button clicked!");
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        console.log("Search:", e.target.value);
+    };
+
+    const handleFilterChange = (option) => {
+        setFilter(option);
+        console.log("Selected Filter:", option);
+    };
+
     return (
         <div className="flex flex-col min-h-[80vh]">
-            <Title />
+            <Title
+                title="Project Idea Lists"
+                onCreate={handleCreate}
+                showSearch={true}
+                showFilter={true}
+                searchPlaceholder="Search by project title"
+                onSearchChange={handleSearchChange}
+                filterOptions={["Popular", "Newest", "Oldest"]}
+                initSelectedFilter="Newest"
+                onFilterChange={handleFilterChange}
+            />
             <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {/* {loading ? (
                 <p className="text-center col-span-full text-gray-400">Loading projects...</p>
@@ -57,6 +82,11 @@ const ProjectListPage = () =>{
                 ))
                 )} */}
 
+                <ProjectCard />
+                <ProjectCard />
+                <ProjectCard />
+                <ProjectCard />
+                <ProjectCard />
                 <ProjectCard />
             </div>
             <div className="w-full flex justify-center">
