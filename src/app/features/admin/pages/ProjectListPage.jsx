@@ -9,7 +9,8 @@ const ProjectListPage = () => {
     const [curPage, setCurPage] = useState(1);
     const [projects, setProjects] = useState([]);
     const [totalPages, setTotalPages] = useState(99);
-    const [isLoading, setIsLoading] = useState(null);
+    const [isApproveLoading, setIsApproveLoading] = useState(null);
+    const [isRejectLoading, setIsRejectLoading] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [loadingProject, setLoadingProject] = useState(null); 
     const [searchTerm, setSearchTerm] = useState("");
@@ -18,11 +19,12 @@ const ProjectListPage = () => {
     // Example demo projects (you can replace with API data)
     useEffect(() => {
         const demoProjects = [
-            { id: 1, title: "ERP Management System", submittedByProfile: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", description: "Integrating business processes into one system. Helps manage sales, inventory, and accounting efficiently.", likestate: true, likecount: 5650, viewcount: 10200, postBy: "Kyaw Thura", projectType: ["Mobile"], status: 2, },
+            { id: 1, title: "ERP Management System", submittedByProfile: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", description: "Integrating business processes into one system. Helps manage sales, inventory, and accounting efficiently.", likestate: true, likecount: 5690, viewcount: 10200, postBy: "Kyaw Thura", projectType: ["Mobile"], status: 2, },
             { id: 2, title: "E-Learning Platform", submittedByProfile: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", description: "A platform for students and teachers to connect, share lessons, and track progress online.", likestate: true, likecount: 789, viewcount: 2350, postBy: "Aye Chan Moe", projectType: [3, 4], status: 1, },
             { id: 3, title: "Inventory Tracker App", submittedByProfile: "https://images.pexels.com/photos/3773833/pexels-photo-3773833.jpeg", description: "Tracks inventory levels, orders, and deliveries for small businesses.", likestate: false, likecount: 320, viewcount: 1500, postBy: "Thazin Hnin", projectType: [2, 5], status: 2, },
             { id: 4, title: "Online Booking System", submittedByProfile: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg", description: "Manages hotel or event reservations with real-time availability updates.", likestate: true, likecount: 982, viewcount: 4120, postBy: "Nyan Lin Aung", projectType: [1, 3], status: 1, },
             { id: 5, title: "Health Monitoring Dashboard", submittedByProfile: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg", description: "Displays real-time health data collected from wearable devices.", likestate: false, likecount: 420, viewcount: 830, postBy: "May Hnin Wai", projectType: [4, 5], status: 3, },
+            { id: 6, title: "Health Monitoring Dashboard", submittedByProfile: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg", description: "Displays real-time health data collected from wearable devices.", likestate: false, likecount: 420, viewcount: 830, postBy: "May Hnin Wai", projectType: [4, 5], status: 3, },
         ];
         setProjects(demoProjects);
     }, []);
@@ -86,18 +88,17 @@ const ProjectListPage = () => {
         console.log("Rejected project:", projectId);
         console.log("=== BUTTON CLICKED - CALLING API ===");
         
-        setIsLoading(projectId);
+        setIsRejectLoading(projectId);
         try {
-            // await APICALL(projectId); 
+            // await APICALL(projectId);
             setTimeout(() => {
-                setProjects(projects.filter((project)=> project.id !== projectId))
-                toast.success(`Project ${projectId} rejected successfully`);
-                setIsLoading(null);
+                setProjects((prev) => prev.filter((p) => p.id !== projectId));
+                toast.success(`Project ${projectId} approved successfully`);
+                setIsRejectLoading(null);
             }, 1000);
         } catch (error) {
-            console.error("Error rejecting project:", error);
-        } finally {
-            setIsLoading(null);
+            console.error("Error approving project:", error);
+            setIsRejectLoading(null);
         }
     };
 
@@ -105,17 +106,17 @@ const ProjectListPage = () => {
         console.log("Approved project:", projectId);
         console.log("=== BUTTON CLICKED - CALLING API ===");
 
-        setIsLoading(projectId);
+        setIsApproveLoading(projectId);
        try {
             // await APICALL(projectId);
             setTimeout(() => {
                 setProjects((prev) => prev.filter((p) => p.id !== projectId));
                 toast.success(`Project ${projectId} approved successfully`);
-                setIsLoading(null);
+                setIsApproveLoading(null);
             }, 1000);
         } catch (error) {
             console.error("Error approving project:", error);
-            setIsLoading(null);
+            setIsApproveLoading(null);
         }
     };
 
@@ -149,7 +150,7 @@ const ProjectListPage = () => {
     return (
         <div className="flex flex-col min-h-[80vh]">
             <Title
-                title="Project Idea Lists"
+                title="Project Idea Lists"  
                 showSearch={true}
                 showFilter={true}
                 searchPlaceholder="Search by project title"
@@ -178,9 +179,11 @@ const ProjectListPage = () => {
                             tags={proj.projectType}
                             onLike={() => handleLike(proj.id, proj.likestate)}
                             onApprove={() => handleApprove(proj.id)}
+                            approveLoading={isApproveLoading === proj.id}
+                            rejectLoading={isRejectLoading === proj.id}
                             onReject={() => handleReject(proj.id)}
-                            actionLoading={isLoading === proj.id}
-                            rejectModel= {isModalOpen === proj.id}
+                            onRejectClick = {(id) => setIsModalOpen(id)}
+                            isRejectModalOpen= {isModalOpen === proj.id}
                         />
                     ))
                 )}

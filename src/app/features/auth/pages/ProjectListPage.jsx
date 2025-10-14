@@ -21,7 +21,7 @@ const ProjectListPage = () => {
      { title: "Health Monitoring Dashboard", submittedByProfile: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg", description: "Displays real-time health data collected from wearable devices.", likestate: false, likecount: 420, viewcount: 830, postBy: "May Hnin Wai", tag: [4, 5], status: 3, },
     ];
     setProjects(demoProjects);
-  }, [projects]);
+  }, []);
 
   // 🔍 Filter + Search logic
   const filteredProjects = projects
