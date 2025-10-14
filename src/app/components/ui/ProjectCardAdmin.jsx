@@ -15,19 +15,22 @@ const ProjectCardAdmin = ({
     showActions = true,
     onLike,
     onApprove,
-    onReject,
     actionLoading = false,
+    onReject,
+    onRejectClick,
+    isRejectModalOpen,
 }) =>{
 
     const [isLiked, setIsLiked] = useState(liked);
     const [likes, setLikes] = useState(likeCount);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleLike = () => {
         const newLikeState = !isLiked;
         setIsLiked(newLikeState);
         setLikes(newLikeState ? likes + 1 : likes - 1);
         onLike && onLike(projectId, newLikeState);
+        console.log(actionLoading);
+        
     };
 
     const formatCount = (num) => {
@@ -142,34 +145,38 @@ const ProjectCardAdmin = ({
 
             {/* button */}
             <div className="flex justify-center items-center gap-8">
-                <Button variant="black_button" size="primary" onClick={()=>setIsModalOpen(true)}>Reject</Button>
-                <Button variant="primary" size="primary" onClick={()=> onApprove && onApprove(projectId)}>
-                    {actionLoading && (
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    )}
+                <Button variant="black_button" size="primary" className="px-8" onClick={()=>rejectModel && rejectModel()}>Reject</Button>
+                <Button variant="primary" size="primary" className="relative px-8" onClick={()=> onApprove && onApprove(projectId)}>
+                    <div className="absolute left-3">
+                        {actionLoading && (
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        )}
+                    </div>
                     Approve
                 </Button>
             </div>
 
             {/* reject model box */}
 
-            {isModalOpen && (
+            {rejectModel && (
                 <div className="w-full h-screen absolute left-0 top-0 flex justify-center items-center bg-slate-950/20 ">
                     <div className="w-[410px] border border-[#99A1AF] bg-black rounded-3xl space-y-5 px-16 py-8">
                         <h1 className="text-2xl font-semibold">Are you sure to reject ?</h1>
                         <p className="text-[#99A1AF] ">The project idea will be rejected. Are you really want to reject it?</p>
                         <div className="flex justify-center items-center gap-8">
-                            <Button variant="black_button" size="primary" className="bg-black border-[#6A7282] text-[#99A1AF]" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
-                            <Button variant="primary" size="primary" className="bg-[#C10007]/70 hover:bg-[#C10007]/100" onClick={()=>{if(onReject) onReject(projectId) ;  setIsModalOpen(false)}}>
-                                {actionLoading && (
-                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                )}
+                            <Button variant="black_button" size="primary" className="bg-black border-[#6A7282] text-[#99A1AF] px-8" onClick={()=>rejectModel && rejectModel()}>Cancel</Button>
+                            <Button variant="primary" size="primary" className="relative bg-[#C10007]/70 hover:bg-[#C10007]/100 px-8" onClick={()=>{if(onReject) onReject(projectId) ;  rejectModel && rejectModel()}}>
+                                <div className="absolute left-3">
+                                    {actionLoading && (
+                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" >
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" ></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    )}
+                                </div>
                                 Reject
                             </Button>
                         </div>

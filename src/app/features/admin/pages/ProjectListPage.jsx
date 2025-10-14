@@ -1,13 +1,16 @@
 import Pagination from "@/components/ui/Pagination";
 import ProjectCardAdmin from "@/components/ui/ProjectCardAdmin";
 import Title from "@/components/ui/Title";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const ProjectListPage = () => {
     const [curPage, setCurPage] = useState(1);
     const [projects, setProjects] = useState([]);
     const [totalPages, setTotalPages] = useState(99);
     const [isLoading, setIsLoading] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(null);
     const [loadingProject, setLoadingProject] = useState(null); 
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState("Popular");
@@ -23,6 +26,33 @@ const ProjectListPage = () => {
         ];
         setProjects(demoProjects);
     }, []);
+
+
+    const fetchProjects = async (page = 1) => {
+        try {
+            setLoadingProject(true);
+
+            const response = await axios.get(`/api/projects?page=${page}&limit=6`);
+            const data = await response.data;
+            console.log(data);
+
+            setTotalPages(data.totalPages || 1);
+
+            const sortedProjects = data.sort((a, b) => b.reactions - a.reactions);
+            setProjects(sortedProjects);
+
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        } finally {
+            setLoadingProject(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProjects(curPage);
+    }, [curPage]);
+
+
 
     // 🔍 Filter + Search logic
     const filteredProjects = projects
@@ -40,7 +70,7 @@ const ProjectListPage = () => {
 
             if (filter === "Popular") return reactionsB - reactionsA;
             if (filter === "Oldest") return (a.id || 0) - (b.id || 0);
-            return (b.id || 0) - (a.id || 0); // Newest
+            return (b.id || 0) - (a.id || 0); 
         });
 
     const handleSearchChange = (e) => {
@@ -56,14 +86,18 @@ const ProjectListPage = () => {
         console.log("Rejected project:", projectId);
         console.log("=== BUTTON CLICKED - CALLING API ===");
         
-        setIsLoading(true);
+        setIsLoading(projectId);
         try {
-            // await fakeApiReject(projectId); 
-            console.log(`Project ${projectId} rejected successfully`);
+            // await APICALL(projectId); 
+            setTimeout(() => {
+                setProjects(projects.filter((project)=> project.id !== projectId))
+                toast.success(`Project ${projectId} rejected successfully`);
+                setIsLoading(null);
+            }, 1000);
         } catch (error) {
             console.error("Error rejecting project:", error);
         } finally {
-            setIsLoading(false);
+            setIsLoading(null);
         }
     };
 
@@ -71,14 +105,17 @@ const ProjectListPage = () => {
         console.log("Approved project:", projectId);
         console.log("=== BUTTON CLICKED - CALLING API ===");
 
-        setIsLoading(true);
-        try {
-            // await fakeApiReject(projectId); 
-            console.log(`Project ${projectId} approve successfully`);
+        setIsLoading(projectId);
+       try {
+            // await APICALL(projectId);
+            setTimeout(() => {
+                setProjects((prev) => prev.filter((p) => p.id !== projectId));
+                toast.success(`Project ${projectId} approved successfully`);
+                setIsLoading(null);
+            }, 1000);
         } catch (error) {
-            console.error("Error approve project:", error);
-        } finally {
-            setIsLoading(false);
+            console.error("Error approving project:", error);
+            setIsLoading(null);
         }
     };
 
@@ -121,7 +158,7 @@ const ProjectListPage = () => {
                 onFilterChange={handleFilterChange}
             />
 
-            <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+            <div className=" flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {loadingProject ? (
                     <p className="text-center col-span-full text-gray-400">Loading projects...</p>
                 ) : filteredProjects.length === 0 ? (
@@ -130,7 +167,7 @@ const ProjectListPage = () => {
                     filteredProjects.map((proj) => (
                         <ProjectCardAdmin
                             key={proj.id}
-                            projectid={proj.id}
+                            projectId={proj.id}
                             title={proj.title}
                             description={proj.description}
                             submittedByProfile={proj.submittedByProfile}
@@ -143,6 +180,7 @@ const ProjectListPage = () => {
                             onApprove={() => handleApprove(proj.id)}
                             onReject={() => handleReject(proj.id)}
                             actionLoading={isLoading === proj.id}
+                            rejectModel= {isModalOpen === proj.id}
                         />
                     ))
                 )}
@@ -161,27 +199,3 @@ const ProjectListPage = () => {
 
 export default ProjectListPage;
 
-
-// const fetchProjects = async (page = 1) => {
-//     try {
-//         setLoadingProject(true);
-
-//         const response = await axios.get(`/api/projects?page=${page}&limit=6`);
-//         const data = await res.json();
-//         console.log(data);
-
-//         setTotalPages(data.totalPages || 1);
-
-//         const sortedProjects = data.sort((a, b) => b.reactions - a.reactions);
-//         setProjects(sortedProjects);
-
-//     } catch (error) {
-//         console.error("Error fetching projects:", error);
-//     } finally {
-//         setLoadingProject(false);
-//     }
-// };
-
-// useEffect(() => {
-//     fetchProjects(curPage);
-// }, [curPage]);
