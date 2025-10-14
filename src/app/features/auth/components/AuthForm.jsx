@@ -30,16 +30,17 @@ function AuthForm() {
       if (location.pathname === "/callback") {
         console.log("=== GOOGLE OAuth callback detected ===");
         exchangeGoogleCode(code)
-          .then((data) => {
-            console.log("Google authentication successful!", data);
-            if (data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+          .then((response) => {
+            console.log("Google authentication successful!", response);
+            const result=response.data
+            if (result.user) {
+              localStorage.setItem("user", JSON.stringify(result.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (result.token) {
+              localStorage.setItem("token", result);
             }
             toast.success("Google authentication successful!");
-            if (data.newUser) {
+            if (result.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
@@ -63,15 +64,15 @@ function AuthForm() {
         exchangeGithubCode(code)
           .then((data) => {
             console.log("GitHub authentication successful!", data);
-            if (data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+            if (data.data.user) {
+              localStorage.setItem("user", JSON.stringify(data.data.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
 
             toast.success("GitHub authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");

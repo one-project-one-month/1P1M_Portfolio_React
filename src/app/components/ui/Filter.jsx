@@ -1,67 +1,57 @@
-import { useState, useRef, useEffect } from "react";
-import { IoChevronDown } from "react-icons/io5";
+import React from "react"
+import filterIcon from "@/assets/icons/filter.png"
 
-function Filter({ placeholder, menuList = [], className = "", onChange,icon }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const dropdownRef = useRef(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleSelect = (item) => {
-    setSelected(item);
-    setIsOpen(false);
-    if (onChange) onChange(item);
-  };
+export default function FilterDropdown({ isOpen, onToggle, onSelect }) {
+  const filters = ["Newest", "Price: Low to High", "Price: High to Low", "Popular"]
 
   return (
-    <div className="relative " ref={dropdownRef}>
+    <div className="relative inline-block text-left">
+      {/* --- Filter Button --- */}
       <button
-        type="button"
-        className={`h-12 w-full appearance-none rounded-[28px] px-4 pr-4 py-3
-          border border-white 
-          text-white flex items-center justify-betwee gap-x-1 focus:outline-none 
-          ${className}`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={onToggle}
+        className="
+          flex items-center gap-2
+          py-2 px-[14px]
+          bg-white dark:bg-gray-800
+          border border-[#FAFAFA]
+          rounded-[28px] shadow-sm
+          hover:bg-gray-100 dark:hover:bg-gray-700
+          transition-all duration-200
+        "
       >
-          <span>
-            <img  src={icon}/>
-            </span>  
-
-        <span className={`${selected ? "text-white" : "text-white font-bold text-sm"}`}>
-          {selected ? selected.name : placeholder}
+        <img src={filterIcon} alt="Filter" className="w-6 h-6" />
+        <span className="font-bold leading-5 text-[#FAFAFA] font-sans">
+          Filters
         </span>
-
-        {/* custom react-icon */}
-        <IoChevronDown size={14} className="text-[#F3F4F6]" />
       </button>
 
+      {/* --- Dropdown Menu --- */}
       {isOpen && (
-        <ul
-          className="absolute z-10 mt-1 w-full bg-[#090E23] border-[#FFFFFF26] rounded-lg shadow-lg"
+        <div
+          className="
+            absolute mt-2 w-48
+            bg-white dark:bg-gray-800
+            border border-gray-200 dark:border-gray-700
+            rounded-xl shadow-lg
+            z-10 -translate-x-20
+          "
         >
-          {menuList.map((item) => (
-            <li
-              key={item.id}
-              className="px-4 py-2 cursor-pointer my-0.5 overflow-hidden border-white border rounded-md w-full  text-white"
-              onClick={() => handleSelect(item)}
+          {filters.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => onSelect(option)}
+              className="
+                w-full text-left px-4 py-2
+                text-gray-800 dark:text-gray-100 font-sans
+                hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl
+                transition-colors duration-150
+              "
             >
-              {item.name}
-            </li>
+              {option}
+            </button>
           ))}
-        </ul>
+        </div>
       )}
     </div>
-  );
+  )
 }
-
-export default Filter;
