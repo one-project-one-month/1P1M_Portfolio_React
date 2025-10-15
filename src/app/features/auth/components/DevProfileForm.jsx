@@ -8,6 +8,7 @@ import TechStack from "../../../constants/TechStack";
 import FormDropdown from "../../../components/ui/FormDropdown";
 import FileUpload from "@/components/ui/FileUpload";
 import { setupDevProfile } from "@/services/devProfileService";
+import { useNavigate } from "react-router-dom";
 
 function DevProfileForm() {
   // ---- React Hook Form ----
@@ -18,7 +19,7 @@ function DevProfileForm() {
     reset,
     formState: { errors },
   } = useForm();
-
+  const navigate=useNavigate();
   const onSubmit = async (data) => {
 
 
@@ -28,10 +29,12 @@ function DevProfileForm() {
    
     try {
 
-        console.log("Start");
+        console.log("Start creating dev profiles");
         
         const result=await setupDevProfile(data);
         console.log("Create Dev Profiles",result);
+
+        if(result.status=201) navigate("/admin")
         
     } catch (error) {
         console.error("Create Dev Profile Error",error)

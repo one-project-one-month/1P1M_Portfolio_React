@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 
 const FormTextArea = forwardRef(({name,placeholder,className,error,...props}, ref) => (
-    <div className="relative">
+    <div className="relative w-full">
         <textarea 
             ref={ref}
             name={name} 

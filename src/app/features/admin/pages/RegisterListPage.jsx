@@ -5,6 +5,7 @@ import TechStack from "@/constants/TechStack";
 import RegisterList from "../components/RegisterList";
 import Pagination from "@/components/ui/Pagination";
 import { useState } from "react";
+import FilterDropdown from "@/components/ui/Filter";
 
 
 
@@ -49,7 +50,7 @@ const handleTechStackFilter=(selectedItem)=>{
                 </div>
 
                 <div>
-                    <Filter onChange={handleTechStackFilter} className="w-96"  menuList={TechStack} placeholder={"ROLE"}/>
+                  <FilterDropdown  isOpen={true} filters={filterList}/>
                 </div>
 
 
