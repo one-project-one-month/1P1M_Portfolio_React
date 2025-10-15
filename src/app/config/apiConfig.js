@@ -1,22 +1,9 @@
-/**
- * Application environment configuration utilities
- */
-
 import AppConfig from "./appConfig";
 
-/**
- * Get the base URL for API requests based on the current environment
- * @returns {string} The API base URL
- */
 export const getApiBaseUrl = () => {
   return AppConfig.API_URL;
 };
 
-/**
- * Get a complete API endpoint URL
- * @param {string} endpoint - The API endpoint path
- * @returns {string} The complete API URL
- */
 export const getApiEndpoint = (endpoint) => {
   return `${getApiBaseUrl()}${endpoint}`;
 };
@@ -29,5 +16,28 @@ export const API_ENDPOINTS = {
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
+<<<<<<< HEAD
   SETUP_PROFILE:"/api/v1/profiles"
+=======
+  CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
+};
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {};
+};
+
+export const getAuthConfig = (additionalConfig = {}) => {
+  return {
+    ...additionalConfig,
+    headers: {
+      ...getAuthHeaders(),
+      ...additionalConfig.headers,
+    },
+  };
+>>>>>>> 9ef0b47fdf150e33f40c66e2db895a2404bd31e5
 };

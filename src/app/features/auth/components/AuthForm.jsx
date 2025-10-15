@@ -30,14 +30,13 @@ function AuthForm() {
       if (location.pathname === "/callback") {
         console.log("=== GOOGLE OAuth callback detected ===");
         exchangeGoogleCode(code)
-          .then((response) => {
-            console.log("Google authentication successful!", response);
-            const result=response.data
-            if (result.user) {
-              localStorage.setItem("user", JSON.stringify(result.user));
+          .then((data) => {
+            console.log("Google authentication successful!", data);
+            if (data.data.user) {
+              localStorage.setItem("user", JSON.stringify(data.user));
             }
-            if (result.token) {
-              localStorage.setItem("token", result);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
             toast.success("Google authentication successful!");
             if (result.newUser) {
