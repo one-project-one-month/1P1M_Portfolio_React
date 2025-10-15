@@ -39,7 +39,7 @@ function AuthForm() {
               localStorage.setItem("token", data.data.token);
             }
             toast.success("Google authentication successful!");
-            if (data.newUser) {
+            if (result.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
@@ -71,7 +71,7 @@ function AuthForm() {
             }
 
             toast.success("GitHub authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");

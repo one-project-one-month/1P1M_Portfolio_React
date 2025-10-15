@@ -16,6 +16,9 @@ export const API_ENDPOINTS = {
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
+<<<<<<< HEAD
+  SETUP_PROFILE:"/api/v1/profiles"
+=======
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
 };
 
@@ -36,4 +39,5 @@ export const getAuthConfig = (additionalConfig = {}) => {
       ...additionalConfig.headers,
     },
   };
+>>>>>>> 9ef0b47fdf150e33f40c66e2db895a2404bd31e5
 };
