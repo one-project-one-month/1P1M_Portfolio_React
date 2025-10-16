@@ -34,16 +34,6 @@ const authRouter = [
   {
     path: "reset-password",
     element: <ResetPasswordPage />,
-  },
-  {
-    path: "user",
-    children: [
-      {
-        path: "dev-list", // Final path: /user/dev-list
-        element: <DevListPage />
-      },
-    ]
-
   }
 ];
 

@@ -9,6 +9,7 @@ import CopyIcon from "@/assets/icons/Copy.png";
 import { getDevProfiles } from "@/services/devProfileService";
 import Background from "@/components/ui/Background";
 import Pagination from "../../../components/ui/Pagination";
+import Navbar from "@/components/ui/Navbar";
 
 // Sample mock data
 const teamMembers = [
@@ -131,6 +132,7 @@ export default function DevListPage() {
     return (
         <Background>
             <div className="w-[1296px] mx-auto py-6 min-h-screen flex flex-col">
+                <Navbar/>
                 <div className="max-w-[1400px] mx-auto flex-grow w-full">
                     <div className="flex items-center justify-between mb-2">
                         <div>
