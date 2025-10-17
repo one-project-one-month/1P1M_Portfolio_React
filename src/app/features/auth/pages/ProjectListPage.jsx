@@ -5,22 +5,22 @@ import { ProjectIdeaList } from "@/services/projectIdeaService";
 import React, { useEffect, useState } from "react";
 
 const ProjectListPage = () => {
-  const [curPage, setCurPage] = useState(1);
+  const [curPage, setCurPage] = useState(0);
   const [projects, setProjects] = useState([]);
   const [totalPages, setTotalPages] = useState(99);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Popular");
 
-  const fetchProjects = async (page = 1) => {
+  const fetchProjects = async (page = 0) => {
         try {
             setLoading(true);
 
-            const data = await ProjectIdeaList(page,6);
+            const {data} = await ProjectIdeaList(page,6);
             console.log(data);
 
             setTotalPages(data.totalPages || 1);  
-            const sortedProjects = data?.sort((a, b) => b.reactions - a.reactions);
+            const sortedProjects = data.sort((a, b) => b.reactions - a.reactions);
             setProjects(sortedProjects);
 
         } catch (error) {
@@ -31,18 +31,7 @@ const ProjectListPage = () => {
     };
 
     useEffect(() => {
-      const demoProjects = [
-            { id:1,title: "ERP Management System", submittedByProfile: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", description: "Integrating business processes into one system. Helps manage sales, inventory, and accounting efficiently.", likestate: true, likecount: 5650, viewcount: 10200, postBy: "Kyaw Thura", tag: [1, 2], status: 2, },
-            { id: 2,title: "E-Learning Platform", submittedByProfile: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", description: "A platform for students and teachers to connect, share lessons, and track progress online.", likestate: true, likecount: 789, viewcount: 2350, postBy: "Aye Chan Moe", tag: [3, 4], status: 1, },
-            { id: 3,title: "Inventory Tracker App", submittedByProfile: "https://images.pexels.com/photos/3773833/pexels-photo-3773833.jpeg", description: "Tracks inventory levels, orders, and deliveries for small businesses.", likestate: false, likecount: 320, viewcount: 1500, postBy: "Thazin Hnin", tag: [2, 5], status: 2, },
-            {id: 4, title: "Online Booking System", submittedByProfile: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg", description: "Manages hotel or event reservations with real-time availability updates.", likestate: true, likecount: 982, viewcount: 4120, postBy: "Nyan Lin Aung", tag: [1, 3], status: 1, },
-            { id: 5,title: "Inventory Tracker App", submittedByProfile: "https://images.pexels.com/photos/3773833/pexels-photo-3773833.jpeg", description: "Tracks inventory levels, orders, and deliveries for small businesses.", likestate: false, likecount: 320, viewcount: 1500, postBy: "Thazin Hnin", tag: [2, 5], status: 2, },
-            {id: 6, title: "Health Monitoring Dashboard", submittedByProfile: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg", description: "Displays real-time health data collected from wearable devices.", likestate: false, likecount: 420, viewcount: 830, postBy: "May Hnin Wai", tag: [4, 5], status: 3, },
-        ];
-
-      setProjects(demoProjects);
-
-        // fetchProjects(curPage);
+        fetchProjects(curPage);
     }, [curPage]);
 
 
@@ -85,14 +74,14 @@ const ProjectListPage = () => {
           filteredProjects.map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
-              title={proj.title}
-              submittedByProfile={proj.submittedByProfile}
+              title={proj.projectName}
               description={proj.description}
+              submittedByProfile={proj.profilePictureUrl}
+              postBy={proj.devName}
+              likecount={proj.reaction_count}
               likestate={proj.likestate}
-              likecount={proj.likecount}
               viewcount={proj.viewcount}
-              tag={proj.tag}
-              postBy={proj.postBy}
+              tag={proj.projectTypes}
             />
           ))
         )}

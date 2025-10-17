@@ -21,6 +21,7 @@ export const DevProfilePage = lazy(() =>
   import("../features/auth/pages/DevProfilePage")
 );
 
+
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
 );
@@ -39,8 +40,8 @@ export const AdminLayout = PageLoader(
   lazy(() => import("@/components/core/layouts/AdminLayout"))
 );
 
-export const RegisterListPage=PageLoader(
-  lazy(()=>import("@/features/admin/pages/RegisterListPage"))
+export const RegisterListPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/RegisterListPage"))
 )
 
 export const ProjectListPage=PageLoader(
@@ -48,10 +49,12 @@ export const ProjectListPage=PageLoader(
 )
 
 export const ProjectListPageAdmin=PageLoader(
-  lazy(()=>import("@/features/admin/pages/ProjectListPage"))
+  lazy(()=>import("@/features/admin/pages/ProjectListPageAdmin"))
 )
 
 export const ProjectCreateFormPage = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
 );
-
+export const DevListPage = lazy(() =>
+  import("../features/user/pages/DevListPage")
+);

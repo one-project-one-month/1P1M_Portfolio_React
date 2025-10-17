@@ -1,59 +1,97 @@
 import React from "react";
+import RightIcon from "@/assets/icons/right-pagination.png";
+import LeftIcon from "@/assets/icons/left-pagination.png";
 
-const Pagination = ({ currentPage, totalPages,onPageChange}) => {
+const FIXED_TOTAL_PAGES = 99;
 
-    const getPages = () => {
-        const pages = [];
-        const maxVisible = 5;
+export default function Pagination({ totalPages, currentPage, onPageChange }) {
+    const finalTotalPages = Math.max(totalPages || 1, FIXED_TOTAL_PAGES);
 
-        if (totalPages <= maxVisible) {
-            for (let i = 1; i <= totalPages; i++) pages.push(i);
+    const renderPages = () => {
+        const fixedPages = [];
+        if (currentPage <= 3) {
+            fixedPages.push(1, 2, 3, 4, "...", finalTotalPages);
+        } else if (currentPage >= finalTotalPages - 2) {
+            fixedPages.push(1, "...", finalTotalPages - 3, finalTotalPages - 2, finalTotalPages - 1, finalTotalPages);
         } else {
-            if (currentPage <= 3) {
-            pages.push(1, 2, 3, "...", totalPages);
-            } else if (currentPage >= totalPages - 2) {
-            pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
-            } else {
-            pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
-            }
+            fixedPages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", finalTotalPages);
         }
 
-        return pages;
+        const pagesToRender = fixedPages;
+
+        return pagesToRender.map((page, index) => {
+            if (page === "...") {
+                return (
+                    <span
+                        key={`dots-${index}`}
+                        className="w-10 h-10 flex items-center justify-center text-gray-500 select-none"
+                    >
+                        ...
+                    </span>
+                );
+            }
+
+            const isCurrent = currentPage === page;
+
+            return (
+                <button
+                    key={page}
+                    onClick={() => onPageChange(page)}
+                    className={`w-10 h-10 flex items-center justify-center rounded-[4px] 
+                        transition-colors duration-300 text-sm font-medium
+                        ${isCurrent
+                            ? "bg-[#9C39FC] text-white font-semibold" // Active Page
+                            : "bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28]" // Inactive Page
+                        }`}
+                >
+                    {page}
+                </button>
+            );
+        });
     };
 
-   const handlePageChange = (page) => {
-    if (page === "..." || page < 1 || page > totalPages) return;
-    onPageChange?.(page); 
-  };
+    const ArrowButton = ({ icon, onClick, disabled, altText }) => (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={`w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-300 
+                ${disabled
+                    ? "bg-[#1C1F26] opacity-30 cursor-not-allowed" // Disabled state
+                    : "bg-[#1C1F26] hover:bg-[#2A2E38] opacity-100" // Active state
+                }`}
+        >
+            <img
+                src={icon}
+                alt={altText}
+                className="w-[40px] h-[40px]"
+            />
+        </button>
+    );
 
-  const pages = getPages();
 
-  return (
-    <div className="flex items-center gap-2 text-white/9 select-none">
-      {/* Prev Button */}
-      <button type="button" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className={`w-9 md:w-12 h-9 md:h-12 bg-white/9  flex items-center justify-center aspect-square border border-white/15 rounded-md transition-all mr-2  ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100/20 active:scale-95"} `} aria-label="Previous" >
-        <svg width="9" height="16" viewBox="0 0 12 18" fill="none" xmlns="http://www.w3.org/2000/svg" >
-          <path d="M11 1L2 9.24242L11 17" stroke="#D1D5DC" strokeOpacity="0.7" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
+    if (totalPages <= 1) {
+        return null;
+    }
 
-      {/* Page Numbers */}
-      <div className="flex gap-2 text-sm md:text-base text-white">
-        {pages.map((page, index) => (
-         <button key={index} type="button" onClick={() => typeof page === "number" ? handlePageChange(page) : null}  disabled={page === "..."} className={`w-9 md:w-12 h-9 md:h-12 flex items-center justify-center aspect-square rounded-md transition-all ${  page === currentPage  ? "bg-[#9C39FC] text-white" : page === "..." ? "text-gray-400 cursor-default"   : "border border-white/9 bg-white/9  hover:bg-gray-100/20 active:scale-95"  }`} >
-            {page}
-          </button>
-        ))}
-      </div>
+    return (
+        <div className="flex items-center justify-center gap-3 mt-8">
 
-      {/* Next Button */}
-      <button type="button" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}  className={`w-9 md:w-12 h-9 md:h-12 bg-white/9  flex items-center justify-center aspect-square border border-white/15 rounded-md transition-all ml-2 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100/20 active:scale-95"} `} aria-label="Next">
-        <svg width="9" height="16" viewBox="0 0 12 18" fill="none" xmlns="http://www.w3.org/2000/svg" >
-          <path d="M1 1L10 9.24242L1 17" stroke="#D1D5DC" strokeOpacity="0.7" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
-    </div>
-  );
-};
+            <ArrowButton
+                icon={LeftIcon}
+                altText="Previous Page"
+                onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+                disabled={currentPage === 1}
+            />
 
-export default Pagination;
+            {renderPages()}
+
+            <ArrowButton
+                icon={RightIcon}
+                altText="Next Page"
+                onClick={() => onPageChange(Math.min(currentPage + 1, finalTotalPages))}
+                disabled={currentPage === finalTotalPages}
+            />
+
+        </div>
+    );
+}

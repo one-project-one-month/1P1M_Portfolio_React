@@ -1,5 +1,16 @@
-import apiClient from "@/api/axios";
+import apiClient from "@/api/axios"; 
 import { API_ENDPOINTS } from "@/config/apiConfig";
+
+  export const getDevProfiles = async () => {
+    try {
+      const response = await apiClient.get("/profiles");//end point
+      return response.data; 
+    } catch (error) {
+      console.error("Error fetching developer", error);
+      throw error;
+    }
+  };
+
 
 
 export const setupDevProfile=async(form)=>{

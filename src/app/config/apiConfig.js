@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
-  PROJECT_IDEA: "/portfolio/api/v1/project-ideas",
+  PROJECT_IDEA: "/portfolio/api/v1/project-idea",
 };
 
 export const getAuthHeaders = () => {

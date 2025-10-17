@@ -2,6 +2,7 @@ import Background from "@/components/ui/Background";
 import Navbar from "@/components/ui/Navbar";
 import { Outlet } from "react-router-dom";
 
+
 function MainLayout() {
   return (
     <Background>

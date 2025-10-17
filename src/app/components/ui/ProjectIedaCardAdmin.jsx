@@ -50,44 +50,20 @@ const ProjectCardAdmin = ({
 
                 <div className="flex justify-center gap-2">
 
-                    <Button type="submit" className='h-[28px] text-sm cursor-pointer bg-[#B58400] hover:bg-[#B58400] px-6' variant="primary" size="secondary" 
-                        onClick={async (e) => { 
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log("=== BUTTON CLICKED - CALLING API ===");
-                            await onSubmit(e);
-                        }}
-                    >
-                        <div className="flex items-center justify-center">
-                            Mobile
-                        </div>
-                    </Button>
-
-                    <Button type="submit" className='h-[28px] text-sm cursor-pointer bg-[#B58400] hover:bg-[#B58400] px-6' variant="primary" size="secondary" 
-                        onClick={async (e) => { 
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log("=== BUTTON CLICKED - CALLING API ===");
-                            await onSubmit(e);
-                        }}
-                    >
-                        <div className="flex items-center justify-center">
-                            Website
-                        </div>
-                    </Button>
-
-                    <Button type="submit" className='h-[28px] text-sm cursor-pointer bg-[#B58400] hover:bg-[#B58400] px-6' variant="primary" size="secondary"
-                        onClick={async (e) => { 
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log("=== BUTTON CLICKED - CALLING API ===");
-                            await onSubmit(e);
-                        }}
-                    >
-                        <div className="flex items-center justify-center">
-                            Desktop
-                        </div>
-                    </Button>
+                    {tags.map((tagName, idx)=>(                 
+                        <Button key={idx} type="submit" className='h-[28px] text-sm cursor-pointer bg-[#B58400] hover:bg-[#B58400] px-6' variant="primary" size="secondary" 
+                            onClick={async (e) => { 
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log("=== BUTTON CLICKED - CALLING API ===");
+                                await onSubmit(e);
+                            }}
+                        >
+                            <div className="flex items-center justify-center">
+                                {tagName}
+                            </div>
+                        </Button>
+                    ))}
 
                 </div>
 

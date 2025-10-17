@@ -6,11 +6,16 @@ const ProjectIdeaCard = ({title, projectid, description, submittedByProfile, lik
     const [likes, setLikes] = useState(Number(likecount));
     const [liked, setLiked] = useState(likestate);
 
-    const handleLike = () => {
+    const handleLike = async() => {
         setLiked((prev) => !prev);
         setLikes((prev) => (liked ? prev - 1 : prev + 1));
-        // call like api increase
-        console.log(liked ? `LIKED TO ${projectid}` : `LIKED TO ${projectid}`);
+        try {
+            const res = await 
+            
+            console.log(liked ? `LIKED TO ${projectid}` : `LIKED TO ${projectid}`);
+        } catch (error) {
+            
+        } 
     };
 
     const formatCount = (num) => {

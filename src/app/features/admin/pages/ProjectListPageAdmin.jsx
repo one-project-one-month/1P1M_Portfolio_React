@@ -1,15 +1,15 @@
 import Pagination from "@/components/ui/Pagination";
-import ProjectCardAdmin from "@/components/ui/ProjectCardAdmin";
+import ProjectCardAdmin from "@/components/ui/ProjectIedaCardAdmin";
 import Title from "@/components/ui/Title";
-import { updateProjectIdeaStatus } from "@/services/projectIdeaService";
+import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea, updateProjectIdeaStatus } from "@/services/projectIdeaService";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const ProjectListPage = () => {
-    const [curPage, setCurPage] = useState(1);
+const ProjectListPageAdmin = () => {
+    const [curPage, setCurPage] = useState(0);
     const [projects, setProjects] = useState([]);
-    const [totalPages, setTotalPages] = useState(99);
+    const [totalPages, setTotalPages] = useState(null);
     const [isApproveLoading, setIsApproveLoading] = useState(null);
     const [isRejectLoading, setIsRejectLoading] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(null);
@@ -17,11 +17,11 @@ const ProjectListPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState("Popular");
 
-    const fetchProjects = async (page = 1) => {
+    const fetchProjects = async (page = 0) => {
         try {
-            setLoading(true);
+            setLoadingProject(true);
 
-            const data = await ProjectIdeaList(page, 6);
+            const {data} = await ProjectIdeaList(page, 6);
             console.log(data);
 
             setTotalPages(data.totalPages || 1);
@@ -31,23 +31,12 @@ const ProjectListPage = () => {
         } catch (error) {
             console.error("Error fetching projects:", error);
         } finally {
-            setLoading(false);
+            setLoadingProject(false);
         }
     };
 
     useEffect(() => {
-        const demoProjects = [
-            { id: 1, title: "ERP Management System", submittedByProfile: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", description: "Integrating business processes into one system. Helps manage sales, inventory, and accounting efficiently.", likestate: true, likecount: 5650, viewcount: 10200, postBy: "Kyaw Thura", tag: [1, 2], status: 2, },
-            { id: 2, title: "E-Learning Platform", submittedByProfile: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", description: "A platform for students and teachers to connect, share lessons, and track progress online.", likestate: true, likecount: 789, viewcount: 2350, postBy: "Aye Chan Moe", tag: [3, 4], status: 1, },
-            { id: 3, title: "Inventory Tracker App", submittedByProfile: "https://images.pexels.com/photos/3773833/pexels-photo-3773833.jpeg", description: "Tracks inventory levels, orders, and deliveries for small businesses.", likestate: false, likecount: 320, viewcount: 1500, postBy: "Thazin Hnin", tag: [2, 5], status: 2, },
-            { id: 4, title: "Online Booking System", submittedByProfile: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg", description: "Manages hotel or event reservations with real-time availability updates.", likestate: true, likecount: 982, viewcount: 4120, postBy: "Nyan Lin Aung", tag: [1, 3], status: 1, },
-            { id: 5, title: "Inventory Tracker App", submittedByProfile: "https://images.pexels.com/photos/3773833/pexels-photo-3773833.jpeg", description: "Tracks inventory levels, orders, and deliveries for small businesses.", likestate: false, likecount: 320, viewcount: 1500, postBy: "Thazin Hnin", tag: [2, 5], status: 2, },
-            { id: 6, title: "Health Monitoring Dashboard", submittedByProfile: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg", description: "Displays real-time health data collected from wearable devices.", likestate: false, likecount: 420, viewcount: 830, postBy: "May Hnin Wai", tag: [4, 5], status: 3, },
-        ];
-
-        setProjects(demoProjects);
-
-        // fetchProjects(curPage);
+        fetchProjects(curPage);
     }, [curPage]);
 
 
@@ -79,22 +68,17 @@ const ProjectListPage = () => {
         setIsRejectLoading(projectId);
         try {
 
-            // const res = await updateProjectIdeaStatus(projectId, 0); // 0 = REJECTED
+            const res = await updateProjectIdeaStatus(projectId, 0); // 0 = REJECTED
 
-            // if(res?.success || res?.status === 200){
-            //     setProjects((prev) => prev.filter((p) => p.id !== projectId));
-            //     toast.success(`Project ${projectId} approved successfully`);
-            //     setIsRejectLoading(null);
-            // }
-
-            setTimeout(() => {
+            if(res?.success || res?.status === 200){
                 setProjects((prev) => prev.filter((p) => p.id !== projectId));
-                toast.success(`Project ${projectId} reject successfully`);
+                toast.success(`Project ${projectId} approved successfully`);
                 setIsRejectLoading(null);
-            }, 1000);
+            }
 
         } catch (error) {
             console.error("Error approving project:", error);
+            toast.error(error.message)
             setIsRejectLoading(null);
         }
     };
@@ -106,28 +90,23 @@ const ProjectListPage = () => {
         setIsApproveLoading(projectId);
         try {
 
-            // const res = await updateProjectIdeaStatus(projectId, 0); // 0 = REJECTED
+            const res = await updateProjectIdeaStatus(projectId, 1); // 0 = APPROVED
 
-            //  if(res?.success || res?.status === 200){
-            //     setProjects((prev) => prev.filter((p) => p.id !== projectId));
-            //     toast.success(`Project ${projectId} approved successfully`);
-            //     setIsRejectLoading(null);
-            // }
-
-            setTimeout(() => {
+             if(res?.success || res?.status === 200){
                 setProjects((prev) => prev.filter((p) => p.id !== projectId));
                 toast.success(`Project ${projectId} approved successfully`);
-                setIsApproveLoading(null);
-            }, 1000);
+                setIsRejectLoading(null);
+            }
 
         } catch (error) {
             console.error("Error approving project:", error);
+            toast.error(error.message)
             setIsApproveLoading(null);
         }
     };
 
 
-    const handleLike = (projectId, liked) => {
+    const handleLike = async(projectId, liked) => {
         console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
 
         setProjects(prev =>
@@ -140,6 +119,11 @@ const ProjectListPage = () => {
 
         try {
             console.log(`API called for project ${projectId}`);
+            if(liked){
+                const res = await unreactProjectIdea(projectId)
+            }else{
+                const res = await reactProjectIdea(projectId)
+            }
         } catch (error) {
             console.error("Error updating like:", error);
             setProjects(prev =>
@@ -175,14 +159,14 @@ const ProjectListPage = () => {
                         <ProjectCardAdmin
                             key={proj.id}
                             projectId={proj.id}
-                            title={proj.title}
+                            title={proj.projectName}
                             description={proj.description}
-                            submittedByProfile={proj.submittedByProfile}
-                            postBy={proj.postBy}
-                            likeCount={proj.likecount}
+                            submittedByProfile={proj.profilePictureUrl}
+                            postBy={proj.devName}
+                            likeCount={proj.reaction_count}
                             viewCount={proj.viewcount}
                             liked={proj.likestate}
-                            tags={proj.projectType}
+                            tags={proj.projectTypes}
                             onLike={() => handleLike(proj.id, proj.likestate)}
                             onApprove={() => handleApprove(proj.id)}
                             approveLoading={isApproveLoading === proj.id}
@@ -206,5 +190,4 @@ const ProjectListPage = () => {
     );
 };
 
-export default ProjectListPage;
-
+export default ProjectListPageAdmin;
