@@ -5,6 +5,7 @@ import {
   AdminLayout,
   RegisterListPage,
   ProjectCreateFormPage,
+  ApprovedIdeasPage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <RegisterListPage /> },
       { path: "create-project", element: <ProjectCreateFormPage /> },
+      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
     ],
   },
   ...authRouter,

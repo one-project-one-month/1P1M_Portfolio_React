@@ -40,7 +40,6 @@ function FormDropdown({ placeholder, menuList = [], className = "", onChange }) 
         {/* custom react-icon */}
         <IoChevronDown size={18} className="text-[#F3F4F6]" />
       </button>
-x
       {isOpen && (
         <ul
           className="absolute z-10 mt-1 w-full bg-white border border-[#FFFFFF26] rounded-lg shadow-lg"
