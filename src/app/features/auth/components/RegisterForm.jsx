@@ -147,7 +147,7 @@ const RegisterForm = () => {
       }
 
       toast.success("OTP has been sent to your email.");
-      // navigate("/otp-verify", { state: { email, password } });
+      navigate("/otp-verify", { state: { email, password } });
     } catch (error) {
       console.error("Register error:", error);
       toast.removeAll();
