@@ -32,11 +32,11 @@ function AuthForm() {
         exchangeGoogleCode(code)
           .then((data) => {
             console.log("Google authentication successful!", data);
-            if (data.user) {
+            if (data.data.user) {
               localStorage.setItem("user", JSON.stringify(data.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
             toast.success("Google authentication successful!");
             if (data.newUser) {
@@ -63,11 +63,11 @@ function AuthForm() {
         exchangeGithubCode(code)
           .then((data) => {
             console.log("GitHub authentication successful!", data);
-            if (data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+            if (data.data.user) {
+              localStorage.setItem("user", JSON.stringify(data.data.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
 
             toast.success("GitHub authentication successful!");

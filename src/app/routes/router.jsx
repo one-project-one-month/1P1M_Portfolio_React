@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import {
   DevProfilePage,
-  MainLayout,
+  MainLayout, DevListPage,
   AdminLayout,
   RegisterListPage,
   ProjectCreateFormPage,
+  ApprovedIdeasPage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 
@@ -12,7 +13,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    children: [{ path: "setup-profile", element: <DevProfilePage /> }],
+    children: [{ path: "setup-profile", element: <DevProfilePage /> },
+    { path: "dev-list", element: <DevListPage /> },
+    ],
   },
   {
     path: "/admin",
@@ -20,6 +23,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <RegisterListPage /> },
       { path: "create-project", element: <ProjectCreateFormPage /> },
+      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
     ],
   },
   ...authRouter,

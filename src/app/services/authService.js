@@ -6,7 +6,7 @@ export const exchangeGithubCode = async (code) => {
     const response = await apiClient.post(API_ENDPOINTS.GITHUB_EXCHANGE, {
       code,
     });
-
+    console.log("GitHub exchange response:", response);
     return response.data;
   } catch (error) {
     console.error("Error exchanging GitHub code:", error);
@@ -19,7 +19,7 @@ export const exchangeGoogleCode = async (code) => {
     const response = await apiClient.post(API_ENDPOINTS.GOOGLE_EXCHANGE, {
       code,
     });
-
+    console.log("Google exchange response:", response);
     return response.data;
   } catch (error) {
     console.error("Error exchanging Google code:", error);
@@ -81,20 +81,25 @@ export const verifyOtpCode = async (email, otpCode) => {
   }
 };
 
-export const signupWithEmail = async (email, password) => {
+export const signupWithEmail = async (email, password, token = null) => {
   try {
     const response = await apiClient.post(API_ENDPOINTS.REGISTER, {
       email,
       password,
-    });
+    },
+    {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }
+  );
 
     return response.data;
   } catch (error) {
     console.error("Error signup :", error);
 
-    throw error.response?.data || {
-      message: "Network or server error. Please try again.",
-    };
+    throw (
+      error.response?.data || {
+        message: "Network or server error. Please try again.",
+      }
+    );
   }
 };
-

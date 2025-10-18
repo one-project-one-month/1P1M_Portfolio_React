@@ -16,6 +16,14 @@ const buttonVariants = cva("rounded-lg cursor-pointer", {
         " rounded-[8px]  border border-white/15 bg-[#030712] flex items-center justify-center  text-white",
       black_small_button:
         " rounded-lg  border border-[#99A1AF] opacity-50 flex items-center justify-center gap-6 text-black",
+
+      //yellow button (Preview)
+      yellow_button:
+        "bg-[#FFBA00] text-[#000000] text-sm font-sans font-semibold rounded-[8px] hover:opacity-90 transition-all duration-200",
+
+      //purple button (View)
+      purple_button:
+        "bg-[#6F28B3] text-white text-sm font-sans font-semibold rounded-[8px] hover:opacity-90 transition-all duration-200",
     },
     size: {
       primary: "h-12 px-6 py-3 gap-2",
@@ -23,6 +31,9 @@ const buttonVariants = cva("rounded-lg cursor-pointer", {
       white_button: "w-[275px] h-[57px] px-[16px] py-[14px] gap-[10px]",
       black_button: "w-[275px] h-[57px] px-[16px] py-[14px] gap-[10px]",
       black_small_button: "w-[94px] h-12 px-6 py-0",
+
+      yellow_button: "w-[102px] h-[48px] text-center leading-[48px]",
+      purple_button: "w-[82px] h-[48px] text-center leading-[48px]",
     },
   },
 });

@@ -5,36 +5,35 @@ import Button from "@/components/ui/Button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { plusIconUrl } from "@/assets/icons/iconUrls";
+import apiClient from "@/api/axios";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
 function ProjectCreateForm() {
-  // React Hook Form setup with validation
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
-    mode: "onChange",
+    mode: "onSubmit",
     defaultValues: {
       projectName: "",
       projectDetail: "",
       githubLink: "",
+      projectLink: "",
       toolsUsed: "",
     },
   });
 
-  // Additional state for non-form elements
   const [projectImage, setProjectImage] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
 
-  // Helper function to create TextField-compatible handlers
   const createFieldHandler = (fieldName, validationRules = {}) => {
     const registration = register(fieldName, validationRules);
     return {
       name: registration.name,
       ref: registration.ref,
       onChange: (value) => {
-        // Convert value to event-like object for react-hook-form
         registration.onChange({ target: { name: fieldName, value } });
       },
       onBlur: registration.onBlur,
@@ -46,180 +45,241 @@ function ProjectCreateForm() {
     console.log("Selected file:", file.name, file.size);
   };
 
-  // Handle form submission
   const onSubmit = async (data) => {
-    // Prepare data for backend
-    const projectData = {
-      projectName: data.projectName,
-      projectDetail: data.projectDetail,
-      githubLink: data.githubLink,
-      toolsUsed: data.toolsUsed,
-      projectImage: projectImage,
-      teamMembers: teamMembers,
-      createdAt: new Date().toISOString(),
-    };
-
-    console.log("=== PROJECT SUBMISSION DATA ===");
-    console.log("Form Data:", projectData);
-    console.log(
-      "Project Image:",
-      projectImage
-        ? `${projectImage.name} (${projectImage.size} bytes)`
-        : "No image selected"
-    );
-    console.log("Team Members:", teamMembers);
-    console.log("================");
-
-    // TODO: Replace with actual API call
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const toolsArray = data.toolsUsed
+        .split(",")
+        .map((tool) => tool.trim())
+        .filter((tool) => tool.length > 0);
 
-      console.log("✅ Project created successfully!");
+      const projectPayload = {
+        name: data.projectName,
+        description: data.projectDetail,
+        projectLink: data.projectLink,
+        repoLink: data.githubLink,
+        languageAndTools: toolsArray,
+      };
 
-      // Reset form after successful submission
+      console.log("=== PROJECT SUBMISSION ===");
+      console.log("Payload:", projectPayload);
+      console.log("Additional data:");
+      console.log(
+        "Project Image:",
+        projectImage
+          ? `${projectImage.name} (${projectImage.size} bytes)`
+          : "No image selected"
+      );
+      console.log("Team Members:", teamMembers);
+      console.log("================");
+
+      const response = await apiClient.post(
+        API_ENDPOINTS.CREATE_PROJECT,
+        projectPayload,
+        getAuthConfig()
+      );
+
+      console.log("✅ Project created successfully!", response.data);
+
       reset();
       setProjectImage(null);
       setTeamMembers([]);
     } catch (error) {
       console.error("❌ Error creating project:", error);
+
+      if (error.response) {
+        console.error("Server error:", error.response.data);
+      } else if (error.request) {
+        console.error("Network error: No response received");
+      } else {
+        console.error("Error:", error.message);
+      }
     }
   };
 
-  // Handle cancel
   const handleCancel = () => {
-    // Reset form
     reset();
     setProjectImage(null);
     setTeamMembers([]);
     console.log("Form cancelled and reset");
   };
 
-  // Handle team member addition (placeholder)
   const handleAddTeamMember = () => {
-    // TODO: Implement team member selection logic
     console.log("Add team member clicked - implement member selection modal");
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col lg:flex-row gap-6 lg:gap-50 w-full"
+      className="flex flex-col lg:flex-row gap-2 lg:gap-3 w-full h-full"
     >
       {/* Left side - File Upload */}
-      <div className="flex flex-col gap-2 items-center">
+      <div className="flex flex-col gap-0 items-center lg:w-2/5">
         <FileUpload
           onFileSelect={handleImageSelect}
           accept="image/*"
           maxSize={1 * 1024 * 1024}
         />
-        <div className="text-white text-center w-full">Upload Image</div>
-        <div className="text-gray-400 text-sm text-center w-full">
-          maximum image size is 1MB.
+        <div className="text-white text-center text-xs font-medium mt-1">
+          Upload Image
+        </div>
+        <div className="text-gray-400 text-xs text-center">
+          maximum image size is 1MB
         </div>
       </div>
 
       {/* Right side - Form Fields */}
-      <div className="flex flex-col flex-1">
-        <TextField
-          label="Project Name"
-          id="project-name"
-          placeholder="Enter your project name"
-          showEditButton={false}
-          isEditMode={false}
-          className="relative w-full text-white font-sans text-sm font-semibold leading-8"
-          error={errors.projectName?.message}
-          {...createFieldHandler("projectName", {
-            required: "Project name is required",
-            minLength: {
-              value: 3,
-              message: "Too short (min 3 characters)",
-            },
-            maxLength: {
-              value: 50,
-              message: "Too long (max 50 characters)",
-            },
-          })}
-        />
-
-        <div className="flex flex-col gap-2">
-          <label htmlFor="project-detail" className="text-white">
-            Project detail
-          </label>
-          <FormTextArea
-            id="project-detail"
-            placeholder="Provide details about your project"
-            className="w-full h-28"
-            {...register("projectDetail", {
-              required: "Project detail is required",
+      <div className="flex flex-col flex-1 lg:w-3/5">
+        <div>
+          <TextField
+            label="Project Name"
+            id="project-name"
+            placeholder="Enter your project name"
+            showEditButton={false}
+            isEditMode={false}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("projectName", {
+              required: "Project name is required",
               minLength: {
-                value: 10,
-                message: "Too short (min 10 characters)",
+                value: 3,
+                message: "Too short (min 3 characters)",
               },
               maxLength: {
-                value: 500,
-                message: "Too long (max 500 characters)",
+                value: 50,
+                message: "Too long (max 50 characters)",
               },
             })}
           />
-          {errors.projectDetail && (
-            <span className="text-xs text-[#FB2C36] mt-1 ml-2 block">
-              {errors.projectDetail.message}
-            </span>
+          {errors.projectName?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.projectName?.message}
+            </div>
           )}
         </div>
-
-        <TextField
-          label="Github link"
-          id="github-link"
-          placeholder="Enter your project GitHub link"
-          showEditButton={false}
-          isEditMode={false}
-          className="relative w-full text-white font-sans text-sm font-semibold leading-8"
-          error={errors.githubLink?.message}
-          {...createFieldHandler("githubLink", {
-            required: "GitHub link is required",
-            pattern: {
-              value: /^https:\/\/github\.com\/.+/,
-              message: "Invalid GitHub URL",
-            },
-          })}
-        />
-
-        <TextField
-          label="Tools Used"
-          id="tools-used"
-          placeholder="e.g., HTML, CSS, JavaScript, React"
-          showEditButton={false}
-          isEditMode={false}
-          className="relative w-full text-white font-sans text-sm font-semibold leading-8"
-          error={errors.toolsUsed?.message}
-          {...createFieldHandler("toolsUsed", {
-            required: "Tools used is required",
-            minLength: {
-              value: 2,
-              message: "Too short (min 2 characters)",
-            },
-            maxLength: {
-              value: 100,
-              message: "Too long (max 100 characters)",
-            },
-          })}
-        />
-
-        {/* User Images Section */}
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            {/* Sample User Images */}
-            {Array.from({ length: 6 }, (_, index) => (
-              <div key={index} className="relative">
-                <img
-                  src="/src/app/assets/sample-user-img.jpg"
-                  alt={`Team member ${index + 1}`}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
-                />
+        <div className="-mt-5">
+          <div className="flex flex-col gap-0">
+            <label
+              htmlFor="project-detail"
+              className="text-white font-sans text-sm font-semibold leading-8 mb-1"
+            >
+              Project detail
+            </label>
+            <FormTextArea
+              id="project-detail"
+              placeholder="Provide details about your project"
+              className="w-full"
+              {...register("projectDetail", {
+                required: "Project detail is required",
+                minLength: {
+                  value: 10,
+                  message: "Too short (min 10 characters)",
+                },
+              })}
+            />
+            {errors.projectDetail?.message && (
+              <div className="text-xs text-[#FB2C36] text-end -mt-1">
+                {errors.projectDetail.message}
               </div>
-            ))}
+            )}
+          </div>
+        </div>
+        <div>
+          <TextField
+            label="Github link"
+            id="github-link"
+            placeholder="Enter your project GitHub link"
+            showEditButton={false}
+            isEditMode={false}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("githubLink", {
+              required: "GitHub link is required",
+              pattern: {
+                value: /^https:\/\/github\.com\/.+/,
+                message: "Invalid GitHub URL",
+              },
+            })}
+          />
+          {errors.githubLink?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.githubLink.message}
+            </div>
+          )}
+        </div>
+        <div className="-mt-6">
+          <TextField
+            label="Project link"
+            id="project-link"
+            placeholder="Enter your project hosting link"
+            showEditButton={false}
+            isEditMode={false}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("projectLink", {
+              required: "Project link is required",
+              pattern: {
+                value: /^https?:\/\/.+/,
+                message: "Invalid URL format",
+              },
+            })}
+          />
+          {errors.projectLink?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.projectLink.message}
+            </div>
+          )}
+        </div>
+        <div className="-mt-6 z-10">
+          <TextField
+            label="Tools Used"
+            id="tools-used"
+            placeholder="e.g., HTML, CSS, JavaScript, React"
+            showEditButton={false}
+            isEditMode={false}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("toolsUsed", {
+              required: "Tools used is required",
+              minLength: {
+                value: 2,
+                message: "Too short (min 2 characters)",
+              },
+              maxLength: {
+                value: 100,
+                message: "Too long (max 100 characters)",
+              },
+            })}
+          />
+          {errors.toolsUsed?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.toolsUsed.message}
+            </div>
+          )}
+        </div>
+        {/* User Images Section */}
+        <div className="flex flex-col mb-2 -mt-4 z-0">
+          <div className="flex items-center gap-2">
+            {/* Sample User Images - Show max 5 */}
+            {Array.from(
+              { length: Math.min(teamMembers.length || 6, 5) },
+              (_, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={
+                      teamMembers[index]?.avatar ||
+                      "/src/app/assets/sample-user-img.jpg"
+                    }
+                    alt={`Team member ${index + 1}`}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
+                  />
+                </div>
+              )
+            )}
+
+            {/* Show "+more" indicator if there are more than 5 members */}
+            {(teamMembers.length || 6) > 5 && (
+              <div className="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
+                <span className="text-white text-xs font-semibold">
+                  +{(teamMembers.length || 6) - 5}
+                </span>
+              </div>
+            )}
 
             {/* Add Member Button */}
             <button
@@ -231,9 +291,8 @@ function ProjectCreateForm() {
             </button>
           </div>
         </div>
-
         {/* Action Buttons */}
-        <div className="flex justify-end gap-4 mt-6">
+        <div className="flex justify-end gap-2 mt-1">
           <Button
             variant="black_button"
             size="primary"
