@@ -4,7 +4,8 @@ import { getApiBaseUrl } from "@/config/apiConfig";
 const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
   headers: {
-    "Content-Type": "application/json",
+          "Content-Type": "application/json", 
+          "Accept": "application/json"
   },
 });
 

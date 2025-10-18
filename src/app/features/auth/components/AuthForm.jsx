@@ -33,13 +33,13 @@ function AuthForm() {
           .then((data) => {
             console.log("Google authentication successful!", data);
             if (data.data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+              localStorage.setItem("user", JSON.stringify(data.data.user));
             }
             if (data.data.token) {
               localStorage.setItem("token", data.data.token);
             }
             toast.success("Google authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
@@ -71,7 +71,7 @@ function AuthForm() {
             }
 
             toast.success("GitHub authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
