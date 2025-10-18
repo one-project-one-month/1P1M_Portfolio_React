@@ -33,7 +33,7 @@ const PasswordField = forwardRef(({ label, onChange, placeholder, name, id, erro
       <span className='absolute top-12 right-4 cursor-pointer text-white' onClick={() => setShow(!show)}>
         <EyeIcon open={show} />
       </span>
-      {error && <span className='absolute left-0 -bottom-6 text-sm text-[#FB2C36] mt-1 block'>{error}</span>}
+      {error && <span className='absolute left-0 bottom text-xs text-[#FB2C36] mt-1 block'>{error}</span>}
     </div>
   );
 });
