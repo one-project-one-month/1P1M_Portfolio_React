@@ -1,7 +1,7 @@
 import Pagination from "@/components/ui/Pagination";
 import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
 import Title from "@/components/ui/Title";
-import { ProjectIdeaList } from "@/services/projectIdeaService";
+import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea } from "@/services/projectIdeaService";
 import React, { useEffect, useState } from "react";
 
 const ProjectListPage = () => {
@@ -53,6 +53,37 @@ const ProjectListPage = () => {
       return (b.id || 0) - (a.id || 0); // Newest
     });
 
+    const handleLike = async(projectId, liked) => {
+            console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
+    
+            setProjects(prev =>
+                prev.map(p =>
+                    p.id === projectId
+                        ? { ...p, likecount: liked ? p.likecount - 1 : p.likecount + 1, likestate: !liked }
+                        : p
+                )
+            );
+    
+            try {
+                console.log(`API called for project ${projectId}`);
+                if(liked){
+                    await unreactProjectIdea(projectId)
+                }else{
+                    await reactProjectIdea(projectId)
+                }
+            } catch (error) {
+                console.error("Error updating like:", error);
+                setProjects(prev =>
+                    prev.map(p =>
+                        p.id === projectId
+                            ? { ...p, likecount: liked ? p.likecount + 1 : p.likecount - 1, likestate: liked }
+                            : p
+                    )
+                );
+            }
+        };
+
+
   return (
     <div className="flex flex-col min-h-[80vh]">
       <Title
@@ -74,14 +105,15 @@ const ProjectListPage = () => {
           filteredProjects.map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
+              projectId={proj.id}
               title={proj.projectName}
               description={proj.description}
               submittedByProfile={proj.profilePictureUrl}
               postBy={proj.devName}
-              likecount={proj.reaction_count}
-              likestate={proj.likestate}
-              viewcount={proj.viewcount}
-              tag={proj.projectTypes}
+              likeCount={proj.reaction_count}
+              liked={proj.likestate}
+              tags={proj.projectTypes}
+              onLike={() => handleLike(proj.id, proj.likestate)}
             />
           ))
         )}

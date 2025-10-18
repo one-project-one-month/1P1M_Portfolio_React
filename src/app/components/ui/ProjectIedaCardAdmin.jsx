@@ -8,7 +8,6 @@ const ProjectCardAdmin = ({
     submittedByProfile,
     postBy,
     likeCount = 0,
-    viewCount = 0,
     liked = false,
     status, 
     tags = [],
@@ -22,7 +21,7 @@ const ProjectCardAdmin = ({
 }) =>{
 
     const [isLiked, setIsLiked] = useState(liked);
-    const [likes, setLikes] = useState(likeCount);
+    const [likes, setLikes] = useState(Number(likeCount));
 
     const handleLike = () => {
         const newLikeState = !isLiked;
@@ -30,7 +29,6 @@ const ProjectCardAdmin = ({
         setLikes(newLikeState ? likes + 1 : likes - 1);
         onLike && onLike(projectId, newLikeState);
         console.log(isRejectModalOpen);
-        
     };
 
     const formatCount = (num) => {
@@ -102,16 +100,6 @@ const ProjectCardAdmin = ({
 
                         <span className="text-sm">{formatCount(likes)}</span>
                 </button>
-                <div className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        strokeWidth="1.8" stroke="currentColor" className="w-5 h-5 text-gray-400">
-                        <path strokeLinecap="round" strokeLinejoin="round" 
-                        d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 
-                        7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
-                        <circle cx="12" cy="12" r="3" fill="currentColor" />
-                    </svg>
-                    <p>{formatCount(viewCount)}</p>
-                </div>
                 {status && (
                     <div className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${status === 1 ? 'bg-[#9AE600] text-[#364153]' : status === 2 ? 'bg-[#155DFC] text-[#F9FAFB]' : 'bg-[#79716B] text-[#F9FAFB]'}`}>
                         {status === 1 ? 'In Progress' : status === 2 ? 'Complete' : 'Unqualified'}

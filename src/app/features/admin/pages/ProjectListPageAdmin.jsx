@@ -120,9 +120,9 @@ const ProjectListPageAdmin = () => {
         try {
             console.log(`API called for project ${projectId}`);
             if(liked){
-                const res = await unreactProjectIdea(projectId)
+                await unreactProjectIdea(projectId)
             }else{
-                const res = await reactProjectIdea(projectId)
+                await reactProjectIdea(projectId)
             }
         } catch (error) {
             console.error("Error updating like:", error);
@@ -164,7 +164,6 @@ const ProjectListPageAdmin = () => {
                             submittedByProfile={proj.profilePictureUrl}
                             postBy={proj.devName}
                             likeCount={proj.reaction_count}
-                            viewCount={proj.viewcount}
                             liked={proj.likestate}
                             tags={proj.projectTypes}
                             onLike={() => handleLike(proj.id, proj.likestate)}

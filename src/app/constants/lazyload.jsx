@@ -55,6 +55,11 @@ export const ProjectListPageAdmin=PageLoader(
 export const ProjectCreateFormPage = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
 );
+
+export const ApprovedIdeasPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/ApprovedIdeasPage"))
+);
+
 export const DevListPage = lazy(() =>
   import("../features/user/pages/DevListPage")
 );
