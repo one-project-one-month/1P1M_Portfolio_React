@@ -87,19 +87,30 @@ export const signupWithEmail = async (email, password, token = null) => {
       email,
       password,
     },
-    {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    }
-  );
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }
+    );
 
     return response.data;
   } catch (error) {
     console.error("Error signup :", error);
 
-    throw (
-      error.response?.data || {
-        message: "Network or server error. Please try again.",
-      }
-    );
+    throw error.response?.data || {
+      message: "Network or server error. Please try again.",
+    };
+  }
+};
+
+export const forgotPassword = async (email) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.FORGOT_PASSWORD, {
+      email,
+    });
+
+    return response.data;
+  } catch (error) {
+    // console.error("Error in forgot password:", error);
+    throw error.response?.data || error;
   }
 };

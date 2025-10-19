@@ -18,14 +18,15 @@ export const API_ENDPOINTS = {
   REGISTER: "/portfolio/api/v1/auth/users/signup",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
+  FORGOT_PASSWORD: "/portfolio/api/v1/auth/users/password/forgot",
 };
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return token
     ? {
-        Authorization: `Bearer ${token}`,
-      }
+      Authorization: `Bearer ${token}`,
+    }
     : {};
 };
 

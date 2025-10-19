@@ -31,6 +31,9 @@ export const ForgotPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
 );
 
+export const CheckPasswordOtpPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/CheckPasswordOtpPage"))
+);
 
 export const ResetPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ResetPasswordPage"))
