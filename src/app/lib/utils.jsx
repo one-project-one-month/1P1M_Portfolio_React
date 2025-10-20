@@ -43,3 +43,4 @@ export const authUtils = {
     return user?.username || user?.email || "User";
   },
 };
+

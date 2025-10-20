@@ -1,8 +1,8 @@
 import React from "react"
 import filterIcon from "@/assets/icons/filter.png"
 
-export default function FilterDropdown({ isOpen, onToggle, onSelect }) {
-  const filters = ["Newest", "Price: Low to High", "Price: High to Low", "Popular"]
+export default function FilterDropdown({ isOpen, onToggle, onSelect,filters=[] }) {
+  // const filters = ["Newest", "Price: Low to High", "Price: High to Low", "Popular"]
 
   return (
     <div className="relative inline-block text-left">

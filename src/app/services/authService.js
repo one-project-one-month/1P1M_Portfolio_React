@@ -81,12 +81,16 @@ export const verifyOtpCode = async (email, otpCode) => {
   }
 };
 
-export const signupWithEmail = async (email, password) => {
+export const signupWithEmail = async (email, password, token = null) => {
   try {
     const response = await apiClient.post(API_ENDPOINTS.REGISTER, {
       email,
       password,
-    });
+    },
+    {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }
+  );
 
     return response.data;
   } catch (error) {
