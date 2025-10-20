@@ -1,6 +1,6 @@
 import React from "react";
 
-const RegisterList = ({role}) => {
+const RegisterList = ({ role }) => {
   const users = [
     {
       name: "Alice Tan",
@@ -38,14 +38,12 @@ const RegisterList = ({role}) => {
       phone: "09678901234",
       role: "Backend Developer",
     },
-      {
+    {
       name: "Sakura Ito",
       email: "sakura.ito@example.com",
       phone: "09789012345",
       role: "Mobile Developer",
-     },
-
-
+    },
 
     // {
     //   name: "Sakura Ito",
@@ -133,40 +131,38 @@ const RegisterList = ({role}) => {
     // },
   ];
 
-  const filterUser= 
-        role==="All" ? users : users.filter((user)=>user.role.includes(role));
+  const filterUser =
+    role === "All" ? users : users.filter((user) => user.role.includes(role));
 
-
-
-  const tHead=["No","Name","Email","Phone","Role"]
+  const tHead = ["No", "Name", "Email", "Phone", "Role"];
 
   return (
     <table className="text-white/90 w-full mt-10 p-2  border-separate border-spacing-y-1">
-      <thead >
+      <thead>
         <tr className="">
-          {tHead.map((title,index)=>(
+          {tHead.map((title, index) => (
             <th key={index} className="text-lg px-4 font-normal pb-8 ">
-                {title}
+              {title}
             </th>
           ))}
         </tr>
       </thead>
 
-    <tbody className="">
-  {filterUser.map((user, index) => (
-    <tr
-      key={index}
-      className="text-center text-sm font-medium  "
-    >
-      <td className="px-4 py-5 border-s rounded-tl-xl border-t rounded-bl-xl border-b">{index + 1}</td>
-      <td className="px-4 py-5 border-t border-b ">{user.name}</td>
-      <td className="px-4 py-5 border-t border-b">{user.email}</td>
-      <td className="px-4 py-5 border-t border-b">{user.phone}</td>
-      <td className="px-4 py-5  border-e border-t rounded-tr-xl border-b rounded-br-xl">{user.role}</td>
-    </tr>
-  ))}
-</tbody>
-
+      <tbody className="">
+        {filterUser.map((user, index) => (
+          <tr key={index} className="text-center text-sm font-medium  ">
+            <td className="px-4 py-5 border-s rounded-tl-xl border-t rounded-bl-xl border-b">
+              {index + 1}
+            </td>
+            <td className="px-4 py-5 border-t border-b ">{user.name}</td>
+            <td className="px-4 py-5 border-t border-b">{user.email}</td>
+            <td className="px-4 py-5 border-t border-b">{user.phone}</td>
+            <td className="px-4 py-5  border-e border-t rounded-tr-xl border-b rounded-br-xl">
+              {user.role}
+            </td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };

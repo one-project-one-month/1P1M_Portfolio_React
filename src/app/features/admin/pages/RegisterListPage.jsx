@@ -27,7 +27,7 @@ const handleTechStackFilter=(selectedItem)=>{
 
 
 
-    const filterList=[{id:1,name:"Newest"},{id:2,name:"Oldest"}]
+    const filterList=["Newest","Oldest"]
     return(
     <div className="flex flex-col relative">
     
@@ -49,9 +49,9 @@ const handleTechStackFilter=(selectedItem)=>{
                     Total Count-40
                 </div>
 
-                <div>
-                  <FilterDropdown  isOpen={true} filters={filterList}/>
-                </div>
+                {/* <div>
+                  <FilterDropdown  isOpen={false} filters={filterList}/>
+                </div> */}
 
 
                 <div>
