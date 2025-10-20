@@ -1,4 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
+import NotFound from "../features/auth/pages/NotFound";
+
+
 import {
   DevProfilePage,
   MainLayout, DevListPage,
@@ -27,6 +30,11 @@ const router = createBrowserRouter([
     ],
   },
   ...authRouter,
+
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 export default router;
