@@ -58,3 +58,7 @@ export const ApprovedIdeasPage = PageLoader(
 export const DevListPage = lazy(() =>
   import("../features/user/pages/DevListPage")
 );
+
+export const OpomRegisterPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/OpomRegisterPage"))
+);
