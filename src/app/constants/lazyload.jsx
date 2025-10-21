@@ -52,6 +52,10 @@ export const ApprovedIdeasPage = PageLoader(
   lazy(() => import("@/features/admin/pages/ApprovedIdeasPage"))
 );
 
+export const LandingPage = PageLoader(
+  lazy(() => import("@/features/user/pages/LandingPage"))
+);
+
 export const DevListPage = lazy(() =>
   import("../features/user/pages/DevListPage")
 );
