@@ -1,7 +1,7 @@
 import Button from '@/components/ui/Button'
 import Footer from '@/components/ui/Footer'
 import React from 'react'
-import DevCard from '../components/DevCard'
+// import DevCard from '../components/DevCard'
 import ProjectCard from '@/components/ui/ProjectCard'
 
 const LandingPage = () => {
@@ -53,7 +53,7 @@ const LandingPage = () => {
         </section>
         {/* End About Section */}
 
-        {/* Start About Section */}
+        {/* Start Registered Section */}
         <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
           <div className='w-full flex justify-between items-center my-4'>
             <h1 className='text-5xl'>Registered</h1>
@@ -63,13 +63,18 @@ const LandingPage = () => {
             {/* <DevCard /> */}
           </div>
         </section>
-
-        {/* End About Section */}
-
-        {/* Start Registered Section */}
         {/* End Registered Section */}
 
         {/* Start Approved Ideas Section */}
+        <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
+          <div className='w-full flex justify-between items-center my-4'>
+            <h1 className='text-5xl'>Approved Ideas</h1>
+            <button className='border-b cursor-pointer'>View more</button>
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+            <ProjectCard  />
+          </div>
+        </section>
         {/* End Approved Ideas Section */}
 
     </div>
