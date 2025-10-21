@@ -31,13 +31,14 @@ function DevProfileForm() {
 
   const handleImageSelect = (file) => {
     console.log("Selected file:", file.name, file.size);
-   if(file) {
-     const imgUrl = URL.createObjectURL(file);
-    setImgUrl(imgUrl.substring(imgUrl.indexOf("h")));
-   }
+    if (file) {
+      const imgUrl = URL.createObjectURL(file);
+      setImgUrl(imgUrl.substring(imgUrl.indexOf("h")));
+    }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, event) => {
+    event.preventDefault();
     console.log(imgUrl);
 
     const payLoad = {
