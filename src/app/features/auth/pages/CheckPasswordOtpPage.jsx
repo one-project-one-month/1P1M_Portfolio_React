@@ -23,7 +23,7 @@ function CheckPasswordOtpPage() {
 
   return (
     <Background className="h-screen flex items-center justify-center">
-      <FormBackground className="flex items-center justify-around flex-col">
+      <FormBackground className="!w-[500px] flex items-center justify-around flex-col">
         <OtpForm
           email={email}
           onVerifySuccess={handleVerifySuccess}

@@ -114,3 +114,20 @@ export const forgotPassword = async (email) => {
     throw error.response?.data || error;
   }
 };
+
+
+export const resetPassword = async (email, newPassword) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.RESET_PASSWORD,
+      {
+        email,
+        newPassword,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error.response?.data || error;
+  }
+};
