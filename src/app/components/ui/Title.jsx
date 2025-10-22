@@ -14,6 +14,7 @@ const Title = ({
 }) => {
     const [selectedFilter, setSelectedFilter] = useState(initSelectedFilter);
     const [isOpen, setIsOpen] = useState(false);
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
     const menuRef = useRef(null);
 
 
@@ -35,7 +36,7 @@ const Title = ({
 
   return (
     
-    <div className='w-full flex justify-between items-center gap-8 py-10'>
+    <div className='relative w-full flex justify-between items-center gap-8 py-10'>
 
       <div className="flex w-2/3 h-11 justify-between items-center gap-8">
         <div className='relative text-nowrap'>
@@ -44,7 +45,7 @@ const Title = ({
         </div>
 
         {showSearch && (
-          <div className="w-full h-full flex items-center border border-white/20 bg-white/9 rounded-md overflow-hidden px-3">
+          <div className="w-full h-full hidden md:flex items-center border border-white/20 bg-white/9 rounded-md overflow-hidden px-3">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M14.0776 14.0999L16.6444 16.6666M15.9036 9.6509C15.9036 13.14 13.0847 15.9685 9.60733 15.9685C6.12998 15.9685 3.31104 13.14 3.31104 9.6509C3.31104 6.16179 6.12998 3.33331 9.60733 3.33331C13.0847 3.33331 15.9036 6.16179 15.9036 9.6509Z" stroke ="#6A7282" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -57,6 +58,32 @@ const Title = ({
             />
           </div>
         )}
+
+        {showSearch && (
+          <div className="flex md:hidden items-center justify-center">
+            <button
+              onClick={() => setShowMobileSearch(!showMobileSearch)}
+              className="p-2 rounded-md border border-white/20 bg-white/10"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M14.0776 14.0999L16.6444 16.6666M15.9036 9.6509C15.9036 13.14 13.0847 15.9685 9.60733 15.9685C6.12998 15.9685 3.31104 13.14 3.31104 9.6509C3.31104 6.16179 6.12998 3.33331 9.60733 3.33331C13.0847 3.33331 15.9036 6.16179 15.9036 9.6509Z" stroke="#F9FAFB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {showMobileSearch && (
+          <div className="absolute -bottom-4 left-0 w-full flex md:hidden items-center border border-white/20 bg-white/10 rounded-md overflow-hidden px-3 z-10">
+            <input
+              type="text"
+              placeholder={searchPlaceholder}
+              className="w-full h-10 bg-transparent text-white px-3 border-none outline-none placeholder-[#6A7282]"
+              onChange={onSearchChange}
+              autoFocus
+            />
+          </div>
+        )}
+
       </div>
 
       <div className="flex justify-center items-center gap-4">
