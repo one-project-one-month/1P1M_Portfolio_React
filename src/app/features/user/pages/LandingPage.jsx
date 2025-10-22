@@ -1,10 +1,84 @@
 import Button from '@/components/ui/Button'
 import Footer from '@/components/ui/Footer'
-import React from 'react'
+import React, { useState } from 'react'
 // import DevCard from '../components/DevCard'
 import ProjectCard from '@/components/ui/ProjectCard'
+import ProjectIdeaCard from '@/components/ui/ProjectIdeaCard'
+import { useQuery } from '@tanstack/react-query'
+import { getDevProfiles } from '@/services/devProfileService'
+import { fetchApprovedProjects } from '@/services/approvedProjectsService'
+import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea } from '@/services/projectIdeaService'
+import { useNavigate } from 'react-router-dom'
+
+const fetchApprovedProjectIdeas = async () => {
+  // const res = await fetchApprovedProjects()
+  const res = await ProjectIdeaList()
+  console.log('fetch approved project',res.data);
+  return res.data || []
+}
+
+const fetchRegisteredDevs = async () => {
+  const res = await getDevProfiles()
+  console.log("fetch registered dev",res)
+  return res.data.data || []
+}
+
+ const handleLike = async(projectId, liked) => {
+            console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
+    
+            setProjects(prev =>
+                prev.map(p =>
+                    p.id === projectId
+                        ? { ...p, likecount: liked ? p.likecount - 1 : p.likecount + 1, likestate: !liked }
+                        : p
+                )
+            );
+    
+            try {
+                console.log(`API called for project ${projectId}`);
+                if(liked){
+                    await unreactProjectIdea(projectId)
+                }else{
+                    await reactProjectIdea(projectId)
+                }
+            } catch (error) {
+                console.error("Error updating like:", error);
+                setProjects(prev =>
+                    prev.map(p =>
+                        p.id === projectId
+                            ? { ...p, likecount: liked ? p.likecount + 1 : p.likecount - 1, likestate: liked }
+                            : p
+                    )
+                );
+            }
+        };
+
 
 const LandingPage = () => {
+
+  const navigate = useNavigate();
+
+  // Fetch Approved Project Ideas
+  const {
+    data: approvedProjectideas = [],
+    isLoading: ideasLoading,
+    isError: ideasError,
+  } = useQuery({
+    queryKey: ['approvedProjectideas'],
+    queryFn: fetchApprovedProjectIdeas,
+  })
+
+  // Fetch Registered Developers
+  const {
+    data: registeredDevs = [],
+    isLoading: devsLoading,
+    isError: devsError,
+  } = useQuery({
+    queryKey: ['registeredDevs'],
+    queryFn: fetchRegisteredDevs,
+  })
+
+
   return (
     <div className="">
         {/* Start Welcome Page Content */}
@@ -57,7 +131,9 @@ const LandingPage = () => {
         <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
           <div className='w-full flex justify-between items-center my-4'>
             <h1 className='text-5xl'>Registered</h1>
-            <button className='border-b cursor-pointer'>View more</button>
+            <button className='border-b cursor-pointer'
+            //  onClick={()=>navigate('/dev-list')}
+             >View more</button>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
             {/* <DevCard /> */}
@@ -69,10 +145,26 @@ const LandingPage = () => {
         <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
           <div className='w-full flex justify-between items-center my-4'>
             <h1 className='text-5xl'>Approved Ideas</h1>
-            <button className='border-b cursor-pointer'>View more</button>
+            <button className='border-b cursor-pointer' onClick={()=>navigate('/approved-ideas')}>View more</button>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-            <ProjectCard  />
+            {
+              approvedProjectideas.map((approvedProjectIdea,index)=>(
+                <ProjectIdeaCard 
+                key={index}
+                projectId={approvedProjectIdea.id}
+                title={approvedProjectIdea.projectName}
+                description={approvedProjectIdea.description}
+                submittedByProfile={approvedProjectIdea.profilePictureUrl}
+                postBy={approvedProjectIdea.devName}
+                likeCount={approvedProjectIdea.reaction_count}
+                liked={approvedProjectIdea.likestate}
+                tags={approvedProjectIdea.projectTypes}
+                status={approvedProjectIdea.status}
+                onLike={() => handleLike(approvedProjectIdea.id, approvedProjectIdea.likestate)}
+                 />
+              ))
+            }
           </div>
         </section>
         {/* End Approved Ideas Section */}

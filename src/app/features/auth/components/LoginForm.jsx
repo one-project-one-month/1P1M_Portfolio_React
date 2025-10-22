@@ -76,6 +76,17 @@ function LoginForm() {
 
       if (data?.data.token) {
         localStorage.setItem("token", data?.data.token);
+
+        // Store user information
+        const userInfo = {
+          id: data?.data.userId,
+          username: data?.data.username,
+          email: data?.data.email,
+          role: data?.data.role,
+          roleId: data?.data.roleId,
+          isNewUserLogin: data?.data.isNewUserLogin,
+        };
+        localStorage.setItem("user", JSON.stringify(userInfo));
       }
 
       // alert("Login successful!");
