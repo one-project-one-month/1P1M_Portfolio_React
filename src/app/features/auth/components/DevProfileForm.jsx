@@ -9,38 +9,57 @@ import FormDropdown from "../../../components/ui/FormDropdown";
 import FileUpload from "@/components/ui/FileUpload";
 import { setupDevProfile } from "@/services/devProfileService";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function DevProfileForm() {
   // ---- React Hook Form ----
+
+  const [imgUrl, setImgUrl] = useState("");
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm();
-  const navigate=useNavigate();
-  const onSubmit = async (data) => {
+  } = useForm({
+    mode: "onSubmit",
+    defaultValues: {
+      profilePictureUrl: "",
+    },
+  });
+  const navigate = useNavigate();
 
-
-
-    console.log("Form Data:", data);
-
-   
-    try {
-
-        console.log("Start creating dev profiles");
-        
-        const result=await setupDevProfile(data);
-        console.log("Create Dev Profiles",result);
-
-        if(result.status=201) navigate("/admin")
-        
-    } catch (error) {
-        console.error("Create Dev Profile Error",error)
+  const handleImageSelect = (file) => {
+    console.log("Selected file:", file.name, file.size);
+    if (file) {
+      const imgUrl = URL.createObjectURL(file);
+      setImgUrl(imgUrl.substring(imgUrl.indexOf("h")));
     }
+  };
 
-    
+  const onSubmit = async (data, event) => {
+    event.preventDefault();
+    console.log(imgUrl);
+
+    const payLoad = {
+      name: data.name,
+      techStacks: [data.techStacks.name],
+      profilePictureUrl: imgUrl,
+      github: data.github,
+      linkedIn: data.linkedIn,
+      aboutDev: data.aboutDev,
+    };
+
+    try {
+      console.log("Start creating dev profiles", payLoad);
+
+      const result = await setupDevProfile(payLoad);
+      console.log("Create Dev Profiles", result);
+
+      if (result.code === 201 || result.success === 1) navigate("/admin");
+    } catch (error) {
+      console.error("Create Dev Profile Error", error);
+    }
   };
 
   return (
@@ -53,26 +72,16 @@ function DevProfileForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center mt-2 gap-y-6"
       >
-        {/* Profile Image */}
-        <Controller
-          name="profilePictureUrl"
-          control={control}
-          rules={{ required: "Profile image is required" }}
-          render={({ field }) => (
-            <FileUpload
-              onFileSelect={(file) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  field.onChange(reader.result); // store Base64 in RHF
-                };
-                reader.readAsDataURL(file);
-              }}
-              className="w-[139px] h-[139px]"
-            />
-          )}
+        <FileUpload
+          onFileSelect={handleImageSelect}
+          accept="image/*"
+          maxSize={1 * 1024 * 1024}
         />
+
         {errors.profilePictureUrl && (
-          <p className="text-red-500 text-sm">{errors.profilePictureUrl.message}</p>
+          <p className="text-red-500 text-sm">
+            {errors.profilePictureUrl.message}
+          </p>
         )}
 
         {/* Name */}
@@ -144,7 +153,7 @@ function DevProfileForm() {
           name="about"
           placeholder="About yourself"
           className="h-28 w-full"
-          {...register("about", {
+          {...register("aboutDev", {
             required: "Please write something about yourself",
           })}
         />

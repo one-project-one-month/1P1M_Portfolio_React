@@ -35,3 +35,8 @@ export const unreactProjectIdea = async (projectId) => {
 export const getProjectReactionCount = async (projectId) => {
   return apiClient.get(`${API_ENDPOINTS.PROJECT_IDEA}/react/count?project_id=${projectId}`);
 };
+
+export const createProjectIdea = async (projectData) => {
+  const response = await api.post("/project-idea", projectData);
+  return response.data;
+};

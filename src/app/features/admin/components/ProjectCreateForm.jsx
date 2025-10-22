@@ -14,6 +14,7 @@ function ProjectCreateForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
   } = useForm({
     mode: "onSubmit",
     defaultValues: {
@@ -24,6 +25,9 @@ function ProjectCreateForm() {
       toolsUsed: "",
     },
   });
+
+  // Watch form values to pass to TextField components for proper reset
+  const formValues = watch();
 
   const [projectImage, setProjectImage] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
@@ -72,26 +76,74 @@ function ProjectCreateForm() {
       console.log("Team Members:", teamMembers);
       console.log("================");
 
-      const response = await apiClient.post(
+      // Step 1: Create the project first
+      console.log("📝 Creating project...");
+      const projectResponse = await apiClient.post(
         API_ENDPOINTS.CREATE_PROJECT,
         projectPayload,
         getAuthConfig()
       );
 
-      console.log("✅ Project created successfully!", response.data);
+      console.log("✅ Project created successfully!", projectResponse.data);
 
+      // Get the project ID from response
+      const projectPortfolioId =
+        projectResponse.data?.id || projectResponse.data?.projectPortfolioId;
+
+      if (!projectPortfolioId) {
+        throw new Error("Project ID not found in response");
+      }
+
+      // Step 2: Upload image if one is selected
+      if (projectImage) {
+        console.log("📤 Uploading project image...");
+
+        // Validate image size (1MB max)
+        const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+        if (projectImage.size > maxSize) {
+          throw new Error("Image size exceeds 1MB limit");
+        }
+
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append("file", projectImage);
+        formData.append("projectPortfolioId", projectPortfolioId);
+
+        const uploadResponse = await apiClient.post(
+          API_ENDPOINTS.UPLOAD_PROJECT_IMAGE,
+          formData,
+          getAuthConfig({
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        );
+
+        console.log("✅ Image uploaded successfully!", uploadResponse.data);
+      }
+
+      console.log("🎉 Project creation completed successfully!");
+
+      // Reset form after successful submission
       reset();
       setProjectImage(null);
       setTeamMembers([]);
+
+      // TODO: Show success message to user
+      // TODO: Redirect to project list or project detail page
     } catch (error) {
       console.error("❌ Error creating project:", error);
 
+      // Handle different error cases
       if (error.response) {
         console.error("Server error:", error.response.data);
+        // TODO: Show error message based on server response
       } else if (error.request) {
         console.error("Network error: No response received");
+        // TODO: Show network error message
       } else {
         console.error("Error:", error.message);
+        // TODO: Show generic error message
       }
     }
   };
@@ -136,6 +188,7 @@ function ProjectCreateForm() {
             placeholder="Enter your project name"
             showEditButton={false}
             isEditMode={false}
+            value={formValues.projectName}
             className="relative w-full text-white font-sans text-xs font-semibold leading-4"
             {...createFieldHandler("projectName", {
               required: "Project name is required",
@@ -189,6 +242,7 @@ function ProjectCreateForm() {
             placeholder="Enter your project GitHub link"
             showEditButton={false}
             isEditMode={false}
+            value={formValues.githubLink}
             className="relative w-full text-white font-sans text-xs font-semibold leading-4"
             {...createFieldHandler("githubLink", {
               required: "GitHub link is required",
@@ -211,6 +265,7 @@ function ProjectCreateForm() {
             placeholder="Enter your project hosting link"
             showEditButton={false}
             isEditMode={false}
+            value={formValues.projectLink}
             className="relative w-full text-white font-sans text-xs font-semibold leading-4"
             {...createFieldHandler("projectLink", {
               required: "Project link is required",
@@ -233,6 +288,7 @@ function ProjectCreateForm() {
             placeholder="e.g., HTML, CSS, JavaScript, React"
             showEditButton={false}
             isEditMode={false}
+            value={formValues.toolsUsed}
             className="relative w-full text-white font-sans text-xs font-semibold leading-4"
             {...createFieldHandler("toolsUsed", {
               required: "Tools used is required",
@@ -296,6 +352,7 @@ function ProjectCreateForm() {
           <Button
             variant="black_button"
             size="primary"
+            type="button"
             onClick={handleCancel}
             disabled={isSubmitting}
           >
