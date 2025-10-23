@@ -20,16 +20,20 @@ export const API_ENDPOINTS = {
   SETUP_PROFILE:"/portfolio/api/v1/profiles/create/",
   GET_PROFILE:"/portfolio/api/v1/profiles",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
+  PROJECT_IDEA: "/portfolio/api/v1/project-idea",
   UPLOAD_PROJECT_IMAGE: "/portfolio/api/v1/project-portfolio/uploadFile",
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
+  FORGOT_PASSWORD: "/portfolio/api/v1/auth/users/password/forgot",
+  RESET_PASSWORD: "/portfolio/api/v1/auth/users/password/reset",
+
 };
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return token
     ? {
-        Authorization: `Bearer ${token}`,
-      }
+      Authorization: `Bearer ${token}`,
+    }
     : {};
 };
 
