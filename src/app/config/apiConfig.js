@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   REGISTER: "/portfolio/api/v1/auth/users/signup",
   SETUP_PROFILE:"/portfolio/api/v1/profiles/create/",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
+  PROJECT_IDEA: "/portfolio/api/v1/project-idea",
   UPLOAD_PROJECT_IMAGE: "/portfolio/api/v1/project-portfolio/uploadFile",
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
   FORGOT_PASSWORD: "/portfolio/api/v1/auth/users/password/forgot",
