@@ -46,6 +46,11 @@ export const loginWithEmailPassword = async (email, password) => {
       email,
       password,
     });
+    const { token, user } = response.data;
+
+    // save token and user in localStorage
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
 
     return response.data;
   } catch (error) {
@@ -87,10 +92,15 @@ export const signupWithEmail = async (email, password, token = null) => {
       email,
       password,
     },
-      {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      }
-    );
+    {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }
+  );
+  const { token, user } = response.data;
+  // Save to localStorage
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(response.data.user));
+
 
     return response.data;
   } catch (error) {

@@ -87,6 +87,7 @@ function LoginForm() {
           isNewUserLogin: data?.data.isNewUserLogin,
         };
         localStorage.setItem("user", JSON.stringify(userInfo));
+        localStorage.setItem("token", token);
       }
 
       // alert("Login successful!");

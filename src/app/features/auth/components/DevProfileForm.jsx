@@ -41,6 +41,12 @@ function DevProfileForm() {
     event.preventDefault();
     console.log(imgUrl);
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("You must log in first");
+      return;
+    }
+
     const payLoad = {
       name: data.name,
       techStacks: [data.techStacks.name],
@@ -188,6 +194,7 @@ function DevProfileForm() {
             >
               Create
             </Button>
+
           </div>
         </div>
       </form>
