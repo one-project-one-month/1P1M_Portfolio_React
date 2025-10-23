@@ -75,17 +75,22 @@ function OtpForm({
       const isValid = await verifyOtp(otpValue);
 
       if (isValid) {
-        toast.success("OTP verified successfully!", { id: "verify-otp" });
-        toast.loading("Creating your account...", { id: "signup" });
-
-        const signupResponse = await signupWithEmail(email, password);
-
-        if (signupResponse.code === 200 && signupResponse.success === 1) {
-          toast.success("Signup successful! Redirecting...", { id: "signup" });
+        // If password exists, it's a signup flow.
+        if (password) {
+          toast.success("OTP verified successfully!", { id: "verify-otp" });
+          toast.loading("Creating your account...", { id: "signup" });
+          const signupResponse = await signupWithEmail(email, password);
+          if (signupResponse.code === 200 && signupResponse.success === 1) {
+            toast.success("Signup successful! Redirecting...", { id: "signup" });
+            onVerifySuccess?.();
+            navigate("/setup-profile");
+          } else {
+            toast.error(signupResponse.message || "Signup failed. Please try again.", { id: "signup" });
+          }
+        } else { // Otherwise, it's a forgot password flow.
+          toast.success("🎉 OTP Verified Successfully! Proceed to reset your password.", { id: "verify-otp" });
           onVerifySuccess?.();
-          navigate("/setup-profile");
-        } else {
-          toast.error("Signup failed. Please try again.", { id: "signup" });
+          navigate("/reset-password", { state: { email } });
         }
       } else {
         toast.error("Invalid OTP code. Please try again.", {
@@ -170,20 +175,18 @@ function OtpForm({
       {/* Resend Code */}
       <div className="text-center flex items-center gap-2">
         <p
-          className={`text-md ${
-            hasError && errorMessage ? "text-red-400" : "text-gray-400"
-          }`}
+          className={`text-md ${hasError && errorMessage ? "text-red-400" : "text-gray-400"
+            }`}
         >
           {hasError && errorMessage ? errorMessage : "Didn't receive OTP code?"}
         </p>
         <button
           onClick={handleResend}
           disabled={isResendDisabled}
-          className={`text-sm cursor-pointer ${
-            isResendDisabled
-              ? "text-purple-400 opacity-50 cursor-not-allowed"
-              : "text-purple-400 hover:text-purple-300"
-          }`}
+          className={`text-sm cursor-pointer ${isResendDisabled
+            ? "text-purple-400 opacity-50 cursor-not-allowed"
+            : "text-purple-400 hover:text-purple-300"
+            }`}
         >
           {isResendDisabled
             ? `Resend Code (${formatTimer(resendTimer)})`
@@ -197,11 +200,10 @@ function OtpForm({
         size="primary"
         onClick={handleVerify}
         disabled={otpValue.length !== 6 || isVerifying}
-        className={`cursor-pointer${
-          otpValue.length !== 6 || isVerifying
-            ? "opacity-50 cursor-not-allowed"
-            : ""
-        }`}
+        className={`cursor-pointer${otpValue.length !== 6 || isVerifying
+          ? "opacity-50 cursor-not-allowed"
+          : ""
+          }`}
       >
         {isVerifying ? "Verifying..." : "Verify"}
       </Button>
