@@ -1,3 +1,4 @@
+const DEFAULT_API_URL = "http://localhost:8080/";
 import AppConfig from "./appConfig";
 
 export const getApiBaseUrl = () => {
@@ -17,6 +18,7 @@ export const API_ENDPOINTS = {
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
   SETUP_PROFILE:"/portfolio/api/v1/profiles/create/",
+  GET_PROFILE:"/portfolio/api/v1/profiles",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
   UPLOAD_PROJECT_IMAGE: "/portfolio/api/v1/project-portfolio/uploadFile",
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
