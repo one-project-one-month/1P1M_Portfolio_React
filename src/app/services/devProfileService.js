@@ -1,9 +1,12 @@
 import apiClient from "@/api/axios";
-import { API_ENDPOINTS , getAuthConfig} from "@/config/apiConfig";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
 export const getDevProfiles = async () => {
   try {
-    const response = await apiClient.get(API_ENDPOINTS.GET_PROFILES, getAuthConfig()); //end point
+    const response = await apiClient.get(
+      API_ENDPOINTS.GET_PROFILE,
+      getAuthConfig()
+    ); //end point
     return response.data;
   } catch (error) {
     console.error("Error fetching developer", error);
@@ -16,18 +19,15 @@ export const setupDevProfile = async (form) => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
-    console.log("Token from localStorage:", token);
-    console.log("User from localStorage:", user);
-
-    if (!user ||!token) throw new Error("Missing token. You are not logged in.");
+    if (!user || !token)
+      throw new Error("Missing token. You are not logged in.");
 
     const payload = {
       ...form,
-      userId: user.id,
     };
 
     const response = await apiClient.post(
-      API_ENDPOINTS.SETUP_PROFILE || "/profiles",
+      API_ENDPOINTS.SETUP_PROFILE + `${user.id}` || "/profiles",
       payload,
       {
         headers: {
