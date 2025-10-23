@@ -11,6 +11,7 @@ import {
   ProjectListPage,
   ProjectListPageAdmin,
   ApprovedIdeasPage,
+  LandingPage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 
@@ -18,24 +19,21 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    children: [{ path: "setup-profile", element: <DevProfilePage /> },
-    { path: "dev-list", element: <DevListPage /> },
-      { path: "ideas", element: <ProjectListPage /> },
-    ],
-  },
-  {
-    path: "/admin",
-    element: <AdminLayout />,
     children: [
+      {index:true, element: <LandingPage />},
       { path: "setup-profile", element: <DevProfilePage /> },
-    ],
+      { path: "dev-list", element: <DevListPage /> },
+      { path: "ideas", element: <ProjectListPage /> },
+      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
+    ]
   },
   {path:"/admin",
     element:<AdminLayout/>,
-      children: [
-        { index: true, element: <RegisterListPage /> },
-        { path: "create-project", element: <ProjectCreateFormPage /> },
-        { path: "ideas", element: <ProjectListPageAdmin /> },
+    children: [
+      { index: true, element: <RegisterListPage /> },
+      { path: "create-project", element: <ProjectCreateFormPage /> },
+      { path: "ideas", element: <ProjectListPageAdmin /> },
+      { path: "setup-profile", element: <DevProfilePage /> },
       { path: "approved-ideas", element: <ApprovedIdeasPage /> },
     ],
   },
