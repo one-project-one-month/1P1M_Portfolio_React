@@ -46,6 +46,11 @@ export const loginWithEmailPassword = async (email, password) => {
       email,
       password,
     });
+    const { token, user } = response.data;
+
+    // save token and user in localStorage
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
 
     return response.data;
   } catch (error) {
@@ -91,15 +96,48 @@ export const signupWithEmail = async (email, password, token = null) => {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     }
   );
+  const { token, user } = response.data;
+  // Save to localStorage
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(response.data.user));
+
 
     return response.data;
   } catch (error) {
     console.error("Error signup :", error);
 
-    throw (
-      error.response?.data || {
-        message: "Network or server error. Please try again.",
+    throw error.response?.data || {
+      message: "Network or server error. Please try again.",
+    };
+  }
+};
+
+export const forgotPassword = async (email) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.FORGOT_PASSWORD, {
+      email,
+    });
+
+    return response.data;
+  } catch (error) {
+    // console.error("Error in forgot password:", error);
+    throw error.response?.data || error;
+  }
+};
+
+
+export const resetPassword = async (email, newPassword) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.RESET_PASSWORD,
+      {
+        email,
+        newPassword,
       }
     );
+    return response.data;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error.response?.data || error;
   }
 };

@@ -88,7 +88,7 @@ function ProjectCreateForm() {
 
       // Get the project ID from response
       const projectPortfolioId =
-        projectResponse.data?.id || projectResponse.data?.projectPortfolioId;
+        projectResponse.data?.projectId || projectResponse.data?.projectId;
 
       if (!projectPortfolioId) {
         throw new Error("Project ID not found in response");
