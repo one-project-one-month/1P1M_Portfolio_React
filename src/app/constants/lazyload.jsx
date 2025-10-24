@@ -45,9 +45,9 @@ export const RegisterListPage = PageLoader(
   lazy(() => import("@/features/admin/pages/RegisterListPage"))
 );
 
-export const ProjectListPage = PageLoader(
-  lazy(() => import("@/features/auth/pages/ProjectListPage"))
-);
+export const ProjectListPage=PageLoader(
+  lazy(()=>import("@/features/auth/pages/ProjectIdeaListPage"))
+)
 
 export const ProjectListPageAdmin = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectListPageAdmin"))
