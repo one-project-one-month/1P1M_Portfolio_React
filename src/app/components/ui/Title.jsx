@@ -9,7 +9,7 @@ const Title = ({
   searchPlaceholder = "Search...",
   onSearchChange,
   filterOptions = [ "Popular", "Newest", "Oldest"],
-  initSelectedFilter = "Newest",
+  initSelectedFilter = "Popular",
   onFilterChange
 }) => {
     const [selectedFilter, setSelectedFilter] = useState(initSelectedFilter);

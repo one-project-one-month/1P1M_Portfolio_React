@@ -17,7 +17,6 @@ const ProjectListPage = () => {
             setLoading(true);
 
             const {data} = await ProjectIdeaList(page,6);
-            console.log(data);
 
             setTotalPages(data.totalPages || 1);  
             const sortedProjects = data.sort((a, b) => b.reactions - a.reactions);
@@ -45,38 +44,32 @@ const ProjectListPage = () => {
       );
     })
     .sort((a, b) => {
-      const reactionsA = a.reactions || a.likecount || 0;
-      const reactionsB = b.reactions || b.likecount || 0;
+      const reactionsA = a.reaction_count || 0;
+      const reactionsB = b.reaction_count || 0;
 
       if (filter === "Popular") return reactionsB - reactionsA;
       if (filter === "Oldest") return (a.id || 0) - (b.id || 0);
-      return (b.id || 0) - (a.id || 0); // Newest
+      return (b.id || 0) - (a.id || 0); 
     });
 
-    const handleLike = async(projectId, liked) => {
-            console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
-    
-            setProjects(prev =>
-                prev.map(p =>
-                    p.id === projectId
-                        ? { ...p, likecount: liked ? p.likecount - 1 : p.likecount + 1, likestate: !liked }
-                        : p
-                )
-            );
-    
+    const handleLike = async(projectId, likeState) => {
+            console.log(`${likeState ? "Unliked" : "Liked"} project:`, projectId);
+            
+            
+            
             try {
-                console.log(`API called for project ${projectId}`);
-                if(liked){
-                    await unreactProjectIdea(projectId)
+              console.log(`API called for project ${projectId}`);
+              if(likeState){
+                  await reactProjectIdea(projectId)
                 }else{
-                    await reactProjectIdea(projectId)
+                  await unreactProjectIdea(projectId)
                 }
             } catch (error) {
                 console.error("Error updating like:", error);
                 setProjects(prev =>
                     prev.map(p =>
                         p.id === projectId
-                            ? { ...p, likecount: liked ? p.likecount + 1 : p.likecount - 1, likestate: liked }
+                            ? { ...p, likecount: likeState ? p.likecount + 1 : p.likecount - 1, likestate: likeState }
                             : p
                     )
                 );
@@ -96,13 +89,16 @@ const ProjectListPage = () => {
         onFilterChange={setFilter}
       />
 
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {/* <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6"> */}
+      <div className="flex-grow flex flex-wrap  gap-6 p-6">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">Loading projects...</p>
         ) : filteredProjects.length === 0 ? (
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
-          filteredProjects.map((proj) => (
+          filteredProjects
+          .filter((proj)=>proj.status === "PENDING")
+          .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
               projectId={proj.id}
@@ -111,9 +107,9 @@ const ProjectListPage = () => {
               submittedByProfile={proj.profilePictureUrl}
               postBy={proj.devName}
               likeCount={proj.reaction_count}
-              liked={proj.likestate}
+              liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
-              onLike={() => handleLike(proj.id, proj.likestate)}
+              onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))
         )}

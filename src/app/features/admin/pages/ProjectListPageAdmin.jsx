@@ -22,7 +22,6 @@ const ProjectListPageAdmin = () => {
             setLoadingProject(true);
 
             const {data} = await ProjectIdeaList(page, 6);
-            console.log(data);
 
             setTotalPages(data.totalPages || 1);
             const sortedProjects = data?.sort((a, b) => b.reactions - a.reactions);
@@ -51,8 +50,8 @@ const ProjectListPageAdmin = () => {
             );
         })
         .sort((a, b) => {
-            const reactionsA = a.reactions || a.likecount || 0;
-            const reactionsB = b.reactions || b.likecount || 0;
+            const reactionsA = a.reaction_count || 0;
+            const reactionsB = b.reaction_count || 0;
 
             if (filter === "Popular") return reactionsB - reactionsA;
             if (filter === "Oldest") return (a.id || 0) - (b.id || 0);
@@ -72,12 +71,14 @@ const ProjectListPageAdmin = () => {
 
             if(res?.success || res?.status === 200){
                 setProjects((prev) => prev.filter((p) => p.id !== projectId));
-                toast.success(`Project ${projectId} approved successfully`);
+                toast.removeAll();
+                toast.success(`Project ${projectId} rejected successfully`);
                 setIsRejectLoading(null);
             }
 
         } catch (error) {
             console.error("Error approving project:", error);
+            toast.removeAll();
             toast.error(error.message)
             setIsRejectLoading(null);
         }
@@ -94,12 +95,14 @@ const ProjectListPageAdmin = () => {
 
              if(res?.success || res?.status === 200){
                 setProjects((prev) => prev.filter((p) => p.id !== projectId));
+                toast.removeAll();
                 toast.success(`Project ${projectId} approved successfully`);
                 setIsRejectLoading(null);
             }
 
         } catch (error) {
             console.error("Error approving project:", error);
+            toast.removeAll();
             toast.error(error.message)
             setIsApproveLoading(null);
         }
@@ -107,22 +110,12 @@ const ProjectListPageAdmin = () => {
 
 
     const handleLike = async(projectId, liked) => {
-        console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
-
-        setProjects(prev =>
-            prev.map(p =>
-                p.id === projectId
-                    ? { ...p, likecount: liked ? p.likecount - 1 : p.likecount + 1, likestate: !liked }
-                    : p
-            )
-        );
 
         try {
-            console.log(`API called for project ${projectId}`);
             if(liked){
-                await unreactProjectIdea(projectId)
-            }else{
                 await reactProjectIdea(projectId)
+            }else{
+                await unreactProjectIdea(projectId)
             }
         } catch (error) {
             console.error("Error updating like:", error);
@@ -166,9 +159,9 @@ const ProjectListPageAdmin = () => {
                             submittedByProfile={proj.profilePictureUrl}
                             postBy={proj.devName}
                             likeCount={proj.reaction_count}
-                            liked={proj.likestate}
+                            liked={proj.reactedProjects?.includes(proj.id)}
                             tags={proj.projectTypes}
-                            onLike={() => handleLike(proj.id, proj.likestate)}
+                            onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
                             onApprove={() => handleApprove(proj.id)}
                             approveLoading={isApproveLoading === proj.id}
                             rejectLoading={isRejectLoading === proj.id}

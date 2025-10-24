@@ -20,9 +20,9 @@ const ProjectIdeaCard = ({
     const handleLike = () => {
         const newLikeState = !isLiked;
         setIsLiked(newLikeState);
-        setLikes(newLikeState ? likes + 1 : likes - 1);
+        setLikes(newLikeState == true ? likes + 1 : likes - 1);
+        console.log(newLikeState)
         onLike && onLike(projectId, newLikeState);
-        console.log(isRejectModalOpen);
     };
 
     const formatCount = (num) => {
@@ -80,7 +80,7 @@ const ProjectIdeaCard = ({
                     {/* Heart SVG */}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        fill={liked ? "currentColor" : "none"}
+                        fill={isLiked ? "currentColor" : "none"}
                         viewBox="0 0 24 24"
                         strokeWidth="1.8"
                         stroke="currentColor"
