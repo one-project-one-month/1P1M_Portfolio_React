@@ -16,11 +16,12 @@ export const API_ENDPOINTS = {
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
-  SETUP_PROFILE:"/portfolio/api/v1/profiles/create/",
+  SETUP_PROFILE: "/portfolio/api/v1/profiles/create/",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
   UPLOAD_PROJECT_IMAGE: "/portfolio/api/v1/project-portfolio/uploadFile",
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
   FORGOT_PASSWORD: "/portfolio/api/v1/auth/users/password/forgot",
+  OPOM_REGISTER: "/portfolio/api/v1/auth/register",
 };
 
 export const getAuthHeaders = () => {

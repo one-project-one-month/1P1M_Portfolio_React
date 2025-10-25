@@ -1,5 +1,5 @@
 import apiClient from "@/api/axios";
-import { API_ENDPOINTS } from "@/config/apiConfig";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
 export const exchangeGithubCode = async (code) => {
   try {
@@ -111,6 +111,21 @@ export const forgotPassword = async (email) => {
     return response.data;
   } catch (error) {
     // console.error("Error in forgot password:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const opomRegister = async (form) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.OPOM_REGISTER,
+      form,
+      getAuthConfig()
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in OPOM registration:", error);
     throw error.response?.data || error;
   }
 };
