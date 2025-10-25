@@ -28,4 +28,8 @@ export const API_ENDPOINTS = {
   CHECK_EMAIL: "/portfolio/api/v1/auth/users/checkEmail",
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
+
+  //add-member-feature
+  FIND_DEV_PROFILE: "/portfolio/api/v1/profiles"
+
 };
