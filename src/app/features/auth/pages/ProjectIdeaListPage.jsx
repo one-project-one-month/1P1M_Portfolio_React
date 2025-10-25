@@ -114,7 +114,7 @@ const ProjectListPage = () => {
           ))
         )}
       </div>
-
+      
       <div className="w-full flex justify-center">
         <Pagination
           currentPage={curPage}
