@@ -1,12 +1,23 @@
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
-export const getDevProfiles = async () => {
+export const getDevProfiles = async (params = {}) => {
   try {
-    const response = await apiClient.get(
-      API_ENDPOINTS.GET_PROFILE,
-      getAuthConfig()
-    ); //end point    
+    const queryParams = new URLSearchParams();
+
+    // Add parameters if they exist
+    if (params.keyword) queryParams.append("keyword", params.keyword);
+    if (params.page !== undefined) queryParams.append("page", params.page);
+    if (params.size !== undefined) queryParams.append("size", params.size);
+    if (params.sortField) queryParams.append("sortField", params.sortField);
+    if (params.sortDirection)
+      queryParams.append("sortDirection", params.sortDirection);
+
+    const url = `${API_ENDPOINTS.GET_PROFILE}${
+      queryParams.toString() ? `?${queryParams.toString()}` : ""
+    }`;
+
+    const response = await apiClient.get(url, getAuthConfig());
     return response.data;
   } catch (error) {
     console.error("Error fetching developer", error);

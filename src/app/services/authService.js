@@ -96,7 +96,7 @@ export const signupWithEmail = async (email, password, token = null) => {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     }
   );
-  const { token, user } = response.data;
+  const { token: authToken, user } = response.data;
   // Save to localStorage
   localStorage.setItem("token", token);
   localStorage.setItem("user", JSON.stringify(response.data.user));
