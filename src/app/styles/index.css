@@ -118,3 +118,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px; /* scrollbar width */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* optional — or use #ffffff17 if you want faint track */
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--theme-border, #E2E8F0); /* 👈 your requested color */
+  border-radius: 9999px;
+}
+
+/* Optional hover effect */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #cfd6df;
+}
+
+/* Firefox support (optional) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-border, #E2E8F0) transparent;
+}

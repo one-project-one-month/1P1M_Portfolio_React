@@ -36,3 +36,4 @@ export default function SearchBar({ placeholder = "Search...", onChange, value, 
     </form>
   )
 }
+
