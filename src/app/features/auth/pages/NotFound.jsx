@@ -50,16 +50,18 @@
 
 // export default Notfound;
 
-
-
-import React from 'react'
-import "../../../styles/NotFound.css"
+import React from "react";
+// import "../../../styles/NotFound.css"
 
 const Notfound = () => {
   return (
     <div>
       {/* Outer link kept if needed */}
-      <a href="https://codepen.io/uiswarup/pen/qBebRpq" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://codepen.io/uiswarup/pen/qBebRpq"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <header className="top-header"></header>
 
         <div>
@@ -85,7 +87,9 @@ const Notfound = () => {
             <div className="error__message message">
               <h1 className="message__title">Page Not Found</h1>
               <p className="message__text">
-                We're sorry, the page you were looking for isn't found here. The link you followed may either be broken or no longer exists. Please try again, or take a look at our.
+                We're sorry, the page you were looking for isn't found here. The
+                link you followed may either be broken or no longer exists.
+                Please try again, or take a look at our.
               </p>
             </div>
             <div className="error__nav e-nav">
@@ -96,8 +100,7 @@ const Notfound = () => {
         </section>
       </a>
     </div>
-  )
-}
+  );
+};
 
-export default Notfound
-
+export default Notfound;

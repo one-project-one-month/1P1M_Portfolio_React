@@ -2,11 +2,22 @@ import FileUpload from "@/components/ui/FileUpload";
 import FormTextArea from "@/components/ui/FormTextArea";
 import TextField from "@/components/ui/TextField";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { plusIconUrl } from "@/assets/icons/iconUrls";
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { getDevProfiles } from "@/services/devProfileService";
+import { X } from "lucide-react";
+import CustomBox from "@/components/ui/CustomBox";
+import toast from "react-hot-toast";
 
 function ProjectCreateForm() {
   const {
@@ -26,11 +37,17 @@ function ProjectCreateForm() {
     },
   });
 
-  // Watch form values to pass to TextField components for proper reset
   const formValues = watch();
 
   const [projectImage, setProjectImage] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [search, setSearch] = useState("");
+  const [devProfiles, setDevProfiles] = useState([]);
+  const [devLoading, setDevLoading] = useState(false);
+  const [devError, setDevError] = useState(null);
+  const [fileUploadKey, setFileUploadKey] = useState(0);
 
   const createFieldHandler = (fieldName, validationRules = {}) => {
     const registration = register(fieldName, validationRules);
@@ -46,10 +63,13 @@ function ProjectCreateForm() {
 
   const handleImageSelect = (file) => {
     setProjectImage(file);
-    console.log("Selected file:", file.name, file.size);
   };
 
   const onSubmit = async (data) => {
+    const loadingToast = toast.loading("Creating project...", {
+      position: "top-right",
+    });
+
     try {
       const toolsArray = data.toolsUsed
         .split(",")
@@ -62,30 +82,14 @@ function ProjectCreateForm() {
         projectLink: data.projectLink,
         repoLink: data.githubLink,
         languageAndTools: toolsArray,
-        developerEmails: ["htetlynnko27@gmail.com"],
+        developerEmails: teamMembers.length > 0 ? teamMembers : [],
       };
 
-      console.log("=== PROJECT SUBMISSION ===");
-      console.log("Payload:", projectPayload);
-      console.log("Additional data:");
-      console.log(
-        "Project Image:",
-        projectImage
-          ? `${projectImage.name} (${projectImage.size} bytes)`
-          : "No image selected"
-      );
-      console.log("Team Members:", teamMembers);
-      console.log("================");
-
-      // Step 1: Create the project first
-      console.log("📝 Creating project...");
       const projectResponse = await apiClient.post(
         API_ENDPOINTS.CREATE_PROJECT,
         projectPayload,
         getAuthConfig()
       );
-
-      console.log("✅ Project created successfully!", projectResponse.data);
 
       // Get the project ID from response
       const projectPortfolioId = projectResponse.data?.data.projectId;
@@ -95,8 +99,6 @@ function ProjectCreateForm() {
 
       // Step 2: Upload image if one is selected
       if (projectImage) {
-        console.log("📤 Uploading project image...");
-
         // Validate image size (1MB max)
         const maxSize = 1 * 1024 * 1024; // 1MB in bytes
         if (projectImage.size > maxSize) {
@@ -117,32 +119,51 @@ function ProjectCreateForm() {
             },
           })
         );
-
-        console.log("✅ Image uploaded successfully!", uploadResponse.data);
       }
 
-      console.log("🎉 Project creation completed successfully!");
+      // Dismiss loading toast and show success toast
+      toast.dismiss(loadingToast);
+      toast.success("🎉 Project created successfully!", {
+        duration: 4000,
+        position: "top-right",
+      });
 
       // Reset form after successful submission
       reset();
       setProjectImage(null);
       setTeamMembers([]);
-
-      // TODO: Show success message to user
-      // TODO: Redirect to project list or project detail page
+      setSelectedMembers([]);
+      setSearch("");
+      setDevProfiles([]);
+      setIsDialogOpen(false);
+      setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
     } catch (error) {
       console.error("❌ Error creating project:", error);
 
-      // Handle different error cases
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      // Show error toast with appropriate message
       if (error.response) {
         console.error("Server error:", error.response.data);
-        // TODO: Show error message based on server response
+        const errorMessage =
+          error.response.data?.message || "Server error occurred";
+        toast.error(`❌ ${errorMessage}`, {
+          duration: 5000,
+          position: "top-right",
+        });
       } else if (error.request) {
         console.error("Network error: No response received");
-        // TODO: Show network error message
+        toast.error("❌ Network error: Please check your connection", {
+          duration: 5000,
+          position: "top-right",
+        });
       } else {
         console.error("Error:", error.message);
-        // TODO: Show generic error message
+        toast.error(`❌ Error: ${error.message}`, {
+          duration: 5000,
+          position: "top-right",
+        });
       }
     }
   };
@@ -151,12 +172,106 @@ function ProjectCreateForm() {
     reset();
     setProjectImage(null);
     setTeamMembers([]);
-    console.log("Form cancelled and reset");
+    setSelectedMembers([]);
+    setSearch("");
+    setDevProfiles([]);
+    setIsDialogOpen(false);
+    setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
   };
 
   const handleAddTeamMember = () => {
-    console.log("Add team member clicked - implement member selection modal");
+    setIsDialogOpen(true);
   };
+
+  // Filter out already selected members from API results
+  const filteredDevs =
+    devProfiles?.filter((dev) => {
+      // Use userId for comparison since API returns userId instead of id
+      const devId = dev.userId || dev.id;
+      const isAlreadySelected = selectedMembers.find((member) => {
+        const memberId = member.userId || member.id;
+        return memberId === devId;
+      });
+      return !isAlreadySelected;
+    }) || [];
+
+  const handleAddMember = (dev) => {
+    const devId = dev.userId || dev.id;
+    const isAlreadySelected = selectedMembers.find((member) => {
+      const memberId = member.userId || member.id;
+      return memberId === devId;
+    });
+
+    if (!isAlreadySelected) {
+      setSelectedMembers([...selectedMembers, dev]);
+    }
+  };
+
+  const handleRemoveMember = (devToRemove) => {
+    const devId = devToRemove.userId || devToRemove.id;
+    setSelectedMembers(
+      selectedMembers.filter((member) => {
+        const memberId = member.userId || member.id;
+        return memberId !== devId;
+      })
+    );
+  };
+
+  const handleSaveMembers = () => {
+    // Update teamMembers with email addresses from selected members
+    const memberEmails = selectedMembers
+      .map((member) => member.email)
+      .filter(Boolean);
+    setTeamMembers(memberEmails);
+    setIsDialogOpen(false);
+  };
+
+  const handleDiscardMembers = () => {
+    setSelectedMembers([]);
+    setSearch("");
+    setDevProfiles([]);
+    setDevError(null);
+    setIsDialogOpen(false);
+  };
+
+  // Search functionality - only fetch when user types
+  const searchDevelopers = useCallback(async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setDevProfiles([]);
+      setDevError(null);
+      return;
+    }
+
+    setDevLoading(true);
+    setDevError(null);
+
+    try {
+      const data = await getDevProfiles({ keyword: searchTerm });
+
+      if (Array.isArray(data)) {
+        setDevProfiles(data);
+      } else if (data?.data && Array.isArray(data.data)) {
+        setDevProfiles(data.data);
+      } else {
+        setDevProfiles([]);
+      }
+    } catch (error) {
+      console.error("Error searching developers:", error);
+      setDevError("Error searching developers: " + error.message);
+      setDevProfiles([]);
+    } finally {
+      setDevLoading(false);
+    }
+  }, []);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchDevelopers(search);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [search, searchDevelopers]);
 
   return (
     <form
@@ -166,6 +281,7 @@ function ProjectCreateForm() {
       {/* Left side - File Upload */}
       <div className="flex flex-col gap-0 items-center lg:w-2/5">
         <FileUpload
+          key={fileUploadKey}
           onFileSelect={handleImageSelect}
           accept="image/*"
           maxSize={1 * 1024 * 1024}
@@ -310,40 +426,185 @@ function ProjectCreateForm() {
         {/* User Images Section */}
         <div className="flex flex-col mb-2 -mt-4 z-0">
           <div className="flex items-center gap-2">
-            {/* Sample User Images - Show max 5 */}
-            {Array.from(
-              { length: Math.min(teamMembers.length || 6, 5) },
-              (_, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={
-                      teamMembers[index]?.avatar ||
-                      "/src/app/assets/sample-user-img.jpg"
-                    }
-                    alt={`Team member ${index + 1}`}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
-                  />
-                </div>
-              )
-            )}
+            {/* Team Member Images - Show max 5 */}
+            {selectedMembers.slice(0, 5).map((member, index) => (
+              <div key={member.userId || member.id} className="relative group">
+                <img
+                  src={
+                    member.profilePictureUrl ||
+                    `https://picsum.photos/48/48?random=${member.id}`
+                  }
+                  alt={member.name || `Team member ${index + 1}`}
+                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
+                  title={member.name || "Team member"}
+                />
+              </div>
+            ))}
 
             {/* Show "+more" indicator if there are more than 5 members */}
-            {(teamMembers.length || 6) > 5 && (
+            {selectedMembers.length > 5 && (
               <div className="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
                 <span className="text-white text-xs font-semibold">
-                  +{(teamMembers.length || 6) - 5}
+                  +{selectedMembers.length - 5}
                 </span>
               </div>
             )}
 
+            {/* Show placeholder if no members selected */}
+            {selectedMembers.length === 0 && (
+              <div className="text-gray-400 text-sm">
+                No team members selected
+              </div>
+            )}
+
             {/* Add Member Button */}
-            <button
-              type="button"
-              className="w-12 h-12 rounded-full bg-gray-700 border-2 border-gray-600 hover:border-gray-400 hover:bg-gray-600 transition-colors flex items-center justify-center cursor-pointer text-white font-bold text-4xl"
-              onClick={handleAddTeamMember}
-            >
-              <img src={plusIconUrl} alt="" />
-            </button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="w-12 h-12 rounded-full bg-gray-700 border-2 border-gray-600 hover:border-gray-400 hover:bg-gray-600 transition-colors flex items-center justify-center cursor-pointer text-white font-bold text-4xl"
+                  onClick={handleAddTeamMember}
+                >
+                  <img src={plusIconUrl} alt="" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl bg-[#1A1A1A] border border-[#3A3A3A] rounded-3xl p-8">
+                <DialogHeader className="flex flex-row justify-between items-center">
+                  <DialogTitle className="text-white text-xl font-semibold">
+                    Add Member
+                  </DialogTitle>
+                  <button
+                    onClick={() => setIsDialogOpen(false)}
+                    className="text-white hover:text-gray-300 transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </DialogHeader>
+
+                <div className="space-y-4 mt-6">
+                  {/* Search Input */}
+                  <input
+                    type="text"
+                    placeholder="Search member..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full h-12 rounded-lg border border-[#FFFFFF26] bg-[#FFFFFF17] px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  />
+
+                  {/* Selected Members */}
+                  {selectedMembers.length > 0 && (
+                    <CustomBox
+                      style={{
+                        width: "100%",
+                        height: "150px",
+                        borderRadius: "0.5rem",
+                        borderWidth: "1px",
+                        padding: "16px",
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: "12px",
+                        overflowY: "auto",
+                        alignContent: "flex-start",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      {selectedMembers.map((member) => (
+                        <div
+                          key={member.userId || member.id}
+                          className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-2 gap-2"
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={
+                                member.profilePictureUrl ||
+                                `https://picsum.photos/40/40?random=${member.id}`
+                              }
+                              alt={member.name || "User"}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <p className="text-white text-sm font-medium truncate max-w-[120px]">
+                              {member.name || "Unknown User"}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveMember(member)}
+                            className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
+                          >
+                            <X size={12} className="text-black" />
+                          </button>
+                        </div>
+                      ))}
+                    </CustomBox>
+                  )}
+
+                  {/* Search Results */}
+                  <div className="max-h-40 overflow-y-auto space-y-2">
+                    {devLoading ? (
+                      <p className="text-gray-400 text-center py-4">
+                        Loading developers...
+                      </p>
+                    ) : devError ? (
+                      <p className="text-red-400 text-center py-4">
+                        Error loading developers
+                      </p>
+                    ) : filteredDevs.length === 0 ? (
+                      <p className="text-gray-400 text-center py-4">
+                        {search ? "No members found" : "Type a name to search"}
+                      </p>
+                    ) : (
+                      filteredDevs.map((dev) => (
+                        <div
+                          key={dev.userId || dev.id}
+                          className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-3"
+                        >
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                dev.profilePictureUrl ||
+                                `https://picsum.photos/40/40?random=${dev.id}`
+                              }
+                              alt={dev.name || "User"}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="text-white font-medium">
+                                {dev.name || "Unknown User"}
+                              </p>
+                              <p className="text-gray-400 text-sm">
+                                {dev.email || "No email"}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleAddMember(dev)}
+                            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-end gap-3 pt-4">
+                    <button
+                      onClick={handleDiscardMembers}
+                      className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-full transition-colors"
+                    >
+                      Discard
+                    </button>
+                    <button
+                      onClick={handleSaveMembers}
+                      className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         {/* Action Buttons */}
