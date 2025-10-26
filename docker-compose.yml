@@ -35,8 +35,10 @@ services:
 
       SPRING_MAIL_HOST: smtp.gmail.com
       SPRING_MAIL_PORT: 587
-      SPRING_MAIL_USERNAME: minzayarmaung2002@gmail.com
-      SPRING_MAIL_PASSWORD: vgklvkranagneybo
+      # SPRING_MAIL_USERNAME: minzayarmaung2002@gmail.com
+      # SPRING_MAIL_PASSWORD: vgklvkranagneybo
+      SPRING_MAIL_USERNAME: winminthant.gwin@gmail.com
+      SPRING_MAIL_PASSWORD: aqtl wula wqvo xbqu
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
 
