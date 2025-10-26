@@ -32,14 +32,14 @@ function AuthForm() {
         exchangeGoogleCode(code)
           .then((data) => {
             console.log("Google authentication successful!", data);
-            if (data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+            if (data.data.user) {
+              localStorage.setItem("user", JSON.stringify(data.data.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
             toast.success("Google authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
@@ -63,15 +63,15 @@ function AuthForm() {
         exchangeGithubCode(code)
           .then((data) => {
             console.log("GitHub authentication successful!", data);
-            if (data.user) {
-              localStorage.setItem("user", JSON.stringify(data.user));
+            if (data.data.user) {
+              localStorage.setItem("user", JSON.stringify(data.data.user));
             }
-            if (data.token) {
-              localStorage.setItem("token", data.token);
+            if (data.data.token) {
+              localStorage.setItem("token", data.data.token);
             }
 
             toast.success("GitHub authentication successful!");
-            if (data.newUser) {
+            if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
               navigate("/dashboard");
@@ -171,10 +171,10 @@ function AuthForm() {
 
           if (emailExists) {
             console.log("Email exists - navigating to login page");
-            navigate("/login");
+            navigate("/login", { state: { email } });
           } else {
             console.log("Email not registered - navigating to register page");
-            navigate("/register");
+            navigate("/register", { state: { email } });
           }
         } catch (error) {
           console.error("Error in email check flow:", error);

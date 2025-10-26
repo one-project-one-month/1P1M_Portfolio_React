@@ -15,7 +15,7 @@ const EyeIcon = ({ open }) => (
   )
 );
 
-const PasswordField = forwardRef(({ label, placeholder, name, id, error, className }, ref) => {
+const PasswordField = forwardRef(({ label, onChange, placeholder, name, id, error, className }, ref) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -27,12 +27,13 @@ const PasswordField = forwardRef(({ label, placeholder, name, id, error, classNa
         name={name}
         id={id}
         placeholder={placeholder}
+        onChange={(e) => onChange?.(e.target.value)} 
         className={`w-full px-3 py-2 rounded bg-[#222] text-white outline-none ${className}`}
       />
       <span className='absolute top-12 right-4 cursor-pointer text-white' onClick={() => setShow(!show)}>
         <EyeIcon open={show} />
       </span>
-      {error && <span className='absolute left-0 -bottom-6 text-sm text-[#FB2C36] mt-1 block'>{error}</span>}
+      {error && <span className='absolute left-0 bottom text-xs text-[#FB2C36] mt-1 block'>{error}</span>}
     </div>
   );
 });

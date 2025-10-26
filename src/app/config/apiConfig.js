@@ -1,22 +1,10 @@
-/**
- * Application environment configuration utilities
- */
-
+const DEFAULT_API_URL = "http://localhost:8080/";
 import AppConfig from "./appConfig";
 
-/**
- * Get the base URL for API requests based on the current environment
- * @returns {string} The API base URL
- */
 export const getApiBaseUrl = () => {
   return AppConfig.API_URL;
 };
 
-/**
- * Get a complete API endpoint URL
- * @param {string} endpoint - The API endpoint path
- * @returns {string} The complete API URL
- */
 export const getApiEndpoint = (endpoint) => {
   return `${getApiBaseUrl()}${endpoint}`;
 };
@@ -28,8 +16,4 @@ export const API_ENDPOINTS = {
   CHECK_EMAIL: "/portfolio/api/v1/auth/users/checkEmail",
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
-
-  //add-member-feature
-  FIND_DEV_PROFILE: "/portfolio/api/v1/profiles"
-
 };

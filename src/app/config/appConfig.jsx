@@ -1,4 +1,7 @@
-const DEFAULT_API_URL = "https://onep1m-portfolio-backend.onrender.com";
+const DEFAULT_API_URL = "http://localhost:8080/";
+// const DEFAULT_API_URL = "https://onep1m-portfolio-backend.onrender.com";
+
+// http://localhost:8080/swagger-ui/index.html#/
 
 const AppConfig = {
   APP_NAME: import.meta.env.VITE_APP_NAME || "OPOM Portfolio",
