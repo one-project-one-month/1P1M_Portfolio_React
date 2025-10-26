@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DevCard from "../components/DevCard";
 import SearchIcon from "@/assets/icons/search.png";
 import { getDevProfiles } from "@/services/devProfileService";
@@ -10,15 +10,44 @@ export default function DevListPage() {
   const [devProfiles, setDevProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const membersPerPage = 6;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [sortField, setSortField] = useState("name");
+  const [sortDirection, setSortDirection] = useState("asc");
+  const pageSize = 6;
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCurrentPage(1); // Reset to first page when searching
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
 
   useEffect(() => {
     async function fetchProfiles() {
       try {
-        const data = await getDevProfiles();
-        console.log("API Response Data:", data.data);
+        setLoading(true);
+        const params = {
+          keyword: searchTerm,
+          page: currentPage - 1, // Backend expects 0-based pagination
+          size: pageSize,
+          sortField: sortField,
+          sortDirection: sortDirection,
+        };
+
+        const data = await getDevProfiles(params);
+        console.log("API Response Data:", data);
+
         const profiles = Array.isArray(data.data) ? data.data : [];
         setDevProfiles(profiles);
+
+        // Set pagination meta data from backend response
+        if (data.meta) {
+          setTotalPages(data.meta.totalPages);
+          setTotalItems(data.meta.totalItems);
+          // Don't override currentPage from meta to avoid conflicts
+        }
       } catch (error) {
         console.error("Error fetching profiles", error);
       } finally {
@@ -26,24 +55,14 @@ export default function DevListPage() {
       }
     }
     fetchProfiles();
-  }, []);
+  }, [searchTerm, currentPage, sortField, sortDirection]);
 
-  const filteredMembers = devProfiles.filter(
-    (member) =>
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  const indexOfLastMember = currentPage * membersPerPage;
-  const indexOfFirstMember = indexOfLastMember - membersPerPage;
-  const currentMembers = filteredMembers.slice(
-    indexOfFirstMember,
-    indexOfLastMember
-  );
-  const totalPages = Math.min(
-    5,
-    Math.ceil(filteredMembers.length / membersPerPage)
-  );
+  // Backend handles filtering and pagination, so we use profiles directly
+  const currentMembers = devProfiles;
 
   return (
     <div className="w-[1296px] mx-auto py-6 min-h-screen flex flex-col">
@@ -90,7 +109,7 @@ export default function DevListPage() {
             <p className="text-center text-gray-400 py-10">
               Loading profiles...
             </p>
-          ) : filteredMembers.length === 0 ? (
+          ) : currentMembers.length === 0 ? (
             <p className="text-center text-gray-500 py-10 text-lg">
               No developer profiles found.
             </p>
@@ -108,7 +127,7 @@ export default function DevListPage() {
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
-          onPageChange={setCurrentPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

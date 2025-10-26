@@ -62,6 +62,7 @@ function ProjectCreateForm() {
         projectLink: data.projectLink,
         repoLink: data.githubLink,
         languageAndTools: toolsArray,
+        developerEmails: ["htetlynnko27@gmail.com"],
       };
 
       console.log("=== PROJECT SUBMISSION ===");
@@ -87,9 +88,7 @@ function ProjectCreateForm() {
       console.log("✅ Project created successfully!", projectResponse.data);
 
       // Get the project ID from response
-      const projectPortfolioId =
-        projectResponse.data?.projectId || projectResponse.data?.projectId;
-
+      const projectPortfolioId = projectResponse.data?.data.projectId;
       if (!projectPortfolioId) {
         throw new Error("Project ID not found in response");
       }
@@ -107,10 +106,10 @@ function ProjectCreateForm() {
         // Create FormData for file upload
         const formData = new FormData();
         formData.append("file", projectImage);
-        formData.append("projectPortfolioId", projectPortfolioId);
-
-        const uploadResponse = await apiClient.post(
-          API_ENDPOINTS.UPLOAD_PROJECT_IMAGE,
+        // formData.append("projectPortfolioId", projectPortfolioId);
+        const uploadResponse = await apiClient.patch(
+          API_ENDPOINTS.UPLOAD_PROJECT_IMAGE +
+            `?projectPortfolioId=${projectPortfolioId}`,
           formData,
           getAuthConfig({
             headers: {
