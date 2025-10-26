@@ -1,8 +1,9 @@
 import React from "react";
 
-function CustomBox({ children }) {
+function CustomBox({ children, style={}, className = "" }) {
   return (
     <div
+    className={className}
       style={{
         width: "628px",
         height: "150px",
@@ -14,6 +15,7 @@ function CustomBox({ children }) {
         background: "#FFFFFF17",
         border: "1px solid #FFFFFF26",
         opacity: 1,
+        ...style
       }}
     >
       {children}

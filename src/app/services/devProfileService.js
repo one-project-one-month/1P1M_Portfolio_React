@@ -6,7 +6,7 @@ export const getDevProfiles = async () => {
     const response = await apiClient.get(
       API_ENDPOINTS.GET_PROFILE,
       getAuthConfig()
-    ); //end point
+    ); //end point    
     return response.data;
   } catch (error) {
     console.error("Error fetching developer", error);
