@@ -17,8 +17,8 @@ export const API_ENDPOINTS = {
   SEND_OTP: "/portfolio/api/v1/auth/users/send-otpCode",
   VERIFY_OTP: "/portfolio/api/v1/auth/users/verify-otpCode",
   REGISTER: "/portfolio/api/v1/auth/users/signup",
-  SETUP_PROFILE:"/portfolio/api/v1/profiles/create/",
-  GET_PROFILE:"/portfolio/api/v1/profiles",
+  SETUP_PROFILE: "/portfolio/api/v1/profiles/create/",
+  GET_PROFILE: "/portfolio/api/v1/profiles",
   CREATE_PROJECT: "/portfolio/api/v1/project-portfolio",
   PROJECT_IDEA: "/portfolio/api/v1/project-idea",
   UPLOAD_PROJECT_IMAGE: "/portfolio/api/v1/project-portfolio/uploadFile",
@@ -27,14 +27,15 @@ export const API_ENDPOINTS = {
   RESET_PASSWORD: "/portfolio/api/v1/auth/users/password/reset",
   GET_ALL_PROJECTS: "/portfolio/api/v1/project-portfolio/getAllProjectProfiles",
   REACT_PROJECT: "/portfolio/api/v1/project-portfolio/react",
+  GET_PROJECT_PORTFOLIO: "/portfolio/api/v1/project-portfolio",
 };
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return token
     ? {
-      Authorization: `Bearer ${token}`,
-    }
+        Authorization: `Bearer ${token}`,
+      }
     : {};
 };
 

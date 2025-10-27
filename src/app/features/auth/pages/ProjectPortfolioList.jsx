@@ -6,7 +6,11 @@ import ProjectCard from "@/components/ui/ProjectCard";
 import Pagination from "@/components/ui/Pagination";
 import projectImage from "@/assets/ProjectImage.png";
 
-import { getAllProjectProfiles, reactToProject } from "@/services/projectPortfolioService";
+import {
+  getAllProjectProfiles,
+  reactToProject,
+} from "@/services/projectPortfolioService";
+import { useNavigate } from "react-router-dom";
 
 function ProjectPortfolioList() {
   const filterOptions = ["Popular", "Newest", "Oldest"];
@@ -17,6 +21,8 @@ function ProjectPortfolioList() {
   const [selectedFilter, setSelectedFilter] = useState("Popular");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+  const navigate = useNavigate();
 
   // Debounce logic
   useEffect(() => {
@@ -95,14 +101,14 @@ function ProjectPortfolioList() {
     <div className="flex flex-col items-center justify-center w-full h-full">
       {/* Header Section */}
       <div className="flex flex-row items-center w-full mt-6 mb-10">
-        <h1 className="text-3xl font-bold text-[#FFFFFF] ">
+        <h1 className="text-3xl font-bold text-[#FFFFFF] min-w-fit mr-5 ">
           <span className="border-b-[5px] border-[#FFBA00] rounded-md inline-block pb-1">
             Project
           </span>
           &nbsp;Portfolio Lists
         </h1>
 
-        <div className="flex flex-row justify-center items-center ml-[20px]">
+        <div className="flex w-full justify-between">
           <SearchBar
             placeholder="Search by project title"
             onSearch={handleSearch}
@@ -112,6 +118,9 @@ function ProjectPortfolioList() {
           <div className="flex items-center ml-[100px] gap-3">
             <Button
               variant="purple_button"
+              onClick={() => {
+                navigate("/create-project");
+              }}
               size="purple_button"
               className="w-[100px] bg-[#9C39FC]"
             >
@@ -130,23 +139,38 @@ function ProjectPortfolioList() {
       </div>
 
       {/* Project Grid */}
-      <div className="grid w-full max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mx-auto">
-        {projects.length > 0 ? (
-          projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              image={project.projectPicUrl || projectImage}
-              title={project.name}
-              description={project.description}
-              initialLikes={project.reaction_count || 0}
-              initialViews={project.view_count || "0"}
-              onClickReact={handleReact}
-              project={project}
-            />
-          ))
-        ) : (
-          <p className="text-white text-center col-span-3">No projects found.</p>
-        )}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="grid auto-rows-fr gap-6 
+                        grid-cols-1 
+                        sm:grid-cols-1 
+                        md:grid-cols-2 
+                        lg:grid-cols-3 
+                        xl:grid-cols-3 
+                        2xl:grid-cols-4"
+        >
+          {projects.length > 0 ? (
+            projects.map((project) => (
+              <div key={project.id} className="w-full">
+                <ProjectCard
+                  image={project.projectPicUrl || projectImage}
+                  title={project.name}
+                  description={project.description}
+                  initialLikes={project.reaction_count || 0}
+                  initialViews={project.view_count || "0"}
+                  onClickReact={handleReact}
+                  project={project}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full flex items-center justify-center py-12">
+              <p className="text-white text-center text-lg">
+                No projects found.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Pagination */}
