@@ -3,15 +3,13 @@ import SearchBar from "@/components/ui/SearchBar";
 import FilterDropdown from "@/components/ui/Filter";
 import Button from "@/components/ui/Button";
 import ProjectCard from "@/components/ui/ProjectCard";
-import projectImage from "@/assets/ProjectImage.png";
 import Pagination from "@/components/ui/Pagination";
+import projectImage from "@/assets/ProjectImage.png";
 
-
+import { getAllProjectProfiles, reactToProject } from "@/services/projectPortfolioService";
 
 function ProjectPortfolioList() {
   const filterOptions = ["Popular", "Newest", "Oldest"];
-
-  // States
   const [query, setQuery] = useState("");
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,135 +18,78 @@ function ProjectPortfolioList() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [debouncedQuery, setDebouncedQuery] = useState(query);
 
-  const token = localStorage.getItem("token");
-
-  
   // Debounce logic
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 1000); // wait 500ms after typing stops
-
-    return () => clearTimeout(handler); // cleanup if user keeps typing
+    }, 1000);
+    return () => clearTimeout(handler);
   }, [query]);
 
-
-  // Function to build API URL dynamically
-  const buildApiUrl = () => {
-    let baseUrl =
-      "http://localhost:8080/portfolio/api/v1/project-portfolio/getAllProjectProfiles";
-
-    // Default pagination & sorting
-    let page = currentPage - 1; // API expects 0-based page
-    let size = 6;
-    let sortField = "name";
-    let sortDirection = "desc";
-
-    // Apply filter logic
+  // Build sorting/filter params
+  const getSortParams = () => {
     switch (selectedFilter) {
       case "Popular":
-        sortField = "name";
-        sortDirection = "asc";
-        break;
+        return { sortField: "name", sortDirection: "asc" };
       case "Newest":
-        sortField = "id";
-        sortDirection = "desc";
-        break;
+        return { sortField: "id", sortDirection: "desc" };
       case "Oldest":
-        sortField = "id";
-        sortDirection = "asc";
-        break;
+        return { sortField: "id", sortDirection: "asc" };
       default:
-        break;
+        return { sortField: "name", sortDirection: "desc" };
     }
-
-    // Build query params
-    const params = new URLSearchParams({
-      page,
-      size,
-      sortField,
-      sortDirection,
-    });
-
-    if (query.trim() !== "") {
-      params.append("keyword", query.trim());
-    }
-
-    return `${baseUrl}?${params.toString()}`;
   };
 
+  // Fetch projects
   const fetchProjects = async () => {
-    const url = buildApiUrl();
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const { sortField, sortDirection } = getSortParams();
+      const data = await getAllProjectProfiles({
+        page: currentPage - 1,
+        size: 6,
+        sortField,
+        sortDirection,
+        keyword: debouncedQuery,
       });
 
-      const data = await res.json();
       console.log("✅ API Response:", data);
-
-      // Correctly extract from the API shape
       setProjects(data.data || []);
       setTotalPages(data.meta?.totalPages || 1);
-    } catch (err) {
-      console.error("❌ Error fetching projects:", err);
+    } catch (error) {
+      console.error("❌ Error fetching projects:", error);
     }
   };
 
-
-  // Fetch whenever debouncedQuery, filter, or page changes
   useEffect(() => {
-    if (!token) {
-      console.error("❌ No token found in localStorage!");
-      return;
-    }
     fetchProjects();
-  }, [token, debouncedQuery, currentPage, selectedFilter]);
+  }, [debouncedQuery, currentPage, selectedFilter]);
 
-  // Search handler
+  // React handler
+  const handleReact = async (projectId) => {
+    try {
+      await reactToProject(projectId);
+      console.log("👍 Reacted successfully to project:", projectId);
+      // Optional: refresh list or increment like count locally
+    } catch (error) {
+      console.error("❌ Error reacting:", error);
+    }
+  };
+
+  // Handlers for search/filter/pagination
   const handleSearch = (searchTerm) => {
     setQuery(searchTerm);
-    setCurrentPage(1); // reset pagination
+    setCurrentPage(1);
   };
 
-  // Filter handler
   const handleSelectFilter = (option) => {
     setSelectedFilter(option);
-    setCurrentPage(1); // reset pagination
+    setCurrentPage(1);
     setIsFilterOpen(false);
   };
 
-  // Pagination handler
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  //React the project with post
-  const handleReact = async (projectId) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(
-        `http://localhost:8080/portfolio/api/v1/project-portfolio/react?projectPortfolioId=${projectId}`,
-        {
-          method: "POST",
-          headers: { "Authorization": `Bearer ${token}` },
-        }
-      );
-
-      return response; // ✅ Return so the caller can inspect status
-    } catch (error) {
-      console.error("❌ Error reacting:", error);
-      throw error;
-    }
-  };
-
-
-
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
@@ -168,7 +109,6 @@ function ProjectPortfolioList() {
             value={query}
             onChange={setQuery}
           />
-
           <div className="flex items-center ml-[100px] gap-3">
             <Button
               variant="purple_button"
@@ -199,16 +139,13 @@ function ProjectPortfolioList() {
               title={project.name}
               description={project.description}
               initialLikes={project.reaction_count || 0}
-              initialViews={project.reaction_count || "0"} // or replace with actual view count if available
-              
+              initialViews={project.view_count || "0"}
               onClickReact={handleReact}
               project={project}
             />
           ))
         ) : (
-          <p className="text-white text-center col-span-3">
-            No projects found.
-          </p>
+          <p className="text-white text-center col-span-3">No projects found.</p>
         )}
       </div>
 
@@ -225,6 +162,3 @@ function ProjectPortfolioList() {
 }
 
 export default ProjectPortfolioList;
-
-
-
