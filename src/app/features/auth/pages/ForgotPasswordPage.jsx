@@ -3,53 +3,46 @@ import Background from "@/components/ui/Background";
 import FormBackground from "@/components/ui/FormBackground";
 import TextField from "@/components/ui/TextField";
 import Button from "@/components/ui/Button";
-import { forgotPassword } from "@/services/authService";
+import { checkEmailExists, forgotPassword } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [emailErrorMsg, setEmailErrorMsg] = useState("");
-  const [showEmailError, setShowEmailError] = useState(false);
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-    if (!email.trim()) {
-      return "Email is required";
-    } else if (!emailRegex.test(email)) {
-      return "Invalid email address";
-    }
-    return "";
-  };
+
+
 
   const handleContinue = async () => {
-    const emailErr = validateEmail(email);
-    setEmailErrorMsg(emailErr);
-    setShowEmailError(!!emailErr);
+    const emailExists = await checkEmailExists(email);
+    
+    setLoading(true);
 
-    if (emailErr) {
-      setTimeout(() => {
+    if(emailExists?.data){
+      try {
+
+        const res = await forgotPassword(email);
+        if(res.code === 200 && res.success === 1){
+          toast.success("OTP resent successfully! Check your email.", {id: "resend-otp",});
+          navigate("/otp-verify", { state: { email } });
+        }
+
+      } catch (error) {
+        console.error("Error during password forgot:", error);
+      } finally {
         setLoading(false);
-        setError("");
-      }, 2000);
-    } else {
-      console.log("Email:", email);
+      }
+    }else{
+      toast.error("Email not in our system! Please register first")
+      navigate("/register",{ state: { email } });
+
     }
 
-    try {
-      const data = await forgotPassword(email);
-      console.log("Data to be sent:", data);
 
-      navigate("/check-password-otp", { state: { email } });
-    } catch (error) {
-      console.error("Error during password forgot:", error);
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -77,13 +70,9 @@ function ForgotPasswordPage() {
               value={email}
               onChange={(value) => setEmail(value)}
               showEditButton={false}
+              error= {emailError}
               className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
-            {showEmailError && (
-              <p className="text-red-500 text-xs absolute bottom-[15px]">
-                {emailErrorMsg}
-              </p>
-            )}
           </div>
 
           {/* Continue Button */}
