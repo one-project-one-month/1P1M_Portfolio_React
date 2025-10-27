@@ -12,10 +12,10 @@ export default function FilterDropdown({ isOpen, onToggle, onSelect,filters=[] }
         className="
           flex items-center gap-2
           py-2 px-[14px]
-          bg-white dark:bg-gray-800
+          bg-gray-800
           border border-[#FAFAFA]
           rounded-[28px] shadow-sm
-          hover:bg-gray-100 dark:hover:bg-gray-700
+          hover:bg-gray-700 dark:hover:bg-gray-700
           transition-all duration-200
         "
       >
@@ -30,7 +30,7 @@ export default function FilterDropdown({ isOpen, onToggle, onSelect,filters=[] }
         <div
           className="
             absolute mt-2 w-48
-            bg-white dark:bg-gray-800
+            bg-gray-800
             border border-gray-200 dark:border-gray-700
             rounded-xl shadow-lg
             z-10 -translate-x-20
@@ -42,8 +42,8 @@ export default function FilterDropdown({ isOpen, onToggle, onSelect,filters=[] }
               onClick={() => onSelect(option)}
               className="
                 w-full text-left px-4 py-2
-                text-gray-800 dark:text-gray-100 font-sans
-                hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl
+                text-white dark:text-gray-100 font-sans
+                hover:bg-gray-700 dark:hover:bg-gray-700 rounded-xl
                 transition-colors duration-150
               "
             >

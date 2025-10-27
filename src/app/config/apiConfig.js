@@ -25,7 +25,8 @@ export const API_ENDPOINTS = {
   APPROVED_IDEAS: "/portfolio/api/v1/approved-ideas",
   FORGOT_PASSWORD: "/portfolio/api/v1/auth/users/password/forgot",
   RESET_PASSWORD: "/portfolio/api/v1/auth/users/password/reset",
-
+  GET_ALL_PROJECTS: "/portfolio/api/v1/project-portfolio/getAllProjectProfiles",
+  REACT_PROJECT: "/portfolio/api/v1/project-portfolio/react",
 };
 
 export const getAuthHeaders = () => {

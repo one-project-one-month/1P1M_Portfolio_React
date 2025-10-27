@@ -10,15 +10,47 @@ export default function ProjectCard({
   description,
   initialLikes = 0,
   initialViews = 0,
+
+  onClickReact,
+  project
 }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [viewCount] = useState(initialViews);
 
-  const toggleLike = () => {
-    setLiked(!liked);
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+
+const handleLikeClick = async () => {
+  // Optimistically update the UI
+  setLiked((prev) => !prev);
+  setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+
+  try {
+    const response = await onClickReact(project.id);
+
+    // If backend says “already reacted” (409), that means user had liked before
+    if (response?.status === 409) {
+      console.log("ℹ️ Already reacted — reverting to unliked state");
+      setLiked(false);
+      setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+    }
+
+    // If successful
+    else if (response?.ok) {
+      console.log("✅ React success");
+    }
+
+    // If other error
+    else if (response && !response.ok) {
+      throw new Error(`Server returned ${response.status}`);
+    }
+    } catch (error) {
+      console.error("❌ Error reacting:", error);
+      // Revert UI if something went wrong
+      setLiked((prev) => !prev);
+      setLikeCount((prev) => (liked ? prev + 1 : prev - 1));
+    }
   };
+
 
   return (
     <div className="flex justify-center items-center border-box">
@@ -46,7 +78,7 @@ export default function ProjectCard({
           <h1 className="text-2xl font-semibold leading-8 text-[#F9FAFB] font-sans">
             {title}
           </h1>
-          <p className="text-[#99A1AF] font-light leading-5 text-sm font-sans max-w-[300px]">
+          <p className="text-[#99A1AF] font-light leading-5 text-sm font-sans max-w-[300px] h-[60px] overflow-hidden">
             {description}
           </p>
         </div>
@@ -55,7 +87,8 @@ export default function ProjectCard({
         <div className="flex items-center justify-center gap-4 mt-[11px]">
           {/* Like */}
           <button
-            onClick={toggleLike}
+            // onClick={toggleLike}
+            onClick={handleLikeClick}
             className="flex items-center gap-2 hover:scale-105 transition-transform"
           >
             <img
