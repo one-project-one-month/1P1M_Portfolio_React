@@ -41,16 +41,16 @@ export const RegisterListPage = PageLoader(
   lazy(() => import("@/features/admin/pages/RegisterListPage"))
 );
 
-export const ProjectListPage=PageLoader(
-  lazy(()=>import("@/features/auth/pages/ProjectIdeaListPage"))
-)
+export const ProjectListPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/ProjectIdeaListPage"))
+);
 
 export const ProjectListPageAdmin = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectListPageAdmin"))
 );
 
 export const ProjectCreateFormPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
+  lazy(() => import("@/features/user/pages/ProjectCreateFormPage"))
 );
 
 export const ApprovedIdeasPage = PageLoader(

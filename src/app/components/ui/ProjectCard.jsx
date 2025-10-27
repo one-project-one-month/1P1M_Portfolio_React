@@ -3,6 +3,7 @@ import heartIcon from "@/assets/icons/Heart.png";
 import activeHeartIcon from "@/assets/icons/ActiveHeart.png";
 import eyeIcon from "@/assets/icons/eye.png";
 import Button from "./Button";
+import ProjectPortfolioDetail from "@/features/user/components/ProjectPortfolioDetail";
 
 export default function ProjectCard({
   image,
@@ -12,37 +13,37 @@ export default function ProjectCard({
   initialViews = 0,
 
   onClickReact,
-  project
+  project,
 }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [viewCount] = useState(initialViews);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
+  const handleLikeClick = async () => {
+    // Optimistically update the UI
+    setLiked((prev) => !prev);
+    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
 
-const handleLikeClick = async () => {
-  // Optimistically update the UI
-  setLiked((prev) => !prev);
-  setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+    try {
+      const response = await onClickReact(project.id);
 
-  try {
-    const response = await onClickReact(project.id);
+      // If backend says “already reacted” (409), that means user had liked before
+      if (response?.status === 409) {
+        console.log("ℹ️ Already reacted — reverting to unliked state");
+        setLiked(false);
+        setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+      }
 
-    // If backend says “already reacted” (409), that means user had liked before
-    if (response?.status === 409) {
-      console.log("ℹ️ Already reacted — reverting to unliked state");
-      setLiked(false);
-      setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
-    }
+      // If successful
+      else if (response?.ok) {
+        console.log("✅ React success");
+      }
 
-    // If successful
-    else if (response?.ok) {
-      console.log("✅ React success");
-    }
-
-    // If other error
-    else if (response && !response.ok) {
-      throw new Error(`Server returned ${response.status}`);
-    }
+      // If other error
+      else if (response && !response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
     } catch (error) {
       console.error("❌ Error reacting:", error);
       // Revert UI if something went wrong
@@ -51,6 +52,13 @@ const handleLikeClick = async () => {
     }
   };
 
+  const handleViewClick = () => {
+    setIsDetailOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailOpen(false);
+  };
 
   return (
     <div className="flex justify-center items-center border-box">
@@ -116,11 +124,22 @@ const handleLikeClick = async () => {
             Preview
           </Button>
 
-          <Button variant="purple_button" size="purple_button">
+          <Button
+            variant="purple_button"
+            size="purple_button"
+            onClick={handleViewClick}
+          >
             View
           </Button>
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      <ProjectPortfolioDetail
+        projectId={project?.id}
+        isOpen={isDetailOpen}
+        onClose={handleCloseDetail}
+      />
     </div>
   );
 }
