@@ -12,7 +12,8 @@ export default function SearchBar({ placeholder = "Search...", onChange, value, 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center w-[510px] py-3 px-4 bg-white shadow-sm dark:bg-gray-800 border border-[Filters] rounded-[8px]"
+      // className="flex items-center w-[510px] py-3 px-4 bg-white shadow-sm dark:bg-gray-800 border border-[Filters] rounded-[8px]"
+        className="flex items-center w-[510px] py-3 px-4 bg-gray-500/30 shadow-sm border border-gray-600 rounded-[8px]"
     >
       <button
         type="submit"
@@ -30,7 +31,7 @@ export default function SearchBar({ placeholder = "Search...", onChange, value, 
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full ml-[10px] bg-transparent dark:text-gray-100 text-sm focus:outline-none"
+        className="w-full ml-[10px] bg-transparent text-gray-100 text-sm focus:outline-none"
       />
       
     </form>

@@ -5,7 +5,8 @@ import LeftIcon from "@/assets/icons/left-pagination.png";
 const FIXED_TOTAL_PAGES = 99;
 
 export default function Pagination({ totalPages, currentPage, onPageChange }) {
-  const finalTotalPages = Math.max(totalPages || 1, FIXED_TOTAL_PAGES);
+  // const finalTotalPages = Math.max(totalPages || 1, FIXED_TOTAL_PAGES);
+  const finalTotalPages = totalPages > 0 ? totalPages : FIXED_TOTAL_PAGES; 
 
   const renderPages = () => {
     const fixedPages = [];
