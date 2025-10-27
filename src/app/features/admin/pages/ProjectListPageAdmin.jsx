@@ -61,9 +61,6 @@ const ProjectListPageAdmin = () => {
 
     const handleReject = async (projectId) => {
 
-        console.log("Rejected project:", projectId);
-        console.log("=== BUTTON CLICKED - CALLING API ===");
-
         setIsRejectLoading(projectId);
         try {
 
@@ -85,8 +82,6 @@ const ProjectListPageAdmin = () => {
     };
 
     const handleApprove = async (projectId) => {
-        console.log("Approved project:", projectId);
-        console.log("=== BUTTON CLICKED - CALLING API ===");
 
         setIsApproveLoading(projectId);
         try {
@@ -149,7 +144,7 @@ const ProjectListPageAdmin = () => {
                     <p className="text-center col-span-full text-gray-400">No projects found.</p>
                 ) : (
                     filteredProjects
-                    .filter((proj) => proj.status === "PENDING")
+                    // .filter((proj) => proj.status === "PENDING")
                     .map((proj) => (
                         <ProjectCardAdmin
                             key={proj.id}
