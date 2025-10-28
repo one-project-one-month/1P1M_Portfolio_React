@@ -35,8 +35,11 @@ export const fetchApprovedProjects = async ({
           id: project.id,
           projectName: project.name,
           projectDetails: project.description,
+          profilePictureUrl: project.profilePictureUrl,
           devName: project.devName,
+          devId: project.dev_id,
           reactionCount: project.reactionCount,
+          reactedProjects: project.reactedProjects,
           projectTypes: [...new Set(project.projectTypes || [])], // Remove duplicates
           status: project.status
         })),

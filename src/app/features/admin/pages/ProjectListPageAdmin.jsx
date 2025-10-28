@@ -144,7 +144,7 @@ const ProjectListPageAdmin = () => {
                     <p className="text-center col-span-full text-gray-400">No projects found.</p>
                 ) : (
                     filteredProjects
-                    // .filter((proj) => proj.status === "PENDING")
+                    .filter((proj) => proj.status === "PENDING")
                     .map((proj) => (
                         <ProjectCardAdmin
                             key={proj.id}

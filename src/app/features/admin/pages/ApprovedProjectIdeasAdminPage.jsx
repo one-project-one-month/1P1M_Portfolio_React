@@ -101,6 +101,7 @@ const ApprovedProjectIdeasAdminPage = () => {
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
           filteredProjects
+          .filter((projects)=> projects.status !== "DELETED")
           .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
@@ -109,12 +110,12 @@ const ApprovedProjectIdeasAdminPage = () => {
               description={proj.projectDetails}
               submittedByProfile={proj.profilePictureUrl}
               postBy={proj.devName}
-              likeCount={proj.reaction_count}
+              likeCount={proj.reactionCount}
               liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
-              status={proj.status}
-              canEdit={()=>handleEdit(proj.id)}
-              canDelete={()=>handleDelete(proj.id)}
+              status={proj.status.toLowerCase() === "in_progress"? 1 : proj.status.toLowerCase() === "completed"? 2 : 3}
+              // canEdit={()=>handleEdit(proj.id)}
+              // canDelete={()=>handleDelete(proj.id)}
               onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))

@@ -54,29 +54,25 @@ const ApprovedProjectIdeasPage = () => {
       return (b.id || 0) - (a.id || 0); 
     });
 
-    const handleLike = async(projectId, likeState) => {
-            console.log(`${likeState ? "Unliked" : "Liked"} project:`, projectId);
-            
-            
-            
-            try {
-              console.log(`API called for project ${projectId}`);
-              if(likeState){
-                  await reactProjectIdea(projectId)
-                }else{
-                  await unreactProjectIdea(projectId)
-                }
-            } catch (error) {
-                console.error("Error updating like:", error);
-                setProjects(prev =>
-                    prev.map(p =>
-                        p.id === projectId
-                            ? { ...p, likecount: likeState ? p.likecount + 1 : p.likecount - 1, likestate: likeState }
-                            : p
-                    )
-                );
-            }
-        };
+    const handleLike = async(projectId, liked) => {
+   
+           try {
+               if(liked){
+                   await reactProjectIdea(projectId)
+               }else{
+                   await unreactProjectIdea(projectId)
+               }
+           } catch (error) {
+               console.error("Error updating like:", error);
+               setProjects(prev =>
+                   prev.map(p =>
+                       p.id === projectId
+                           ? { ...p, likecount: liked ? p.likecount + 1 : p.likecount - 1, likestate: liked }
+                           : p
+                   )
+               );
+           }
+       };
 
 
   return (
@@ -99,6 +95,7 @@ const ApprovedProjectIdeasPage = () => {
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
           filteredProjects
+          .filter((projects)=> projects.status !== "DELETED")
           .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
@@ -107,10 +104,10 @@ const ApprovedProjectIdeasPage = () => {
               description={proj.projectDetails}
               submittedByProfile={proj.profilePictureUrl}
               postBy={proj.devName}
-              likeCount={proj.reaction_count}
+              likeCount={proj.reactionCount}
               liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
-              status={proj.status}
+              status={proj.status.toLowerCase() === "in_progress"? 1 : proj.status.toLowerCase() === "completed"? 2 : 3}
               onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))
