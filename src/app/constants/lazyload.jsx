@@ -54,7 +54,10 @@ export const ProjectCreateFormPage = PageLoader(
 );
 
 export const ApprovedIdeasPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ApprovedIdeasPage"))
+  lazy(() => import("@/features/user/pages/ApprovedProjectIdeasPage"))
+);
+export const ApprovedIdeasAdminPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/ApprovedProjectIdeasAdminPage"))
 );
 
 export const LandingPage = PageLoader(

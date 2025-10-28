@@ -61,9 +61,6 @@ const ProjectListPageAdmin = () => {
 
     const handleReject = async (projectId) => {
 
-        console.log("Rejected project:", projectId);
-        console.log("=== BUTTON CLICKED - CALLING API ===");
-
         setIsRejectLoading(projectId);
         try {
 
@@ -85,8 +82,6 @@ const ProjectListPageAdmin = () => {
     };
 
     const handleApprove = async (projectId) => {
-        console.log("Approved project:", projectId);
-        console.log("=== BUTTON CLICKED - CALLING API ===");
 
         setIsApproveLoading(projectId);
         try {
