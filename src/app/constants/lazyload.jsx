@@ -71,3 +71,7 @@ export const DevListPage = lazy(() =>
 export const ProjectPortfolioList = lazy(() =>
   import("@/features/auth/pages/ProjectPortfolioList")
 );
+
+export const ProjectIdeaPage = lazy(() =>
+  import("@/features/auth/pages/Projectideapage")
+);

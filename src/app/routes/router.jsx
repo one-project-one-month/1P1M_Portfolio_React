@@ -14,6 +14,7 @@ import {
   LandingPage,
   ProjectPortfolioList,
   ApprovedIdeasAdminPage,
+  ProjectIdeaPage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: "project-portfolio", element: <ProjectPortfolioList /> },
       { path: "add-member", element: <AddMemberPage /> },
       { path: "create-project", element: <ProjectCreateFormPage /> },
+      { path: "project-idea", element: <ProjectIdeaPage /> },
     ],
   },
   {
