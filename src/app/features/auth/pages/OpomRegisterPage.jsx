@@ -12,6 +12,7 @@ import "react-phone-input-2/lib/style.css";
 import Button from "@/components/ui/Button";
 import { opomRegister } from "@/services/authService";
 import FormField from "@/components/ui/FormFields";
+import toast from "react-hot-toast";
 
 const OpomRegisterPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,21 +28,25 @@ const OpomRegisterPage = () => {
     const payLoad = {
       name: data.name,
       email: data.email,
-      phone: data.phone,
-      telegram_username: data.telegram_username,
-      status: data.status,
-      github_url: data.github_url,
-      role: data.role,
-      platformLinks: data.platformLinks?.value,
+      phone: data.phone || "",
+      telegram_username: data.telegram_username || "",
+      github_url: data.github_url || "",
+      role: data.role?.name || data.role || "",
+      status: "ACTIVE",
+      platformLinks:
+        data.platformLinks?.id && data.platformLinks?.value
+          ? [{ platformId: data.platformLinks.id, link: data.platformLinks.value }]
+          : [],
     };
 
     try {
-      console.log("Submitting OPOM registration Payload", payLoad);
-
-      const response = await opomRegister(payLoad);
-      console.log(response);
+      const result = await opomRegister(payLoad);
+      console.log("Submitting OPOM registration Payload", result);
+      toast.success("Registration successful!");
+      navigate("/");
     } catch (error) {
-      console.error(error);
+      console.error("OPOM Registration Error:", error);
+      toast.error(error.message || "Registration failed. Please check your input and try again.");
     }
   };
 
@@ -74,9 +79,9 @@ const OpomRegisterPage = () => {
         {!isLoading && (
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             {/* form fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
               {/* Column 1 */}
-              <div className="flex flex-col gap-y-1">
+              <div className="flex flex-col gap-y-4">
                 <FormField
                   type="text"
                   placeholder="Name"
@@ -91,11 +96,18 @@ const OpomRegisterPage = () => {
                 <Controller
                   name="phone"
                   control={control}
+                  rules={{
+                    required: "Phone number is required",
+                    minLength: {
+                      value: 11,
+                      message: "Please enter a valid phone number.",
+                    },
+                  }}
                   render={({ field }) => (
                     <PhoneInput
                       {...field}
                       country={"mm"}
-                      containerClass="mb-4"
+                      containerClass=""
                       inputClass="!bg-[#111] !w-full !h-12 !text-white !border-gray-700"
                       buttonClass="!bg-[#111] !border-gray-700 hover:!bg-gray-800"
                       dropdownClass="!bg-[#111] !text-white"
@@ -104,6 +116,10 @@ const OpomRegisterPage = () => {
                     />
                   )}
                 />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                )}
+
                 <FormField
                   type="text"
                   placeholder="Telegram Username"
@@ -118,13 +134,17 @@ const OpomRegisterPage = () => {
               </div>
 
               {/* Column 2 */}
-              <div className="flex flex-col gap-y-1">
+              <div className="flex flex-col gap-y-4">
                 <FormField
                   placeholder="Email"
                   showEditButton={false}
                   className="w-full text-white font-sans text-sm font-semibold leading-8"
                   {...register("email", { required: "Email is required" })}
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+
                 <FormField
                   id="github_url"
                   name="github_url"
@@ -132,6 +152,7 @@ const OpomRegisterPage = () => {
                   className="w-full text-white font-sans text-sm font-semibold leading-8"
                   {...register("github_url")}
                 />
+
                 <Controller
                   name="role"
                   control={control}
@@ -140,10 +161,13 @@ const OpomRegisterPage = () => {
                       {...field}
                       placeholder="Role"
                       menuList={TechStack}
-                      className="w-full text-white font-sans text-sm font-semibold leading-8 mb-4"
+                      className="w-full text-white font-sans text-sm font-semibold leading-8"
                     />
                   )}
                 />
+                {errors.role && (
+                  <p className="text-red-500 text-sm">{errors.role.message}</p>
+                )}
                 <Controller
                   name="platformLinks"
                   control={control}
@@ -152,7 +176,7 @@ const OpomRegisterPage = () => {
                       {...field}
                       placeholder="Platform link"
                       menuList={Platform}
-                      className="w-full text-white font-sans text-sm font-semibold leading-8 mb-4"
+                      className="w-full text-white font-sans text-sm font-semibold leading-8"
                     />
                   )}
                 />
