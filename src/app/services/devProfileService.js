@@ -1,28 +1,61 @@
 import apiClient from "@/api/axios";
-import { API_ENDPOINTS } from "@/config/apiConfig";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
-export const getDevProfiles = async () => {
+export const getDevProfiles = async (params = {}, signal = null) => {
   try {
-    const response = await apiClient.get("/profiles"); //end point
+    const queryParams = new URLSearchParams();
+
+    // Add parameters if they exist
+    if (params.keyword) queryParams.append("keyword", params.keyword);
+    if (params.page !== undefined) queryParams.append("page", params.page);
+    if (params.size !== undefined) queryParams.append("size", params.size);
+    if (params.sortField) queryParams.append("sortField", params.sortField);
+    if (params.sortDirection)
+      queryParams.append("sortDirection", params.sortDirection);
+
+    const url = `${API_ENDPOINTS.GET_PROFILE}${
+      queryParams.toString() ? `?${queryParams.toString()}` : ""
+    }`;
+
+    const config = {
+      ...getAuthConfig(),
+      ...(signal && { signal }), // Add AbortController signal if provided
+    };
+
+    const response = await apiClient.get(url, config);
     return response.data;
   } catch (error) {
-    console.error("Error fetching developer", error);
-    throw error;
+    // Don't log AbortError as it's expected when cancelling requests
+    if (error.name !== "AbortError") {
+      console.error("Error fetching developer", error);
+    }
+    throw error.response?.data || error;
   }
 };
 
 export const setupDevProfile = async (form) => {
   try {
-    const user = localStorage.getItem("user");
-    const userJson = JSON.parse(user);
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || !token)
+      throw new Error("Missing token. You are not logged in.");
+
+    const payload = {
+      ...form,
+    };
 
     const response = await apiClient.post(
-      API_ENDPOINTS.SETUP_PROFILE + userJson.id,
-      form
+      API_ENDPOINTS.SETUP_PROFILE + `${user.id}` || "/profiles",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
-    console.log("END_POINt", API_ENDPOINTS.SETUP_PROFILE + userJson.id);
-
+    console.log("Profile setup success:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error creating dev profiles:", error);

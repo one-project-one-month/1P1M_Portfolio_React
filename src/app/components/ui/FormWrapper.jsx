@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from './Button';
 
-const FormWrapper = ({ title, subtitle, children, onSubmit, className, loading }) => (
+const FormWrapper = ({ title, subtitle, children, onSubmit, className, loading, buttonText = "Continue" }) => (
         <form className={`text-white font-sans text-sm font-semibold leading-8 ${className}`}>
             <div className="text-2xl text-center space-y-2">
             <h2 className='text-2xl'>{title}</h2>
@@ -23,7 +23,7 @@ const FormWrapper = ({ title, subtitle, children, onSubmit, className, loading }
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     )}
-                    Continue
+                    {buttonText}
                 </div>
             </Button>
         </form>

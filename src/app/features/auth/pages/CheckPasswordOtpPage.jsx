@@ -13,7 +13,9 @@ function CheckPasswordOtpPage() {
 
   const handleVerifySuccess = () => {
     // Navigate to dashboard or next step
-    toast.success("🎉 OTP Verified Successfully! Proceed to reset your password.");
+    toast.success(
+      "🎉 OTP Verified Successfully! Proceed to reset your password."
+    );
     navigate("/password-reset");
   };
 

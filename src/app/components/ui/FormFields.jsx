@@ -1,6 +1,6 @@
 import React from "react";
 
-function FormField({ placeholder, type = "text", className = "", ...props }) {
+function FormField({ placeholder, type = "text",noFocus = false, className = "", ...props }) {
   return (
     <input
       type={type}
@@ -11,7 +11,7 @@ function FormField({ placeholder, type = "text", className = "", ...props }) {
         text-white 
         placeholder:font-sans placeholder:font-normal placeholder:text-sm placeholder:leading-5 
         placeholder:tracking-normal placeholder:align-middle placeholder:text-[#6A7282]
-        focus:outline-none focus:ring-2 focus:ring-purple-500
+        ${noFocus ? "focus:outline-none focus:ring-0" : "focus:outline-none focus:ring-2 focus:ring-purple-500"}
         ${className}
       `}
       {...props}

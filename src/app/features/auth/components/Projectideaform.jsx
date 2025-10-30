@@ -4,7 +4,7 @@ import FormBackground from "../../../components/ui/FormBackground";
 import TextField from "@/components/ui/TextField";
 import FormTextArea from "@/components/ui/FormTextArea";
 import { useMutation } from "@tanstack/react-query";
-import { createProjectIdea } from "@/app/services/projectIdeaService";
+import { createProjectIdea } from "@/services/projectIdeaService";
 import toast from "react-hot-toast";
 
 const Projectideaform = () => {
@@ -30,7 +30,11 @@ const Projectideaform = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.projectName || !formData.description || !formData.projectType) {
+    if (
+      !formData.projectName ||
+      !formData.description ||
+      !formData.projectType
+    ) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -51,9 +55,7 @@ const Projectideaform = () => {
           name="projectName"
           placeholder="Enter your project name"
           value={formData.projectName}
-          onChange={(e) =>
-            setFormData({ ...formData, projectName: e.target.value })
-          }
+          onChange={(value) => setFormData({ ...formData, projectName: value })}
           className="w-full text-white font-sans text-sm font-medium leading-8"
         />
 

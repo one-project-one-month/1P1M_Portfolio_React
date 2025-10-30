@@ -15,17 +15,15 @@ export const LoginPage = PageLoader(
 
 export const RegisterPage = PageLoader(
   lazy(() => import("@/features/auth/pages/RegisterPage"))
-)
+);
 
 export const DevProfilePage = lazy(() =>
   import("../features/auth/pages/DevProfilePage")
 );
 
-
 export const OtpPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OtpPage"))
 );
-
 
 export const ForgotPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
@@ -45,14 +43,29 @@ export const AdminLayout = PageLoader(
 
 export const RegisterListPage = PageLoader(
   lazy(() => import("@/features/admin/pages/RegisterListPage"))
-)
+);
+
+export const ProjectListPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/ProjectIdeaListPage"))
+);
+
+export const ProjectListPageAdmin = PageLoader(
+  lazy(() => import("@/features/admin/pages/ProjectListPageAdmin"))
+);
 
 export const ProjectCreateFormPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
+  lazy(() => import("@/features/user/pages/ProjectCreateFormPage"))
 );
 
 export const ApprovedIdeasPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ApprovedIdeasPage"))
+  lazy(() => import("@/features/user/pages/ApprovedProjectIdeasPage"))
+);
+export const ApprovedIdeasAdminPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/ApprovedProjectIdeasAdminPage"))
+);
+
+export const LandingPage = PageLoader(
+  lazy(() => import("@/features/user/pages/LandingPage"))
 );
 
 export const DevListPage = lazy(() =>
@@ -61,4 +74,11 @@ export const DevListPage = lazy(() =>
 
 export const OpomRegisterPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OpomRegisterPage"))
+);
+export const ProjectPortfolioList = lazy(() =>
+  import("@/features/auth/pages/ProjectPortfolioList")
+);
+
+export const ProjectIdeaPage = lazy(() =>
+  import("@/features/auth/pages/Projectideapage")
 );

@@ -1,6 +1,13 @@
-
-import { AuthPage, OtpPage, LoginPage, ResetPasswordPage, ForgotPasswordPage, RegisterPage, CheckPasswordOtpPage, OpomRegisterPage } from "@/constants/lazyload";
-
+import {
+  AuthPage,
+  OtpPage,
+  LoginPage,
+  ResetPasswordPage,
+  ForgotPasswordPage,
+  RegisterPage,
+  CheckPasswordOtpPage,
+  OpomRegisterPage,
+} from "@/constants/lazyload";
 
 const authRouter = [
   {
@@ -42,7 +49,7 @@ const authRouter = [
   {
     path: "opom-register",
     element: <OpomRegisterPage />,
-  }
+  },
 ];
 
 export default authRouter;
