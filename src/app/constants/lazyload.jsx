@@ -29,6 +29,10 @@ export const ForgotPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ForgotPasswordPage"))
 );
 
+export const CheckPasswordOtpPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/CheckPasswordOtpPage"))
+);
+
 export const ResetPasswordPage = PageLoader(
   lazy(() => import("@/features/auth/pages/ResetPasswordPage"))
 );
@@ -68,6 +72,9 @@ export const DevListPage = lazy(() =>
   import("../features/user/pages/DevListPage")
 );
 
+export const OpomRegisterPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/OpomRegisterPage"))
+);
 export const ProjectPortfolioList = lazy(() =>
   import("@/features/auth/pages/ProjectPortfolioList")
 );

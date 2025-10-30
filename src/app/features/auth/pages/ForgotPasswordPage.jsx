@@ -13,36 +13,29 @@ function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-
-
-
-
   const handleContinue = async () => {
     const emailExists = await checkEmailExists(email);
-    
+
     setLoading(true);
 
-    if(emailExists?.data){
+    if (emailExists?.data) {
       try {
-
         const res = await forgotPassword(email);
-        if(res.code === 200 && res.success === 1){
-          toast.success("OTP resent successfully! Check your email.", {id: "resend-otp",});
+        if (res.code === 200 && res.success === 1) {
+          toast.success("OTP resent successfully! Check your email.", {
+            id: "resend-otp",
+          });
           navigate("/otp-verify", { state: { email } });
         }
-
       } catch (error) {
         console.error("Error during password forgot:", error);
       } finally {
         setLoading(false);
       }
-    }else{
-      toast.error("Email not in our system! Please register first")
-      navigate("/register",{ state: { email } });
-
+    } else {
+      toast.error("Email not in our system! Please register first");
+      navigate("/register", { state: { email } });
     }
-
-
   };
 
   return (
@@ -70,7 +63,7 @@ function ForgotPasswordPage() {
               value={email}
               onChange={(value) => setEmail(value)}
               showEditButton={false}
-              error= {emailError}
+              error={emailError}
               className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
           </div>
@@ -84,19 +77,23 @@ function ForgotPasswordPage() {
           >
             {loading ? "Processing..." : "Continue"}
           </Button>
-
         </div>
         <div className="mt-6 py-4 flex text-sm text-[#99A1AF]">
           <a href="/login" className="flex text-center cursor-pointer block">
-            <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Login
           </a>
         </div>
       </FormBackground>
-    </Background >
-  )
+    </Background>
+  );
 }
 
 export default ForgotPasswordPage;

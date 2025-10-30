@@ -1,5 +1,5 @@
 import apiClient from "@/api/axios";
-import { API_ENDPOINTS } from "@/config/apiConfig";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
 export const exchangeGithubCode = async (code) => {
   try {
@@ -46,7 +46,7 @@ export const loginWithEmailPassword = async (email, password) => {
       email,
       password,
     });
-    
+
     const data = response.data?.data;
 
     if (!data?.token) throw new Error("Invalid response: no token found");
@@ -109,13 +109,13 @@ export const signupWithEmail = async (email, password) => {
   } catch (error) {
     console.error("Error signup:", error);
 
-    throw error.response?.data || {
-      message: "Network or server error. Please try again.",
-    };
+    throw (
+      error.response?.data || {
+        message: "Network or server error. Please try again.",
+      }
+    );
   }
 };
-
-
 
 export const forgotPassword = async (email) => {
   try {
@@ -130,16 +130,26 @@ export const forgotPassword = async (email) => {
   }
 };
 
+export const opomRegister = async (form) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.OPOM_REGISTER,
+      form,
+      getAuthConfig()
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in OPOM registration:", error);
+  }
+};
 
 export const resetPassword = async (email, newPassword) => {
   try {
-    const response = await apiClient.post(
-      API_ENDPOINTS.RESET_PASSWORD,
-      {
-        email,
-        newPassword,
-      }
-    );
+    const response = await apiClient.post(API_ENDPOINTS.RESET_PASSWORD, {
+      email,
+      newPassword,
+    });
     return response.data;
   } catch (error) {
     console.error("Error resetting password:", error);
