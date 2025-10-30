@@ -1,17 +1,48 @@
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS } from "@/config/apiConfig";
 
-export const ProjectIdeaList = async (page = 0, limit = 6, sortField="name", sortDirection = "desc") => {
+export const ProjectIdeaList = async (
+  page = 0,
+  limit = 6,
+  keyword = "",
+  sortField,
+  sortDirection
+) => {
   try {
+    // let sortField = "id";
+    // let sortDirection = "desc";
+
+    // if (filter === "Popular") {
+    //   // sortField = "reactionCount";
+    //   sortDirection = "desc";
+    // } else if (filter === "Oldest") {
+    //   sortField = "id";
+    //   sortDirection = "asc";
+    // } else if (filter === "Newest") {
+    //   sortField = "id";
+    //   sortDirection = "desc";
+    // }
+
     const response = await apiClient.get(
-      `${API_ENDPOINTS.PROJECT_IDEA}/getAllProjectIdeas?page=${page}&size=${limit}&sortField=${sortField}&sortDirection=${sortDirection}`
+      `${API_ENDPOINTS.PROJECT_IDEA}/getAllProjectIdeas`,
+      {
+        params: {
+          page,
+          size: limit,
+          sortField,
+          sortDirection,
+          keyword,
+        },
+      }
     );
+
     return response.data;
   } catch (error) {
     console.error("Error fetching project ideas:", error);
     throw error.response?.data || error;
   }
 };
+
 
 export const updateProjectIdeaStatus = async (projectIdeaId, status) => {
   try {

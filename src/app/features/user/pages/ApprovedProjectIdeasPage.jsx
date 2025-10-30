@@ -6,7 +6,7 @@ import { reactProjectIdea, unreactProjectIdea } from "@/services/projectIdeaServ
 import React, { useEffect, useState } from "react";
 
 const ApprovedProjectIdeasPage = () => {
-  const [curPage, setCurPage] = useState(1);
+  const [curPage, setCurPage] = useState(0);
   const [projects, setProjects] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
