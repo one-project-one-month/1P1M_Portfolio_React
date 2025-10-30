@@ -19,7 +19,7 @@ export const fetchApprovedProjects = async ({
     };
 
     if (sortBy) params.sortBy = sortBy;
-    if (search) params.search = search; 
+    if (search) params.keyword = search; 
 
     const response = await apiClient.get("/portfolio/api/v1/approved-ideas", { params });
     const backendData = response.data;

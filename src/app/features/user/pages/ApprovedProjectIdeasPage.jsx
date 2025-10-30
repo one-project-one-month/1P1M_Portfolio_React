@@ -6,7 +6,7 @@ import { reactProjectIdea, unreactProjectIdea } from "@/services/projectIdeaServ
 import React, { useEffect, useState } from "react";
 
 const ApprovedProjectIdeasPage = () => {
-  const [curPage, setCurPage] = useState(0);
+  const [curPage, setCurPage] = useState(1);
   const [projects, setProjects] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -25,12 +25,12 @@ const ApprovedProjectIdeasPage = () => {
           : "oldest";
 
       const data = await fetchApprovedProjects({
-        page: page + 1, // frontend 0-based → backend 1-based
+        page,
         size: 6,
         sortBy: sortParam,
         search: searchTerm
       });
-
+      
       setTotalPages(data.data.pagination.totalPages || 1);
       setProjects(data.data.projects);
     } catch (error) {
@@ -42,12 +42,17 @@ const ApprovedProjectIdeasPage = () => {
 
 useEffect(() => {
   const delayDebounce = setTimeout(() => {
-    fetchProjects(curPage);
+    setCurPage(1);
+    fetchProjects(1);
   }, 500); 
 
   return () => clearTimeout(delayDebounce);
-}, [curPage, filter, searchTerm]);
+}, [filter, searchTerm]);
 
+
+useEffect(() => {
+  fetchProjects(curPage);
+}, [curPage]);
 
   const handleLike = async (projectId, liked) => {
     try {
@@ -90,7 +95,8 @@ useEffect(() => {
         onFilterChange={setFilter}
       />
 
-      <div className="flex-grow flex flex-wrap gap-6 p-6">
+      {/* <div className="flex-grow flex flex-wrap gap-6 p-6"> */}
+      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">
             Loading projects...
@@ -133,6 +139,7 @@ useEffect(() => {
           totalPages={totalPages}
           onPageChange={(newPage) => setCurPage(newPage)}
         />
+
       </div>
     </div>
   );
