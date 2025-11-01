@@ -7,14 +7,14 @@ import Button from "../../../components/ui/Button";
 import TechStack from "../../../constants/TechStack";
 import FormDropdown from "../../../components/ui/FormDropdown";
 import FileUpload from "@/components/ui/FileUpload";
-import { setupDevProfile } from "@/services/devProfileService";
+import { setupDevProfile, uploadDevImage } from "@/services/devProfileService";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function DevProfileForm() {
   // ---- React Hook Form ----
 
-  const [imgUrl, setImgUrl] = useState("");
+  const [img, setImg] = useState("");
   const {
     register,
     handleSubmit,
@@ -23,50 +23,67 @@ function DevProfileForm() {
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
-    defaultValues: {
-      profilePictureUrl: "",
-    },
+   
   });
   const navigate = useNavigate();
 
   const handleImageSelect = (file) => {
-    console.log("Selected file:", file.name, file.size);
+    console.log("Selected file:", file);
+    console.log();
+    
     if (file) {
-      const imgUrl = URL.createObjectURL(file);
-      setImgUrl(imgUrl.substring(imgUrl.indexOf("h")));
+      
+      setImg(file);
+      console.log(img);
+      
     }
   };
 
-  const onSubmit = async (data, event) => {
-    event.preventDefault();
-    console.log(imgUrl);
+  const formData=new FormData()
+  formData.append("DEV image",img)
+  console.log("FROM DATA",formData);
+  
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      alert("You must log in first");
-      return;
-    }
+const onSubmit = async (data) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    alert("You must log in first");
+    return;
+  }
 
-    const payLoad = {
-      name: data.name,
-      techStacks: [data.techStacks.name],
-      profilePictureUrl: imgUrl,
-      github: data.github,
-      linkedIn: data.linkedIn,
-      aboutDev: data.aboutDev,
-    };
-
-    try {
-      console.log("Start creating dev profiles", payLoad);
-
-      const result = await setupDevProfile(payLoad);
-      console.log("Create Dev Profiles", result);
-
-      if (result.code === 201 || result.success === 1) navigate("/admin");
-    } catch (error) {
-      console.error("Create Dev Profile Error", error);
-    }
+  const payLoad = {
+    name: data.name,
+    techStacks: [data.techStacks.name],
+    github: data.github,
+    linkedIn: data.linkedIn,
+    aboutDev: data.aboutDev,
   };
+
+  try {
+    console.log("Start creating dev profiles", payLoad);
+
+    const result = await setupDevProfile(payLoad);
+    console.log("Create Dev Profiles", result);
+
+    if (result.success === 1 && result.data && result.data.devProfileId) {
+      const devProfileId = result.data.devProfileId;
+
+      
+      const formData = new FormData();
+      formData.append("file", img);
+
+      console.log("Uploading image for Dev ID:", devProfileId);
+
+      const uploadRes = await uploadDevImage(devProfileId, formData);
+      console.log("Upload Response:", uploadRes);
+
+      navigate("/admin");
+    }
+  } catch (error) {
+    console.error("Create Dev Profile Error", error);
+  }
+};
+
 
   return (
     <FormBackground className="w-[532px]">
