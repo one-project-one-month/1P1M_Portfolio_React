@@ -5,23 +5,22 @@ export const ProjectIdeaList = async (
   page = 0,
   limit = 6,
   keyword = "",
-  sortField,
+  filter,
   sortDirection
 ) => {
   try {
-    // let sortField = "id";
-    // let sortDirection = "desc";
-
-    // if (filter === "Popular") {
-    //   // sortField = "reactionCount";
-    //   sortDirection = "desc";
-    // } else if (filter === "Oldest") {
-    //   sortField = "id";
-    //   sortDirection = "asc";
-    // } else if (filter === "Newest") {
-    //   sortField = "id";
-    //   sortDirection = "desc";
-    // }
+    let sortField = "id";
+    
+    if (filter === "Popular") {
+      sortField = "reactedUsers";
+       sortDirection = "asc";
+    } else if (filter === "Oldest") {
+      sortField = "id";
+      sortDirection = "asc";
+    } else if (filter === "Newest") {
+      sortField = "id";
+      sortDirection = "desc";
+    }
 
     const response = await apiClient.get(
       `${API_ENDPOINTS.PROJECT_IDEA}/getAllProjectIdeas`,

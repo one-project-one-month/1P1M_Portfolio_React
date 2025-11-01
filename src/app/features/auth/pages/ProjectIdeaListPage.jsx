@@ -5,7 +5,7 @@ import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea } from "@/service
 import React, { useEffect, useState } from "react";
 
 const ProjectListPage = () => {
-  const [curPage, setCurPage] = useState(1);
+  const [curPage, setCurPage] = useState(0);
   const [projects, setProjects] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -13,15 +13,13 @@ const ProjectListPage = () => {
   const [filter, setFilter] = useState("Popular");
 
 
-  const fetchProjects = async (page = 1) => {
+  const fetchProjects = async (page = 0) => {
     try {
       setLoading(true);
-      const { data, meta } = await ProjectIdeaList(page, 6,  searchTerm);
-      console.log(data, meta);
+      const { data, meta } = await ProjectIdeaList(page, 6,  searchTerm, filter);
       
       setTotalPages(meta?.totalPages || 1);
       setProjects(data)
-      console.log("project : ",projects);
       
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -44,6 +42,7 @@ const ProjectListPage = () => {
   useEffect(() => {
     fetchProjects(curPage);
   }, [curPage]);
+  
   const handleLike = async (projectId, likeState) => {
 
     try {
