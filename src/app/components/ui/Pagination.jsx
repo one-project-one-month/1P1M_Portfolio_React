@@ -2,100 +2,50 @@ import React from "react";
 import RightIcon from "@/assets/icons/right-pagination.png";
 import LeftIcon from "@/assets/icons/left-pagination.png";
 
-export default function Pagination({ totalPages, currentPage, onPageChange }) {
-  const finalTotalPages = Math.max(1, Number(totalPages) || 1);
-  // Convert backend's 0-based page index to 1-based for UI
-  const cur = Math.min(Math.max(1, Number(currentPage) + 1 || 1), finalTotalPages);
+export default function Pagination({ totalPages = 1, currentPage, onPageChange }) {
+  const finalTotalPages = Math.max(totalPages, 1);
 
-  const renderPages = () => {
+  const getPageNumbers = () => {
     if (finalTotalPages <= 6) {
-      return Array.from({ length: finalTotalPages }, (_, i) => {
-        const page = i + 1;
-        const isCurrent = page === cur;
-        return (
-          <button
-            key={page}
-            onClick={() => onPageChange(page - 1)}
-            className={`w-10 h-10 flex items-center justify-center rounded-[4px] 
-              transition-colors duration-300 text-sm font-medium ${
-                isCurrent
-                  ? "bg-[#9C39FC] text-white font-semibold"
-                  : "bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28]"
-              }`}
-          >
-            {page}
-          </button>
-        );
-      });
+      // Render all pages if small total
+      return Array.from({ length: finalTotalPages }, (_, i) => i + 1);
     }
 
-    const pages = [];
-    if (cur <= 3) {
-      pages.push(1, 2, 3, 4, "...", finalTotalPages);
-    } else if (cur >= finalTotalPages - 2) {
-      pages.push(
-        1,
-        "...",
-        Math.max(1, finalTotalPages - 3),
-        Math.max(1, finalTotalPages - 2),
-        Math.max(1, finalTotalPages - 1),
-        finalTotalPages
-      );
-    } else {
-      pages.push(
-        1,
-        "...",
-        Math.max(1, cur - 1),
-        cur,
-        Math.min(finalTotalPages, cur + 1),
-        "...",
-        finalTotalPages
-      );
+    if (currentPage <= 3) {
+      return [1, 2, 3, 4, "...", finalTotalPages];
     }
 
-    return pages.map((page, idx) => {
-      if (page === "...") {
-        return (
-          <span
-            key={`dots-${idx}`}
-            className="w-10 h-10 flex items-center justify-center text-gray-500 select-none"
-          >
-            ...
-          </span>
-        );
-      }
+    if (currentPage >= finalTotalPages - 2) {
+      return [
+        1,
+        "...",
+        finalTotalPages - 3,
+        finalTotalPages - 2,
+        finalTotalPages - 1,
+        finalTotalPages,
+      ];
+    }
 
-      const isCurrent = cur === page;
-      return (
-        <button
-          key={page}
-          onClick={() => onPageChange(page - 1)}
-          className={`w-10 h-10 flex items-center justify-center rounded-[4px] 
-                        transition-colors duration-300 text-sm font-medium cursor-pointer
-                        ${
-                          isCurrent
-                            ? "bg-[#9C39FC] text-white font-semibold"
-                            : "bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28]"
-                        }`}
-        >
-          {page}
-        </button>
-      );
-    });
+    // Middle section
+    return [
+      1,
+      "...",
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      "...",
+      finalTotalPages,
+    ];
   };
 
-  const ArrowButton = ({ icon, onClick, disabled, altText }) => (
+  const ArrowButton = ({ icon, onClick, disabled, alt }) => (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-300 
-                ${
-                  disabled
-                    ? "bg-[#1C1F26] opacity-30 cursor-not-allowed"
-                    : "bg-[#1C1F26] hover:bg-[#2A2E38] cursor-pointer opacity-100"
-                }`}
+      className={`w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-200 
+        ${disabled ? "opacity-30 cursor-not-allowed" : "hover:bg-[#2A2E38]"} bg-[#1C1F26]`}
     >
-      <img src={icon} alt={altText} className="" />
+      <img src={icon} alt={alt} className="w-[40px] h-[40px]" />
     </button>
   );
 
@@ -105,18 +55,40 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
     <div className="flex items-center justify-center gap-3 mt-8">
       <ArrowButton
         icon={LeftIcon}
-        altText="Previous Page"
-        onClick={() => onPageChange(Math.max(cur - 2, 0))}
-        disabled={cur === 1}
+        alt="Previous"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
       />
 
-      {renderPages()}
+      {getPageNumbers().map((page, index) =>
+        page === "..." ? (
+          <span
+            key={`dots-${index}`}
+            className="w-10 h-10 flex items-center justify-center text-gray-400"
+          >
+            ...
+          </span>
+        ) : (
+          <button
+            key={page}
+            onClick={() => onPageChange(page)}
+            className={`w-10 h-10 flex items-center justify-center rounded-[4px] text-sm font-medium transition-colors 
+              ${
+                currentPage === page
+                  ? "bg-[#9C39FC] text-white font-semibold"
+                  : "bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28]"
+              }`}
+          >
+            {page}
+          </button>
+        )
+      )}
 
       <ArrowButton
         icon={RightIcon}
-        altText="Next Page"
-        onClick={() => onPageChange(Math.min(cur, finalTotalPages - 1))}
-        disabled={cur === finalTotalPages}
+        alt="Next"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === finalTotalPages}
       />
     </div>
   );

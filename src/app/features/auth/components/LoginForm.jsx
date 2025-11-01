@@ -5,6 +5,7 @@ import TextField from "@/components/ui/TextField";
 import PasswordField from "@/components/ui/PasswordField";
 import { loginWithEmailPassword } from "@/services/authService";
 import { NavLink, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function LoginForm() {
   const [password, setPassword] = useState("");
@@ -19,12 +20,6 @@ function LoginForm() {
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
 
-  console.log(emailErrorMsg);
-  console.log(passwordErrorMsg);
-  console.log(showEmailError);
-  console.log(showPasswordError);
-  console.log(email);
-  console.log(password);
 
   //validation
   const validateEmail = (email) => {
@@ -68,27 +63,13 @@ function LoginForm() {
 
     try {
       const data = await loginWithEmailPassword(email, password);
-      console.log("Login success:", data);
-
+      
+      
       if (data.success === 0 || data.code >= 400) {
         throw new Error(data.message || "Login failed. Please try again.");
       }
-
-      if (data?.data.token) {
-        localStorage.setItem("token", data?.data.token);
-
-        // Store user information
-        const userInfo = {
-          id: data?.data.userId,
-          username: data?.data.username,
-          email: data?.data.email,
-          role: data?.data.role,
-          roleId: data?.data.roleId,
-          isNewUserLogin: data?.data.isNewUserLogin,
-        };
-        localStorage.setItem("user", JSON.stringify(userInfo));
-      }
-
+      
+      toast.success("Login successfully!");
       // alert("Login successful!");
       navigate("/setup-profile");
     } catch (err) {
