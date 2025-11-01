@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DevCard from "../components/DevCard";
 import SearchIcon from "@/assets/icons/search.png";
 import { getDevProfiles } from "@/services/devProfileService";
@@ -7,6 +7,7 @@ import FilterDropdown from "@/components/ui/Filter";
 
 export default function DevListPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [devProfiles, setDevProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,46 +17,84 @@ export default function DevListPage() {
   const [sortDirection, setSortDirection] = useState("asc");
   const pageSize = 6;
 
-  // Debounced search effect
+  // Ref to track the current AbortController
+  const abortControllerRef = useRef(null);
+
+  // Debounced search effect - only updates debouncedSearchTerm after 500ms of no changes
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setCurrentPage(1); // Reset to first page when searching
-    }, 300);
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Increased to 500ms for better debouncing
+
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
+  // Reset to first page when search term actually changes (debounced)
   useEffect(() => {
-    async function fetchProfiles() {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
       try {
+        // Cancel any ongoing request
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort();
+        }
+
+        // Create new AbortController for this request
+        abortControllerRef.current = new AbortController();
+
         setLoading(true);
         const params = {
-          keyword: searchTerm,
+          keyword: debouncedSearchTerm,
           page: currentPage - 1, // Backend expects 0-based pagination
           size: pageSize,
           sortField: sortField,
           sortDirection: sortDirection,
         };
 
-        const data = await getDevProfiles(params);
-        console.log("API Response Data:", data);
+        console.log("Making API call with params:", params);
+        const data = await getDevProfiles(
+          params,
+          abortControllerRef.current.signal
+        );
 
-        const profiles = Array.isArray(data.data) ? data.data : [];
-        setDevProfiles(profiles);
+        // Only update state if request wasn't aborted
+        if (!abortControllerRef.current.signal.aborted) {
+          console.log("API Response Data:", data);
 
-        // Set pagination meta data from backend response
-        if (data.meta) {
-          setTotalPages(data.meta.totalPages);
-          setTotalItems(data.meta.totalItems);
-          // Don't override currentPage from meta to avoid conflicts
+          const profiles = Array.isArray(data.data) ? data.data : [];
+          setDevProfiles(profiles);
+
+          // Set pagination meta data from backend response
+          if (data.meta) {
+            setTotalPages(data.meta.totalPages);
+            setTotalItems(data.meta.totalItems);
+          }
         }
       } catch (error) {
-        console.error("Error fetching profiles", error);
+        // Don't log error if request was aborted
+        if (error.name !== "AbortError") {
+          console.error("Error fetching profiles", error);
+        }
       } finally {
-        setLoading(false);
+        // Only set loading to false if request wasn't aborted
+        if (!abortControllerRef.current?.signal.aborted) {
+          setLoading(false);
+        }
       }
-    }
+    };
+
     fetchProfiles();
-  }, [searchTerm, currentPage, sortField, sortDirection]);
+
+    // Cleanup function to abort request on unmount
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [debouncedSearchTerm, currentPage, sortField, sortDirection]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

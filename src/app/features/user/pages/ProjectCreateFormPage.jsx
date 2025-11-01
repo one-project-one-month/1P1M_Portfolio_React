@@ -1,5 +1,5 @@
 import FormBackground from "@/components/ui/FormBackground";
-import ProjectCreateForm from "@/features/admin/components/ProjectCreateForm";
+import ProjectCreateForm from "@/features/user/components/ProjectCreateForm";
 
 function ProjectCreateFormPage() {
   return (

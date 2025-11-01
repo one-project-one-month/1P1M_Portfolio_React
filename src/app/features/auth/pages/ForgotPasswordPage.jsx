@@ -3,52 +3,38 @@ import Background from "@/components/ui/Background";
 import FormBackground from "@/components/ui/FormBackground";
 import TextField from "@/components/ui/TextField";
 import Button from "@/components/ui/Button";
-import { forgotPassword } from "@/services/authService";
+import { checkEmailExists, forgotPassword } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [emailErrorMsg, setEmailErrorMsg] = useState("");
-  const [showEmailError, setShowEmailError] = useState(false);
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
-    if (!email.trim()) {
-      return "Email is required";
-    } else if (!emailRegex.test(email)) {
-      return "Invalid email address";
-    }
-    return "";
-  };
-
   const handleContinue = async () => {
-    const emailErr = validateEmail(email);
-    setEmailErrorMsg(emailErr);
-    setShowEmailError(!!emailErr);
+    const emailExists = await checkEmailExists(email);
 
-    if (emailErr) {
-      setTimeout(() => {
+    setLoading(true);
+
+    if (emailExists?.data) {
+      try {
+        const res = await forgotPassword(email);
+        if (res.code === 200 && res.success === 1) {
+          toast.success("OTP resent successfully! Check your email.", {
+            id: "resend-otp",
+          });
+          navigate("/otp-verify", { state: { email } });
+        }
+      } catch (error) {
+        console.error("Error during password forgot:", error);
+      } finally {
         setLoading(false);
-        setError("");
-      }, 2000);
+      }
     } else {
-      console.log("Email:", email);
-    }
-
-    try {
-      const data = await forgotPassword(email);
-      console.log("Data to be sent:", data);
-
-      navigate("/check-password-otp", { state: { email } });
-    } catch (error) {
-      console.error("Error during password forgot:", error);
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+      toast.error("Email not in our system! Please register first");
+      navigate("/register", { state: { email } });
     }
   };
 
@@ -77,13 +63,9 @@ function ForgotPasswordPage() {
               value={email}
               onChange={(value) => setEmail(value)}
               showEditButton={false}
+              error={emailError}
               className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
-            {showEmailError && (
-              <p className="text-red-500 text-xs absolute bottom-[15px]">
-                {emailErrorMsg}
-              </p>
-            )}
           </div>
 
           {/* Continue Button */}
@@ -95,19 +77,23 @@ function ForgotPasswordPage() {
           >
             {loading ? "Processing..." : "Continue"}
           </Button>
-
         </div>
         <div className="mt-6 py-4 flex text-sm text-[#99A1AF]">
           <a href="/login" className="flex text-center cursor-pointer block">
-            <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Login
           </a>
         </div>
       </FormBackground>
-    </Background >
-  )
+    </Background>
+  );
 }
 
 export default ForgotPasswordPage;

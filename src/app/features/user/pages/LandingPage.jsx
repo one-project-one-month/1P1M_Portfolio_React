@@ -132,7 +132,7 @@ const LandingPage = () => {
           <div className='w-full flex justify-between items-center my-4'>
             <h1 className='text-5xl'>Registered</h1>
             <button className='border-b cursor-pointer'
-            //  onClick={()=>navigate('/dev-list')}
+             onClick={()=>navigate('/dev-list')}
              >View more</button>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>

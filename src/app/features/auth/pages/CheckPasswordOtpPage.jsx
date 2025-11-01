@@ -13,7 +13,9 @@ function CheckPasswordOtpPage() {
 
   const handleVerifySuccess = () => {
     // Navigate to dashboard or next step
-    toast.success("🎉 OTP Verified Successfully! Proceed to reset your password.");
+    toast.success(
+      "🎉 OTP Verified Successfully! Proceed to reset your password."
+    );
     navigate("/password-reset");
   };
 
@@ -23,7 +25,7 @@ function CheckPasswordOtpPage() {
 
   return (
     <Background className="h-screen flex items-center justify-center">
-      <FormBackground className="!w-[500px] flex items-center justify-around flex-col">
+      <FormBackground className="flex items-center justify-around flex-col">
         <OtpForm
           email={email}
           onVerifySuccess={handleVerifySuccess}

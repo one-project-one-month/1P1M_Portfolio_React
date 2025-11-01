@@ -3,7 +3,7 @@ import FormWrapper from "../../../components/ui/FormWrapper";
 import TextField from "../../../components/ui/TextField";
 import PasswordField from "../../../components/ui/PasswordField";
 import { useLocation, useNavigate } from "react-router-dom";
-import { checkEmailExists, signupWithEmail } from "@/services/authService";
+import { checkEmailExists, loginWithEmailPassword, sendOtpCode, signupWithEmail } from "@/services/authService";
 import toast from "react-hot-toast";
 
 const RegisterForm = () => {
@@ -146,7 +146,14 @@ const RegisterForm = () => {
         return;
       }
 
-      navigate("/otp-verify", { state: { email, password } });
+      // after fill register form, called otp api to verify 
+      const res = await sendOtpCode(email);
+      if(res.code === 200 && res.success === 1){
+          toast.success("OTP resent successfully! Check your email.", {id: "resend-otp",});
+          navigate("/otp-verify", { state: { email, password } });
+      }
+
+        
     } catch (error) {
       console.error("Register error:", error);
       toast.removeAll();
@@ -162,6 +169,7 @@ const RegisterForm = () => {
       subtitle="Please fill in the details below"
       onSubmit={handleSubmit}
       loading={loading}
+      buttonText="Continue"
     >
       <TextField
         ref={emailRef}

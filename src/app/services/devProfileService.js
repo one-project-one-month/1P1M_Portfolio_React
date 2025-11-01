@@ -1,7 +1,7 @@
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
-export const getDevProfiles = async (params = {}) => {
+export const getDevProfiles = async (params = {}, signal = null) => {
   try {
     const queryParams = new URLSearchParams();
 
@@ -17,10 +17,18 @@ export const getDevProfiles = async (params = {}) => {
       queryParams.toString() ? `?${queryParams.toString()}` : ""
     }`;
 
-    const response = await apiClient.get(url, getAuthConfig());
+    const config = {
+      ...getAuthConfig(),
+      ...(signal && { signal }), // Add AbortController signal if provided
+    };
+
+    const response = await apiClient.get(url, config);
     return response.data;
   } catch (error) {
-    console.error("Error fetching developer", error);
+    // Don't log AbortError as it's expected when cancelling requests
+    if (error.name !== "AbortError") {
+      console.error("Error fetching developer", error);
+    }
     throw error.response?.data || error;
   }
 };
