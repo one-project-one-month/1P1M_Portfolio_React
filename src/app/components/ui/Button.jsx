@@ -20,6 +20,9 @@ const buttonVariants = cva("rounded-lg cursor-pointer", {
       //yellow button (Preview)
       yellow_button:
         "bg-[#FFBA00] text-[#000000] text-sm font-sans font-semibold rounded-[8px] hover:opacity-90 transition-all duration-200",
+      yellow_small_button:
+        "bg-[#B58400] text-[#F9FAFB] text-sm font-medium rounded-[8px] hover:opacity-90 transition-all duration-200 px-6 py-2",
+
 
       //purple button (View)
       purple_button:
@@ -34,6 +37,7 @@ const buttonVariants = cva("rounded-lg cursor-pointer", {
 
       yellow_button: "w-[102px] h-[48px] text-center leading-[48px]",
       purple_button: "w-[82px] h-[48px] text-center leading-[48px]",
+      yellow_small_button: "w-[93px] h-[28px] text-center leadig-5 ",
     },
   },
 });

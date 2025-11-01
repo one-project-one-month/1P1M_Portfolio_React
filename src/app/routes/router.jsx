@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import NotFound from "../features/auth/pages/NotFound";
 
+
 import {
   DevProfilePage,
   MainLayout,
@@ -13,11 +14,9 @@ import {
   ApprovedIdeasPage,
   LandingPage,
   ProjectPortfolioList,
-  ApprovedIdeasAdminPage,
-  ProjectIdeaPage,
+  ProfileDetailPage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
-import AddMemberPage from "@/features/user/pages/AddMemberPage";
 
 const router = createBrowserRouter([
   {
@@ -30,9 +29,11 @@ const router = createBrowserRouter([
       { path: "ideas", element: <ProjectListPage /> },
       { path: "approved-ideas", element: <ApprovedIdeasPage /> },
       { path: "project-portfolio", element: <ProjectPortfolioList /> },
-      { path: "add-member", element: <AddMemberPage /> },
-      { path: "create-project", element: <ProjectCreateFormPage /> },
-      { path: "project-idea", element: <ProjectIdeaPage /> },
+      { path: "profile-detail/:devId", element: <ProfileDetailPage /> },
+
+
+
+
     ],
   },
   {
@@ -40,9 +41,10 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <RegisterListPage /> },
+      { path: "create-project", element: <ProjectCreateFormPage /> },
       { path: "ideas", element: <ProjectListPageAdmin /> },
       { path: "setup-profile", element: <DevProfilePage /> },
-      { path: "approved-ideas", element: <ApprovedIdeasAdminPage /> },
+      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
     ],
   },
   ...authRouter,

@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   GET_ALL_PROJECTS: "/portfolio/api/v1/project-portfolio/getAllProjectProfiles",
   REACT_PROJECT: "/portfolio/api/v1/project-portfolio/react",
   GET_PROJECT_PORTFOLIO: "/portfolio/api/v1/project-portfolio",
+  GET_PROFILE_DATA: "/portfolio/api/v1/auth/users/getProfileData",
 };
 
 export const getAuthHeaders = () => {

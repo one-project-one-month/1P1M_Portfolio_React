@@ -3,6 +3,7 @@
 services:
   postgres-db:
     image: postgres:15
+    platform: linux/amd64
     container_name: postgres_db
     environment:
       POSTGRES_DB: opom_portfolio_db
@@ -24,6 +25,7 @@ services:
         condition: service_healthy
     container_name: opom_portfolio_backend
     image: hlyamhtet/opom-portfolio:latest
+    platform: linux/amd64
     command: ["java", "-jar", "app.jar", "--spring.profiles.active=uat,cloudinary"]
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/opom_portfolio_db

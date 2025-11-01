@@ -3,12 +3,19 @@ import React from "react";
 import Button from "../../../components/ui/Button";
 import GitHubIcon from "@/assets/icons/GitHub.png";
 import LinkedinIcon from "@/assets/icons/Linkedin.png";
+import { useNavigate } from "react-router-dom";
 
-export default function DevCard({ member }) {
+
+
+export default function DevCard({ member, devId }) {
+
+  const navigate = useNavigate();
+
   const handleVisitProfile = () => {
-    const profileLink = member.github || member.linkedIn || "#";
-    window.open(profileLink, "_blank");
+    // Navigate to profile-detail page with devId
+    navigate(`/profile-detail/${devId || member.dev_id || member.id}`);
   };
+
   const handleInvite = () => {
     const inviteLink =
       member.inviteUrl || `/invite?dev=${member.telegram.replace("@", "")}`;
