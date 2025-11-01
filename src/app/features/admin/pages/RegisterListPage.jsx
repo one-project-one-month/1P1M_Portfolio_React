@@ -62,7 +62,7 @@ function RegisterListPage() {
           <div>Total Count-{data?.meta?.totalItems}</div>
 
           <div>
-            <Filter
+            <Filte
               icon={filterIconUrl}
               menuList={filterList}
               placeholder={`Filter`}
