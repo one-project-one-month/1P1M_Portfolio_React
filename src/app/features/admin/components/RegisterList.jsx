@@ -1,17 +1,17 @@
 
 import React from "react";
 
-const RegisterList = ({ role}) => {
+const RegisterList = ({data}) => {
   
 
-  const filterUser=[]
+const filterUser = Array.isArray(data) ? data : [];
 
   const tHead = ["No", "Name", "Email", "Phone", "Role"];
 
 
 
   return (
-    <table className="text-white/90 w-full h-full mt-4 p-2  border-separate border-spacing-y-1">
+    <table className="text-white/90 w-full  mt-4 p-2  border-separate border-spacing-y-1">
       <thead>
         <tr className="">
           {tHead.map((title, index) => (
@@ -24,12 +24,12 @@ const RegisterList = ({ role}) => {
 
       <tbody className="">
         {filterUser.map((user, index) => (
-          <tr key={index} className="text-center text-sm font-medium  ">
+          <tr key={index} className="text-center text-sm font-medium b h-3 ">
             <td className="px-4 py-5 border-s rounded-tl-xl border-t rounded-bl-xl border-b">
               {index + 1}
             </td>
             <td className="px-4 py-5 border-t border-b ">{user.name}</td>
-            <td className="px-4 py-5 border-t border-b">{user.email}</td>
+            <td className="px-4 py-2 border-t border-b">{user.email}</td>
             <td className="px-4 py-5 border-t border-b">{user.phone}</td>
             <td className="px-4 py-5  border-e border-t rounded-tr-xl border-b rounded-br-xl">
               {user.role}
