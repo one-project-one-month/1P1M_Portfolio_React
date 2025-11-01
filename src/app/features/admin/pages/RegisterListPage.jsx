@@ -23,7 +23,7 @@ function RegisterListPage() {
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const size = 8;
+  const size = 7;
   const { data, isLoading, isError } = useOpomRegister({
     keyword,
     page,
@@ -34,7 +34,7 @@ function RegisterListPage() {
 
   const totalPages = data?.meta?.totalPages || 0;
 
-  console.log(data);
+  console.log(data?.data);
 
   const filterList = ["Newest", "Oldest"];
 
@@ -72,7 +72,7 @@ function RegisterListPage() {
       </div>
 
       <div className=" h-8/12">
-        <RegisterList />
+        <RegisterList data={data?.data} />
       </div>
 
       <div className="flex justify-center mt-2 gap-y-1.5">

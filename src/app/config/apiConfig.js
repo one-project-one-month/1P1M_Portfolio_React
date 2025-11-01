@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   GET_ALL_PROJECTS: "/portfolio/api/v1/project-portfolio/getAllProjectProfiles",
   REACT_PROJECT: "/portfolio/api/v1/project-portfolio/react",
   GET_PROJECT_PORTFOLIO: "/portfolio/api/v1/project-portfolio",
+  OPOM_REGISTER:"/portfolio/api/v1/auth/register",
   GET_ALL_OPOM_REGISTER:"/portfolio/api/v1/auth/getAllOpomRegister"
 };
 
