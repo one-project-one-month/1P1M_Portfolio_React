@@ -22,7 +22,7 @@ function Navbar(){
         {/* nav_links */}
         <div className=" font-medium flex gap-x-10 p-1">
             {nav_links.map((link)=>(
-                <NavLink id={link.id} to={link.path} className={({isActive})=>`${isActive ? "text-white":"text-[#ADADADA3]"}`}>
+                <NavLink key={link.id} id={link.id} to={link.path} className={({isActive})=>`${isActive ? "text-white":"text-[#ADADADA3]"}`}>
                     <span>{link.name}</span>
                 </NavLink>
             ))}
