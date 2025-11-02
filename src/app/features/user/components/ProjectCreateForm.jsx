@@ -91,24 +91,19 @@ function ProjectCreateForm() {
         getAuthConfig()
       );
 
-      // Get the project ID from response
       const projectPortfolioId = projectResponse.data?.data.projectId;
       if (!projectPortfolioId) {
         throw new Error("Project ID not found in response");
       }
 
-      // Step 2: Upload image if one is selected
       if (projectImage) {
-        // Validate image size (1MB max)
-        const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+        const maxSize = 1 * 1024 * 1024;
         if (projectImage.size > maxSize) {
           throw new Error("Image size exceeds 1MB limit");
         }
 
-        // Create FormData for file upload
         const formData = new FormData();
         formData.append("file", projectImage);
-        // formData.append("projectPortfolioId", projectPortfolioId);
         const uploadResponse = await apiClient.patch(
           API_ENDPOINTS.UPLOAD_PROJECT_IMAGE +
             `?projectPortfolioId=${projectPortfolioId}`,
@@ -121,14 +116,12 @@ function ProjectCreateForm() {
         );
       }
 
-      // Dismiss loading toast and show success toast
       toast.dismiss(loadingToast);
       toast.success("🎉 Project created successfully!", {
         duration: 4000,
         position: "top-right",
       });
 
-      // Reset form after successful submission
       reset();
       setProjectImage(null);
       setTeamMembers([]);
@@ -136,14 +129,12 @@ function ProjectCreateForm() {
       setSearch("");
       setDevProfiles([]);
       setIsDialogOpen(false);
-      setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
+      setFileUploadKey((prev) => prev + 1);
     } catch (error) {
       console.error("❌ Error creating project:", error);
 
-      // Dismiss loading toast
       toast.dismiss(loadingToast);
 
-      // Show error toast with appropriate message
       if (error.response) {
         console.error("Server error:", error.response.data);
         const errorMessage =
@@ -176,49 +167,65 @@ function ProjectCreateForm() {
     setSearch("");
     setDevProfiles([]);
     setIsDialogOpen(false);
-    setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
+    setFileUploadKey((prev) => prev + 1);
   };
 
   const handleAddTeamMember = () => {
     setIsDialogOpen(true);
   };
 
-  // Filter out already selected members from API results
-  const filteredDevs =
-    devProfiles?.filter((dev) => {
-      // Use userId for comparison since API returns userId instead of id
-      const devId = dev.userId || dev.id;
+  const filteredDevs = (() => {
+    console.log("devProfiles before filtering:", devProfiles);
+    console.log("selectedMembers:", selectedMembers);
+
+    if (!devProfiles || !Array.isArray(devProfiles)) {
+      console.log("devProfiles is not an array:", devProfiles);
+      return [];
+    }
+
+    const filtered = devProfiles.filter((dev) => {
+      const devId = dev.dev_id || dev.userId || dev.id || dev.email;
       const isAlreadySelected = selectedMembers.find((member) => {
-        const memberId = member.userId || member.id;
-        return memberId === devId;
+        const memberId =
+          member.dev_id || member.userId || member.id || member.email;
+        const isMatch = memberId === devId;
+        if (isMatch) {
+          console.log(`Filtering out already selected member: ${memberId}`);
+        }
+        return isMatch;
       });
       return !isAlreadySelected;
-    }) || [];
+    });
 
+    console.log("filteredDevs result:", filtered);
+    return filtered;
+  })();
   const handleAddMember = (dev) => {
-    const devId = dev.userId || dev.id;
+    const devId = dev.dev_id || dev.userId || dev.id;
     const isAlreadySelected = selectedMembers.find((member) => {
-      const memberId = member.userId || member.id;
+      const memberId = member.dev_id || member.userId || member.id;
       return memberId === devId;
     });
 
     if (!isAlreadySelected) {
+      console.log("Adding member:", dev);
       setSelectedMembers([...selectedMembers, dev]);
+    } else {
+      console.log("Member already selected:", dev);
     }
   };
 
   const handleRemoveMember = (devToRemove) => {
-    const devId = devToRemove.userId || devToRemove.id;
+    const devId = devToRemove.dev_id || devToRemove.userId || devToRemove.id;
     setSelectedMembers(
       selectedMembers.filter((member) => {
-        const memberId = member.userId || member.id;
+        const memberId = member.dev_id || member.userId || member.id;
         return memberId !== devId;
       })
     );
   };
 
   const handleSaveMembers = () => {
-    // Update teamMembers with email addresses from selected members
     const memberEmails = selectedMembers
       .map((member) => member.email)
       .filter(Boolean);
@@ -234,7 +241,6 @@ function ProjectCreateForm() {
     setIsDialogOpen(false);
   };
 
-  // Search functionality - only fetch when user types
   const searchDevelopers = useCallback(async (searchTerm) => {
     if (!searchTerm.trim()) {
       setDevProfiles([]);
@@ -252,6 +258,8 @@ function ProjectCreateForm() {
         setDevProfiles(data);
       } else if (data?.data && Array.isArray(data.data)) {
         setDevProfiles(data.data);
+      } else if (data?.data?.data && Array.isArray(data.data.data)) {
+        setDevProfiles(data.data.data);
       } else {
         setDevProfiles([]);
       }
@@ -264,7 +272,6 @@ function ProjectCreateForm() {
     }
   }, []);
 
-  // Debounced search effect
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       searchDevelopers(search);
@@ -278,7 +285,6 @@ function ProjectCreateForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col lg:flex-row gap-2 lg:gap-3 w-full h-full"
     >
-      {/* Left side - File Upload */}
       <div className="flex flex-col gap-0 items-center lg:w-2/5">
         <FileUpload
           key={fileUploadKey}
@@ -294,7 +300,6 @@ function ProjectCreateForm() {
         </div>
       </div>
 
-      {/* Right side - Form Fields */}
       <div className="flex flex-col flex-1 lg:w-3/5">
         <div>
           <TextField
@@ -428,11 +433,18 @@ function ProjectCreateForm() {
           <div className="flex items-center gap-2">
             {/* Team Member Images - Show max 5 */}
             {selectedMembers.slice(0, 5).map((member, index) => (
-              <div key={member.userId || member.id} className="relative group">
+              <div
+                key={`member-${
+                  member.dev_id || member.userId || member.id || index
+                }`}
+                className="relative group"
+              >
                 <img
                   src={
                     member.profilePictureUrl ||
-                    `https://picsum.photos/48/48?random=${member.id}`
+                    `https://picsum.photos/48/48?random=${
+                      member.dev_id || member.id
+                    }`
                   }
                   alt={member.name || `Team member ${index + 1}`}
                   className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
@@ -441,23 +453,23 @@ function ProjectCreateForm() {
               </div>
             ))}
 
-            {/* Show "+more" indicator if there are more than 5 members */}
             {selectedMembers.length > 5 && (
-              <div className="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
+              <div
+                key="more-members-indicator"
+                className="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
+              >
                 <span className="text-white text-xs font-semibold">
                   +{selectedMembers.length - 5}
                 </span>
               </div>
             )}
 
-            {/* Show placeholder if no members selected */}
             {selectedMembers.length === 0 && (
               <div className="text-gray-400 text-sm">
                 No team members selected
               </div>
             )}
 
-            {/* Add Member Button */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <button
@@ -482,7 +494,6 @@ function ProjectCreateForm() {
                 </DialogHeader>
 
                 <div className="space-y-4 mt-6">
-                  {/* Search Input */}
                   <input
                     type="text"
                     placeholder="Search member..."
@@ -490,8 +501,6 @@ function ProjectCreateForm() {
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full h-12 rounded-lg border border-[#FFFFFF26] bg-[#FFFFFF17] px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500"
                   />
-
-                  {/* Selected Members */}
                   {selectedMembers.length > 0 && (
                     <CustomBox
                       style={{
@@ -509,16 +518,20 @@ function ProjectCreateForm() {
                         boxSizing: "border-box",
                       }}
                     >
-                      {selectedMembers.map((member) => (
+                      {selectedMembers.map((member, index) => (
                         <div
-                          key={member.userId || member.id}
+                          key={`selected-member-${
+                            member.dev_id || member.userId || member.id || index
+                          }`}
                           className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-2 gap-2"
                         >
                           <div className="flex items-center gap-2">
                             <img
                               src={
                                 member.profilePictureUrl ||
-                                `https://picsum.photos/40/40?random=${member.id}`
+                                `https://picsum.photos/40/40?random=${
+                                  member.dev_id || member.id
+                                }`
                               }
                               alt={member.name || "User"}
                               className="w-8 h-8 rounded-full object-cover"
@@ -537,8 +550,6 @@ function ProjectCreateForm() {
                       ))}
                     </CustomBox>
                   )}
-
-                  {/* Search Results */}
                   <div className="max-h-40 overflow-y-auto space-y-2">
                     {devLoading ? (
                       <p className="text-gray-400 text-center py-4">
@@ -546,23 +557,37 @@ function ProjectCreateForm() {
                       </p>
                     ) : devError ? (
                       <p className="text-red-400 text-center py-4">
-                        Error loading developers
+                        Error loading developers: {devError}
                       </p>
                     ) : filteredDevs.length === 0 ? (
-                      <p className="text-gray-400 text-center py-4">
-                        {search ? "No members found" : "Type a name to search"}
-                      </p>
+                      <div className="text-gray-400 text-center py-4">
+                        {search ? (
+                          <div>
+                            <p>No members found for "{search}"</p>
+                            <p className="text-xs mt-1">
+                              Found {devProfiles.length} total results,{" "}
+                              {selectedMembers.length} already selected
+                            </p>
+                          </div>
+                        ) : (
+                          "Type a name to search"
+                        )}
+                      </div>
                     ) : (
-                      filteredDevs.map((dev) => (
+                      filteredDevs.map((dev, index) => (
                         <div
-                          key={dev.userId || dev.id}
+                          key={`search-result-${
+                            dev.dev_id || dev.userId || dev.id || index
+                          }`}
                           className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-3"
                         >
                           <div className="flex items-center gap-3">
                             <img
                               src={
                                 dev.profilePictureUrl ||
-                                `https://picsum.photos/40/40?random=${dev.id}`
+                                `https://picsum.photos/40/40?random=${
+                                  dev.dev_id || dev.id
+                                }`
                               }
                               alt={dev.name || "User"}
                               className="w-10 h-10 rounded-full object-cover"
@@ -586,8 +611,7 @@ function ProjectCreateForm() {
                       ))
                     )}
                   </div>
-
-                  {/* Action Buttons */}
+                  ={" "}
                   <div className="flex justify-end gap-3 pt-4">
                     <button
                       onClick={handleDiscardMembers}
@@ -607,7 +631,6 @@ function ProjectCreateForm() {
             </Dialog>
           </div>
         </div>
-        {/* Action Buttons */}
         <div className="flex justify-end gap-2 mt-1">
           <Button
             variant="black_button"

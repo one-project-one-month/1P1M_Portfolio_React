@@ -43,13 +43,19 @@ export default function DevCard({ member }) {
               <span className="text-gray-400 text-sm">No tech stacks</span>
             )}
           </div>
-          <div className="flex items-center gap-2 leading-6 pt-[5px] min-w-0">
-            <span
-              className="text-white text-[16px] overflow-hidden text-ellipsis whitespace-nowrap block"
+          <div className="flex items-center gap-2 leading-5 pt-[5px] min-w-0">
+            <p
+              className="text-white text-sm leading-5 overflow-hidden text-ellipsis line-clamp-2 block"
               title={member.aboutDev || "Developer"}
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
             >
               {member.aboutDev || "Developer"}
-            </span>
+            </p>
           </div>
         </div>
       </div>

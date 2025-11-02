@@ -215,66 +215,18 @@ const ProjectPortfolioDetail = ({ projectId, isOpen, onClose }) => {
                     Team
                   </h3>
                   <div className="flex -space-x-2">
-                    {project.assignedDevs?.devProfileIds?.map(
-                      (devId, index) => (
-                        <div
-                          key={devId}
-                          className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]"
-                        >
-                          <img
-                            src={`https://picsum.photos/48/48?random=${devId}`}
-                            alt={`Team member ${index + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )
-                    ) || (
-                      // Default team members to match original design
-                      <>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=1"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=2"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=3"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=4"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=5"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]">
-                          <img
-                            src="https://picsum.photos/48/48?random=6"
-                            alt="Team member"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </>
-                    )}
+                    {project.assignedDevs?.developers?.map((devId, index) => (
+                      <div
+                        key={devId}
+                        className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#1a1a1a]"
+                      >
+                        <img
+                          src={devId.profilePictureUrl}
+                          alt={`Team member ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

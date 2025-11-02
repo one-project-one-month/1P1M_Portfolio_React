@@ -20,7 +20,6 @@ function LoginForm() {
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
 
-
   //validation
   const validateEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -63,15 +62,19 @@ function LoginForm() {
 
     try {
       const data = await loginWithEmailPassword(email, password);
-      
-      
+
       if (data.success === 0 || data.code >= 400) {
         throw new Error(data.message || "Login failed. Please try again.");
       }
-      
+
       toast.success("Login successfully!");
+      console.log("Login successful:", data);
       // alert("Login successful!");
-      navigate("/setup-profile");
+      if (data.data.isNewUserLogin) {
+        navigate("/setup-profile");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error("Login failed:", err);
       setError(err.message || "Login failed");
