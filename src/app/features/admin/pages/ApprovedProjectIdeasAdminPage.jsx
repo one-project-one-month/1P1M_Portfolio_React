@@ -14,45 +14,45 @@ const ApprovedProjectIdeasAdminPage = () => {
   const [filter, setFilter] = useState("Popular");
 
   const fetchProjects = async (page = 0) => {
-        try {
-            setLoading(true);
-
-            const data = await fetchApprovedProjects(page,6);
-            const approvedProjects =  data.data.projects
-            
-            setTotalPages(data.data.pagination.totalPages || 1);  
-            const sortedProjects = approvedProjects.sort((a, b) => b.reactions - a.reactions);
-            setProjects(sortedProjects);
-
-        } catch (error) {
-            console.error("Error fetching projects:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchProjects(curPage);
-    }, [curPage]);
-
-
-  const filteredProjects = projects
-    .filter((proj) => {
-      const projectName = proj.name || proj.title || "";
-      const projectDesc = proj.description || "";
-      return (
-        projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        projectDesc.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    })
-    .sort((a, b) => {
-      const reactionsA = a.reaction_count || 0;
-      const reactionsB = b.reaction_count || 0;
-
-      if (filter === "Popular") return reactionsB - reactionsA;
-      if (filter === "Oldest") return (a.id || 0) - (b.id || 0);
-      return (b.id || 0) - (a.id || 0); 
-    });
+     try {
+       setLoading(true);
+ 
+       const sortParam =
+         filter === "Popular"
+           ? "popular"
+           : filter === "Newest"
+           ? "newest"
+           : "oldest";
+ 
+       const data = await fetchApprovedProjects({
+         page,
+         size: 6,
+         sortBy: sortParam,
+         search: searchTerm
+       });
+       
+       setTotalPages(data.data.pagination.totalPages || 1);
+       setProjects(data.data.projects);
+     } catch (error) {
+       console.error("Error fetching projects:", error);
+     } finally {
+       setLoading(false);
+     }
+   };
+ 
+ useEffect(() => {
+   const delayDebounce = setTimeout(() => {
+     setCurPage(0);
+     fetchProjects(0);
+   }, 500); 
+ 
+   return () => clearTimeout(delayDebounce);
+ }, [filter, searchTerm]);
+ 
+ 
+ useEffect(() => {
+   fetchProjects(curPage);
+ }, [curPage]);
 
     const handleLike = async(projectId, likeState) => {            
             try {
@@ -93,14 +93,13 @@ const ApprovedProjectIdeasAdminPage = () => {
         onFilterChange={setFilter}
       />
 
-      {/* <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6"> */}
-      <div className="flex-grow flex flex-wrap  gap-6 p-6">
+      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">Loading projects...</p>
-        ) : filteredProjects.length === 0 ? (
+        ) : projects.length === 0 ? (
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
-          filteredProjects
+          projects
           .filter((projects)=> projects.status !== "DELETED" && projects.status !== "PENDING")
           .map((proj) => (
             <ProjectIdeaCard
@@ -113,9 +112,7 @@ const ApprovedProjectIdeasAdminPage = () => {
               likeCount={proj.reactionCount}
               liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
-              status={proj.status.toLowerCase() === "in_progress"? 1 : proj.status.toLowerCase() === "completed"? 2 : 3}
-              // canEdit={()=>handleEdit(proj.id)}
-              // canDelete={()=>handleDelete(proj.id)}
+              status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
               onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))

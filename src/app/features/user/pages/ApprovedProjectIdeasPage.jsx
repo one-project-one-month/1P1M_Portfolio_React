@@ -42,8 +42,8 @@ const ApprovedProjectIdeasPage = () => {
 
 useEffect(() => {
   const delayDebounce = setTimeout(() => {
-    setCurPage(1);
-    fetchProjects(1);
+    setCurPage(0);
+    fetchProjects(0);
   }, 500); 
 
   return () => clearTimeout(delayDebounce);
@@ -95,7 +95,6 @@ useEffect(() => {
         onFilterChange={setFilter}
       />
 
-      {/* <div className="flex-grow flex flex-wrap gap-6 p-6"> */}
       <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">
@@ -117,14 +116,9 @@ useEffect(() => {
                 submittedByProfile={proj.profilePictureUrl}
                 postBy={proj.devName}
                 likeCount={proj.reactionCount}
+                tags={proj.projectTypes}
                 liked={proj.reactedProjects?.includes(proj.id)}
-                status={
-                  proj.status.toLowerCase() === "in_progress"
-                    ? 1
-                    : proj.status.toLowerCase() === "completed"
-                    ? 2
-                    : 3
-                }
+                status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
                 onLike={(projectId, likeState) =>
                   handleLike(projectId, likeState)
                 }
