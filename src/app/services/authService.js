@@ -137,7 +137,6 @@ export const opomRegister = async (form) => {
       form,
       getAuthConfig()
     );
-
     return response.data;
   } catch (error) {
     console.error("Error in OPOM registration:", error);

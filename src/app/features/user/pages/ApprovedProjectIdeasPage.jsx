@@ -2,7 +2,10 @@ import Pagination from "@/components/ui/Pagination";
 import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
 import Title from "@/components/ui/Title";
 import { fetchApprovedProjects } from "@/services/approvedProjectsService";
-import { reactProjectIdea, unreactProjectIdea } from "@/services/projectIdeaService";
+import {
+  reactProjectIdea,
+  unreactProjectIdea,
+} from "@/services/projectIdeaService";
 import React, { useEffect, useState } from "react";
 
 const ApprovedProjectIdeasPage = () => {
@@ -28,9 +31,9 @@ const ApprovedProjectIdeasPage = () => {
         page,
         size: 6,
         sortBy: sortParam,
-        search: searchTerm
+        search: searchTerm,
       });
-      
+
       setTotalPages(data.data.pagination.totalPages || 1);
       setProjects(data.data.projects);
     } catch (error) {
@@ -40,19 +43,22 @@ const ApprovedProjectIdeasPage = () => {
     }
   };
 
-useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    setCurPage(1);
-    fetchProjects(1);
-  }, 500); 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setCurPage(1);
+      fetchProjects(1);
+    }, 500);
 
-  return () => clearTimeout(delayDebounce);
-}, [filter, searchTerm]);
+    return () => clearTimeout(delayDebounce);
+  }, [filter, searchTerm]);
 
+  useEffect(() => {
+    fetchProjects(curPage);
+  }, [curPage]);
 
-useEffect(() => {
-  fetchProjects(curPage);
-}, [curPage]);
+  useEffect(() => {
+    fetchProjects(curPage);
+  }, [curPage]);
 
   const handleLike = async (projectId, liked) => {
     try {
@@ -139,7 +145,6 @@ useEffect(() => {
           totalPages={totalPages}
           onPageChange={(newPage) => setCurPage(newPage)}
         />
-
       </div>
     </div>
   );
