@@ -66,6 +66,8 @@ function RegisterListPage() {
               icon={filterIconUrl}
               menuList={filterList}
               placeholder={`Filter`}
+              filters={filterList}
+              isOpen={true}
             />
           </div>
         </div>

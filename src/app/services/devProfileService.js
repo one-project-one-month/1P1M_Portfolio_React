@@ -34,9 +34,12 @@ export const getDevProfiles = async (params = {}, signal = null) => {
 };
 
 export const setupDevProfile = async (form) => {
+  
   try {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
+    
+    console.log(API_ENDPOINTS.SETUP_PROFILE + `${user.id}` );
 
     if (!user || !token)
       throw new Error("Missing token. You are not logged in.");
@@ -46,7 +49,7 @@ export const setupDevProfile = async (form) => {
     };
 
     const response = await apiClient.post(
-      API_ENDPOINTS.SETUP_PROFILE + `${user.id}` || "/profiles",
+      API_ENDPOINTS.SETUP_PROFILE + `${user.id}` ,
       payload,
       {
         headers: {
@@ -55,6 +58,9 @@ export const setupDevProfile = async (form) => {
       }
     );
 
+
+    
+
     console.log("Profile setup success:", response.data);
     return response.data;
   } catch (error) {
@@ -62,3 +68,20 @@ export const setupDevProfile = async (form) => {
     throw error.response?.data || error;
   }
 };
+
+export const uploadDevImage=async(file)=>{
+
+  try {
+     const user = JSON.parse(localStorage.getItem("user"));
+    
+    const response= await apiClient.patch(API_ENDPOINTS.UPLOAD_DEV_IMAGE + '/' + `${user.id}`, file);
+    console.log("Uploading image...");
+    
+    return response.data;
+  } catch (error) {
+    console.log("Error at upoading image");
+    
+    throw error?.response?.data || error
+  }
+
+}
