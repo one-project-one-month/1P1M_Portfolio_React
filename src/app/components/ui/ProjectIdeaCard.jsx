@@ -35,9 +35,20 @@ const ProjectIdeaCard = ({
   return (
     <div className="w-[406px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
       <div className="h-full flex flex-col gap-[14px] items-center">
-        <div className="w-ful h-full">
+        <div className="w-full h-full">
           <h2 className="text-2xl font-[600] mb-4">{title}</h2>
-          <p className="text-wrap text-sm text-[#99A1AF]">{description}</p>
+          <p
+            className="text-sm text-[#99A1AF] leading-5 overflow-hidden line-clamp-4"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 4,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+            title={description}
+          >
+            {description}
+          </p>
         </div>
 
         <div className="flex justify-center gap-2">

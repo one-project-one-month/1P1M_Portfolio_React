@@ -10,10 +10,10 @@ export const ProjectIdeaList = async (
 ) => {
   try {
     let sortField = "id";
-    
+
     if (filter === "Popular") {
       sortField = "reactedUsers";
-       sortDirection = "asc";
+      sortDirection = "asc";
     } else if (filter === "Oldest") {
       sortField = "id";
       sortDirection = "asc";
@@ -42,10 +42,11 @@ export const ProjectIdeaList = async (
   }
 };
 
-
 export const updateProjectIdeaStatus = async (projectIdeaId, status) => {
   try {
-    const response = await apiClient.patch(`${API_ENDPOINTS.PROJECT_IDEA}?projectIdeaId=${projectIdeaId}&status=${status}`);
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.PROJECT_IDEA}?projectIdeaId=${projectIdeaId}&status=${status}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error updating project idea status:", error);
@@ -53,20 +54,28 @@ export const updateProjectIdeaStatus = async (projectIdeaId, status) => {
   }
 };
 
-
 export const reactProjectIdea = async (projectId) => {
-  return apiClient.post(`${API_ENDPOINTS.PROJECT_IDEA}/react?projectIdeaId=${projectId}`);
+  return apiClient.post(
+    `${API_ENDPOINTS.PROJECT_IDEA}/react?projectIdeaId=${projectId}`
+  );
 };
 
 export const unreactProjectIdea = async (projectId) => {
-  return apiClient.delete(`${API_ENDPOINTS.PROJECT_IDEA}/unreact?projectIdeaId=${projectId}`);
+  return apiClient.delete(
+    `${API_ENDPOINTS.PROJECT_IDEA}/unreact?projectIdeaId=${projectId}`
+  );
 };
 
 export const getProjectReactionCount = async (projectId) => {
-  return apiClient.get(`${API_ENDPOINTS.PROJECT_IDEA}/react/count?project_id=${projectId}`);
+  return apiClient.get(
+    `${API_ENDPOINTS.PROJECT_IDEA}/react/count?project_id=${projectId}`
+  );
 };
 
 export const createProjectIdea = async (projectData) => {
-  const response = await api.post("/project-idea", projectData);
+  const response = await apiClient.post(
+    `${API_ENDPOINTS.PROJECT_IDEA}`,
+    projectData
+  );
   return response.data;
 };
