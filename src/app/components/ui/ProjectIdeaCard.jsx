@@ -211,8 +211,7 @@ const ProjectIdeaCard = ({
                 : "bg-[#79716B] text-[#F9FAFB]"
             }`}
           >
-            {/* {status === 1 ? 'In Progress' : status === 2 ? 'Complete' : 'Unqualified'} */}
-            {status}
+            {status === 1 ? 'In Progress' : status === 2 ? 'Complete' : 'Unqualified'}
           </div>
         )}
       </div>

@@ -1,64 +1,39 @@
-import Button from "@/components/ui/Button";
-import Footer from "@/components/ui/Footer";
-import React, { useState } from "react";
-// import DevCard from '../components/DevCard'
-import ProjectCard from "@/components/ui/ProjectCard";
-import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
-import { useQuery } from "@tanstack/react-query";
-import { getDevProfiles } from "@/services/devProfileService";
-import { fetchApprovedProjects } from "@/services/approvedProjectsService";
-import {
-  ProjectIdeaList,
-  reactProjectIdea,
-  unreactProjectIdea,
-} from "@/services/projectIdeaService";
-import { useNavigate } from "react-router-dom";
+import Button from '@/components/ui/Button'
+import Footer from '@/components/ui/Footer'
+import React, { useState } from 'react'
+import ProjectIdeaCard from '@/components/ui/ProjectIdeaCard'
+import { useQuery } from '@tanstack/react-query'
+import { getDevProfiles } from '@/services/devProfileService'
+import { fetchApprovedProjects } from '@/services/approvedProjectsService'
+import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea } from '@/services/projectIdeaService'
+import { useNavigate } from 'react-router-dom'
+import DevCard from '../components/DevCard'
 
 const fetchApprovedProjectIdeas = async () => {
-  // const res = await fetchApprovedProjects()
-  const res = await ProjectIdeaList();
-  console.log("fetch approved project", res.data);
-  return res.data || [];
-};
+  const res = await fetchApprovedProjects()
+  return res.data.projects || []
+}
+
 
 const fetchRegisteredDevs = async () => {
-  const res = await getDevProfiles();
-  console.log("fetch registered dev", res);
-  return res.data.data || [];
-};
+  const res = await getDevProfiles()
+  return res.data || []
+}
 
-const handleLike = async (projectId, liked) => {
-  console.log(`${liked ? "Unliked" : "Liked"} project:`, projectId);
-
-  setProjects((prev) =>
-    prev.map((p) =>
-      p.id === projectId
-        ? {
-            ...p,
-            likecount: liked ? p.likecount - 1 : p.likecount + 1,
-            likestate: !liked,
-          }
-        : p
-    )
-  );
+const handleLike = async (projectId, likeState) => {
 
   try {
-    console.log(`API called for project ${projectId}`);
-    if (liked) {
-      await unreactProjectIdea(projectId);
+    if (likeState) {
+      await reactProjectIdea(projectId)
     } else {
-      await reactProjectIdea(projectId);
+      await unreactProjectIdea(projectId)
     }
   } catch (error) {
     console.error("Error updating like:", error);
-    setProjects((prev) =>
-      prev.map((p) =>
+    setProjects(prev =>
+      prev.map(p =>
         p.id === projectId
-          ? {
-              ...p,
-              likecount: liked ? p.likecount + 1 : p.likecount - 1,
-              likestate: liked,
-            }
+          ? { ...p, likecount: likeState ? p.likecount + 1 : p.likecount - 1, likestate: likeState }
           : p
       )
     );
@@ -140,80 +115,71 @@ const LandingPage = () => {
 
           <div className="flex flex-col justify-between items-center gap-8">
             <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
-              <h3 className="text-lg md:text-2xl mb-8">
-                Who <span className="text-[#BD7AFD]">We </span>are?
-              </h3>
-              <p className="text-sm">
-                We are a rapid development organization dedicated to delivering
-                a fully usable project every month. We support our community and
-                work intensely to present a tangible, user-ready product in 30
-                days.
-              </p>
+              <h3 className='text-lg md:text-2xl mb-8'>Who <span className='text-[#BD7AFD]'>We </span>are?</h3>
+              <p className='text-sm'>We are  a rapid development organization dedicated to delivering a fully usable project every month. We support our community and work intensely to present a tangible, user-ready product in 30 days.</p>
             </div>
             <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
-              <h3 className="text-lg md:text-2xl mb-8">
-                What you have to <span className="text-[#BD7AFD]">Do </span>?
-              </h3>
-              <p className="text-sm">
-                You can share the ideas you have in mind. From those, the most
-                popular projects will be selected and you will have to work on
-                them. You will have to present the project after one month.
-              </p>
+              <h3 className='text-lg md:text-2xl mb-8'>What you have to  <span className='text-[#BD7AFD]'>Do </span>?</h3>
+              <p className='text-sm'>You can share the ideas you have in mind. From those, the most popular projects will be selected and you will have to work on them. You will have to present the project after one month.</p>
             </div>
           </div>
+
         </div>
       </section>
       {/* End About Section */}
 
       {/* Start Registered Section */}
       <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="w-full flex justify-between items-center my-4">
-          <h1 className="text-5xl">Registered</h1>
-          <button
-            className="border-b cursor-pointer"
-            onClick={() => navigate("/dev-list")}
-          >
-            View more
-          </button>
+        <div className='w-full flex justify-between items-center my-4'>
+          <h1 className='text-5xl'>Registered</h1>
+          <button className='border-b cursor-pointer'
+           onClick={()=>navigate('/dev-list')}
+          >View more</button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {/* <DevCard /> */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+          {
+            registeredDevs
+            .slice(0,6)
+            .map((devProfile,idx)=>(
+              <DevCard key={idx} member={devProfile} />
+            ))
+          }
         </div>
       </section>
       {/* End Registered Section */}
 
       {/* Start Approved Ideas Section */}
       <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="w-full flex justify-between items-center my-4">
-          <h1 className="text-5xl">Approved Ideas</h1>
-          <button
-            className="border-b cursor-pointer"
-            onClick={() => navigate("/approved-ideas")}
-          >
-            View more
-          </button>
+        <div className='w-full flex justify-between items-center my-4'>
+          <h1 className='text-5xl'>Approved Ideas</h1>
+          <button className='border-b cursor-pointer' onClick={() => navigate('/approved-ideas')}>View more</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {approvedProjectideas.map((approvedProjectIdea, index) => (
-            <ProjectIdeaCard
-              key={index}
-              projectId={approvedProjectIdea.id}
-              title={approvedProjectIdea.projectName}
-              description={approvedProjectIdea.description}
-              submittedByProfile={approvedProjectIdea.profilePictureUrl}
-              postBy={approvedProjectIdea.devName}
-              likeCount={approvedProjectIdea.reaction_count}
-              liked={approvedProjectIdea.likestate}
-              tags={approvedProjectIdea.projectTypes}
-              status={approvedProjectIdea.status}
-              onLike={() =>
-                handleLike(
-                  approvedProjectIdea.id,
-                  approvedProjectIdea.likestate
-                )
-              }
-            />
-          ))}
+          {
+            approvedProjectideas
+            .slice(0, 6)
+            .map((approvedProjectIdea) => (
+              <ProjectIdeaCard
+                key={approvedProjectIdea.id}
+                projectId={approvedProjectIdea.id}
+                title={approvedProjectIdea.projectName}
+                description={approvedProjectIdea.projectDetails}
+                submittedByProfile={approvedProjectIdea.profilePictureUrl}
+                postBy={approvedProjectIdea.devName}
+                likeCount={approvedProjectIdea.reactionCount}
+                liked={approvedProjectIdea.reactedProjects?.includes(approvedProjectIdea.id)}
+                tags={approvedProjectIdea.projectTypes}
+                onLike={(projectId, likestate) => handleLike(projectId, likestate)}
+                status={
+                  approvedProjectIdea.status.toLowerCase() === "in_progress"
+                    ? 1
+                    : approvedProjectIdea.status.toLowerCase() === "completed"
+                    ? 2
+                    : 3
+                }
+              />
+            ))
+          }
         </div>
       </section>
       {/* End Approved Ideas Section */}
