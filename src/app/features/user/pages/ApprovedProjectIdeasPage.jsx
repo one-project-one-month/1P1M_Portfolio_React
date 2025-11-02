@@ -43,11 +43,11 @@ const ApprovedProjectIdeasPage = () => {
     }
   };
 
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      setCurPage(1);
-      fetchProjects(1);
-    }, 500);
+useEffect(() => {
+  const delayDebounce = setTimeout(() => {
+    setCurPage(0);
+    fetchProjects(0);
+  }, 500); 
 
     return () => clearTimeout(delayDebounce);
   }, [filter, searchTerm]);
@@ -122,14 +122,9 @@ const ApprovedProjectIdeasPage = () => {
                 submittedByProfile={proj.profilePictureUrl}
                 postBy={proj.devName}
                 likeCount={proj.reactionCount}
+                tags={proj.projectTypes}
                 liked={proj.reactedProjects?.includes(proj.id)}
-                status={
-                  proj.status.toLowerCase() === "in_progress"
-                    ? 1
-                    : proj.status.toLowerCase() === "completed"
-                    ? 2
-                    : 3
-                }
+                status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
                 onLike={(projectId, likeState) =>
                   handleLike(projectId, likeState)
                 }

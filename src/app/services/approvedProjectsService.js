@@ -5,16 +5,15 @@ const API_ENDPOINTS = {
 };
 
 export const fetchApprovedProjects = async ({ 
-  page = 1, 
+  page = 0, 
   size = 6, 
   sortBy = "", 
   search = ""    
 } = {}) => {
   try {
-    const backendPage = page - 1;
 
     const params = {
-      page: backendPage,
+      page: page,
       size,
     };
 
@@ -32,6 +31,7 @@ export const fetchApprovedProjects = async ({
           projectName: project.name,
           projectDetails: project.description,
           profilePictureUrl: project.profilePictureUrl,
+          projectTypes: project.projectTypes,
           devName: project.devName,
           devId: project.dev_id,
           reactionCount: project.reactionCount,
