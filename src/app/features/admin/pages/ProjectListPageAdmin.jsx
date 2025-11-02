@@ -5,6 +5,7 @@ import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea, updateProjectIde
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ProjectListPageAdmin = () => {
     const [curPage, setCurPage] = useState(0);
@@ -16,13 +17,14 @@ const ProjectListPageAdmin = () => {
     const [loadingProject, setLoadingProject] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState("Popular");
+    const navigate = useNavigate();
+
 
    const fetchProjects = async (page = 0) => {
      try {
        setLoadingProject(true);
        const { data, meta } = await ProjectIdeaList(page, 6,  searchTerm, filter);
 
-       filteredProject = data.filter(project => project.status === "PENDING")
        
        setTotalPages(meta?.totalPages || 1);
        setProjects(data)
@@ -35,20 +37,17 @@ const ProjectListPageAdmin = () => {
    };
  
  
-   useEffect(() => {
-     const delayDebounce = setTimeout(() => {
-       setCurPage(0);
-       fetchProjects(0);
-     }, 500);
- 
-     return () => clearTimeout(delayDebounce);
-   }, [filter, searchTerm]);
- 
- 
-   useEffect(() => {
-     fetchProjects(curPage);
-   }, [curPage]);
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setCurPage(0);
+    }, 500);
 
+    return () => clearTimeout(delayDebounce);
+  }, [filter, searchTerm]);
+
+  useEffect(() => {
+    fetchProjects(curPage);
+  }, [curPage]);
 
 
 
@@ -124,6 +123,7 @@ const ProjectListPageAdmin = () => {
                 title="Project Idea Lists"
                 showSearch={true}
                 showFilter={true}
+                onCreate={()=>navigate("/project-idea")}
                 searchPlaceholder="Search by project title"
                 onSearchChange={(e) => setSearchTerm(e.target.value)}
                 filterOptions={["Popular", "Newest", "Oldest"]}
@@ -137,7 +137,6 @@ const ProjectListPageAdmin = () => {
                     <p className="text-center col-span-full text-gray-400">No projects found.</p>
                 ) : (
                     projects
-                    .filter((proj) => proj.status === "PENDING")
                     .map((proj) => (
                         <ProjectCardAdmin
                             key={proj.id}

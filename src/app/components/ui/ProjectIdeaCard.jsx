@@ -33,7 +33,8 @@ const ProjectIdeaCard = ({
   };
 
   return (
-    <div className="w-[406px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    <div className="min-h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    {/* // <div className="w-[406px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]"> */}
       <div className="h-full flex flex-col gap-[14px] items-center">
         <div className="w-full h-full">
           <h2 className="text-2xl font-[600] mb-4">{title}</h2>
@@ -214,6 +215,30 @@ const ProjectIdeaCard = ({
             {status === 1 ? 'In Progress' : status === 2 ? 'Complete' : 'Unqualified'}
           </div>
         )}
+
+        {/* -------------------------- Start Other Option ------------------------ */}
+        {/* {status && (
+          <div
+            className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${
+                status === "APPROVED"
+                ? "bg-[#9AE600] text-[#364153]"
+                : status === "REJECTED"
+                ? "bg-[#FF3B30] text-[#F9FAFB]"
+                : status === "INPROGRESS"
+                ? "bg-[#FFD60A] text-[#364153]"
+                : status === "COMPLETED"
+                ? "bg-[#155DFC] text-[#F9FAFB]"
+                : status === "DELETED"
+                ? "bg-[#D9D9D9] text-[#79716B]"
+                : "bg-[#79716B] text-[#F9FAFB]"
+            }`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+          </div>
+        )} */}
+        
+      {/* -------------------------- End Other Option ------------------------ */}
+
       </div>
     </div>
   );

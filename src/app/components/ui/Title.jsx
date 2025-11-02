@@ -40,7 +40,7 @@ const Title = ({
 
       <div className="flex w-2/3 h-11 justify-between items-center gap-8">
         <div className='relative text-nowrap'>
-          <h1 className='text-3xl text-white'>{title}</h1>
+          <h1 className='text-lg md:text-3xl text-white'>{title}</h1>
           <div className="w-1/2 h-1.5 absolute -bottom-2 left-0 bg-[#FFBA00] rounded"></div>
         </div>
 

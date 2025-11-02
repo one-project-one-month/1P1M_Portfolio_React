@@ -36,6 +36,7 @@ const ApprovedProjectIdeasPage = () => {
 
       setTotalPages(data.data.pagination.totalPages || 1);
       setProjects(data.data.projects);
+
     } catch (error) {
       console.error("Error fetching projects:", error);
     } finally {
@@ -43,18 +44,13 @@ const ApprovedProjectIdeasPage = () => {
     }
   };
 
-useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    setCurPage(0);
-    fetchProjects(0);
-  }, 500); 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setCurPage(0);
+    }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [filter, searchTerm]);
-
-  useEffect(() => {
-    fetchProjects(curPage);
-  }, [curPage]);
 
   useEffect(() => {
     fetchProjects(curPage);
@@ -90,7 +86,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="flex flex-col min-h-[80vh]">
+    <div className="flex flex-col items-center min-h-[80vh]">
       <Title
         title="Approved Idea Lists"
         showSearch={true}
@@ -101,7 +97,7 @@ useEffect(() => {
         onFilterChange={setFilter}
       />
 
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">
             Loading projects...

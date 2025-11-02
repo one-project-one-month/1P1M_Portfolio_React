@@ -43,19 +43,17 @@ const ApprovedProjectIdeasAdminPage = () => {
      }
    };
  
- useEffect(() => {
-   const delayDebounce = setTimeout(() => {
-     setCurPage(0);
-     fetchProjects(0);
-   }, 500); 
- 
-   return () => clearTimeout(delayDebounce);
- }, [filter, searchTerm]);
- 
- 
- useEffect(() => {
-   fetchProjects(curPage);
- }, [curPage]);
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setCurPage(0);
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [filter, searchTerm]);
+
+  useEffect(() => {
+    fetchProjects(curPage);
+  }, [curPage]);
 
   const handleLike = async (projectId, likeState) => {
     try {
@@ -78,14 +76,6 @@ const ApprovedProjectIdeasAdminPage = () => {
         )
       );
     }
-  };
-
-  const handleEdit = (projectId) => {
-    console.log("I'm editing : ", projectId);
-  };
-
-  const handleDelete = (projectId) => {
-    console.log("I'm deleteing : ", projectId);
   };
 
   return (
@@ -120,6 +110,7 @@ const ApprovedProjectIdeasAdminPage = () => {
               liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
               status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
+              // status={ proj.status.toUpperCase()}
               onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))
