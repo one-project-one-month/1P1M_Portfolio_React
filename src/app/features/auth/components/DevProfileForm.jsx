@@ -62,7 +62,7 @@ function DevProfileForm() {
       console.log("Create Dev Profiles", result);
 
       if (result.success === 1 && result.data && result.data.dev_id) {
-        const devProfileId = result.data.dev;
+        const devProfileId = result.data.dev_id;
 
         const formData = new FormData();
         formData.append("file", img);
@@ -181,10 +181,10 @@ function DevProfileForm() {
         {/* Buttons */}
         <div className="flex w-full justify-between">
           <div className="text-sm font-bold flex items-center gap-x-1">
-            <span className="text-[#F9FAFB]/50 size-5">
+            {/* <span className="text-[#F9FAFB]/50 size-5">
               <PiSwatchesLight />
-            </span>
-            <button className="text-[#F9FAFB]/50">Choose Theme</button>
+            </span> */}
+            {/* <button className="text-[#F9FAFB]/50">Choose Theme</button> */}
           </div>
 
           <div className="flex gap-2">

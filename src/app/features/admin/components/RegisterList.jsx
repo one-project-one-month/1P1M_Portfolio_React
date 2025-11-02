@@ -1,13 +1,16 @@
 
 import React from "react";
 
-const RegisterList = ({data}) => {
+const RegisterList = ({data,error}) => {
   
 
 const filterUser = Array.isArray(data) ? data : [];
 
   const tHead = ["No", "Name", "Email", "Phone", "Role"];
 
+
+
+if(error) return <div>Something went wrong</div>
 
 
   return (

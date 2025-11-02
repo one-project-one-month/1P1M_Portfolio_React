@@ -24,7 +24,7 @@ function RegisterListPage() {
   }, [searchTerm]);
 
   const size = 7;
-  const { data, isLoading, isError } = useOpomRegister({
+  const { data,isError} = useOpomRegister({
     keyword,
     page,
     size,
@@ -67,18 +67,18 @@ function RegisterListPage() {
               menuList={filterList}
               placeholder={`Filter`}
               filters={filterList}
-              isOpen={true}
+              isOpen={false}
             />
           </div>
         </div>
       </div>
 
       <div className=" h-8/12">
-        <RegisterList data={data?.data} />
+        <RegisterList data={data?.data} error={isError} />
       </div>
 
       <div className="flex justify-center mt-2 gap-y-1.5">
-        {/* <Pagination totalPages={totalPages} currentPage={currentPage} /> */}
+        <Pagination  totalPages={totalPages} currentPage={page} onPageChange={(newPage)=>setPage(newPage)}/>
       </div>
     </div>
   );

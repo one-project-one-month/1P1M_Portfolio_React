@@ -69,12 +69,14 @@ export const setupDevProfile = async (form) => {
   }
 };
 
-export const uploadDevImage=async(file)=>{
+export const uploadDevImage=async(file,devId)=>{
 
   try {
      const user = JSON.parse(localStorage.getItem("user"));
     
-    const response= await apiClient.patch(API_ENDPOINTS.UPLOAD_DEV_IMAGE + '/' + `${user.id}`, file);
+    const response= await apiClient.patch(API_ENDPOINTS.UPLOAD_DEV_IMAGE + '/' + `${devId}`,file);
+    console.log(response);
+    
     console.log("Uploading image...");
     
     return response.data;
