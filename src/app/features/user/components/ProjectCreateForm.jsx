@@ -1,0 +1,636 @@
+import FileUpload from "@/components/ui/FileUpload";
+import FormTextArea from "@/components/ui/FormTextArea";
+import TextField from "@/components/ui/TextField";
+import Button from "@/components/ui/Button";
+import { useState, useEffect, useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { plusIconUrl } from "@/assets/icons/iconUrls";
+import apiClient from "@/api/axios";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { getDevProfiles } from "@/services/devProfileService";
+import { X } from "lucide-react";
+import CustomBox from "@/components/ui/CustomBox";
+import toast from "react-hot-toast";
+
+function ProjectCreateForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    watch,
+  } = useForm({
+    mode: "onSubmit",
+    defaultValues: {
+      projectName: "",
+      projectDetail: "",
+      githubLink: "",
+      projectLink: "",
+      toolsUsed: "",
+    },
+  });
+
+  const formValues = watch();
+
+  const [projectImage, setProjectImage] = useState(null);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [search, setSearch] = useState("");
+  const [devProfiles, setDevProfiles] = useState([]);
+  const [devLoading, setDevLoading] = useState(false);
+  const [devError, setDevError] = useState(null);
+  const [fileUploadKey, setFileUploadKey] = useState(0);
+
+  const createFieldHandler = (fieldName, validationRules = {}) => {
+    const registration = register(fieldName, validationRules);
+    return {
+      name: registration.name,
+      ref: registration.ref,
+      onChange: (value) => {
+        registration.onChange({ target: { name: fieldName, value } });
+      },
+      onBlur: registration.onBlur,
+    };
+  };
+
+  const handleImageSelect = (file) => {
+    setProjectImage(file);
+  };
+
+  const onSubmit = async (data) => {
+    const loadingToast = toast.loading("Creating project...", {
+      position: "top-right",
+    });
+
+    try {
+      const toolsArray = data.toolsUsed
+        .split(",")
+        .map((tool) => tool.trim())
+        .filter((tool) => tool.length > 0);
+
+      const projectPayload = {
+        name: data.projectName,
+        description: data.projectDetail,
+        projectLink: data.projectLink,
+        repoLink: data.githubLink,
+        languageAndTools: toolsArray,
+        developerEmails: teamMembers.length > 0 ? teamMembers : [],
+      };
+
+      const projectResponse = await apiClient.post(
+        API_ENDPOINTS.CREATE_PROJECT,
+        projectPayload,
+        getAuthConfig()
+      );
+
+      // Get the project ID from response
+      const projectPortfolioId = projectResponse.data?.data.projectId;
+      if (!projectPortfolioId) {
+        throw new Error("Project ID not found in response");
+      }
+
+      // Step 2: Upload image if one is selected
+      if (projectImage) {
+        // Validate image size (1MB max)
+        const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+        if (projectImage.size > maxSize) {
+          throw new Error("Image size exceeds 1MB limit");
+        }
+
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append("file", projectImage);
+        // formData.append("projectPortfolioId", projectPortfolioId);
+        const uploadResponse = await apiClient.patch(
+          API_ENDPOINTS.UPLOAD_PROJECT_IMAGE +
+            `?projectPortfolioId=${projectPortfolioId}`,
+          formData,
+          getAuthConfig({
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        );
+      }
+
+      // Dismiss loading toast and show success toast
+      toast.dismiss(loadingToast);
+      toast.success("🎉 Project created successfully!", {
+        duration: 4000,
+        position: "top-right",
+      });
+
+      // Reset form after successful submission
+      reset();
+      setProjectImage(null);
+      setTeamMembers([]);
+      setSelectedMembers([]);
+      setSearch("");
+      setDevProfiles([]);
+      setIsDialogOpen(false);
+      setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
+    } catch (error) {
+      console.error("❌ Error creating project:", error);
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
+      // Show error toast with appropriate message
+      if (error.response) {
+        console.error("Server error:", error.response.data);
+        const errorMessage =
+          error.response.data?.message || "Server error occurred";
+        toast.error(`❌ ${errorMessage}`, {
+          duration: 5000,
+          position: "top-right",
+        });
+      } else if (error.request) {
+        console.error("Network error: No response received");
+        toast.error("❌ Network error: Please check your connection", {
+          duration: 5000,
+          position: "top-right",
+        });
+      } else {
+        console.error("Error:", error.message);
+        toast.error(`❌ Error: ${error.message}`, {
+          duration: 5000,
+          position: "top-right",
+        });
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    reset();
+    setProjectImage(null);
+    setTeamMembers([]);
+    setSelectedMembers([]);
+    setSearch("");
+    setDevProfiles([]);
+    setIsDialogOpen(false);
+    setFileUploadKey((prev) => prev + 1); // Force FileUpload component to re-mount
+  };
+
+  const handleAddTeamMember = () => {
+    setIsDialogOpen(true);
+  };
+
+  // Filter out already selected members from API results
+  const filteredDevs =
+    devProfiles?.filter((dev) => {
+      // Use userId for comparison since API returns userId instead of id
+      const devId = dev.userId || dev.id;
+      const isAlreadySelected = selectedMembers.find((member) => {
+        const memberId = member.userId || member.id;
+        return memberId === devId;
+      });
+      return !isAlreadySelected;
+    }) || [];
+
+  const handleAddMember = (dev) => {
+    const devId = dev.userId || dev.id;
+    const isAlreadySelected = selectedMembers.find((member) => {
+      const memberId = member.userId || member.id;
+      return memberId === devId;
+    });
+
+    if (!isAlreadySelected) {
+      setSelectedMembers([...selectedMembers, dev]);
+    }
+  };
+
+  const handleRemoveMember = (devToRemove) => {
+    const devId = devToRemove.userId || devToRemove.id;
+    setSelectedMembers(
+      selectedMembers.filter((member) => {
+        const memberId = member.userId || member.id;
+        return memberId !== devId;
+      })
+    );
+  };
+
+  const handleSaveMembers = () => {
+    // Update teamMembers with email addresses from selected members
+    const memberEmails = selectedMembers
+      .map((member) => member.email)
+      .filter(Boolean);
+    setTeamMembers(memberEmails);
+    setIsDialogOpen(false);
+  };
+
+  const handleDiscardMembers = () => {
+    setSelectedMembers([]);
+    setSearch("");
+    setDevProfiles([]);
+    setDevError(null);
+    setIsDialogOpen(false);
+  };
+
+  // Search functionality - only fetch when user types
+  const searchDevelopers = useCallback(async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setDevProfiles([]);
+      setDevError(null);
+      return;
+    }
+
+    setDevLoading(true);
+    setDevError(null);
+
+    try {
+      const data = await getDevProfiles({ keyword: searchTerm });
+
+      if (Array.isArray(data)) {
+        setDevProfiles(data);
+      } else if (data?.data && Array.isArray(data.data)) {
+        setDevProfiles(data.data);
+      } else {
+        setDevProfiles([]);
+      }
+    } catch (error) {
+      console.error("Error searching developers:", error);
+      setDevError("Error searching developers: " + error.message);
+      setDevProfiles([]);
+    } finally {
+      setDevLoading(false);
+    }
+  }, []);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchDevelopers(search);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [search, searchDevelopers]);
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col lg:flex-row gap-2 lg:gap-3 w-full h-full"
+    >
+      {/* Left side - File Upload */}
+      <div className="flex flex-col gap-0 items-center lg:w-2/5">
+        <FileUpload
+          key={fileUploadKey}
+          onFileSelect={handleImageSelect}
+          accept="image/*"
+          maxSize={1 * 1024 * 1024}
+        />
+        <div className="text-white text-center text-xs font-medium mt-1">
+          Upload Image
+        </div>
+        <div className="text-gray-400 text-xs text-center">
+          maximum image size is 1MB
+        </div>
+      </div>
+
+      {/* Right side - Form Fields */}
+      <div className="flex flex-col flex-1 lg:w-3/5">
+        <div>
+          <TextField
+            label="Project Name"
+            id="project-name"
+            placeholder="Enter your project name"
+            showEditButton={false}
+            isEditMode={false}
+            value={formValues.projectName}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("projectName", {
+              required: "Project name is required",
+              minLength: {
+                value: 3,
+                message: "Too short (min 3 characters)",
+              },
+              maxLength: {
+                value: 50,
+                message: "Too long (max 50 characters)",
+              },
+            })}
+          />
+          {errors.projectName?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.projectName?.message}
+            </div>
+          )}
+        </div>
+        <div className="-mt-5">
+          <div className="flex flex-col gap-0">
+            <label
+              htmlFor="project-detail"
+              className="text-white font-sans text-sm font-semibold leading-8 mb-1"
+            >
+              Project detail
+            </label>
+            <FormTextArea
+              id="project-detail"
+              placeholder="Provide details about your project"
+              className="w-full"
+              {...register("projectDetail", {
+                required: "Project detail is required",
+                minLength: {
+                  value: 10,
+                  message: "Too short (min 10 characters)",
+                },
+              })}
+            />
+            {errors.projectDetail?.message && (
+              <div className="text-xs text-[#FB2C36] text-end -mt-1">
+                {errors.projectDetail.message}
+              </div>
+            )}
+          </div>
+        </div>
+        <div>
+          <TextField
+            label="Github link"
+            id="github-link"
+            placeholder="Enter your project GitHub link"
+            showEditButton={false}
+            isEditMode={false}
+            value={formValues.githubLink}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("githubLink", {
+              required: "GitHub link is required",
+              pattern: {
+                value: /^https:\/\/github\.com\/.+/,
+                message: "Invalid GitHub URL",
+              },
+            })}
+          />
+          {errors.githubLink?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.githubLink.message}
+            </div>
+          )}
+        </div>
+        <div className="-mt-6">
+          <TextField
+            label="Project link"
+            id="project-link"
+            placeholder="Enter your project hosting link"
+            showEditButton={false}
+            isEditMode={false}
+            value={formValues.projectLink}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("projectLink", {
+              required: "Project link is required",
+              pattern: {
+                value: /^https?:\/\/.+/,
+                message: "Invalid URL format",
+              },
+            })}
+          />
+          {errors.projectLink?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.projectLink.message}
+            </div>
+          )}
+        </div>
+        <div className="-mt-6 z-10">
+          <TextField
+            label="Tools Used"
+            id="tools-used"
+            placeholder="e.g., HTML, CSS, JavaScript, React"
+            showEditButton={false}
+            isEditMode={false}
+            value={formValues.toolsUsed}
+            className="relative w-full text-white font-sans text-xs font-semibold leading-4"
+            {...createFieldHandler("toolsUsed", {
+              required: "Tools used is required",
+              minLength: {
+                value: 2,
+                message: "Too short (min 2 characters)",
+              },
+              maxLength: {
+                value: 100,
+                message: "Too long (max 100 characters)",
+              },
+            })}
+          />
+          {errors.toolsUsed?.message && (
+            <div className="text-xs text-[#FB2C36] text-end -mt-6">
+              {errors.toolsUsed.message}
+            </div>
+          )}
+        </div>
+        {/* User Images Section */}
+        <div className="flex flex-col mb-2 -mt-4 z-0">
+          <div className="flex items-center gap-2">
+            {/* Team Member Images - Show max 5 */}
+            {selectedMembers.slice(0, 5).map((member, index) => (
+              <div key={member.userId || member.id} className="relative group">
+                <img
+                  src={
+                    member.profilePictureUrl ||
+                    `https://picsum.photos/48/48?random=${member.id}`
+                  }
+                  alt={member.name || `Team member ${index + 1}`}
+                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer"
+                  title={member.name || "Team member"}
+                />
+              </div>
+            ))}
+
+            {/* Show "+more" indicator if there are more than 5 members */}
+            {selectedMembers.length > 5 && (
+              <div className="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
+                <span className="text-white text-xs font-semibold">
+                  +{selectedMembers.length - 5}
+                </span>
+              </div>
+            )}
+
+            {/* Show placeholder if no members selected */}
+            {selectedMembers.length === 0 && (
+              <div className="text-gray-400 text-sm">
+                No team members selected
+              </div>
+            )}
+
+            {/* Add Member Button */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="w-12 h-12 rounded-full bg-gray-700 border-2 border-gray-600 hover:border-gray-400 hover:bg-gray-600 transition-colors flex items-center justify-center cursor-pointer text-white font-bold text-4xl"
+                  onClick={handleAddTeamMember}
+                >
+                  <img src={plusIconUrl} alt="" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl bg-[#1A1A1A] border border-[#3A3A3A] rounded-3xl p-8">
+                <DialogHeader className="flex flex-row justify-between items-center">
+                  <DialogTitle className="text-white text-xl font-semibold">
+                    Add Member
+                  </DialogTitle>
+                  <button
+                    onClick={() => setIsDialogOpen(false)}
+                    className="text-white hover:text-gray-300 transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </DialogHeader>
+
+                <div className="space-y-4 mt-6">
+                  {/* Search Input */}
+                  <input
+                    type="text"
+                    placeholder="Search member..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full h-12 rounded-lg border border-[#FFFFFF26] bg-[#FFFFFF17] px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  />
+
+                  {/* Selected Members */}
+                  {selectedMembers.length > 0 && (
+                    <CustomBox
+                      style={{
+                        width: "100%",
+                        height: "150px",
+                        borderRadius: "0.5rem",
+                        borderWidth: "1px",
+                        padding: "16px",
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: "12px",
+                        overflowY: "auto",
+                        alignContent: "flex-start",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      {selectedMembers.map((member) => (
+                        <div
+                          key={member.userId || member.id}
+                          className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-2 gap-2"
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={
+                                member.profilePictureUrl ||
+                                `https://picsum.photos/40/40?random=${member.id}`
+                              }
+                              alt={member.name || "User"}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <p className="text-white text-sm font-medium truncate max-w-[120px]">
+                              {member.name || "Unknown User"}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveMember(member)}
+                            className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
+                          >
+                            <X size={12} className="text-black" />
+                          </button>
+                        </div>
+                      ))}
+                    </CustomBox>
+                  )}
+
+                  {/* Search Results */}
+                  <div className="max-h-40 overflow-y-auto space-y-2">
+                    {devLoading ? (
+                      <p className="text-gray-400 text-center py-4">
+                        Loading developers...
+                      </p>
+                    ) : devError ? (
+                      <p className="text-red-400 text-center py-4">
+                        Error loading developers
+                      </p>
+                    ) : filteredDevs.length === 0 ? (
+                      <p className="text-gray-400 text-center py-4">
+                        {search ? "No members found" : "Type a name to search"}
+                      </p>
+                    ) : (
+                      filteredDevs.map((dev) => (
+                        <div
+                          key={dev.userId || dev.id}
+                          className="flex items-center justify-between bg-gray-800 border border-gray-600 rounded-lg p-3"
+                        >
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={
+                                dev.profilePictureUrl ||
+                                `https://picsum.photos/40/40?random=${dev.id}`
+                              }
+                              alt={dev.name || "User"}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="text-white font-medium">
+                                {dev.name || "Unknown User"}
+                              </p>
+                              <p className="text-gray-400 text-sm">
+                                {dev.email || "No email"}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleAddMember(dev)}
+                            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-end gap-3 pt-4">
+                    <button
+                      onClick={handleDiscardMembers}
+                      className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-full transition-colors"
+                    >
+                      Discard
+                    </button>
+                    <button
+                      onClick={handleSaveMembers}
+                      className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-2 mt-1">
+          <Button
+            variant="black_button"
+            size="primary"
+            type="button"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="primary"
+            size="primary"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Creating..." : "Create"}
+          </Button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
+export default ProjectCreateForm;

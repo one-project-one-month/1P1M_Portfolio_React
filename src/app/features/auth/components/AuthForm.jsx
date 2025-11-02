@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FormFields";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -18,14 +18,18 @@ function AuthForm() {
   const [emailError, setEmailError] = useState("");
   const [touched, setTouched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const oauthProcessingRef = useRef(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const code = searchParams.get("code");
 
-    if (code) {
+    if (code && !oauthProcessingRef.current) {
       console.log("=== OAuth code received ===", code);
       console.log("Current pathname:", location.pathname);
+
+      // Set processing flag to prevent duplicate executions
+      oauthProcessingRef.current = true;
 
       if (location.pathname === "/callback") {
         console.log("=== GOOGLE OAuth callback detected ===");
@@ -42,7 +46,7 @@ function AuthForm() {
             if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
-              navigate("/dashboard");
+              navigate("/");
             }
           })
           .catch((error) => {
@@ -51,10 +55,12 @@ function AuthForm() {
               "Google authentication failed: " +
                 (error.message || "Unknown error")
             );
-
             navigate("/callback");
           })
-          .finally(() => {});
+          .finally(() => {
+            // Reset processing flag
+            oauthProcessingRef.current = false;
+          });
       } else if (
         location.pathname === "/auth/callback" ||
         location.pathname === "/login/oauth2/code/github"
@@ -74,7 +80,7 @@ function AuthForm() {
             if (data.data.newUser) {
               navigate("/setup-profile");
             } else {
-              navigate("/dashboard");
+              navigate("/");
             }
           })
           .catch((error) => {
@@ -84,7 +90,13 @@ function AuthForm() {
                 (error.message || "Unknown error")
             );
           })
-          .finally(() => {});
+          .finally(() => {
+            // Reset processing flag
+            oauthProcessingRef.current = false;
+          });
+      } else {
+        // Reset processing flag if no valid callback path
+        oauthProcessingRef.current = false;
       }
     }
   }, [location.pathname, location.search, navigate]);

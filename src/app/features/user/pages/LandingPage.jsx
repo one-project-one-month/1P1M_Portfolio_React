@@ -11,15 +11,12 @@ import { useNavigate } from 'react-router-dom'
 import DevCard from '../components/DevCard'
 
 const fetchApprovedProjectIdeas = async () => {
-  // const res = await fetchApprovedProjects()
-  const res = await ProjectIdeaList() // used to test bez ApprovedProject Lob error 
-  console.log('fetch approved project', res.data);
-  return res.data || []
+  const res = await fetchApprovedProjects()
+  return res.data.projects || []
 }
 
 const fetchRegisteredDevs = async () => {
   const res = await getDevProfiles()
-  console.log("fetch registered dev", res.data)
   return res.data || []
 }
 
@@ -147,21 +144,26 @@ const LandingPage = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
           {
             approvedProjectideas
-            .filter(approvedProjectIdea => approvedProjectIdea.status === "APPROVED")
             .slice(0, 6)
             .map((approvedProjectIdea, index) => (
               <ProjectIdeaCard
-                key={index}
+                key={approvedProjectIdea.id}
                 projectId={approvedProjectIdea.id}
                 title={approvedProjectIdea.projectName}
-                description={approvedProjectIdea.description}
+                description={approvedProjectIdea.projectDetails}
                 submittedByProfile={approvedProjectIdea.profilePictureUrl}
                 postBy={approvedProjectIdea.devName}
-                likeCount={approvedProjectIdea.reaction_count}
+                likeCount={approvedProjectIdea.reactionCount}
                 liked={approvedProjectIdea.reactedProjects?.includes(approvedProjectIdea.id)}
                 tags={approvedProjectIdea.projectTypes}
-                status={approvedProjectIdea.status}
                 onLike={(projectId, likestate) => handleLike(projectId, likestate)}
+                status={
+                  approvedProjectIdea.status.toLowerCase() === "in_progress"
+                    ? 1
+                    : approvedProjectIdea.status.toLowerCase() === "completed"
+                    ? 2
+                    : 3
+                }
               />
             ))
           }

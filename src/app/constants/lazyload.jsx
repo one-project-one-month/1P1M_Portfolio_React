@@ -45,20 +45,23 @@ export const RegisterListPage = PageLoader(
   lazy(() => import("@/features/admin/pages/RegisterListPage"))
 );
 
-export const ProjectListPage=PageLoader(
-  lazy(()=>import("@/features/auth/pages/ProjectIdeaListPage"))
-)
+export const ProjectListPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/ProjectIdeaListPage"))
+);
 
 export const ProjectListPageAdmin = PageLoader(
   lazy(() => import("@/features/admin/pages/ProjectListPageAdmin"))
 );
 
 export const ProjectCreateFormPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ProjectCreateFormPage"))
+  lazy(() => import("@/features/user/pages/ProjectCreateFormPage"))
 );
 
 export const ApprovedIdeasPage = PageLoader(
-  lazy(() => import("@/features/admin/pages/ApprovedIdeasPage"))
+  lazy(() => import("@/features/user/pages/ApprovedProjectIdeasPage"))
+);
+export const ApprovedIdeasAdminPage = PageLoader(
+  lazy(() => import("@/features/admin/pages/ApprovedProjectIdeasAdminPage"))
 );
 
 export const LandingPage = PageLoader(
@@ -69,6 +72,13 @@ export const DevListPage = lazy(() =>
   import("../features/user/pages/DevListPage")
 );
 
+export const OpomRegisterPage = PageLoader(
+  lazy(() => import("@/features/auth/pages/OpomRegisterPage"))
+);
 export const ProjectPortfolioList = lazy(() =>
   import("@/features/auth/pages/ProjectPortfolioList")
+);
+
+export const ProjectIdeaPage = lazy(() =>
+  import("@/features/auth/pages/Projectideapage")
 );

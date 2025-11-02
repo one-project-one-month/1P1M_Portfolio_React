@@ -1,5 +1,5 @@
 import apiClient from "@/api/axios";
-import { API_ENDPOINTS } from "@/config/apiConfig";
+import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
 
 export const exchangeGithubCode = async (code) => {
   try {
@@ -46,11 +46,23 @@ export const loginWithEmailPassword = async (email, password) => {
       email,
       password,
     });
-    const { token, user } = response.data;
 
-    // save token and user in localStorage
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(response.data.user));
+    const data = response.data?.data;
+
+    if (!data?.token) throw new Error("Invalid response: no token found");
+
+    // store token & user data
+    localStorage.setItem("token", data.token);
+
+    const userInfo = {
+      id: data.userId,
+      username: data.username,
+      email: data.email,
+      role: data.role,
+      roleId: data.roleId,
+      isNewUserLogin: data.isNewUserLogin,
+    };
+    localStorage.setItem("user", JSON.stringify(userInfo));
 
     return response.data;
   } catch (error) {
@@ -86,29 +98,22 @@ export const verifyOtpCode = async (email, otpCode) => {
   }
 };
 
-export const signupWithEmail = async (email, password, token = null) => {
+export const signupWithEmail = async (email, password) => {
   try {
     const response = await apiClient.post(API_ENDPOINTS.REGISTER, {
       email,
       password,
-    },
-    {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    }
-  );
-  const { token: authToken, user } = response.data;
-  // Save to localStorage
-  localStorage.setItem("token", token);
-  localStorage.setItem("user", JSON.stringify(response.data.user));
-
+    });
 
     return response.data;
   } catch (error) {
-    console.error("Error signup :", error);
+    console.error("Error signup:", error);
 
-    throw error.response?.data || {
-      message: "Network or server error. Please try again.",
-    };
+    throw (
+      error.response?.data || {
+        message: "Network or server error. Please try again.",
+      }
+    );
   }
 };
 
@@ -125,16 +130,26 @@ export const forgotPassword = async (email) => {
   }
 };
 
+export const opomRegister = async (form) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.OPOM_REGISTER,
+      form,
+      getAuthConfig()
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in OPOM registration:", error);
+  }
+};
 
 export const resetPassword = async (email, newPassword) => {
   try {
-    const response = await apiClient.post(
-      API_ENDPOINTS.RESET_PASSWORD,
-      {
-        email,
-        newPassword,
-      }
-    );
+    const response = await apiClient.post(API_ENDPOINTS.RESET_PASSWORD, {
+      email,
+      newPassword,
+    });
     return response.data;
   } catch (error) {
     console.error("Error resetting password:", error);

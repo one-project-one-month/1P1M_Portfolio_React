@@ -1,20 +1,20 @@
 import Button from "@/components/ui/Button";
 import OtpInput from "@/components/ui/OtpInput";
 import { useOtpVerification } from "@/features/auth/hooks/useOtpVerification";
-import { signupWithEmail } from "@/services/authService";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function OtpForm({
-  // email = "nora@gmail.com",
+  email,
   onVerifySuccess,
-  onBackToSignup,
+  onMaxAttemptsExceeded
 }) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const email = location.state?.email;
-  const password = location.state?.password;
+
+  if (!email) {
+    throw new Error("Email is required for OTP verification");
+  }
 
   const {
     otpData,
@@ -38,79 +38,35 @@ function OtpForm({
     isVerifying,
   } = otpData;
 
-  // Send OTP automatically when component mounts
-  useEffect(() => {
-    const sendInitialOtp = async () => {
-      try {
-        toast.loading("Sending OTP code...", { id: "initial-otp" });
-        await resendOtp();
-        startResendTimer();
-        toast.success("OTP sent successfully! Check your email.", {
-          id: "initial-otp",
-        });
-      } catch (error) {
-        console.error("Failed to send initial OTP:", error);
-        toast.error("Failed to send OTP. Please try resending.", {
-          id: "initial-otp",
-        });
-        setError("Failed to send OTP. Please try resending.");
-      }
-    };
-
-    sendInitialOtp();
-  }, [email]); // Only run when email changes
 
   const handleOtpChange = (value) => {
-    updateOtpValue(value);
+    const stringValue = Array.isArray(value) ? value.join("") : value;
+    updateOtpValue(stringValue);
   };
 
+  useEffect(()=>{
+    startResendTimer();
+  },[])
+
   const handleVerify = async () => {
-    if (otpValue.length !== 6) {
-      toast.error("Please enter a complete 6-digit code.");
-      return;
-    }
+
+    if (otpValue.length !== 6) return toast.error("Please enter a complete 6-digit code.");
 
     try {
       toast.loading("Verifying OTP code...", { id: "verify-otp" });
       const isValid = await verifyOtp(otpValue);
-
+      
       if (isValid) {
-        // If password exists, it's a signup flow.
-        if (password) {
-          toast.success("OTP verified successfully!", { id: "verify-otp" });
-          toast.loading("Creating your account...", { id: "signup" });
-          const signupResponse = await signupWithEmail(email, password);
-          if (signupResponse.code === 200 && signupResponse.success === 1) {
-            toast.success("Signup successful! Redirecting...", { id: "signup" });
-            onVerifySuccess?.();
-            navigate("/setup-profile");
-          } else {
-            toast.error(signupResponse.message || "Signup failed. Please try again.", { id: "signup" });
-          }
-        } else { // Otherwise, it's a forgot password flow.
-          toast.success("🎉 OTP Verified Successfully! Proceed to reset your password.", { id: "verify-otp" });
-          onVerifySuccess?.();
-          navigate("/reset-password", { state: { email } });
-        }
+        toast.dismiss();
+        onVerifySuccess?.();
       } else {
-        toast.error("Invalid OTP code. Please try again.", {
-          id: "verify-otp",
-        });
-        setError("Please enter the valid code.");
-        incrementAttempts();
-
-        const newAttempts = attempts + 1;
-        if (newAttempts >= MAX_ATTEMPTS) {
-          toast.error("Maximum attempts reached. Redirecting to signup...");
-          setTimeout(() => {
-            onBackToSignup?.();
-          }, 1000);
-        }
+          incrementAttempts();
+          if (attempts + 1 >= MAX_ATTEMPTS) {
+            onMaxAttemptsExceeded?.();
+          }
       }
     } catch (error) {
-      toast.error("Verification failed. Please try again.", {
-        id: "verify-otp",
-      });
+      toast.error("Verification failed. Please try again.", {id: "verify-otp",});
       setError("Please enter the valid code.");
       incrementAttempts();
     }
@@ -143,13 +99,6 @@ function OtpForm({
     }
   };
 
-  if (attempts >= MAX_ATTEMPTS) {
-    return (
-      <div className="flex flex-col items-center gap-6 text-white">
-        Route back to sign up page
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center gap-6 ">
