@@ -23,67 +23,61 @@ function DevProfileForm() {
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
-   
   });
   const navigate = useNavigate();
 
   const handleImageSelect = (file) => {
     console.log("Selected file:", file);
     console.log();
-    
+
     if (file) {
-      
       setImg(file);
       console.log(img);
-      
     }
   };
 
-  const formData=new FormData()
-  formData.append("DEV image",img)
-  console.log("FROM DATA",formData);
-  
+  const formData = new FormData();
+  formData.append("DEV image", img);
+  console.log("FROM DATA", formData);
 
-const onSubmit = async (data) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) {
-    alert("You must log in first");
-    return;
-  }
-
-  const payLoad = {
-    name: data.name,
-    techStacks: [data.techStacks.name],
-    github: data.github,
-    linkedIn: data.linkedIn,
-    aboutDev: data.aboutDev,
-  };
-
-  try {
-    console.log("Start creating dev profiles", payLoad);
-
-    const result = await setupDevProfile(payLoad);
-    console.log("Create Dev Profiles", result);
-
-    if (result.success === 1 && result.data && result.data.devProfileId) {
-      const devProfileId = result.data.devProfileId;
-
-      
-      const formData = new FormData();
-      formData.append("file", img);
-
-      console.log("Uploading image for Dev ID:", devProfileId);
-
-      const uploadRes = await uploadDevImage(devProfileId, formData);
-      console.log("Upload Response:", uploadRes);
-
-      navigate("/admin");
+  const onSubmit = async (data) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("You must log in first");
+      return;
     }
-  } catch (error) {
-    console.error("Create Dev Profile Error", error);
-  }
-};
 
+    const payLoad = {
+      name: data.name,
+      techStacks: [data.techStacks.name],
+      github: data.github,
+      linkedIn: data.linkedIn,
+      aboutDev: data.aboutDev,
+    };
+
+    try {
+      console.log("Start creating dev profiles", payLoad);
+
+      const result = await setupDevProfile(payLoad);
+      console.log("Create Dev Profiles", result);
+
+      if (result.success === 1 && result.data && result.data.dev_id) {
+        const devProfileId = result.data.dev;
+
+        const formData = new FormData();
+        formData.append("file", img);
+
+        console.log("Uploading image for Dev ID:", devProfileId);
+
+        const uploadRes = await uploadDevImage(devProfileId, formData);
+        console.log("Upload Response:", uploadRes);
+
+        navigate("/admin");
+      }
+    } catch (error) {
+      console.error("Create Dev Profile Error", error);
+    }
+  };
 
   return (
     <FormBackground className="w-[532px]">
@@ -211,7 +205,6 @@ const onSubmit = async (data) => {
             >
               Create
             </Button>
-
           </div>
         </div>
       </form>
