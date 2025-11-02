@@ -4,13 +4,37 @@ import { API_ENDPOINTS } from "@/config/apiConfig";
 export const ProjectIdeaList = async (
   page = 0,
   limit = 6,
-  sortField = "name",
-  sortDirection = "desc"
+  keyword = "",
+  filter,
+  sortDirection
 ) => {
   try {
+    let sortField = "id";
+    
+    if (filter === "Popular") {
+      sortField = "reactedUsers";
+       sortDirection = "asc";
+    } else if (filter === "Oldest") {
+      sortField = "id";
+      sortDirection = "asc";
+    } else if (filter === "Newest") {
+      sortField = "id";
+      sortDirection = "desc";
+    }
+
     const response = await apiClient.get(
-      `${API_ENDPOINTS.PROJECT_IDEA}/getAllProjectIdeas?page=${page}&size=${limit}&sortField=${sortField}&sortDirection=${sortDirection}`
+      `${API_ENDPOINTS.PROJECT_IDEA}/getAllProjectIdeas`,
+      {
+        params: {
+          page,
+          size: limit,
+          sortField,
+          sortDirection,
+          keyword,
+        },
+      }
     );
+
     return response.data;
   } catch (error) {
     console.error("Error fetching project ideas:", error);
@@ -18,11 +42,10 @@ export const ProjectIdeaList = async (
   }
 };
 
+
 export const updateProjectIdeaStatus = async (projectIdeaId, status) => {
   try {
-    const response = await apiClient.patch(
-      `${API_ENDPOINTS.PROJECT_IDEA}?projectIdeaId=${projectIdeaId}&status=${status}`
-    );
+    const response = await apiClient.patch(`${API_ENDPOINTS.PROJECT_IDEA}?projectIdeaId=${projectIdeaId}&status=${status}`);
     return response.data;
   } catch (error) {
     console.error("Error updating project idea status:", error);
@@ -30,28 +53,20 @@ export const updateProjectIdeaStatus = async (projectIdeaId, status) => {
   }
 };
 
+
 export const reactProjectIdea = async (projectId) => {
-  return apiClient.post(
-    `${API_ENDPOINTS.PROJECT_IDEA}/react?projectIdeaId=${projectId}`
-  );
+  return apiClient.post(`${API_ENDPOINTS.PROJECT_IDEA}/react?projectIdeaId=${projectId}`);
 };
 
 export const unreactProjectIdea = async (projectId) => {
-  return apiClient.delete(
-    `${API_ENDPOINTS.PROJECT_IDEA}/unreact?projectIdeaId=${projectId}`
-  );
+  return apiClient.delete(`${API_ENDPOINTS.PROJECT_IDEA}/unreact?projectIdeaId=${projectId}`);
 };
 
 export const getProjectReactionCount = async (projectId) => {
-  return apiClient.get(
-    `${API_ENDPOINTS.PROJECT_IDEA}/react/count?project_id=${projectId}`
-  );
+  return apiClient.get(`${API_ENDPOINTS.PROJECT_IDEA}/react/count?project_id=${projectId}`);
 };
 
 export const createProjectIdea = async (projectData) => {
-  const response = await apiClient.post(
-    `${API_ENDPOINTS.PROJECT_IDEA}`,
-    projectData
-  );
+  const response = await api.post("/project-idea", projectData);
   return response.data;
 };

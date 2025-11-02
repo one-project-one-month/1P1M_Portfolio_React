@@ -101,7 +101,7 @@ const ApprovedProjectIdeasAdminPage = () => {
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
           filteredProjects
-          .filter((projects)=> projects.status !== "DELETED")
+          .filter((projects)=> projects.status !== "DELETED" && projects.status !== "PENDING")
           .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}

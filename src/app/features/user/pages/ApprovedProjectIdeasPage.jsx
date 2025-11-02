@@ -8,72 +8,80 @@ import React, { useEffect, useState } from "react";
 const ApprovedProjectIdeasPage = () => {
   const [curPage, setCurPage] = useState(0);
   const [projects, setProjects] = useState([]);
-  const [totalPages, setTotalPages] = useState(99);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Popular");
 
   const fetchProjects = async (page = 0) => {
-        try {
-            setLoading(true);
+    try {
+      setLoading(true);
 
-            const data = await fetchApprovedProjects(page,6);
-            const approvedProjects =  data.data.projects
-            
-            setTotalPages(data.data.pagination.totalPages || 1);  
-            const sortedProjects = approvedProjects.sort((a, b) => b.reactions - a.reactions);
-            setProjects(sortedProjects);
+      const sortParam =
+        filter === "Popular"
+          ? "popular"
+          : filter === "Newest"
+          ? "newest"
+          : "oldest";
 
-        } catch (error) {
-            console.error("Error fetching projects:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+      const data = await fetchApprovedProjects({
+        page,
+        size: 6,
+        sortBy: sortParam,
+        search: searchTerm
+      });
+      
+      setTotalPages(data.data.pagination.totalPages || 1);
+      setProjects(data.data.projects);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchProjects(curPage);
-    }, [curPage]);
+useEffect(() => {
+  const delayDebounce = setTimeout(() => {
+    setCurPage(1);
+    fetchProjects(1);
+  }, 500); 
+
+  return () => clearTimeout(delayDebounce);
+}, [filter, searchTerm]);
 
 
-  const filteredProjects = projects
-    .filter((proj) => {
-      const projectName = proj.name || proj.title || "";
-      const projectDesc = proj.description || "";
-      return (
-        projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        projectDesc.toLowerCase().includes(searchTerm.toLowerCase())
+useEffect(() => {
+  fetchProjects(curPage);
+}, [curPage]);
+
+  const handleLike = async (projectId, liked) => {
+    try {
+      if (liked) {
+        await reactProjectIdea(projectId);
+      } else {
+        await unreactProjectIdea(projectId);
+      }
+
+      // Update local state instantly
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === projectId
+            ? {
+                ...p,
+                reactionCount: liked
+                  ? p.reactionCount + 1
+                  : p.reactionCount - 1,
+                reactedProjects: liked
+                  ? [...(p.reactedProjects || []), p.id]
+                  : (p.reactedProjects || []).filter((id) => id !== p.id),
+              }
+            : p
+        )
       );
-    })
-    .sort((a, b) => {
-      const reactionsA = a.reaction_count || 0;
-      const reactionsB = b.reaction_count || 0;
-
-      if (filter === "Popular") return reactionsB - reactionsA;
-      if (filter === "Oldest") return (a.id || 0) - (b.id || 0);
-      return (b.id || 0) - (a.id || 0); 
-    });
-
-    const handleLike = async(projectId, liked) => {
-   
-           try {
-               if(liked){
-                   await reactProjectIdea(projectId)
-               }else{
-                   await unreactProjectIdea(projectId)
-               }
-           } catch (error) {
-               console.error("Error updating like:", error);
-               setProjects(prev =>
-                   prev.map(p =>
-                       p.id === projectId
-                           ? { ...p, likecount: liked ? p.likecount + 1 : p.likecount - 1, likestate: liked }
-                           : p
-                   )
-               );
-           }
-       };
-
+    } catch (error) {
+      console.error("Error updating like:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-[80vh]">
@@ -82,35 +90,46 @@ const ApprovedProjectIdeasPage = () => {
         showSearch={true}
         showFilter={true}
         searchPlaceholder="Search by project title"
-        onSearchChange={(e)=>setSearchTerm(e.target.value)}
+        onSearchChange={(e) => setSearchTerm(e.target.value)}
         filterOptions={["Popular", "Newest", "Oldest"]}
         onFilterChange={setFilter}
       />
 
-      {/* <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6"> */}
-      <div className="flex-grow flex flex-wrap  gap-6 p-6">
+      {/* <div className="flex-grow flex flex-wrap gap-6 p-6"> */}
+      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {loading ? (
-          <p className="text-center col-span-full text-gray-400">Loading projects...</p>
-        ) : filteredProjects.length === 0 ? (
-          <p className="text-center col-span-full text-gray-400">No projects found.</p>
+          <p className="text-center col-span-full text-gray-400">
+            Loading projects...
+          </p>
+        ) : projects.length === 0 ? (
+          <p className="text-center col-span-full text-gray-400">
+            No projects found.
+          </p>
         ) : (
-          filteredProjects
-          .filter((projects)=> projects.status !== "DELETED")
-          .map((proj) => (
-            <ProjectIdeaCard
-              key={proj.id}
-              projectId={proj.id}
-              title={proj.projectName}
-              description={proj.projectDetails}
-              submittedByProfile={proj.profilePictureUrl}
-              postBy={proj.devName}
-              likeCount={proj.reactionCount}
-              liked={proj.reactedProjects?.includes(proj.id)}
-              tags={proj.projectTypes}
-              status={proj.status.toLowerCase() === "in_progress"? 1 : proj.status.toLowerCase() === "completed"? 2 : 3}
-              onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
-            />
-          ))
+          projects
+            .filter((proj) => proj.status !== "DELETED")
+            .map((proj) => (
+              <ProjectIdeaCard
+                key={proj.id}
+                projectId={proj.id}
+                title={proj.projectName}
+                description={proj.projectDetails}
+                submittedByProfile={proj.profilePictureUrl}
+                postBy={proj.devName}
+                likeCount={proj.reactionCount}
+                liked={proj.reactedProjects?.includes(proj.id)}
+                status={
+                  proj.status.toLowerCase() === "in_progress"
+                    ? 1
+                    : proj.status.toLowerCase() === "completed"
+                    ? 2
+                    : 3
+                }
+                onLike={(projectId, likeState) =>
+                  handleLike(projectId, likeState)
+                }
+              />
+            ))
         )}
       </div>
 
@@ -120,6 +139,7 @@ const ApprovedProjectIdeasPage = () => {
           totalPages={totalPages}
           onPageChange={(newPage) => setCurPage(newPage)}
         />
+
       </div>
     </div>
   );
