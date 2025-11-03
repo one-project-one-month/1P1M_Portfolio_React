@@ -3,7 +3,12 @@ import FormWrapper from "../../../components/ui/FormWrapper";
 import TextField from "../../../components/ui/TextField";
 import PasswordField from "../../../components/ui/PasswordField";
 import { useLocation, useNavigate } from "react-router-dom";
-import { checkEmailExists, loginWithEmailPassword, sendOtpCode, signupWithEmail } from "@/services/authService";
+import {
+  checkEmailExists,
+  loginWithEmailPassword,
+  sendOtpCode,
+  signupWithEmail,
+} from "@/services/authService";
 import toast from "react-hot-toast";
 
 const RegisterForm = () => {
@@ -21,13 +26,14 @@ const RegisterForm = () => {
   const location = useLocation();
   const emailFromAuth = location.state?.email || "";
 
-  //  Email format validation 
-    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  //  Email format validation
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   // Strong password validation (8+ chars, uppercase, lowercase, number, special char)
   const isStrongPassword = (password) =>
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+      password
+    );
 
   const TEMP_DOMAINS = [
     "memeazon.com",
@@ -38,7 +44,7 @@ const RegisterForm = () => {
     "yopmail.com",
     "getnada.com",
   ];
-   const verifyTempEmail = async (email) => {
+  const verifyTempEmail = async (email) => {
     const domain = email.split("@")[1]?.toLowerCase();
 
     if (TEMP_DOMAINS.includes(domain)) return true;
@@ -63,9 +69,6 @@ const RegisterForm = () => {
 
     return false; // not disposable
   };
-
-
-
 
   // Email check function
   const checkEmailExistsInSystem = async (email) => {
@@ -102,7 +105,7 @@ const RegisterForm = () => {
     } else if (!isValidEmail(email)) {
       setEmailError("Enter a valid Email address");
       valid = false;
-    }else{
+    } else {
       toast.loading("Checking email validity...");
       const isTemp = await verifyTempEmail(email);
       toast.remove();
@@ -146,14 +149,14 @@ const RegisterForm = () => {
         return;
       }
 
-      // after fill register form, called otp api to verify 
+      // after fill register form, called otp api to verify
       const res = await sendOtpCode(email);
-      if(res.code === 200 && res.success === 1){
-          toast.success("OTP resent successfully! Check your email.", {id: "resend-otp",});
-          navigate("/otp-verify", { state: { email, password } });
+      if (res.code === 200 && res.success === 1) {
+        toast.success("OTP resent successfully! Check your email.", {
+          id: "resend-otp",
+        });
+        navigate("/auth/otp-verify", { state: { email, password } });
       }
-
-        
     } catch (error) {
       console.error("Register error:", error);
       toast.removeAll();

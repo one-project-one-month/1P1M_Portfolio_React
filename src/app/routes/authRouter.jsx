@@ -1,5 +1,4 @@
 import {
-  AuthPage,
   OtpPage,
   LoginPage,
   ResetPasswordPage,
@@ -21,20 +20,10 @@ const authRouter = [
         element: <LoginPage />,
         index: true,
       },
-      ,
       { path: "setup-profile", element: <DevProfilePage /> },
       {
         path: "register",
         element: <RegisterPage />,
-      },
-
-      {
-        path: "callback",
-        element: <AuthPage />,
-      },
-      {
-        path: "login/oauth2/code/github",
-        element: <AuthPage />,
       },
       {
         path: "otp-verify",

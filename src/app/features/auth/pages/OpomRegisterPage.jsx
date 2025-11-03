@@ -114,13 +114,13 @@ const OpomRegisterPage = () => {
       const token = authUtils.getToken();
       console.log(token);
       if (!token) {
-        navigate("/register");
+        navigate("/auth/register");
       } else {
         setIsLoading(false);
       }
     } catch (error) {
       console.error("Failed to get token", error);
-      navigate("/register");
+      navigate("/auth/register");
     }
   }, [navigate]);
 

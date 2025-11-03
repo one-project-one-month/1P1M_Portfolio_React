@@ -108,7 +108,7 @@ const LandingPage = () => {
           <button
             type="button"
             className="border border-white rounded-full text-sm lg:text-lg cursor-pointer py-4 px-10"
-            onClick={() => navigate("/opom-register")}
+            onClick={() => navigate("/auth/opom-register")}
           >
             Register Now
           </button>

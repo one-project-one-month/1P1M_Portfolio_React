@@ -25,7 +25,7 @@ function ForgotPasswordPage() {
           toast.success("OTP resent successfully! Check your email.", {
             id: "resend-otp",
           });
-          navigate("/otp-verify", { state: { email } });
+          navigate("/auth/otp-verify", { state: { email } });
         }
       } catch (error) {
         console.error("Error during password forgot:", error);
@@ -34,7 +34,7 @@ function ForgotPasswordPage() {
       }
     } else {
       toast.error("Email not in our system! Please register first");
-      navigate("/register", { state: { email } });
+      navigate("/auth/register", { state: { email } });
     }
   };
 
@@ -79,7 +79,10 @@ function ForgotPasswordPage() {
           </Button>
         </div>
         <div className="mt-6 py-4 flex text-sm text-[#99A1AF]">
-          <a href="/login" className="flex text-center cursor-pointer block">
+          <a
+            href="/auth/login"
+            className="flex text-center cursor-pointer block"
+          >
             <svg
               className="h-4 w-4 mr-2"
               fill="none"

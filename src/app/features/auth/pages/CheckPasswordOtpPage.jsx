@@ -20,7 +20,7 @@ function CheckPasswordOtpPage() {
   };
 
   const handleBackToSignup = () => {
-    navigate("/register");
+    navigate("/auth/register");
   };
 
   return (
