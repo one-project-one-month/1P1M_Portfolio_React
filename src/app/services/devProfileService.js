@@ -69,21 +69,27 @@ export const setupDevProfile = async (form) => {
   }
 };
 
-export const uploadDevImage=async(file,devId)=>{
-
+export const uploadDevImage = async (file, devProfileId) => {
   try {
-     const user = JSON.parse(localStorage.getItem("user"));
-    
-    const response= await apiClient.patch(API_ENDPOINTS.UPLOAD_DEV_IMAGE + '/' + `${devId}`,file);
-    console.log(response);
-    
-    console.log("Uploading image...");
-    
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const formData = new FormData();
+    formData.append("file", file);  
+
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${devProfileId}`,
+      file,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          ...(user?.token && { Authorization: `Bearer ${user.token}` }),
+        },
+      }
+    );
+
     return response.data;
   } catch (error) {
-    console.log("Error at upoading image");
-    
-    throw error?.response?.data || error
+    throw error?.response?.data || error;
   }
+};
 
-}
