@@ -69,7 +69,7 @@ function DevProfileForm() {
 
         console.log("Uploading image for Dev ID:", devProfileId);
 
-        const uploadRes = await uploadDevImage(devProfileId, formData);
+        const uploadRes = await uploadDevImage(formData,devProfileId);
         console.log("Upload Response:", uploadRes);
 
         navigate("/admin");
@@ -180,12 +180,7 @@ function DevProfileForm() {
 
         {/* Buttons */}
         <div className="flex w-full justify-between">
-          <div className="text-sm font-bold flex items-center gap-x-1">
-            {/* <span className="text-[#F9FAFB]/50 size-5">
-              <PiSwatchesLight />
-            </span> */}
-            {/* <button className="text-[#F9FAFB]/50">Choose Theme</button> */}
-          </div>
+          <div className="text-sm font-bold flex items-center gap-x-1"></div>
 
           <div className="flex gap-2">
             <Button

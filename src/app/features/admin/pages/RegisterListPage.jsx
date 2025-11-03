@@ -9,10 +9,15 @@ import FilterDropdown from "@/components/ui/Filter";
 import { useOpomRegister } from "@/queries/useOpomRegister";
 
 function RegisterListPage() {
+  const[isOpen,setIsOpen]=useState(false);
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState("");
+  const [sortDirection,setSortDirection]=useState("desc");
   const [searchTerm, setSearchTerm] = useState("");
   console.log(keyword);
+  
+
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -23,16 +28,21 @@ function RegisterListPage() {
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const size = 7;
+  const size = 1;
   const { data,isError} = useOpomRegister({
     keyword,
     page,
     size,
-    sortDirection: "desc",
+    sortDirection,
     sortField: "name",
   });
 
+
+  
+
   const totalPages = data?.meta?.totalPages || 0;
+  console.log(totalPages);
+  
 
   console.log(data?.data);
 
@@ -63,11 +73,12 @@ function RegisterListPage() {
 
           <div>
             <Filter
-              icon={filterIconUrl}
-              menuList={filterList}
-              placeholder={`Filter`}
-              filters={filterList}
-              isOpen={false}
+            isOpen={isOpen}
+            onToggle={(prev)=>setIsOpen(!prev)}
+            onSelect={(opt)=>{setSortDirection(opt)}}
+            filters={filterList}
+    
+             
             />
           </div>
         </div>
@@ -76,9 +87,10 @@ function RegisterListPage() {
       <div className=" h-8/12">
         <RegisterList data={data?.data} error={isError} />
       </div>
+    
 
-      <div className="flex justify-center mt-2 gap-y-1.5">
-        <Pagination  totalPages={totalPages} currentPage={page} onPageChange={(newPage)=>setPage(newPage)}/>
+      <div className="flex  justify-center mt-2 gap-y-1.5">
+          <Pagination  totalPages={totalPages} currentPage={page} onPageChange={(newPage)=>setPage(newPage)}/>
       </div>
     </div>
   );
