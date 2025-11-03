@@ -129,7 +129,7 @@ const LandingPage = () => {
       {/* End About Section */}
 
       {/* Start Registered Section */}
-      <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
+      <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
         <div className='w-full flex justify-between items-center my-4'>
           <h1 className='text-5xl'>Registered</h1>
           <button className='border-b cursor-pointer'
@@ -137,25 +137,45 @@ const LandingPage = () => {
           >View more</button>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-          {
+          {devsLoading ? (
+             <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-gray-800 rounded-xl h-[225px]" />
+              ))}
+            </div>
+          ):
+          (
             registeredDevs
             .slice(0,6)
             .map((devProfile,idx)=>(
               <DevCard key={idx} member={devProfile} />
-            ))
+            )))
           }
         </div>
       </section>
       {/* End Registered Section */}
 
       {/* Start Approved Ideas Section */}
-      <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
+      <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
         <div className='w-full flex justify-between items-center my-4'>
           <h1 className='text-5xl'>Approved Ideas</h1>
           <button className='border-b cursor-pointer' onClick={() => navigate('/approved-ideas')}>View more</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {
+          ideasLoading ? 
+          (
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-gray-800 rounded-xl h-[298px]" />
+              ))}
+            </div>
+          ):  approvedProjectideas.length === 0 ? (
+            <p className="text-center col-span-full text-gray-400">
+              No projects found.
+            </p>
+          )
+          : 
             approvedProjectideas
             .slice(0, 6)
             .map((approvedProjectIdea) => (

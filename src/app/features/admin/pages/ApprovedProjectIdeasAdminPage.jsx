@@ -5,8 +5,10 @@ import { fetchApprovedProjects } from "@/services/approvedProjectsService";
 import {
   reactProjectIdea,
   unreactProjectIdea,
+  updateProjectIdeaStatus,
 } from "@/services/projectIdeaService";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const ApprovedProjectIdeasAdminPage = () => {
   const [curPage, setCurPage] = useState(0);
@@ -78,6 +80,38 @@ const ApprovedProjectIdeasAdminPage = () => {
     }
   };
 
+  const statusChangeHandler = async (projectId, newStatus) => {
+  // Map status text to numeric ID
+  let statusId;
+  switch (newStatus) {
+    case "APPROVED": statusId = 1; break;
+    case "REJECTED": statusId = 0; break;
+    case "IN_PROGRESS": statusId = 2; break;
+    case "COMPLETED": statusId = 3; break;
+    case "DELETED": statusId = 4; break;
+    default: statusId = -1;
+  }
+
+  // Update frontend immediately
+  setProjects((prev) =>
+    prev.map((proj) =>
+      proj.id === projectId ? { ...proj, status: newStatus } : proj
+    )
+  );
+
+  // Update backend
+  try {
+    const res = await updateProjectIdeaStatus(projectId, statusId);
+    if (res?.success || res?.status === 200) {
+      toast.success("Status updated successfully!");
+    }
+  } catch (err) {
+    toast.error("Failed to update status.");
+  }
+};
+
+
+
   return (
     <div className="flex flex-col min-h-[80vh]">
       <Title
@@ -90,14 +124,15 @@ const ApprovedProjectIdeasAdminPage = () => {
         onFilterChange={setFilter}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+      <div className="flew-grow">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">Loading projects...</p>
         ) : projects.length === 0 ? (
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
           projects
-          .filter((projects)=> projects.status !== "DELETED" && projects.status !== "PENDING")
+          // .filter((projects)=> projects.status !== "DELETED" && projects.status !== "PENDING")
           .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}
@@ -109,12 +144,14 @@ const ApprovedProjectIdeasAdminPage = () => {
               likeCount={proj.reactionCount}
               liked={proj.reactedProjects?.includes(proj.id)}
               tags={proj.projectTypes}
-              status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
-              // status={ proj.status.toUpperCase()}
+              // status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
+              statusAdmin={ proj.status }
+              onStatusChange = {newStatus => statusChangeHandler(proj.id, newStatus)}
               onLike={(projectId, likestate)=>handleLike(projectId,likestate)}
             />
           ))
         )}
+      </div>
       </div>
 
       <div className="w-full flex justify-center">
