@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button'
 import Footer from '@/components/ui/Footer'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProjectIdeaCard from '@/components/ui/ProjectIdeaCard'
 import { useQuery } from '@tanstack/react-query'
 import { getDevProfiles } from '@/services/devProfileService'
@@ -43,6 +43,24 @@ const handleLike = async (projectId, likeState) => {
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+      const userData = localStorage.getItem("user");
+  
+      if ( userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("Error parsing user data from localStorage:", error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    }, []);
 
   // Fetch Approved Project Ideas
   const {
@@ -63,6 +81,11 @@ const LandingPage = () => {
     queryKey: ["registeredDevs"],
     queryFn: fetchRegisteredDevs,
   });
+
+  const handleProfileView = (devId) =>{
+    console.log(`I AM PROFILE VIEW ... routing to...  /profile/${user.username}`);
+    // navigate(`/profile/${user.username}`)
+  }
 
   return (
     <div className="">
@@ -149,7 +172,7 @@ const LandingPage = () => {
             registeredDevs
             .slice(0,6)
             .map((devProfile,idx)=>(
-              <DevProfile key={idx} devProfile={devProfile} />
+              <DevProfile key={idx} devProfile={devProfile} viewProfile={()=>handleProfileView(devProfile.dev_id)} />
             )))
           }
         </div>

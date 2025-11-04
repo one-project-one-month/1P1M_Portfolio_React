@@ -2,7 +2,7 @@ import React from 'react'
 import Button from './Button'
 import { useNavigate } from 'react-router-dom'
 
-const DevProfile = ({devProfile}) => {
+const DevProfile = ({devProfile, viewProfile}) => {
     
     const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ const DevProfile = ({devProfile}) => {
                 </a>
             )}
         </div>
-          <Button variant="primary" size="primary" className="hover:bg-[#8A2BE2] transition-colors py-2" onClick={()=> navigate('/dev-list')}>
+          <Button variant="primary" size="primary" className="hover:bg-[#8A2BE2] transition-colors py-2" onClick={viewProfile}>
             View Profile
           </Button>
         </div>
