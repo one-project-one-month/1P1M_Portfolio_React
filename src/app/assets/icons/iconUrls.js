@@ -4,10 +4,14 @@ import opomSvg from "./opom.svg";
 import sampleUser from "../sample-user-img.jpg";
 import imagePlaceholder from "./image-placeholder.svg";
 import plusIcon from "./plus.svg";
-import searchIcon from './search.svg'
-import filterIcon from './filter.svg'
-import arrowRightIcon from './arrowRight.svg';
-import arrowLeftIcon from './arrowLeft.svg';
+import searchIcon from "./search.svg";
+import filterIcon from "./filter.svg";
+import arrowRightIcon from "./arrowRight.svg";
+import arrowLeftIcon from "./arrowLeft.svg";
+import emailIcon from "./email.svg";
+import githubProfileIcon from "./github-icon.svg";
+import linkedinProfileIcon from "./linkedin-icon.svg";
+import editIcon from "./edit.svg";
 
 export const googleIconUrl = googleSvg;
 export const githubIconUrl = githubSvg;
@@ -15,7 +19,11 @@ export const opomIconUrl = opomSvg;
 export const UserImgUrl = sampleUser;
 export const imagePlaceholderUrl = imagePlaceholder;
 export const plusIconUrl = plusIcon;
-export const searchIconUrl=searchIcon;
-export const filterIconUrl=filterIcon;
-export const arrowRightIconUrl=arrowRightIcon
-export const arrowLeftIconUrl=arrowLeftIcon
+export const searchIconUrl = searchIcon;
+export const filterIconUrl = filterIcon;
+export const arrowRightIconUrl = arrowRightIcon;
+export const arrowLeftIconUrl = arrowLeftIcon;
+export const emailIconUrl = emailIcon;
+export const githubProfileIconUrl = githubProfileIcon;
+export const linkedinProfileIconUrl = linkedinProfileIcon;
+export const editIconUrl = editIcon;

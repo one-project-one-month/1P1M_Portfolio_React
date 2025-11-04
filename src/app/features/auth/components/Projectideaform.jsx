@@ -1,29 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../components/ui/Button";
 import FormBackground from "../../../components/ui/FormBackground";
 import TextField from "@/components/ui/TextField";
 import FormTextArea from "@/components/ui/FormTextArea";
 import { useMutation } from "@tanstack/react-query";
-import { createProjectIdea } from "@/services/projectIdeaService";
+import {
+  createProjectIdea,
+  updateProjectIdea,
+} from "@/services/projectIdeaService";
 import toast from "react-hot-toast";
 
-const Projectideaform = () => {
+const Projectideaform = ({
+  isEditMode = false,
+  existingProjectData = null,
+}) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     projectName: "",
     description: "",
     projectType: "",
   });
 
+  useEffect(() => {
+    if (isEditMode && existingProjectData) {
+      setFormData({
+        projectName: existingProjectData.projectIdeaName || "",
+        description: existingProjectData.description || "",
+        projectType: existingProjectData.projectType?.[0] || "",
+      });
+    }
+  }, [isEditMode, existingProjectData]);
+
   const mutation = useMutation({
-    mutationFn: createProjectIdea,
+    mutationFn: (data) => {
+      if (isEditMode) {
+        let statusCode;
+        if (existingProjectData.status === "PENDING") {
+          statusCode = 2;
+        } else if (existingProjectData.status === "APPROVED") {
+          statusCode = 1;
+        } else {
+          statusCode = existingProjectData.status;
+        }
+
+        return updateProjectIdea(
+          existingProjectData.projectIdeaId,
+          data,
+          statusCode
+        );
+      } else {
+        return createProjectIdea(data);
+      }
+    },
     onSuccess: (data) => {
-      toast.success("Project idea submitted successfully!");
+      toast.success(
+        isEditMode
+          ? "Project idea updated successfully!"
+          : "Project idea submitted successfully!"
+      );
       console.log("Response:", data);
-      setFormData({ projectName: "", description: "", projectType: "" });
+
+      if (isEditMode) {
+        navigate("/profile");
+      } else {
+        setFormData({ projectName: "", description: "", projectType: "" });
+      }
     },
     onError: (error) => {
       console.error(error);
-      toast.error(error.response?.data?.message || "Submission failed!");
+      toast.error(
+        error.response?.data?.message ||
+          (isEditMode ? "Update failed!" : "Submission failed!")
+      );
     },
   });
 
@@ -49,6 +99,9 @@ const Projectideaform = () => {
   return (
     <FormBackground className="flex items-center justify-center w-full h-full bg-black">
       <form onSubmit={handleSubmit} className="w-[535px] flex flex-col gap-4">
+        <h2 className="text-white text-2xl font-bold text-center mb-4">
+          {isEditMode ? "Edit Project Idea" : "Submit Project Idea"}
+        </h2>
         <TextField
           label="Project idea Name"
           id="projectName"
@@ -98,9 +151,17 @@ const Projectideaform = () => {
             variant="black_button"
             size="black_small_button"
             type="button"
-            onClick={() =>
-              setFormData({ projectName: "", description: "", projectType: "" })
-            }
+            onClick={() => {
+              if (isEditMode) {
+                navigate("/profile");
+              } else {
+                setFormData({
+                  projectName: "",
+                  description: "",
+                  projectType: "",
+                });
+              }
+            }}
           >
             Cancel
           </Button>
@@ -111,7 +172,13 @@ const Projectideaform = () => {
             type="submit"
             disabled={mutation.isPending}
           >
-            {mutation.isPending ? "Submitting..." : "Submit"}
+            {mutation.isPending
+              ? isEditMode
+                ? "Updating..."
+                : "Submitting..."
+              : isEditMode
+              ? "Update"
+              : "Submit"}
           </Button>
         </div>
       </form>

@@ -15,11 +15,15 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { getDevProfiles } from "@/services/devProfileService";
+import { updateProjectPortfolio } from "@/services/projectPortfolioService";
 import { X } from "lucide-react";
 import CustomBox from "@/components/ui/CustomBox";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
-function ProjectCreateForm() {
+function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -49,6 +53,23 @@ function ProjectCreateForm() {
   const [devError, setDevError] = useState(null);
   const [fileUploadKey, setFileUploadKey] = useState(0);
 
+  // Pre-populate form when editing
+  useEffect(() => {
+    if (isEditMode && existingProjectData) {
+      reset({
+        projectName: existingProjectData.name || "",
+        projectDetail: existingProjectData.description || "",
+        githubLink: existingProjectData.repoLink || "",
+        projectLink: existingProjectData.projectLink || "",
+        toolsUsed: existingProjectData.languageAndTools?.join(", ") || "",
+      });
+
+      if (existingProjectData.developerEmails) {
+        setTeamMembers(existingProjectData.developerEmails);
+      }
+    }
+  }, [isEditMode, existingProjectData, reset]);
+
   const createFieldHandler = (fieldName, validationRules = {}) => {
     const registration = register(fieldName, validationRules);
     return {
@@ -66,9 +87,12 @@ function ProjectCreateForm() {
   };
 
   const onSubmit = async (data) => {
-    const loadingToast = toast.loading("Creating project...", {
-      position: "top-right",
-    });
+    const loadingToast = toast.loading(
+      isEditMode ? "Updating project..." : "Creating project...",
+      {
+        position: "top-right",
+      }
+    );
 
     try {
       const toolsArray = data.toolsUsed
@@ -85,15 +109,31 @@ function ProjectCreateForm() {
         developerEmails: teamMembers.length > 0 ? teamMembers : [],
       };
 
-      const projectResponse = await apiClient.post(
-        API_ENDPOINTS.CREATE_PROJECT,
-        projectPayload,
-        getAuthConfig()
-      );
+      let projectPortfolioId;
 
-      const projectPortfolioId = projectResponse.data?.data.projectId;
-      if (!projectPortfolioId) {
-        throw new Error("Project ID not found in response");
+      if (isEditMode) {
+        // Update existing project
+        const updateResponse = await updateProjectPortfolio(
+          existingProjectData.id,
+          projectPayload
+        );
+
+        projectPortfolioId = existingProjectData.id;
+
+        if (!updateResponse.success) {
+          throw new Error("Failed to update project");
+        }
+      } else {
+        const projectResponse = await apiClient.post(
+          API_ENDPOINTS.CREATE_PROJECT,
+          projectPayload,
+          getAuthConfig()
+        );
+
+        projectPortfolioId = projectResponse.data?.data.projectId;
+        if (!projectPortfolioId) {
+          throw new Error("Project ID not found in response");
+        }
       }
 
       if (projectImage) {
@@ -104,7 +144,7 @@ function ProjectCreateForm() {
 
         const formData = new FormData();
         formData.append("file", projectImage);
-        const uploadResponse = await apiClient.patch(
+        await apiClient.patch(
           API_ENDPOINTS.UPLOAD_PROJECT_IMAGE +
             `?projectPortfolioId=${projectPortfolioId}`,
           formData,
@@ -117,15 +157,24 @@ function ProjectCreateForm() {
       }
 
       toast.dismiss(loadingToast);
-      toast.success("🎉 Project created successfully!", {
-        duration: 4000,
-        position: "top-right",
-      });
+      toast.success(
+        isEditMode
+          ? "🎉 Project updated successfully!"
+          : "🎉 Project created successfully!",
+        {
+          duration: 4000,
+          position: "top-right",
+        }
+      );
 
-      reset();
-      setProjectImage(null);
-      setTeamMembers([]);
-      setSelectedMembers([]);
+      if (isEditMode) {
+        navigate("/profile");
+      } else {
+        reset();
+        setProjectImage(null);
+        setTeamMembers([]);
+        setSelectedMembers([]);
+      }
       setSearch("");
       setDevProfiles([]);
       setIsDialogOpen(false);
@@ -291,6 +340,9 @@ function ProjectCreateForm() {
           onFileSelect={handleImageSelect}
           accept="image/*"
           maxSize={1 * 1024 * 1024}
+          existingImageUrl={
+            isEditMode ? existingProjectData?.projectPicUrl : null
+          }
         />
         <div className="text-white text-center text-xs font-medium mt-1">
           Upload Image
@@ -648,7 +700,13 @@ function ProjectCreateForm() {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating..." : "Create"}
+            {isSubmitting
+              ? isEditMode
+                ? "Updating..."
+                : "Creating..."
+              : isEditMode
+              ? "Update"
+              : "Create"}
           </Button>
         </div>
       </div>

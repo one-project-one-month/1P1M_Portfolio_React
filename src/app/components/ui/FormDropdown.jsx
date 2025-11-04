@@ -1,10 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
 
-function FormDropdown({ placeholder, menuList = [], className = "", onChange }) {
+function FormDropdown({
+  placeholder,
+  menuList = [],
+  className = "",
+  onChange,
+  selectedValue,
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(selectedValue || null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setSelected(selectedValue || null);
+  }, [selectedValue]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -41,9 +51,7 @@ function FormDropdown({ placeholder, menuList = [], className = "", onChange }) 
         <IoChevronDown size={18} className="text-[#F3F4F6]" />
       </button>
       {isOpen && (
-        <ul
-          className="absolute z-10 mt-1 w-full bg-white border border-[#FFFFFF26] rounded-lg shadow-lg"
-        >
+        <ul className="absolute z-10 mt-1 w-full bg-white border border-[#FFFFFF26] rounded-lg shadow-lg">
           {menuList.map((item) => (
             <li
               key={item.id}

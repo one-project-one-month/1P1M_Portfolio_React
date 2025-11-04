@@ -44,3 +44,29 @@ export async function getProjectPortfolioDetails(projectId) {
   const response = await apiClient.get(url);
   return response.data;
 }
+
+export async function updateProjectPortfolio(projectPortfolioId, projectData) {
+  try {
+    const url = `${
+      API_ENDPOINTS.PROJECT_PORTFOLIO || "/portfolio/api/v1/project-portfolio"
+    }?projectPortfolioId=${projectPortfolioId}`;
+    const response = await apiClient.patch(url, projectData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating project portfolio:", error);
+    throw error.response?.data || error;
+  }
+}
+
+export async function deleteProjectPortfolio(projectPortfolioId) {
+  try {
+    const url = `${
+      API_ENDPOINTS.PROJECT_PORTFOLIO || "/portfolio/api/v1/project-portfolio"
+    }?projectPortfolioId=${projectPortfolioId}`;
+    const response = await apiClient.delete(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting project portfolio:", error);
+    throw error.response?.data || error;
+  }
+}

@@ -1,13 +1,15 @@
 import { opomIconUrl, UserImgUrl } from "@/assets/icons/iconUrls";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "./Button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getNavLinks = () => {
     const isAdmin = user?.role === "ADMIN";
@@ -20,6 +22,39 @@ function Navbar() {
       { id: 5, name: "Team", path: "/team" },
     ];
   };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setIsAuth(false);
+    setUser(null);
+    setIsDropdownOpen(false);
+
+    navigate("/");
+  };
+
+  const handleViewProfile = () => {
+    setIsDropdownOpen(false);
+    navigate("/profile");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -72,16 +107,37 @@ function Navbar() {
             Create Account
           </Button>
         ) : (
-          <div className="text-white font-medium flex gap-x-2.5 items-center">
-            {user?.profilePicture && (
+          <div className="relative" ref={dropdownRef}>
+            <div
+              className="text-white font-medium flex gap-x-2.5 items-center cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={toggleDropdown}
+            >
               <img
                 src={user?.profilePicture || UserImgUrl}
                 className="size-9 rounded-full object-cover"
                 alt="User profile"
               />
-            )}
+              <span>{user?.username || user?.email || "User"}</span>
+            </div>
 
-            <span>{user?.username || user?.email || "User"}</span>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-[#1A1A1A] border border-[#3A3A3A] rounded-2xl shadow-lg z-50">
+                <div className="py-2">
+                  <button
+                    onClick={handleViewProfile}
+                    className="w-full px-4 py-3 text-left text-white hover:bg-[#2A2A2A] transition-colors rounded-t-2xl flex items-center gap-3"
+                  >
+                    View profile
+                  </button>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full px-4 py-3 text-left text-white hover:bg-[#2A2A2A] transition-colors rounded-b-2xl flex items-center gap-3"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

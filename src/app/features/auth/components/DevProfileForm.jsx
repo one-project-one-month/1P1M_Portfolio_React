@@ -8,92 +8,291 @@ import TechStack from "../../../constants/TechStack";
 import FormDropdown from "../../../components/ui/FormDropdown";
 import FileUpload from "@/components/ui/FileUpload";
 import { setupDevProfile, uploadDevImage } from "@/services/devProfileService";
+import profileService from "@/services/profileService";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
-function DevProfileForm() {
+function DevProfileForm({ isEditMode = false, existingProfileData = null }) {
   // ---- React Hook Form ----
 
   const [img, setImg] = useState("");
+  const [profileData, setProfileData] = useState(existingProfileData);
+  const [loading, setLoading] = useState(isEditMode && !existingProfileData);
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     mode: "onSubmit",
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(
+      "useEffect triggered with isEditMode:",
+      isEditMode,
+      "existingProfileData:",
+      existingProfileData
+    );
+
+    if (!isEditMode) {
+      console.log("Not in edit mode, setting loading to false");
+      setLoading(false);
+      return;
+    }
+
+    if (existingProfileData) {
+      console.log("Using existing profile data, skipping fetch");
+      setProfileData(existingProfileData);
+      setLoading(false);
+      return;
+    }
+
+    const loadProfileData = async () => {
+      console.log("Starting to load profile data...");
+
+      const timeoutId = setTimeout(() => {
+        console.log("Loading timeout reached, setting loading to false");
+        setLoading(false);
+      }, 10000);
+
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        console.log("User from localStorage:", user);
+
+        if (!user.id) {
+          console.error("No user ID found in localStorage");
+          setLoading(false);
+          return;
+        }
+
+        console.log("Loading profile data for user:", user.id);
+        const response = await profileService.getProfileData(user.id);
+        console.log("Profile data response:", response);
+
+        if (response && response.success) {
+          const { devProfile } = response.data;
+          console.log("Setting profile data:", devProfile);
+          setProfileData(devProfile);
+        } else {
+          console.error("Failed to load profile data:", response);
+        }
+      } catch (error) {
+        console.error("Error loading profile data:", error);
+      } finally {
+        clearTimeout(timeoutId);
+        console.log("Setting loading to false");
+        setLoading(false);
+      }
+    };
+
+    loadProfileData();
+  }, [isEditMode, existingProfileData]);
+
+  useEffect(() => {
+    if (profileData && isEditMode) {
+      let techStackOption = null;
+
+      if (profileData.techStacks && profileData.techStacks.length > 0) {
+        const techStackValue = profileData.techStacks[0];
+        techStackOption = TechStack.find(
+          (stack) => stack.name === techStackValue
+        );
+        if (!techStackOption) {
+          techStackOption = TechStack.find(
+            (stack) => stack.id === techStackValue
+          );
+        }
+      }
+
+      console.log("Pre-populating form with:", {
+        name: profileData.name || "",
+        techStacks: techStackOption,
+        github: profileData.github || "",
+        linkedIn: profileData.linkedIn || "",
+        aboutDev: profileData.aboutDev || "",
+      });
+
+      reset({
+        name: profileData.name || "",
+        techStacks: techStackOption || null,
+        github: profileData.github || "",
+        linkedIn: profileData.linkedIn || "",
+        aboutDev: profileData.aboutDev || "",
+      });
+    }
+  }, [profileData, isEditMode, reset]);
+
   const handleImageSelect = (file) => {
     console.log("Selected file:", file);
-    console.log();
-
     if (file) {
       setImg(file);
-      console.log(img);
     }
   };
-
-  const formData = new FormData();
-  formData.append("DEV image", img);
-  console.log("FROM DATA", formData);
 
   const onSubmit = async (data) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
-      alert("You must log in first");
+      toast.error("You must log in first");
+      return;
+    }
+    let techStackValue;
+    if (data.techStacks) {
+      techStackValue = [data.techStacks.name];
+    } else {
+      console.error("No tech stack selected");
+      toast.error("Please select a tech stack");
       return;
     }
 
     const payLoad = {
       name: data.name,
-      techStacks: [data.techStacks.name],
+      techStacks: techStackValue,
       github: data.github,
       linkedIn: data.linkedIn,
       aboutDev: data.aboutDev,
     };
 
+    console.log("Payload being sent:", payLoad);
+
+    const loadingToast = toast.loading(
+      isEditMode ? "Updating profile..." : "Creating profile...",
+      {
+        position: "top-right",
+      }
+    );
+
     try {
-      console.log("Start creating dev profiles", payLoad);
+      if (isEditMode) {
+        console.log("Updating dev profile", payLoad);
 
-      const result = await setupDevProfile(payLoad);
-      console.log("Create Dev Profiles", result);
+        const result = await profileService.updateProfile(
+          profileData.dev_id,
+          payLoad
+        );
+        console.log("Update Dev Profile", result);
 
-      if (result.success === 1 && result.data && result.data.dev_id) {
-        const devProfileId = result.data.dev_id;
+        if (result.success) {
+          if (img) {
+            const formData = new FormData();
+            formData.append("file", img);
 
-        const formData = new FormData();
-        formData.append("file", img);
+            console.log("Uploading new image for Dev ID:", profileData.dev_id);
 
-        console.log("Uploading image for Dev ID:", devProfileId);
+            const uploadRes = await uploadDevImage(
+              formData,
+              profileData.dev_id
+            );
+            console.log("Upload Response:", uploadRes);
+          }
 
-        const uploadRes = await uploadDevImage(formData,devProfileId);
-        console.log("Upload Response:", uploadRes);
+          toast.dismiss(loadingToast);
+          toast.success("Profile updated successfully!", {
+            position: "top-right",
+          });
 
-        navigate("/admin");
+          navigate("/profile");
+        } else {
+          toast.dismiss(loadingToast);
+          toast.error("Failed to update profile. Please try again.", {
+            position: "top-right",
+          });
+        }
+      } else {
+        console.log("Start creating dev profiles", payLoad);
+
+        const result = await setupDevProfile(payLoad);
+        console.log("Create Dev Profiles", result);
+
+        if (result.success === 1 && result.data && result.data.dev_id) {
+          const devProfileId = result.data.dev_id;
+
+          const formData = new FormData();
+          formData.append("file", img);
+
+          console.log("Uploading image for Dev ID:", devProfileId);
+
+          const uploadRes = await uploadDevImage(formData, devProfileId);
+          console.log("Upload Response:", uploadRes);
+
+          toast.dismiss(loadingToast);
+          toast.success("Profile created successfully!", {
+            position: "top-right",
+          });
+
+          if (user?.role === "ADMIN") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
+        } else {
+          toast.dismiss(loadingToast);
+          toast.error("Failed to create profile. Please try again.", {
+            position: "top-right",
+          });
+        }
       }
     } catch (error) {
-      console.error("Create Dev Profile Error", error);
+      console.error(
+        isEditMode ? "Update Dev Profile Error" : "Create Dev Profile Error",
+        error
+      );
+
+      toast.dismiss(loadingToast);
+      toast.error(
+        isEditMode
+          ? "Failed to update profile. Please try again."
+          : "Failed to create profile. Please try again.",
+        {
+          position: "top-right",
+        }
+      );
     }
   };
+
+  console.log(
+    "DevProfileForm - loading state:",
+    loading,
+    "profileData:",
+    profileData
+  );
+
+  if (loading) {
+    return (
+      <FormBackground className="w-[532px]">
+        <div className="flex flex-col items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4"></div>
+          <p className="text-white">Loading profile data...</p>
+        </div>
+      </FormBackground>
+    );
+  }
 
   return (
     <FormBackground className="w-[532px]">
       <div className="text-3xl text-center space-y-2">
-        <h2 className="text-2xl text-white space-y-3">Set up Profile</h2>
+        <h2 className="text-2xl text-white space-y-3">
+          {isEditMode ? "Edit Profile" : "Set up Profile"}
+        </h2>
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center mt-2 gap-y-6"
       >
-        <FileUpload
-          onFileSelect={handleImageSelect}
-          accept="image/*"
-          maxSize={1 * 1024 * 1024}
-        />
+        <div className="w-full flex justify-center">
+          <FileUpload
+            onFileSelect={handleImageSelect}
+            accept="image/*"
+            maxSize={1 * 1024 * 1024}
+            existingImageUrl={
+              isEditMode ? profileData?.profilePictureUrl : null
+            }
+          />
+        </div>
 
         {errors.profilePictureUrl && (
           <p className="text-red-500 text-sm">
@@ -121,9 +320,9 @@ function DevProfileForm() {
             <FormDropdown
               placeholder="Tech Stack"
               menuList={TechStack}
-              value={field.value}
               onChange={field.onChange}
               className="w-full"
+              selectedValue={field.value} // Pass the selected value
             />
           )}
         />
@@ -188,7 +387,14 @@ function DevProfileForm() {
               variant="black_small_button"
               size="black_small_button"
               className="text-[#F9FAFB] font-bold text-center cursor-pointer"
-              onClick={() => reset()}
+              disabled={isSubmitting}
+              onClick={() => {
+                if (isEditMode) {
+                  navigate("/profile");
+                } else {
+                  reset();
+                }
+              }}
             >
               Cancel
             </Button>
@@ -197,8 +403,15 @@ function DevProfileForm() {
               variant="secondary"
               size="secondary"
               className="font-bold text-center text-[#F9FAFB] cursor-pointer"
+              disabled={isSubmitting}
             >
-              Create
+              {isSubmitting
+                ? isEditMode
+                  ? "Updating..."
+                  : "Creating..."
+                : isEditMode
+                ? "Update"
+                : "Create"}
             </Button>
           </div>
         </div>

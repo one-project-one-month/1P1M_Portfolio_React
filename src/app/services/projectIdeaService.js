@@ -79,3 +79,34 @@ export const createProjectIdea = async (projectData) => {
   );
   return response.data;
 };
+
+export const getProjectIdeaById = async (projectIdeaId) => {
+  try {
+    const response = await apiClient.get(
+      `${API_ENDPOINTS.PROJECT_IDEA}/${projectIdeaId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching project idea:", error);
+    throw error.response?.data || error;
+  }
+};
+
+export const updateProjectIdea = async (
+  projectIdeaId,
+  projectData,
+  status = null
+) => {
+  try {
+    let url = `${API_ENDPOINTS.PROJECT_IDEA}?projectIdeaId=${projectIdeaId}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    const response = await apiClient.patch(url, projectData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating project idea:", error);
+    throw error.response?.data || error;
+  }
+};
