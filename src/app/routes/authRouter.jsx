@@ -1,5 +1,4 @@
 import {
-  AuthPage,
   OtpPage,
   LoginPage,
   ResetPasswordPage,
@@ -7,48 +6,46 @@ import {
   RegisterPage,
   CheckPasswordOtpPage,
   OpomRegisterPage,
+  AuthLayout,
+  DevProfilePage,
 } from "@/constants/lazyload";
 
 const authRouter = [
   {
-    path: "login",
-    element: <LoginPage />,
-  },
-  {
-    path: "register",
-    element: <RegisterPage />,
-  },
-  {
-    path: "auth/callback",
-    element: <AuthPage />,
-  },
-  {
-    path: "callback",
-    element: <AuthPage />,
-  },
-  {
-    path: "login/oauth2/code/github",
-    element: <AuthPage />,
-  },
-  {
-    path: "otp-verify",
-    element: <OtpPage />,
-  },
-  {
-    path: "check-password-otp",
-    element: <CheckPasswordOtpPage />,
-  },
-  {
-    path: "forgot-password",
-    element: <ForgotPasswordPage />,
-  },
-  {
-    path: "reset-password",
-    element: <ResetPasswordPage />,
-  },
-  {
-    path: "opom-register",
-    element: <OpomRegisterPage />,
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage />,
+        index: true,
+      },
+      { path: "setup-profile", element: <DevProfilePage /> },
+      {
+        path: "register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "otp-verify",
+        element: <OtpPage />,
+      },
+      {
+        path: "check-password-otp",
+        element: <CheckPasswordOtpPage />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPasswordPage />,
+      },
+      {
+        path: "opom-register",
+        element: <OpomRegisterPage />,
+      },
+    ],
   },
 ];
 

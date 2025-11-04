@@ -15,6 +15,9 @@ import {
   ProjectPortfolioList,
   ApprovedIdeasAdminPage,
   ProjectIdeaPage,
+  AuthPage,
+  ProfilePage,
+  EditProfilePage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
@@ -25,7 +28,6 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      { path: "setup-profile", element: <DevProfilePage /> },
       { path: "dev-list", element: <DevListPage /> },
       { path: "ideas", element: <ProjectListPage /> },
       { path: "approved-ideas", element: <ApprovedIdeasPage /> },
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
       { path: "add-member", element: <AddMemberPage /> },
       { path: "create-project", element: <ProjectCreateFormPage /> },
       { path: "project-idea", element: <ProjectIdeaPage /> },
+      { path: "profile", element: <ProfilePage /> },
+      { path: "edit-profile", element: <EditProfilePage /> },
     ],
   },
   {
@@ -41,9 +45,17 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <RegisterListPage /> },
       { path: "ideas", element: <ProjectListPageAdmin /> },
-      { path: "setup-profile", element: <DevProfilePage /> },
+      // { path: "setup-profile", element: <DevProfilePage /> },
       { path: "approved-ideas", element: <ApprovedIdeasAdminPage /> },
     ],
+  },
+  {
+    path: "callback",
+    element: <AuthPage />,
+  },
+  {
+    path: "login/oauth2/code/github",
+    element: <AuthPage />,
   },
   ...authRouter,
 

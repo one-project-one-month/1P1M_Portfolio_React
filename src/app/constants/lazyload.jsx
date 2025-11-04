@@ -82,3 +82,15 @@ export const ProjectPortfolioList = lazy(() =>
 export const ProjectIdeaPage = lazy(() =>
   import("@/features/auth/pages/Projectideapage")
 );
+
+export const AuthLayout = PageLoader(
+  lazy(() => import("@/components/core/layouts/AuthLayout"))
+);
+
+export const ProfilePage = PageLoader(
+  lazy(() => import("@/features/user/pages/ProfilePage"))
+);
+
+export const EditProfilePage = PageLoader(
+  lazy(() => import("@/features/user/pages/EditProfilePage"))
+);

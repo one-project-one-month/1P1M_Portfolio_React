@@ -71,7 +71,7 @@ function LoginForm() {
       console.log("Login successful:", data);
       // alert("Login successful!");
       if (data.data.isNewUserLogin) {
-        navigate("/setup-profile");
+        navigate("/auth/setup-profile");
       } else {
         navigate("/");
       }
@@ -151,7 +151,7 @@ function LoginForm() {
 
         {/* Forgot password */}
         <NavLink
-          to={"/forgot-password"}
+          to={"/auth/forgot-password"}
           className="font-sans text-sm text-[#99A1AF] w-full text-center font-semibold mt-4"
         >
           Forget password?

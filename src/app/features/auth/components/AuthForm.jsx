@@ -44,7 +44,7 @@ function AuthForm() {
             }
             toast.success("Google authentication successful!");
             if (data.data.newUser) {
-              navigate("/setup-profile");
+              navigate("/auth/setup-profile");
             } else {
               navigate("/");
             }
@@ -62,7 +62,7 @@ function AuthForm() {
             oauthProcessingRef.current = false;
           });
       } else if (
-        location.pathname === "/auth/callback" ||
+        location.pathname === "/callback" ||
         location.pathname === "/login/oauth2/code/github"
       ) {
         console.log("=== GITHUB OAuth callback detected ===");
@@ -78,7 +78,7 @@ function AuthForm() {
 
             toast.success("GitHub authentication successful!");
             if (data.data.newUser) {
-              navigate("/setup-profile");
+              navigate("/auth/setup-profile");
             } else {
               navigate("/");
             }
@@ -183,10 +183,10 @@ function AuthForm() {
 
           if (emailExists) {
             console.log("Email exists - navigating to login page");
-            navigate("/login", { state: { email } });
+            navigate("/auth/login", { state: { email } });
           } else {
             console.log("Email not registered - navigating to register page");
-            navigate("/register", { state: { email } });
+            navigate("/auth/register", { state: { email } });
           }
         } catch (error) {
           console.error("Error in email check flow:", error);
