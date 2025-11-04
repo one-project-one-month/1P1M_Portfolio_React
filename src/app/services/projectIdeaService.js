@@ -13,7 +13,7 @@ export const ProjectIdeaList = async (
 
     if (filter === "Popular") {
       sortField = "reactedUsers";
-      sortDirection = "asc";
+      sortDirection = "desc";
     } else if (filter === "Oldest") {
       sortField = "id";
       sortDirection = "asc";

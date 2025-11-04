@@ -6,46 +6,44 @@ import {
   reactProjectIdea,
   unreactProjectIdea,
 } from "@/services/projectIdeaService";
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProjectListPage = () => {
   const [curPage, setCurPage] = useState(0);
-  const [projects, setProjects] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("Popular");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const navigate = useNavigate();
 
-  const fetchProjects = async (page = 0) => {
-    try {
-      setLoading(true);
-      const { data, meta } = await ProjectIdeaList(page, 6, searchTerm, filter);
-
-      setTotalPages(meta?.totalPages || 1);
-      setProjects(data);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProjects(curPage);
-  }, [curPage]);
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      setCurPage(0);
-      fetchProjects(0);
+   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm.trim());
     }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [filter, searchTerm]);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   useEffect(() => {
-    fetchProjects(curPage);
-  }, [curPage]);
+    setCurPage(0);
+  }, [ debouncedSearch, filter]);
+
+const {
+    data,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["projects", curPage, debouncedSearch, filter],
+    queryFn: () => ProjectIdeaList(curPage, 6, debouncedSearch, filter),
+    keepPreviousData: true,
+    staleTime: 1000 * 60,
+  });
+
+  const projects = data?.data || [];
+  const totalPages = data?.meta?.totalPages || 1;
+
+
+
 
   const handleLike = async (projectId, likeState) => {
     try {
@@ -56,21 +54,9 @@ const ProjectListPage = () => {
       }
     } catch (error) {
       console.error("Error updating like:", error);
-      setProjects((prev) =>
-        prev.map((p) =>
-          p.id === projectId
-            ? {
-                ...p,
-                reaction_count: likeState
-                  ? (p.reaction_count || 0) + 1
-                  : (p.reaction_count || 0) - 1,
-                likestate: likeState,
-              }
-            : p
-        )
-      );
     }
   };
+
 
   return (
     <div className="flex flex-col min-h-[80vh]">
@@ -78,45 +64,47 @@ const ProjectListPage = () => {
         title="Project Idea Lists"
         showSearch={true}
         showFilter={true}
+        onCreate={()=>navigate("/project-idea")}
         searchPlaceholder="Search by project title"
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
+        onSearchChange={(e) =>setSearchTerm(e.target.value)}
         filterOptions={["Popular", "Newest", "Oldest"]}
         onFilterChange={setFilter}
       />
 
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {/* <div className="flex-grow flex flex-wrap  gap-6 p-6"> */}
-        {loading ? (
-          <p className="text-center col-span-full text-gray-400">
-            Loading projects...
-          </p>
-        ) : projects.length === 0 ? (
-          <p className="text-center col-span-full text-gray-400">
-            No projects found.
-          </p>
-        ) : (
-          projects
-            // .filter((proj)=>proj.status === "PENDING")
-            .map((proj) => (
-              <ProjectIdeaCard
-                key={proj.id}
-                projectId={proj.id}
-                title={proj.projectName}
-                description={proj.description}
-                submittedByProfile={proj.profilePictureUrl}
-                postBy={proj.devName}
-                likeCount={proj.reaction_count}
-                status={proj.status}
-                liked={proj.reactedProjects?.includes(proj.id)}
-                tags={proj.projectTypes}
-                onLike={(projectId, likestate) =>
-                  handleLike(projectId, likestate)
-                }
-              />
-            ))
-        )}
+      <div className="flex-grow">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+          {isLoading || isFetching ? (
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-gray-800 rounded-xl h-[298px]" />
+              ))}
+            </div>
+          ) : projects.length === 0 ? (
+            <p className="text-center col-span-full text-gray-400">
+              No projects found.
+            </p>
+          ) : (
+            projects
+              .map((proj) => (
+                <ProjectIdeaCard
+                  key={proj.id}
+                  projectId={proj.id}
+                  title={proj.projectName}
+                  description={proj.description}
+                  submittedByProfile={proj.profilePictureUrl}
+                  postBy={proj.devName}
+                  likeCount={proj.reaction_count}
+                  liked={proj.reactedProjects?.includes(proj.id)}
+                  tags={proj.projectTypes}
+                  onLike={(projectId, likestate) =>
+                    handleLike(projectId, likestate)
+                  }
+                />
+              ))
+          )}
+        </div>
       </div>
-
+      
       <div className="w-full flex justify-center">
         <Pagination
           currentPage={curPage}

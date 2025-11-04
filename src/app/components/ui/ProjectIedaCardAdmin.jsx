@@ -37,7 +37,8 @@ const ProjectCardAdmin = ({
   };
 
   return (
-    <div className="w-[406px] h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    // <div className="w-[406px] h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    <div className="h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
       <div className="h-full flex flex-col gap-[14px] items-center">
         <div className="w-full h-full">
           <h2 className="text-2xl font-[600] mb-4">{title}</h2>
