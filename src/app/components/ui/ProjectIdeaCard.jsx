@@ -10,6 +10,8 @@ const ProjectIdeaCard = ({
   likeCount = 0,
   liked = false,
   status,
+  statusAdmin,
+  onStatusChange,
   canEdit,
   canDelete,
   tags = [],
@@ -204,17 +206,68 @@ const ProjectIdeaCard = ({
         {status && (
           <div
             className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${
-              status === "APPROVED"
+              status === 1
                 ? "bg-[#9AE600] text-[#364153]"
-                : status === "PENDING"
+                : status === 2
                 ? "bg-[#155DFC] text-[#F9FAFB]"
                 : "bg-[#79716B] text-[#F9FAFB]"
             }`}
           >
-            {/* {status === 1 ? 'In Progress' : status === 2 ? 'Complete' : 'Unqualified'} */}
-            {status}
+            {status === 1
+              ? "In Progress"
+              : status === 2
+              ? "Complete"
+              : "Unqualified"}
           </div>
         )}
+        {statusAdmin && (
+          <select
+            className={`h-[24px] rounded-lg text-sm px-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+              statusAdmin === "APPROVED"
+                ? "bg-[#9AE600] text-[#364153]"
+                : statusAdmin === "REJECTED"
+                ? "bg-[#FF3B30] text-[#F9FAFB]"
+                : statusAdmin === "INPROGRESS"
+                ? "bg-[#FFD60A] text-[#364153]"
+                : statusAdmin === "COMPLETED"
+                ? "bg-[#155DFC] text-[#F9FAFB]"
+                : statusAdmin === "DELETED"
+                ? "bg-[#D9D9D9] text-[#79716B]"
+                : "bg-[#79716B] text-[#F9FAFB]"
+            }`}
+            value={statusAdmin} // controlled value
+            onChange={(e) => onStatusChange(e.target.value)}
+          >
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="DELETED">Deleted</option>
+          </select>
+        )}
+
+        {/* -------------------------- Start Other Option ------------------------ */}
+        {/* {status && (
+          <div
+            className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${
+                status === "APPROVED"
+                ? "bg-[#9AE600] text-[#364153]"
+                : status === "REJECTED"
+                ? "bg-[#FF3B30] text-[#F9FAFB]"
+                : status === "INPROGRESS"
+                ? "bg-[#FFD60A] text-[#364153]"
+                : status === "COMPLETED"
+                ? "bg-[#155DFC] text-[#F9FAFB]"
+                : status === "DELETED"
+                ? "bg-[#D9D9D9] text-[#79716B]"
+                : "bg-[#79716B] text-[#F9FAFB]"
+            }`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+          </div>
+        )} */}
+
+        {/* -------------------------- End Other Option ------------------------ */}
       </div>
     </div>
   );
