@@ -25,6 +25,10 @@ import { authUtils } from "@/lib/utils";
 
 const token =authUtils.getToken()
 const role=authUtils.getRole();
+
+
+console.log("FROM route",role);
+
 const router = createBrowserRouter([
 
   {
@@ -60,7 +64,7 @@ const router = createBrowserRouter([
   //ADMIN ROUTES
   {
     path: "/admin",
-    element: <ProtectedRoute token={token} role={role} allow={["Admin"]} />,
+    element: <ProtectedRoute token={token} role={role} allow={["ADMIN"]} />,
     children: [
       {
         element: <AdminLayout />,
