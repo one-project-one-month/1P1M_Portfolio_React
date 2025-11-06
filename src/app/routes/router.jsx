@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "../features/auth/pages/NotFound";
-
 import {
   DevProfilePage,
   MainLayout,
@@ -21,48 +21,64 @@ import {
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
+import { authUtils } from "@/lib/utils";
 
+const token =authUtils.getToken()
+const role=authUtils.getRole();
 const router = createBrowserRouter([
+
   {
     path: "/",
     element: <MainLayout />,
     children: [
-      { index: true, element: <LandingPage /> },
-      { path: "dev-list", element: <DevListPage /> },
-      { path: "ideas", element: <ProjectListPage /> },
-      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
-      { path: "project-portfolio", element: <ProjectPortfolioList /> },
-      { path: "add-member", element: <AddMemberPage /> },
-      { path: "create-project", element: <ProjectCreateFormPage /> },
-      { path: "project-idea", element: <ProjectIdeaPage /> },
-      { path: "profile", element: <ProfilePage /> },
-      { path: "edit-profile", element: <EditProfilePage /> },
+      { index: true, element: <LandingPage /> }, 
     ],
   },
+
+  // USER ROUTES
+  {
+    element: <ProtectedRoute token={token} role={role} allow={["USER", "ADMIN"]} />,
+    children: [
+      {
+        path: "/",
+        element: <MainLayout />,
+        children: [
+          { path: "dev-list", element: <DevListPage /> },
+          { path: "ideas", element: <ProjectListPage /> },
+          { path: "approved-ideas", element: <ApprovedIdeasPage /> },
+          { path: "project-portfolio", element: <ProjectPortfolioList /> },
+          { path: "add-member", element: <AddMemberPage /> },
+          { path: "create-project", element: <ProjectCreateFormPage /> },
+          { path: "project-idea", element: <ProjectIdeaPage /> },
+          { path: "profile", element: <ProfilePage /> },
+          { path: "edit-profile", element: <EditProfilePage /> },
+        ],
+      },
+    ],
+  },
+
+  //ADMIN ROUTES
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: <ProtectedRoute token={token} role={role} allow={["Admin"]} />,
     children: [
-      { index: true, element: <RegisterListPage /> },
-      { path: "ideas", element: <ProjectListPageAdmin /> },
-      // { path: "setup-profile", element: <DevProfilePage /> },
-      { path: "approved-ideas", element: <ApprovedIdeasAdminPage /> },
+      {
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <RegisterListPage /> },
+          { path: "ideas", element: <ProjectListPageAdmin /> },
+          { path: "approved-ideas", element: <ApprovedIdeasAdminPage /> },
+        ],
+      },
     ],
   },
-  {
-    path: "callback",
-    element: <AuthPage />,
-  },
-  {
-    path: "login/oauth2/code/github",
-    element: <AuthPage />,
-  },
+
+
+  { path: "callback", element: <AuthPage /> },
+  { path: "login/oauth2/code/github", element: <AuthPage /> },
   ...authRouter,
 
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default router;
