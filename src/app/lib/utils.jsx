@@ -42,5 +42,14 @@ export const authUtils = {
     const user = authUtils.getUser();
     return user?.username || user?.email || "User";
   },
+
+
+  getRole:()=>{
+  const user =authUtils.getUser();
+  return user ? user.role : null
+}
 };
+
+
+
 
