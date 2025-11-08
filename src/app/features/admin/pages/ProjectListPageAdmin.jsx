@@ -16,7 +16,7 @@ const ProjectListPageAdmin = () => {
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [filter, setFilter] = useState("");
+    const [filter, setFilter] = useState("Popular");
     const navigate = useNavigate();
 
 
@@ -33,7 +33,7 @@ const ProjectListPageAdmin = () => {
 
     useEffect(() => {
         if (data?.data) {
-            setProjects(data.data);            
+            setProjects(data.data);
         }
     }, [data]);
 
@@ -113,7 +113,7 @@ const ProjectListPageAdmin = () => {
                 onFilterChange={setFilter}
             />
 
-            <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6 p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 {isLoading || isFetching ? (
                     <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[...Array(6)].map((_, i) => (
@@ -141,6 +141,7 @@ const ProjectListPageAdmin = () => {
                                 rejectLoading={isRejectLoading === proj.id}
                                 onReject={() => handleReject(proj.id)}
                                 onRejectClick={(id) => setIsModalOpen(id)}
+                                status={proj.status}
                                 isRejectModalOpen={isModalOpen === proj.id}
                             />
                         ))

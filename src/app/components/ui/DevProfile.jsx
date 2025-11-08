@@ -2,24 +2,24 @@ import React from 'react'
 import Button from './Button'
 import { useNavigate } from 'react-router-dom'
 
+import defaultUserImage from '@/assets/user.png';
+
 const DevProfile = ({devProfile, viewProfile}) => {
     
-    const navigate = useNavigate();
-
   return (
-    <div className='flex flex-col items-center bg-[#030712] rounded-3xl px-12 py-6'>
+    <div className='max-w-[450px] flex flex-col items-center text-white bg-[#030712] rounded-3xl px-12 py-6'>
 
       <div className="space-y-8">
 
         <div className="flex justify-start gap-4">
-            <img src={devProfile.profilePictureUrl} className='w-[104px] h-[106px] rounded-full object-cover' alt="" />
+            <img src={devProfile.profilePictureUrl || defaultUserImage} className='w-[104px] h-[106px] rounded-full object-cover' alt="" />
             <div className="text-left space-y-2">
                 <div className="px-4">
-                    <h2 className='text-2xl'>{devProfile.name}</h2>
+                    <h2 title={devProfile.name} className='text-2xl truncate  max-w-[200px] md:max-w-[150px] lg:max-w-[200px]'>{devProfile.name}</h2>
                 </div>
                 <div className="bg-white/9 border border-white/15 rounded-lg text-sm inline-block px-4 py-2">{devProfile.tech_stack} Developer</div>
                 <div className="px-4">
-                    <p className='text-sm truncate max-w-[200px]'>{devProfile.aboutDev}</p>
+                    <p title={devProfile.aboutDev} className='text-sm truncate max-w-[200px] md:max-w-[150px] lg:max-w-[200px]'>{devProfile.aboutDev}</p>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@ const DevProfile = ({devProfile, viewProfile}) => {
                 </a>
             )}
         </div>
-          <Button variant="primary" size="primary" className="hover:bg-[#8A2BE2] transition-colors py-2" onClick={viewProfile}>
+          <Button variant="primary" size="primary" className="w-full hover:bg-[#8A2BE2] transition-colors py-2" onClick={viewProfile}>
             View Profile
           </Button>
         </div>

@@ -94,3 +94,8 @@ export const ProfilePage = PageLoader(
 export const EditProfilePage = PageLoader(
   lazy(() => import("@/features/user/pages/EditProfilePage"))
 );
+
+
+export const UserProfilePage = PageLoader(
+  lazy(() => import("@/features/user/pages/UserProfilePage"))
+);

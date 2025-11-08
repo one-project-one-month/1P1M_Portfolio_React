@@ -14,10 +14,10 @@ const ProjectListPage = () => {
   const [curPage, setCurPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("Popular");
   const navigate = useNavigate();
 
-   useEffect(() => {
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm.trim());
     }, 500);
@@ -26,9 +26,9 @@ const ProjectListPage = () => {
 
   useEffect(() => {
     setCurPage(0);
-  }, [ debouncedSearch, filter]);
+  }, [debouncedSearch, filter]);
 
-const {
+  const {
     data,
     isLoading,
     isFetching,
@@ -41,7 +41,6 @@ const {
 
   const projects = data?.data || [];
   const totalPages = data?.meta?.totalPages || 1;
-
 
 
 
@@ -64,9 +63,9 @@ const {
         title="Project Idea Lists"
         showSearch={true}
         showFilter={true}
-        onCreate={()=>navigate("/project-idea")}
+        onCreate={() => navigate("/project-idea")}
         searchPlaceholder="Search by project title"
-        onSearchChange={(e) =>setSearchTerm(e.target.value)}
+        onSearchChange={(e) => setSearchTerm(e.target.value)}
         filterOptions={["Popular", "Newest", "Oldest"]}
         onFilterChange={setFilter}
       />
@@ -104,7 +103,7 @@ const {
           )}
         </div>
       </div>
-      
+
       <div className="w-full flex justify-center">
         <Pagination
           currentPage={curPage}

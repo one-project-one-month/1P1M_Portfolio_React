@@ -35,7 +35,7 @@ const ProjectIdeaCard = ({
   };
 
   return (
-    <div className="max-w-[406px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    <div className="max-w-[500px] h-[298px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
       <div className="h-full flex flex-col gap-[14px] items-center">
         <div className="w-full h-full">
           <h2 className="text-2xl font-[600] mb-4">{title}</h2>
@@ -222,53 +222,30 @@ const ProjectIdeaCard = ({
         )}
         {statusAdmin && (
           <select
-            className={`h-[24px] rounded-lg text-sm px-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 ${
-              statusAdmin === "APPROVED"
-                ? "bg-[#9AE600] text-[#364153]"
-                : statusAdmin === "REJECTED"
-                ? "bg-[#FF3B30] text-[#F9FAFB]"
-                : statusAdmin === "INPROGRESS"
-                ? "bg-[#FFD60A] text-[#364153]"
-                : statusAdmin === "COMPLETED"
-                ? "bg-[#155DFC] text-[#F9FAFB]"
-                : statusAdmin === "DELETED"
-                ? "bg-[#D9D9D9] text-[#79716B]"
-                : "bg-[#79716B] text-[#F9FAFB]"
+            className={`h-[24px] rounded-lg text-sm px-3 cursor-pointer focus:outline-none ${
+                statusAdmin === "APPROVED"
+                  ? "bg-[#9AE600] text-[#364153]"
+                  : statusAdmin === "REJECTED"
+                  ? "bg-[#FF3B30] text-[#F9FAFB]"
+                  : statusAdmin === "IN_PROGRESS"
+                  ? "bg-[#FFD60A] text-[#364153]"
+                  : statusAdmin === "COMPLETED"
+                  ? "bg-[#155DFC] text-[#F9FAFB]"
+                  : "bg-[#D9D9D9] text-[#79716B]"
             }`}
             value={statusAdmin} // controlled value
             onChange={(e) => onStatusChange(e.target.value)}
           >
-            <option value="APPROVED">Approved</option>
-            <option value="REJECTED">Rejected</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="DELETED">Deleted</option>
+            <option value="PANDING" className="bg-[#9AE600] text-[#364153]">PANDING</option>
+            <option value="APPROVED" className="bg-[#9AE600] text-[#364153]">Approved</option>
+            <option value="REJECTED" className="bg-[#FF3B30] text-[#F9FAFB]">Rejected</option>
+            <option value="IN_PROGRESS" className="bg-[#FFD60A] text-[#364153]">In Progress</option>
+            <option value="COMPLETED" className="bg-[#155DFC] text-[#F9FAFB]">Completed</option>
+            <option value="DELETED" className="bg-[#D9D9D9] text-[#79716B]">Deleted</option>
           </select>
         )}
 
-        {/* -------------------------- Start Other Option ------------------------ */}
-        {/* {status && (
-          <div
-            className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${
-                status === "APPROVED"
-                ? "bg-[#9AE600] text-[#364153]"
-                : status === "REJECTED"
-                ? "bg-[#FF3B30] text-[#F9FAFB]"
-                : status === "INPROGRESS"
-                ? "bg-[#FFD60A] text-[#364153]"
-                : status === "COMPLETED"
-                ? "bg-[#155DFC] text-[#F9FAFB]"
-                : status === "DELETED"
-                ? "bg-[#D9D9D9] text-[#79716B]"
-                : "bg-[#79716B] text-[#F9FAFB]"
-            }`}
-          >
-            {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
-          </div>
-        )} */}
-
-        {/* -------------------------- End Other Option ------------------------ */}
-      </div>
+       </div>
     </div>
   );
 };

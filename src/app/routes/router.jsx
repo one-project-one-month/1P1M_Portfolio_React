@@ -18,6 +18,7 @@ import {
   AuthPage,
   ProfilePage,
   EditProfilePage,
+  UserProfilePage,
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: "project-idea", element: <ProjectIdeaPage /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "edit-profile", element: <EditProfilePage /> },
+      { path: "profile/:username", element: <UserProfilePage /> },
     ],
   },
   {
