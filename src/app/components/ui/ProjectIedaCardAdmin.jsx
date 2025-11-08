@@ -37,8 +37,7 @@ const ProjectCardAdmin = ({
   };
 
   return (
-    // <div className="w-[406px] h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
-    <div className="h-[360px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
+    <div className="max-w-[500px] bg-[#030712] flex flex-col justify-center items-center gap-4 border border-white/20 text-white text-center rounded-xl p-[28px]">
       <div className="h-full flex flex-col gap-[14px] items-center">
         <div className="w-full h-full">
           <h2 className="text-2xl font-[600] mb-4">{title}</h2>
@@ -114,68 +113,82 @@ const ProjectCardAdmin = ({
 
           <span className="text-sm">{formatCount(likes)}</span>
         </button>
-        {status && (
+        {status.toUpperCase() !== "PENDING" && (
           <div
             className={`h-[24px] flex justify-center items-center rounded-lg text-sm px-6 ${
-              status === 1
+                status.toUpperCase() === "APPROVED"
                 ? "bg-[#9AE600] text-[#364153]"
-                : status === 2
+                : status.toUpperCase() === "REJECTED"
+                ? "bg-[#FF3B30] text-[#F9FAFB]"
+                : status.toUpperCase() === "INPROGRESS"
+                ? "bg-[#FFD60A] text-[#364153]"
+                : status.toUpperCase() === "COMPLETED"
                 ? "bg-[#155DFC] text-[#F9FAFB]"
-                : "bg-[#79716B] text-[#F9FAFB]"
+                : "bg-[#D9D9D9] text-[#79716B]"
             }`}
           >
-            {status === 1
-              ? "In Progress"
-              : status === 2
-              ? "Complete"
-              : "Unqualified"}
+            {
+              status.toUpperCase() === "APPROVED"
+                ? "Approved"
+                : status.toUpperCase() === "REJECTED"
+                ? "Rejected"
+                : status.toUpperCase() === "INPROGRESS"
+                ? "In Progress"
+                : status.toUpperCase() === "COMPLETED"
+                ? "Completed"
+                : "Deleted"  
+              }
           </div>
         )}
       </div>
 
       {/* button */}
-      <div className="flex justify-center items-center gap-8">
-        <Button
-          variant="black_button"
-          size="primary"
-          className="px-8"
-          onClick={() => onRejectClick(projectId)}
-        >
-          Reject
-        </Button>
-        <Button
-          variant="primary"
-          size="primary"
-          className="relative px-8"
-          onClick={() => onApprove && onApprove(projectId)}
-        >
-          <div className="absolute left-3">
-            {approveLoading && (
-              <svg
-                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            )}
+      {
+        status.toUpperCase() === "PENDING" && (
+          <div className="flex justify-center items-center gap-8">
+            <Button
+              variant="black_button"
+              size="primary"
+              className="px-8"
+              onClick={() => onRejectClick(projectId)}
+            >
+              Reject
+            </Button>
+            <Button
+              variant="primary"
+              size="primary"
+              className="relative px-8"
+              onClick={() => onApprove && onApprove(projectId)}
+            >
+              <div className="absolute left-3">
+                {approveLoading && (
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
+              </div>
+              Approve
+            </Button>
           </div>
-          Approve
-        </Button>
-      </div>
+        )
+      }
 
       {/* reject model box */}
 

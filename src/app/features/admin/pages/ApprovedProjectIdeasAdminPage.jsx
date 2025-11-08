@@ -18,44 +18,45 @@ const ApprovedProjectIdeasAdminPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Popular");
 
-  const fetchProjects = async (page = 0) => {
-     try {
-       setLoading(true);
- 
-       const sortParam =
-         filter === "Popular"
-           ? "popular"
-           : filter === "Newest"
-           ? "newest"
-           : "oldest";
- 
-       const data = await fetchApprovedProjects({
-         page,
-         size: 6,
-         sortBy: sortParam,
-         search: searchTerm
-       });
-       
-       setTotalPages(data.data.pagination.totalPages || 1);
-       setProjects(data.data.projects);
-     } catch (error) {
-       console.error("Error fetching projects:", error);
-     } finally {
-       setLoading(false);
-     }
-   };
- 
-  useEffect(() => {
+   const fetchProjects = async (page = 0) => {
+      try {
+        setLoading(true);
+  
+        const sortParam =
+          filter === "Popular"
+            ? "popular"
+            : filter === "Newest"
+            ? "newest"
+            : "oldest";
+  
+        const data = await fetchApprovedProjects({
+          page,
+          size: 6,
+          sortBy: sortParam,
+          search: searchTerm,
+        });
+  
+        setTotalPages(data.data.pagination.totalPages || 1);
+        setProjects(data.data.projects);
+  
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    useEffect(() => {
     const delayDebounce = setTimeout(() => {
       setCurPage(0);
     }, 500);
-
+  
     return () => clearTimeout(delayDebounce);
   }, [filter, searchTerm]);
-
+  
   useEffect(() => {
     fetchProjects(curPage);
-  }, [curPage]);
+  }, [curPage, filter, searchTerm]);
 
   const handleLike = async (projectId, likeState) => {
     try {
@@ -124,15 +125,14 @@ const ApprovedProjectIdeasAdminPage = () => {
         onFilterChange={setFilter}
       />
 
-      <div className="flew-grow">
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+      <div className="flex-grow">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">Loading projects...</p>
         ) : projects.length === 0 ? (
           <p className="text-center col-span-full text-gray-400">No projects found.</p>
         ) : (
           projects
-          // .filter((projects)=> projects.status !== "DELETED" && projects.status !== "PENDING")
           .map((proj) => (
             <ProjectIdeaCard
               key={proj.id}

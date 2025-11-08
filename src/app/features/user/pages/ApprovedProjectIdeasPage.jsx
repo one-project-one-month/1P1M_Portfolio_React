@@ -14,7 +14,7 @@ const ApprovedProjectIdeasPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("Popular");
 
   const fetchProjects = async (page = 0) => {
     try {
@@ -24,8 +24,8 @@ const ApprovedProjectIdeasPage = () => {
         filter === "Popular"
           ? "popular"
           : filter === "Newest"
-          ? "newest"
-          : "oldest";
+            ? "newest"
+            : "oldest";
 
       const data = await fetchApprovedProjects({
         page,
@@ -45,16 +45,16 @@ const ApprovedProjectIdeasPage = () => {
   };
 
   useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    setCurPage(0);
-  }, 500);
+    const delayDebounce = setTimeout(() => {
+      setCurPage(0);
+    }, 500);
 
-  return () => clearTimeout(delayDebounce);
-}, [filter, searchTerm]);
+    return () => clearTimeout(delayDebounce);
+  }, [filter, searchTerm]);
 
-useEffect(() => {
-  fetchProjects(curPage);
-}, [curPage, filter, searchTerm]);
+  useEffect(() => {
+    fetchProjects(curPage);
+  }, [curPage, filter, searchTerm]);
 
   const handleLike = async (projectId, liked) => {
     try {
@@ -69,14 +69,14 @@ useEffect(() => {
         prev.map((p) =>
           p.id === projectId
             ? {
-                ...p,
-                reactionCount: liked
-                  ? p.reactionCount + 1
-                  : p.reactionCount - 1,
-                reactedProjects: liked
-                  ? [...(p.reactedProjects || []), p.id]
-                  : (p.reactedProjects || []).filter((id) => id !== p.id),
-              }
+              ...p,
+              reactionCount: liked
+                ? p.reactionCount + 1
+                : p.reactionCount - 1,
+              reactedProjects: liked
+                ? [...(p.reactedProjects || []), p.id]
+                : (p.reactedProjects || []).filter((id) => id !== p.id),
+            }
             : p
         )
       );
@@ -97,40 +97,39 @@ useEffect(() => {
         onFilterChange={setFilter}
       />
 
-      <div className="flew-grow">
+      <div className="flex-grow">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-        {loading ? (
+          {loading ? (
             <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="animate-pulse bg-gray-800 rounded-xl h-[298px]" />
               ))}
             </div>
-        ) : projects.length === 0 ? (
-          <p className="text-center col-span-full text-gray-400">
-            No projects found.
-          </p>
-        ) : (
-          projects
-            .filter((proj) => proj.status !== "DELETED")
-            .map((proj) => (
-              <ProjectIdeaCard
-                key={proj.id}
-                projectId={proj.id}
-                title={proj.projectName}
-                description={proj.projectDetails}
-                submittedByProfile={proj.profilePictureUrl}
-                postBy={proj.devName}
-                likeCount={proj.reactionCount}
-                tags={proj.projectTypes}
-                liked={proj.reactedProjects?.includes(proj.id)}
-                status={ proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed"? 2 : 3 }
-                onLike={(projectId, likeState) =>
-                  handleLike(projectId, likeState)
-                }
-              />
-            ))
-        )}
-      </div>
+          ) : projects.length === 0 ? (
+            <p className="text-center col-span-full text-gray-400">
+              No projects found.
+            </p>
+          ) : (
+            projects
+              .map((proj) => (
+                <ProjectIdeaCard
+                  key={proj.id}
+                  projectId={proj.id}
+                  title={proj.projectName}
+                  description={proj.projectDetails}
+                  submittedByProfile={proj.profilePictureUrl}
+                  postBy={proj.devName}
+                  likeCount={proj.reactionCount}
+                  tags={proj.projectTypes}
+                  liked={proj.reactedProjects?.includes(proj.id)}
+                  status={proj.status.toLowerCase() === "in_progress" ? 1 : proj.status.toLowerCase() === "completed" ? 2 : 3}
+                  onLike={(projectId, likeState) =>
+                    handleLike(projectId, likeState)
+                  }
+                />
+              ))
+          )}
+        </div>
       </div>
 
       <div className="w-full flex justify-center">

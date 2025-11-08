@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button'
 import Footer from '@/components/ui/Footer'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProjectIdeaCard from '@/components/ui/ProjectIdeaCard'
 import { useQuery } from '@tanstack/react-query'
 import { getDevProfiles } from '@/services/devProfileService'
@@ -8,6 +8,7 @@ import { fetchApprovedProjects } from '@/services/approvedProjectsService'
 import { ProjectIdeaList, reactProjectIdea, unreactProjectIdea } from '@/services/projectIdeaService'
 import { useNavigate } from 'react-router-dom'
 import DevCard from '../components/DevCard'
+import DevProfile from '@/components/ui/DevProfile'
 
 const fetchApprovedProjectIdeas = async () => {
   const res = await fetchApprovedProjects()
@@ -15,7 +16,7 @@ const fetchApprovedProjectIdeas = async () => {
 }
 
 
-const fetchRegisteredDevs = async () => {
+const fetchDevProfileDatas = async () => {
   const res = await getDevProfiles()
   return res.data || []
 }
@@ -43,6 +44,7 @@ const handleLike = async (projectId, likeState) => {
 const LandingPage = () => {
   const navigate = useNavigate();
 
+
   // Fetch Approved Project Ideas
   const {
     data: approvedProjectideas = [],
@@ -55,13 +57,23 @@ const LandingPage = () => {
 
   // Fetch Registered Developers
   const {
-    data: registeredDevs = [],
+    data: DevProfileDatas = [],
     isLoading: devsLoading,
     isError: devsError,
   } = useQuery({
-    queryKey: ["registeredDevs"],
-    queryFn: fetchRegisteredDevs,
+    queryKey: ["DevProfileDatas"],
+    queryFn: fetchDevProfileDatas,
   });
+
+
+  const handleProfileView = (devId) => {
+    const devData = DevProfileDatas.find((dev) => dev.dev_id === devId);
+    console.log(devData);
+    
+    if (!devData) return;
+    const username = devData.email.split("@")[0];
+    navigate(`/profile/${username}`, { state: { devData } });
+  };
 
   return (
     <div className="">
@@ -130,13 +142,13 @@ const LandingPage = () => {
 
       {/* Start Registered Section */}
       <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
-        <div className='w-full flex justify-between items-center my-4'>
-          <h1 className='text-5xl'>Registered</h1>
+        <div className='w-full flex justify-between items-center my-8'>
+          <h1 className='text-5xl'>Dev Profile</h1>
           <button className='border-b cursor-pointer'
            onClick={()=>navigate('/dev-list')}
           >View more</button>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mt-4'>
           {devsLoading ? (
              <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
@@ -145,10 +157,10 @@ const LandingPage = () => {
             </div>
           ):
           (
-            registeredDevs
+            DevProfileDatas
             .slice(0,6)
             .map((devProfile,idx)=>(
-              <DevCard key={idx} member={devProfile} />
+              <DevProfile key={idx} devProfile={devProfile} viewProfile={()=>handleProfileView(devProfile.dev_id)} />
             )))
           }
         </div>
@@ -157,11 +169,11 @@ const LandingPage = () => {
 
       {/* Start Approved Ideas Section */}
       <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
-        <div className='w-full flex justify-between items-center my-4'>
+        <div className='w-full flex justify-between items-center my-8'>
           <h1 className='text-5xl'>Approved Ideas</h1>
           <button className='border-b cursor-pointer' onClick={() => navigate('/approved-ideas')}>View more</button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mt-4">
           {
           ideasLoading ? 
           (

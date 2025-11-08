@@ -18,7 +18,7 @@ function Navbar() {
       { id: 1, name: "Portfolio", path: "/project-portfolio" },
       { id: 2, name: "Dev Profiles", path: "/dev-list" },
       { id: 3, name: "Ideas", path: isAdmin ? "/admin/ideas" : "/ideas" },
-      { id: 4, name: "Approved Ideas", path: "/approved-ideas" },
+      { id: 3, name: "Approved Ideas", path: isAdmin ? "/admin/approved-ideas" : "/approved-ideas" },
       { id: 5, name: "Team", path: "/team" },
     ];
   };
