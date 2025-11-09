@@ -64,7 +64,21 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
         toolsUsed: existingProjectData.languageAndTools?.join(", ") || "",
       });
 
-      if (existingProjectData.developerEmails) {
+      // Handle team members from assignedDevs.developers
+      if (existingProjectData.assignedDevs?.developers) {
+        const developers = existingProjectData.assignedDevs.developers;
+        const developerEmails = developers
+          .map(
+            (dev) =>
+              dev.email ||
+              `${dev.name?.toLowerCase().replace(/\s+/g, "")}@temp.com`
+          )
+          .filter(Boolean);
+        setTeamMembers(developerEmails);
+
+        // Also set selectedMembers for display
+        setSelectedMembers(developers);
+      } else if (existingProjectData.developerEmails) {
         setTeamMembers(existingProjectData.developerEmails);
       }
     }
@@ -480,7 +494,7 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
             </div>
           )}
         </div>
-        {/* User Images Section */}
+        {/* Team Members Section */}
         <div className="flex flex-col mb-2 -mt-4 z-0">
           <div className="flex items-center gap-2">
             {/* Team Member Images - Show max 5 */}

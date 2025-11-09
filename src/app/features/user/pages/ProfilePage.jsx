@@ -80,6 +80,12 @@ const ProfilePage = () => {
 
   const { devProfile, projectIdea, projectPortfolios } = profileData || {};
 
+  const projectIdeasArray = Array.isArray(projectIdea)
+    ? projectIdea
+    : projectIdea
+    ? [projectIdea]
+    : [];
+
   // Transform project portfolio data to match component props
   const transformedProjects =
     projectPortfolios?.map((project) => ({
@@ -96,33 +102,35 @@ const ProfilePage = () => {
       repoLink: project.repoLink,
     })) || [];
 
-  const transformedProjectIdea = projectIdea
-    ? {
-        id: projectIdea.projectIdeaId,
-        title: projectIdea.projectIdeaName,
-        description: projectIdea.description,
-        tags: ["Project Idea"],
-        submittedByProfile:
-          devProfile?.profilePictureUrl ||
-          "https://avatar.iran.liara.run/public/47",
-        postBy: devProfile?.name || "Unknown",
-        likeCount: 0,
-        liked: false,
-        status: projectIdea.status,
-        owner: true,
-      }
-    : null;
+  const transformedProjectIdeas = projectIdeasArray.map((idea) => ({
+    id: idea.projectIdeaId,
+    title: idea.projectIdeaName,
+    description: idea.description,
+    tags:
+      idea.projectTypes && idea.projectTypes.length > 0
+        ? idea.projectTypes
+        : ["Project Idea"],
+    submittedByProfile:
+      devProfile?.profilePictureUrl ||
+      "https://avatar.iran.liara.run/public/47",
+    postBy: devProfile?.name || "Unknown",
+    likeCount: idea.reactionCount || 0,
+    liked: false,
+    status: idea.status,
+    owner: idea.dev_id === devProfile?.dev_id,
+    originalIdea: idea,
+  }));
 
   const handleLikeIdea = (projectId, liked) => {
     console.log(`Idea ${projectId} ${liked ? "liked" : "unliked"}`);
   };
 
-  const handleEditIdea = (projectId) => {
-    console.log(`Edit idea ${projectId}`);
+  const handleEditIdea = (idea) => {
+    console.log(`Edit idea ${idea.projectIdeaId}`);
     navigate("/project-idea", {
       state: {
         isEditMode: true,
-        projectIdeaData: projectIdea,
+        projectIdeaData: idea,
       },
     });
   };
@@ -281,28 +289,28 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {transformedProjectIdea && (
+      {transformedProjectIdeas.length > 0 && (
         <div className="max-w-6xl mx-auto mb-12">
           <h2 className="text-3xl font-bold mb-8">My Projects Ideas</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
-            <ProjectIdeaCard
-              key={transformedProjectIdea.id}
-              projectId={transformedProjectIdea.id}
-              title={transformedProjectIdea.title}
-              description={transformedProjectIdea.description}
-              submittedByProfile={transformedProjectIdea.submittedByProfile}
-              postBy={transformedProjectIdea.postBy}
-              likeCount={transformedProjectIdea.likeCount}
-              liked={transformedProjectIdea.liked}
-              tags={transformedProjectIdea.tags}
-              status={transformedProjectIdea.status}
-              canEdit={
-                transformedProjectIdea.owner
-                  ? () => handleEditIdea(transformedProjectIdea.id)
-                  : null
-              }
-              onLike={handleLikeIdea}
-            />
+            {transformedProjectIdeas.map((idea) => (
+              <ProjectIdeaCard
+                key={idea.id}
+                projectId={idea.id}
+                title={idea.title}
+                description={idea.description}
+                submittedByProfile={idea.submittedByProfile}
+                postBy={idea.postBy}
+                likeCount={idea.likeCount}
+                liked={idea.liked}
+                tags={idea.tags}
+                status={idea.status}
+                canEdit={
+                  idea.owner ? () => handleEditIdea(idea.originalIdea) : null
+                }
+                onLike={handleLikeIdea}
+              />
+            ))}
           </div>
         </div>
       )}

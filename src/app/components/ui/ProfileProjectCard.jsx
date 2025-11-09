@@ -64,7 +64,7 @@ export default function ProfileProjectCard({
     <div className="flex justify-center items-center border-box">
       <div
         className="
-          max-w-[386px] h-[414px]
+          w-full max-w-[386px] h-[414px]
           flex flex-col items-center
           bg-[#000000]
           rounded-[12px]
