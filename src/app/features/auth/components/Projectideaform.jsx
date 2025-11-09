@@ -69,6 +69,7 @@ const Projectideaform = ({
         navigate("/profile");
       } else {
         setFormData({ projectName: "", description: "", projectType: "" });
+        navigate("/ideas");
       }
     },
     onError: (error) => {

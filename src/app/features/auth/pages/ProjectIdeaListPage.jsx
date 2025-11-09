@@ -28,21 +28,15 @@ const ProjectListPage = () => {
     setCurPage(0);
   }, [debouncedSearch, filter]);
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-  } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["projects", curPage, debouncedSearch, filter],
     queryFn: () => ProjectIdeaList(curPage, 6, debouncedSearch, filter),
     keepPreviousData: true,
-    staleTime: 1000 * 60,
+    // staleTime: 1000 * 60,
   });
 
   const projects = data?.data || [];
   const totalPages = data?.meta?.totalPages || 1;
-
-
 
   const handleLike = async (projectId, likeState) => {
     try {
@@ -55,7 +49,6 @@ const ProjectListPage = () => {
       console.error("Error updating like:", error);
     }
   };
-
 
   return (
     <div className="flex flex-col min-h-[80vh]">
@@ -75,7 +68,10 @@ const ProjectListPage = () => {
           {isLoading || isFetching ? (
             <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-gray-800 rounded-xl h-[298px]" />
+                <div
+                  key={i}
+                  className="animate-pulse bg-gray-800 rounded-xl h-[298px]"
+                />
               ))}
             </div>
           ) : projects.length === 0 ? (
@@ -83,23 +79,22 @@ const ProjectListPage = () => {
               No projects found.
             </p>
           ) : (
-            projects
-              .map((proj) => (
-                <ProjectIdeaCard
-                  key={proj.id}
-                  projectId={proj.id}
-                  title={proj.projectName}
-                  description={proj.description}
-                  submittedByProfile={proj.profilePictureUrl}
-                  postBy={proj.devName}
-                  likeCount={proj.reaction_count}
-                  liked={proj.reactedProjects?.includes(proj.id)}
-                  tags={proj.projectTypes}
-                  onLike={(projectId, likestate) =>
-                    handleLike(projectId, likestate)
-                  }
-                />
-              ))
+            projects.map((proj) => (
+              <ProjectIdeaCard
+                key={proj.id}
+                projectId={proj.id}
+                title={proj.projectName}
+                description={proj.description}
+                submittedByProfile={proj.profilePictureUrl}
+                postBy={proj.devName}
+                likeCount={proj.reaction_count}
+                liked={proj.reactedProjects?.includes(proj.id)}
+                tags={proj.projectTypes}
+                onLike={(projectId, likestate) =>
+                  handleLike(projectId, likestate)
+                }
+              />
+            ))
           )}
         </div>
       </div>
