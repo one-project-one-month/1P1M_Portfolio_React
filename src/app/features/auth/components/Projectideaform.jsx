@@ -28,7 +28,10 @@ const Projectideaform = ({
       setFormData({
         projectName: existingProjectData.projectIdeaName || "",
         description: existingProjectData.description || "",
-        projectType: existingProjectData.projectType?.[0] || "",
+        projectType:
+          existingProjectData.projectType?.[0] ||
+          existingProjectData.projectTypes?.[0] ||
+          "",
       });
     }
   }, [isEditMode, existingProjectData]);
