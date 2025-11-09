@@ -106,25 +106,30 @@ function Navbar() {
   }
 
   return (
-    <nav className="h-11 flex w-full justify-between items-center py-10">
+    <nav className=" h-11 flex w-full justify-between items-center py-10">
       <div className="text-2xl text-white">
         <img src={opomIconUrl} className="cursor-pointer" onClick={handleHomeNav} />
       </div>
       {/* nav_links */}
-      <div className=" font-medium flex gap-x-10 p-1">
-        {getNavLinks().map((link) => (
-          <NavLink
-            key={link.id}
-            id={link.id}
-            to={link.path}
-            className={({ isActive }) =>
-              `${isActive ? "text-white" : "text-[#ADADADA3]"}`
-            }
-          >
-            <span>{link.name}</span>
-          </NavLink>
-        ))}
-      </div>
+      <div className="font-medium flex gap-x-10 p-1">
+  {getNavLinks().map((link) => (
+    <NavLink
+      key={link.id}
+      id={link.id}
+      to={link.path}
+      className={({ isActive }) =>
+        `relative px-1 py-0.5 transition-all duration-300 ease-in-out
+        ${isActive ? "text-white" : "text-[#ADADADA3]"}`
+      }
+    >
+      <span className="relative">
+        {link.name}
+      
+      </span>
+    </NavLink>
+  ))}
+</div>
+
 
       <div>
         {!isAuth ? (
