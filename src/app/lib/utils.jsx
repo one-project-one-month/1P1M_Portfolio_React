@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 import Cookies from "js-cookie";
 
+
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -33,10 +34,11 @@ export const authUtils = {
     Cookies.remove("auth_token");
   },
 
-  getProfilePicture: () => {
-    const user = authUtils.getUser();
-    return user?.profile_picture || null;
-  },
+  // getProfilePicture: async() => {
+  //   const user = authUtils.getUser();
+   
+  //   return data.devProfile.profilePictureUrl || null
+  // },
 
   getDisplayName: () => {
     const user = authUtils.getUser();

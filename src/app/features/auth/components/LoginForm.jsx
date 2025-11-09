@@ -72,8 +72,10 @@ function LoginForm() {
       // alert("Login successful!");
       if (data.data.isNewUserLogin) {
         navigate("/auth/setup-profile");
-      } else {
-        navigate("/");
+      } else if(data.data.role=="ADMIN") {
+        navigate("/admin");
+      } else{
+        navigate("/")
       }
     } catch (err) {
       console.error("Login failed:", err);
