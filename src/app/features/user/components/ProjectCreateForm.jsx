@@ -188,6 +188,7 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
         setProjectImage(null);
         setTeamMembers([]);
         setSelectedMembers([]);
+        navigate("/project-portfolio");
       }
       setSearch("");
       setDevProfiles([]);
