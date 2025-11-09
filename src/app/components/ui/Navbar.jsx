@@ -1,7 +1,10 @@
-import { opomIconUrl, UserImgUrl } from "@/assets/icons/iconUrls";
+import { opomIconUrl, sampleUserImgUrl } from "@/assets/icons/iconUrls";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { useState, useEffect, useRef } from "react";
+
+import { authUtils } from "@/lib/utils";
+import { useUserProfile } from "@/queries/useGetProfile";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -9,6 +12,7 @@ function Navbar() {
 
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState(null);
+  const [userImgUrl, setUserImgUrl] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getNavLinks = () => {
@@ -18,8 +22,11 @@ function Navbar() {
       { id: 1, name: "Portfolio", path: "/project-portfolio" },
       { id: 2, name: "Dev Profiles", path: "/dev-list" },
       { id: 3, name: "Ideas", path: isAdmin ? "/admin/ideas" : "/ideas" },
-      { id: 3, name: "Approved Ideas", path: isAdmin ? "/admin/approved-ideas" : "/approved-ideas" },
-      { id: 5, name: "Team", path: "/team" },
+      {
+        id: 3,
+        name: "Approved Ideas",
+        path: isAdmin ? "/admin/approved-ideas" : "/approved-ideas",
+      },
     ];
   };
 
@@ -63,6 +70,7 @@ function Navbar() {
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
+
         setIsAuth(true);
         setUser(parsedUser);
       } catch (error) {
@@ -76,10 +84,31 @@ function Navbar() {
     }
   }, []);
 
+  const { data } = useUserProfile(user?.id);
+
+  useEffect(() => {
+    if (data?.data.devProfile.profilePictureUrl) {
+      setUserImgUrl(data?.data.devProfile.profilePictureUrl);
+    }
+  }, [data]);
+
+  console.log("NAV",user);
+  
+
+  const handleHomeNav=()=>{
+    if(user?.role==="ADMIN") {
+      
+      
+      navigate("/admin") 
+    }else{
+      navigate("/")
+    }
+  }
+
   return (
     <nav className="h-11 flex w-full justify-between items-center py-10">
       <div className="text-2xl text-white">
-        <img src={opomIconUrl} onClick={() => navigate("/")} />
+        <img src={opomIconUrl} className="cursor-pointer" onClick={handleHomeNav} />
       </div>
       {/* nav_links */}
       <div className=" font-medium flex gap-x-10 p-1">
@@ -113,7 +142,7 @@ function Navbar() {
               onClick={toggleDropdown}
             >
               <img
-                src={user?.profilePicture || UserImgUrl}
+                src={userImgUrl || sampleUserImgUrl}
                 className="size-9 rounded-full object-cover"
                 alt="User profile"
               />

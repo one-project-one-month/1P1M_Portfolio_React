@@ -16,7 +16,7 @@ import editIcon from "./edit.svg";
 export const googleIconUrl = googleSvg;
 export const githubIconUrl = githubSvg;
 export const opomIconUrl = opomSvg;
-export const UserImgUrl = sampleUser;
+export const sampleUserImgUrl = sampleUser;
 export const imagePlaceholderUrl = imagePlaceholder;
 export const plusIconUrl = plusIcon;
 export const searchIconUrl = searchIcon;

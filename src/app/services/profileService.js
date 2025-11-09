@@ -8,7 +8,11 @@ export const profileService = {
       const response = await apiClient.get(
         `${API_ENDPOINTS.GET_PROFILE_DATA}?userId=${userId}`
       );
+     
       return response.data;
+
+   
+      
     } catch (error) {
       console.error("Error fetching profile data:", error);
       throw error;
