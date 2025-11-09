@@ -1,8 +1,13 @@
+import { authUtils } from "@/lib/utils";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ token, role, allow }) => {
-  const userRole = role?.name;
-  console.log(role);
+
+  const user =authUtils.getRole();
+  console.log("R",user);
+  
+  const userRole = user;
+  console.log("ROLE",role);
    
 
   if (!token) return <Navigate to="/auth/login" replace />;

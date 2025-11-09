@@ -37,20 +37,20 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      { path: "dev-list", element: <DevListPage /> },
-      { path: "ideas", element: <ProjectListPage /> },
-      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
-      { path: "project-portfolio", element: <ProjectPortfolioList /> },
-      { path: "add-member", element: <AddMemberPage /> },
-      { path: "create-project", element: <ProjectCreateFormPage /> },
-      { path: "project-idea", element: <ProjectIdeaPage /> },
-      { path: "profile", element: <ProfilePage /> },
-      { path: "edit-profile", element: <EditProfilePage /> },
-      { path: "profile/:username", element: <UserProfilePage /> },
+       { path: "dev-list", element: <DevListPage /> },
+          { path: "ideas", element: <ProjectListPage /> },
+          { path: "approved-ideas", element: <ApprovedIdeasPage /> },
+          { path: "project-portfolio", element: <ProjectPortfolioList /> },
+          { path: "add-member", element: <AddMemberPage /> },
+          { path: "create-project", element: <ProjectCreateFormPage /> },
+          { path: "project-idea", element: <ProjectIdeaPage /> },
+          { path: "profile", element: <ProfilePage /> },
+          { path: "edit-profile", element: <EditProfilePage /> },
+     
     ],
   },
 
-  // USER ROUTES
+ 
   {
     element: <ProtectedRoute token={token} role={role} allow={["USER", "ADMIN"]} />,
     children: [
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  //ADMIN ROUTES
+
   {
     path: "/admin",
     element: <ProtectedRoute token={token} role={role} allow={["ADMIN"]} />,

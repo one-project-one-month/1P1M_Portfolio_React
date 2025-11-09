@@ -141,7 +141,7 @@ function ProjectPortfolioList() {
       {/* Project Grid */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className="grid auto-rows-fr gap-6 
+          className="grid auto-rows-fr gap-4 
                         grid-cols-1 
                         sm:grid-cols-1 
                         md:grid-cols-2 
@@ -153,6 +153,7 @@ function ProjectPortfolioList() {
             projects.map((project) => (
               <div key={project.id} className="w-full">
                 <ProjectCard
+                
                   image={project.projectPicUrl || projectImage}
                   title={project.name}
                   description={project.description}
