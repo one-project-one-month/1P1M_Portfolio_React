@@ -46,6 +46,7 @@ const router = createBrowserRouter([
           { path: "project-idea", element: <ProjectIdeaPage /> },
           { path: "profile", element: <ProfilePage /> },
           { path: "edit-profile", element: <EditProfilePage /> },
+          {path:"profile/:username",element:<UserProfilePage/>}
      
     ],
   },
