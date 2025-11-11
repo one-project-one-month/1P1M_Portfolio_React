@@ -7,22 +7,7 @@ import "../../../styles/index.css"
 import Button from "@/components/ui/Button";
 
 
-const MOCK_USERS = [
-  { id: 1, name: "Bora", role: "UI | UX Designer", email: "bora@gmail.com", photo: "https://picsum.photos/200/300?random=1" },
-  { id: 2, name: "Alice", role: "Frontend Developer", email: "alice@gmail.com", photo: "https://picsum.photos/200/300?random=2" },
-  { id: 3, name: "David Luis", role: "Backend Developer", email: "david@gmail.com", photo: "https://picsum.photos/200/300?random=3" },
-  { id: 4, name: "Charlie Charlie", role: "Fullstack Developer", email: "charlie@gmail.com", photo: "https://picsum.photos/200/300?random=4" },
-  { id: 5, name: "Seth", role: "Fullstack Developer", email: "charlie@gmail.com", photo: "https://picsum.photos/200/300?random=4" },
-  { id: 6, name: "Joey", role: "Fullstack Developer", email: "charlie@gmail.com", photo: "https://picsum.photos/200/300?random=4" },
-  { id: 7, name: "Luis kuis tsg", role: "Fullstack Developer", email: "charlie@gmail.com", photo: "https://picsum.photos/200/300?random=4" },
-  { id: 8, name: "Smith Jaguar William", role: "Fullstack Developer", email: "charlie@gmail.com", photo: "https://picsum.photos/200/300?random=4" },
-  { id: 9, name: "Alex", role: "UI | UX Designer", email: "bora@gmail.com", photo: "https://picsum.photos/200/300?random=1" },
-  { id: 10, name: "Austion", role: "UI | UX Designer", email: "bora@gmail.com", photo: "https://picsum.photos/200/300?random=1" },
-  { id: 11, name: "Aaron", role: "UI | UX Designer", email: "bora@gmail.com", photo: "https://picsum.photos/200/300?random=1" },
-  { id: 12, name: "Aron", role: "UI | UX Designer", email: "bora@gmail.com", photo: "https://picsum.photos/200/300?random=1" },
 
-
-];
 
 export default function AddMemberForm() {
   const [search, setSearch] = useState("");

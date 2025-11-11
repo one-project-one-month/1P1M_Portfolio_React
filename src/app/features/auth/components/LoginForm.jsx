@@ -69,7 +69,7 @@ function LoginForm() {
 
       toast.success("Login successfully!");
       console.log("Login successful:", data);
-      // alert("Login successful!");
+     
       if (data.data.isNewUserLogin) {
         navigate("/auth/setup-profile");
       } else if(data.data.role=="ADMIN") {

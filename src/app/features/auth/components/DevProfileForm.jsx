@@ -204,36 +204,44 @@ function DevProfileForm({ isEditMode = false, existingProfileData = null }) {
       } else {
         console.log("Start creating dev profiles", payLoad);
 
-        const result = await setupDevProfile(payLoad);
-        console.log("Create Dev Profiles", result);
+try {
+  const result = await setupDevProfile(payLoad);
+  console.log("Create Dev Profiles", result);
 
-        if (result.success === 1 && result.data && result.data.dev_id) {
-          const devProfileId = result.data.dev_id;
+  if (result.success !== 1 || !result.data?.dev_id) {
+    throw new Error("Failed to create dev profile");
+  }
 
-          const formData = new FormData();
-          formData.append("file", img);
+  const devProfileId = result.data.dev_id;
 
-          console.log("Uploading image for Dev ID:", devProfileId);
+  if (img) {
+    await uploadImageForDev(devProfileId, img);
+  }
 
-          const uploadRes = await uploadDevImage(formData, devProfileId);
-          console.log("Upload Response:", uploadRes);
+  toast.success("Profile created successfully!", {
+    position: "top-right",
+  });
+ toast.dismiss(loadingToast);
+  navigate(user?.role === "ADMIN" ? "/admin" : "/");
+} catch (error) {
+  console.error("Error creating dev profile:", error);
+  toast.dismiss(loadingToast);
+  toast.error(error.message || "Something went wrong!", {
+    position: "top-right",
+  });
+}
 
-          toast.dismiss(loadingToast);
-          toast.success("Profile created successfully!", {
-            position: "top-right",
-          });
 
-          if (user?.role === "ADMIN") {
-            navigate("/admin");
-          } else {
-            navigate("/");
-          }
-        } else {
-          toast.dismiss(loadingToast);
-          toast.error("Failed to create profile. Please try again.", {
-            position: "top-right",
-          });
-        }
+async function uploadImageForDev(devProfileId, imgFile) {
+  const formData = new FormData();
+  formData.append("file", imgFile);
+
+  console.log("Uploading image for Dev ID:", devProfileId);
+
+  const uploadRes = await uploadDevImage(formData, devProfileId);
+  console.log("Upload Response:", uploadRes);
+}
+
       }
     } catch (error) {
       console.error(

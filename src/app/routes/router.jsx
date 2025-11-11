@@ -22,16 +22,8 @@ import {
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
-import { authUtils } from "@/lib/utils";
-
-const token =authUtils.getToken()
-const role=authUtils.getRole();
-
-
-console.log("FROM route",role);
 
 const router = createBrowserRouter([
-
   {
     path: "/",
     element: <MainLayout />,
@@ -50,9 +42,8 @@ const router = createBrowserRouter([
     ],
   },
 
-  // USER ROUTES
   {
-    element: <ProtectedRoute token={token} role={role} allow={["USER", "ADMIN"]} />,
+    element: <ProtectedRoute allow={["USER", "ADMIN"]} />,
     children: [
       {
         path: "/",
@@ -72,10 +63,9 @@ const router = createBrowserRouter([
     ],
   },
 
-  //ADMIN ROUTES
   {
     path: "/admin",
-    element: <ProtectedRoute token={token} role={role} allow={["ADMIN"]} />,
+    element: <ProtectedRoute  allow={["ADMIN"]} />,
     children: [
       {
         element: <AdminLayout />,
@@ -87,7 +77,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-
 
   { path: "callback", element: <AuthPage /> },
   { path: "login/oauth2/code/github", element: <AuthPage /> },
