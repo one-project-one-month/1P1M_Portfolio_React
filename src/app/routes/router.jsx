@@ -22,38 +22,28 @@ import {
 } from "../constants/lazyload";
 import authRouter from "./authRouter";
 import AddMemberPage from "@/features/user/pages/AddMemberPage";
-import { authUtils } from "@/lib/utils";
-
-const token =authUtils.getToken()
-const role=authUtils.getRole();
-
-
-console.log("FROM route",role);
 
 const router = createBrowserRouter([
-
   {
     path: "/",
     element: <MainLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-       { path: "dev-list", element: <DevListPage /> },
-          { path: "ideas", element: <ProjectListPage /> },
-          { path: "approved-ideas", element: <ApprovedIdeasPage /> },
-          { path: "project-portfolio", element: <ProjectPortfolioList /> },
-          { path: "add-member", element: <AddMemberPage /> },
-          { path: "create-project", element: <ProjectCreateFormPage /> },
-          { path: "project-idea", element: <ProjectIdeaPage /> },
-          { path: "profile", element: <ProfilePage /> },
-          { path: "edit-profile", element: <EditProfilePage /> },
-          {path:"profile/:username",element:<UserProfilePage/>}
-     
+      { path: "dev-list", element: <DevListPage /> },
+      { path: "ideas", element: <ProjectListPage /> },
+      { path: "approved-ideas", element: <ApprovedIdeasPage /> },
+      { path: "project-portfolio", element: <ProjectPortfolioList /> },
+      { path: "add-member", element: <AddMemberPage /> },
+      { path: "create-project", element: <ProjectCreateFormPage /> },
+      { path: "project-idea", element: <ProjectIdeaPage /> },
+      { path: "profile", element: <ProfilePage /> },
+      { path: "edit-profile", element: <EditProfilePage /> },
+      { path: "profile/:username", element: <UserProfilePage /> },
     ],
   },
 
- 
   {
-    element: <ProtectedRoute token={token} role={role} allow={["USER", "ADMIN"]} />,
+    element: <ProtectedRoute allow={["USER", "ADMIN"]} />,
     children: [
       {
         path: "/",
@@ -73,10 +63,9 @@ const router = createBrowserRouter([
     ],
   },
 
-
   {
     path: "/admin",
-    element: <ProtectedRoute token={token} role={role} allow={["ADMIN"]} />,
+    element: <ProtectedRoute  allow={["ADMIN"]} />,
     children: [
       {
         element: <AdminLayout />,
@@ -88,7 +77,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-
 
   { path: "callback", element: <AuthPage /> },
   { path: "login/oauth2/code/github", element: <AuthPage /> },
