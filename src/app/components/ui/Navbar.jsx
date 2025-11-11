@@ -92,7 +92,7 @@ function Navbar() {
     }
   }, [data]);
 
-  console.log("NAV",user);
+
   
 
   const handleHomeNav=()=>{
