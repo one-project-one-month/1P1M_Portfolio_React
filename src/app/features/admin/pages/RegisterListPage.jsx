@@ -32,7 +32,7 @@ useEffect(() => {
     setSortDirection("asc");
   }
 }, [filter]);
-    const size = 6;
+    const size = 1;
     const { data, isError,isLoading } = useOpomRegister({
       keyword,
       page,
