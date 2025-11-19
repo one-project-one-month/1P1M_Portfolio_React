@@ -19,7 +19,7 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
   const size = "";
   const [sortDirection, setSortDirection] = useState("desc");
 
-  const { data } = useDevProfile(keyword, page, sortDirection, size);
+  const { data,isError,isLoading } = useDevProfile(keyword, page, sortDirection, size);
 
   const navigate = useNavigate();
 
@@ -432,6 +432,8 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
           handleDialog={handleDialog}
           filteredDevs={DevData}
           devProfiles={DevData}
+          devError={isError}
+          devLoading={isLoading}
           search={search}
           onSearch={onSearch}
         />
