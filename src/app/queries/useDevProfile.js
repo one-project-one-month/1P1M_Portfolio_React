@@ -11,6 +11,6 @@ export const useDevProfile = ({
   return useQuery({
     queryKey: ["devProfiles", keyword, page, sortDirection, sortField, size],
     queryFn: () =>
-      newGetDevProfiles({ keyword, page, sortDirection, sortField, size }),
+      newGetDevProfiles({keyword,page,size,sortDirection,sortField}),
   });
 };

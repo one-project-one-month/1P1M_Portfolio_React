@@ -4,29 +4,23 @@ import TextField from "@/components/ui/TextField";
 import Button from "@/components/ui/Button";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { plusIconUrl } from "@/assets/icons/iconUrls";
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { getDevProfiles } from "@/services/devProfileService";
 import { updateProjectPortfolio } from "@/services/projectPortfolioService";
-import { X } from "lucide-react";
-import CustomBox from "@/components/ui/CustomBox";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import SelectMemeber from "./selectMemeber";
-
-
-
-
+import { useDevProfile } from "@/queries/useDevProfile";
+import { useSearchMember } from "../hooks/useSearchMember";
 
 function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
+  const [page, setPage] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const size = "";
+  const [sortDirection, setSortDirection] = useState("desc");
+
+  const { data } = useDevProfile(keyword, page, sortDirection, size);
+
   const navigate = useNavigate();
 
   const {
@@ -53,10 +47,48 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [search, setSearch] = useState("");
-  const [devProfiles, setDevProfiles] = useState([]);
-  const [devLoading, setDevLoading] = useState(false);
-  const [devError, setDevError] = useState(null);
+
   const [fileUploadKey, setFileUploadKey] = useState(0);
+
+  const DevData = useSearchMember(data?.data, search);
+
+  const handleAddMember = (dev) => {
+    setSelectedMembers((prev) => {
+      const exist = prev.some((mem) => mem.dev_id === dev.dev_id);
+
+      if (exist) {
+        return prev;
+      } else {
+        return [...prev, dev];
+      }
+    });
+  };
+
+  const handleRemoveMember = (dev) => {
+    setSelectedMembers((prev) =>
+      prev.filter((mem) => mem.dev_id !== dev.dev_id)
+    );
+  };
+
+  const onSearch = (e) => {
+    setSearch(e.target.value);
+  };
+
+  //save selected members
+  const handleSaveMembers = () => {
+    const teamMembers = selectedMembers.map((mem) => mem.email).filter(Boolean);
+    setTeamMembers(teamMembers);
+    setIsDialogOpen(false);
+  };
+
+  const handleDiscardMembers = () => {
+    setSelectedMembers([]);
+    setTeamMembers([]);
+  };
+
+  const handleDialog = () => {
+    setIsDialogOpen((prev) => !prev);
+  };
 
   // Pre-populate form when editing
   useEffect(() => {
@@ -196,7 +228,6 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
         navigate("/project-portfolio");
       }
       setSearch("");
-      setDevProfiles([]);
       setIsDialogOpen(false);
       setFileUploadKey((prev) => prev + 1);
     } catch (error) {
@@ -234,120 +265,9 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
     setTeamMembers([]);
     setSelectedMembers([]);
     setSearch("");
-    setDevProfiles([]);
     setIsDialogOpen(false);
     setFileUploadKey((prev) => prev + 1);
   };
-
-  const handleAddTeamMember = () => {
-    setIsDialogOpen(true);
-  };
-
-  const filteredDevs = (() => {
-    console.log("devProfiles before filtering:", devProfiles);
-    console.log("selectedMembers:", selectedMembers);
-
-    if (!devProfiles || !Array.isArray(devProfiles)) {
-      console.log("devProfiles is not an array:", devProfiles);
-      return [];
-    }
-
-    const filtered = devProfiles.filter((dev) => {
-      const devId = dev.dev_id || dev.userId || dev.id || dev.email;
-      const isAlreadySelected = selectedMembers.find((member) => {
-        const memberId =
-          member.dev_id || member.userId || member.id || member.email;
-        const isMatch = memberId === devId;
-        if (isMatch) {
-          console.log(`Filtering out already selected member: ${memberId}`);
-        }
-        return isMatch;
-      });
-      return !isAlreadySelected;
-    });
-
-    console.log("filteredDevs result:", filtered);
-    return filtered;
-  })();
-  const handleAddMember = (dev) => {
-    const devId = dev.dev_id || dev.userId || dev.id;
-    const isAlreadySelected = selectedMembers.find((member) => {
-      const memberId = member.dev_id || member.userId || member.id;
-      return memberId === devId;
-    });
-
-    if (!isAlreadySelected) {
-      console.log("Adding member:", dev);
-      setSelectedMembers([...selectedMembers, dev]);
-    } else {
-      console.log("Member already selected:", dev);
-    }
-  };
-
-  const handleRemoveMember = (devToRemove) => {
-    const devId = devToRemove.dev_id || devToRemove.userId || devToRemove.id;
-    setSelectedMembers(
-      selectedMembers.filter((member) => {
-        const memberId = member.dev_id || member.userId || member.id;
-        return memberId !== devId;
-      })
-    );
-  };
-
-  const handleSaveMembers = () => {
-    const memberEmails = selectedMembers
-      .map((member) => member.email)
-      .filter(Boolean);
-    setTeamMembers(memberEmails);
-    setIsDialogOpen(false);
-  };
-
-  const handleDiscardMembers = () => {
-    setSelectedMembers([]);
-    setSearch("");
-    setDevProfiles([]);
-    setDevError(null);
-    setIsDialogOpen(false);
-  };
-
-  const searchDevelopers = useCallback(async (searchTerm) => {
-    if (!searchTerm.trim()) {
-      setDevProfiles([]);
-      setDevError(null);
-      return;
-    }
-
-    setDevLoading(true);
-    setDevError(null);
-
-    try {
-      const data = await getDevProfiles({ keyword: searchTerm });
-
-      if (Array.isArray(data)) {
-        setDevProfiles(data);
-      } else if (data?.data && Array.isArray(data.data)) {
-        setDevProfiles(data.data);
-      } else if (data?.data?.data && Array.isArray(data.data.data)) {
-        setDevProfiles(data.data.data);
-      } else {
-        setDevProfiles([]);
-      }
-    } catch (error) {
-      console.error("Error searching developers:", error);
-      setDevError("Error searching developers: " + error.message);
-      setDevProfiles([]);
-    } finally {
-      setDevLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      searchDevelopers(search);
-    }, 300); // 300ms delay
-
-    return () => clearTimeout(timeoutId);
-  }, [search, searchDevelopers]);
 
   return (
     <form
@@ -500,9 +420,22 @@ function ProjectCreateForm({ isEditMode = false, existingProjectData = null }) {
             </div>
           )}
         </div>
+
         {/* Team Members Section */}
-      <SelectMemeber selectedMembers={selectedMembers}/>
-      
+        <SelectMemeber
+          handleDiscardMembers={handleDiscardMembers}
+          handleSaveMembers={handleSaveMembers}
+          handleAddMember={handleAddMember}
+          handleRemoveMember={handleRemoveMember}
+          selectedMembers={selectedMembers}
+          isDialogOpen={isDialogOpen}
+          handleDialog={handleDialog}
+          filteredDevs={DevData}
+          devProfiles={DevData}
+          search={search}
+          onSearch={onSearch}
+        />
+
         <div className="flex justify-end gap-2 mt-1">
           <Button
             variant="black_button"

@@ -23,7 +23,7 @@ function Navbar() {
       { id: 2, name: "Dev Profiles", path: "/dev-list" },
       { id: 3, name: "Ideas", path: isAdmin ? "/admin/ideas" : "/ideas" },
       {
-        id: 3,
+        id: 4,
         name: "Approved Ideas",
         path: isAdmin ? "/admin/approved-ideas" : "/approved-ideas",
       },
@@ -91,9 +91,6 @@ function Navbar() {
       setUserImgUrl(data?.data.devProfile.profilePictureUrl);
     }
   }, [data]);
-
-
-  
 
   const handleHomeNav=()=>{
     if(user?.role==="ADMIN") {
