@@ -47,7 +47,7 @@ const Footer = () => {
             <div className="flex flex-col gap-2">
               {
                 socials.map((social,idx)=>(
-                  <a href={social.linkTo} className='text-[#ADADAD]' target='_blank'>{social.name}</a>
+                  <a key={idx} href={social.linkTo} className='text-[#ADADAD]' target='_blank'>{social.name}</a>
                 ))
               }
             </div>
