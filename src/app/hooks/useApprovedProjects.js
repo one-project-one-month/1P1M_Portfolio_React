@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { 
   fetchApprovedProjects, 
-  searchApprovedProjects, 
-  filterApprovedProjects,
-  getProjectTypes 
+  searchApprovedProjects,  
 } from '@/services/approvedProjectsService';
 import { useSearchParams } from 'react-router-dom';
 
