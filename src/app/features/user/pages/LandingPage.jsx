@@ -2,41 +2,15 @@ import Button from "@/components/ui/Button";
 import Footer from "@/components/ui/Footer";
 import React, { useEffect, useState } from "react";
 import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
-import { useQuery } from "@tanstack/react-query";
 
-import { fetchApprovedProjects } from "@/services/approvedProjectsService";
-import {
-  ProjectIdeaList,
-  reactProjectIdea,
-  unreactProjectIdea,
-} from "@/services/projectIdeaService";
 import { useNavigate } from "react-router-dom";
 import DevProfile from "@/components/ui/DevProfile";
 import { useDevProfile } from "@/queries/useDevProfile";
 import { useApprovedProjectsIdeas } from "@/queries/useApprovedProjectIdeas";
+import DevRegisterSection from "../components/DevRegisterSection";
+import ApprovedIdeaSetion from "../components/ApprovedIdeaSetion";
 
-const handleLike = async (projectId, likeState) => {
-  try {
-    if (likeState) {
-      await reactProjectIdea(projectId);
-    } else {
-      await unreactProjectIdea(projectId);
-    }
-  } catch (error) {
-    console.error("Error updating like:", error);
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === projectId
-          ? {
-              ...p,
-              likecount: likeState ? p.likecount + 1 : p.likecount - 1,
-              likestate: likeState,
-            }
-          : p
-      )
-    );
-  }
-};
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -55,14 +29,6 @@ const LandingPage = () => {
     isError: devsError,
   } = useDevProfile({ keyword: "" });
 
-  const handleProfileView = (devId) => {
-    const devData = DevProfileDatas.data.find((dev) => dev.dev_id === devId);
-    console.log(devData);
-
-    if (!devData) return;
-    const username = devData.email.split("@")[0];
-    navigate(`/profile/${username}`, { state: { devData } });
-  };
 
   return (
     <div className="">
@@ -141,99 +107,9 @@ const LandingPage = () => {
       </section>
       {/* End About Section */}
 
-      {/* Start Registered Section */}
-      <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="w-full flex justify-between items-center my-8">
-          <h1 className="text-5xl">Dev Profile</h1>
-          <button
-            className="border-b cursor-pointer"
-            onClick={() => navigate("/dev-list")}
-          >
-            View more
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mt-4">
-          {devsLoading ? (
-            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse bg-gray-800 rounded-xl h-[225px]"
-                />
-              ))}
-            </div>
-          ) : (
-            DevProfileDatas.data
-              .slice(0, 6)
-              .map((devProfile, idx) => (
-                <DevProfile
-                  key={idx}
-                  devProfile={devProfile}
-                  viewProfile={() => handleProfileView(devProfile.dev_id)}
-                />
-              ))
-          )}
-        </div>
-      </section>
-      {/* End Registered Section */}
+      <DevRegisterSection DevProfileDatas={DevProfileDatas} devsError={devsError} devsLoading={devsLoading} />
 
-      {/* Start Approved Ideas Section */}
-      <section className="flex flex-col justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="w-full flex justify-between items-center my-8">
-          <h1 className="text-5xl">Approved Ideas</h1>
-          <button
-            className="border-b cursor-pointer"
-            onClick={() => navigate("/approved-ideas")}
-          >
-            View more
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mt-4">
-          {ideasLoading ? (
-            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse bg-gray-800 rounded-xl h-[298px]"
-                />
-              ))}
-            </div>
-          ) : approvedProjectideas.data.length === 0 ? (
-            <p className="text-center col-span-full text-gray-400">
-              No projects found.
-            </p>
-          ) : (
-            approvedProjectideas.data.projects
-              .slice(0, 6)
-              .map((approvedProjectIdea) => (
-                <ProjectIdeaCard
-                  key={approvedProjectIdea.id}
-                  projectId={approvedProjectIdea.id}
-                  title={approvedProjectIdea.projectName}
-                  description={approvedProjectIdea.projectDetails}
-                  submittedByProfile={approvedProjectIdea.profilePictureUrl}
-                  postBy={approvedProjectIdea.devName}
-                  likeCount={approvedProjectIdea.reactionCount}
-                  liked={approvedProjectIdea.reactedProjects?.includes(
-                    approvedProjectIdea.id
-                  )}
-                  tags={approvedProjectIdea.projectTypes}
-                  onLike={(projectId, likestate) =>
-                    handleLike(projectId, likestate)
-                  }
-                  status={
-                    approvedProjectIdea.status.toLowerCase() === "in_progress"
-                      ? 1
-                      : approvedProjectIdea.status.toLowerCase() === "completed"
-                      ? 2
-                      : 3
-                  }
-                />
-              ))
-          )}
-        </div>
-      </section>
-      {/* End Approved Ideas Section */}
+     <ApprovedIdeaSetion  approvedProjectideas={approvedProjectideas} ideasError={ideasError} ideasLoading={ideasLoading}/> 
     </div>
   );
 };
