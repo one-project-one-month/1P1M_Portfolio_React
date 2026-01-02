@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { authUtils } from "@/lib/utils";
-import {TechStack,Platform} from "@/constants/index"
+import {TechStack,Platform} from "@/constants"
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Button from "@/components/ui/Button";

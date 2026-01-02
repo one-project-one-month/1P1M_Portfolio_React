@@ -1,10 +1,8 @@
 import Button from "@/components/ui/Button";
 import Footer from "@/components/ui/Footer";
 import React, { useEffect, useState } from "react";
-import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
-
 import { useNavigate } from "react-router-dom";
-import DevProfile from "@/components/ui/DevProfile";
+
 import { useDevProfile } from "@/queries/useDevProfile";
 import { useApprovedProjectsIdeas } from "@/queries/useApprovedProjectIdeas";
 import DevRegisterSection from "../components/DevRegisterSection";

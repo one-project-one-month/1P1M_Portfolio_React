@@ -1,4 +1,4 @@
-const Platform = [
+export const Platform = [
   { id: 1, name: "GitHub", value: "github" },
   { id: 2, name: "LinkedIn", value: "linkedin" },
   { id: 3, name: "Behance", value: "behance" },
@@ -8,7 +8,7 @@ const Platform = [
 
 
 
-const TechStack=[
+export const TechStack=[
     {id:1,name:"Backend"},
     {id:2,name:"Frontend"},
     {id:3,name:"UXUI"},
@@ -19,4 +19,3 @@ const TechStack=[
 
 
 
-export default {Platform,TechStack};
