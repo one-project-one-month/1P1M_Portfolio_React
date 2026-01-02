@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import SkeletonCard from "./SkeletonCard";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 import { useNavigate } from "react-router-dom";
 import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
-import { useProjectLike } from "../hooks/useProjectLike";
+import { useProjectLike } from "@/features/landing/hooks/useProjectLike";
 
 const ApprovedIdeaSetion = ({
   ideasLoading,

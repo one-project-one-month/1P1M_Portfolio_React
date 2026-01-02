@@ -1,7 +1,7 @@
 import DevProfile from "@/components/ui/DevProfile";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import SkeletonCard from "./SkeletonCard";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 const DevRegisterSection = ({
   devsLoading,
