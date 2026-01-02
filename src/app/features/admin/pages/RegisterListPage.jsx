@@ -1,11 +1,6 @@
-  import { filterIconUrl } from "@/assets/icons/iconUrls";
-  import Filter from "@/components/ui/Filter";
-  import SearchInput from "@/components/ui/SearchInput";
-  import TechStack from "@/constants/TechStack";
   import RegisterList from "../components/RegisterList";
   import Pagination from "@/components/ui/Pagination";
   import { useEffect, useState } from "react";
-  import FilterDropdown from "@/components/ui/Filter";
   import { useOpomRegister } from "@/queries/useOpomRegister";
   import Title from "@/components/ui/Title";
 

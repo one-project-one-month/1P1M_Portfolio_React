@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import FormField from "../../../components/ui/FormFields";
 import FormTextArea from "../../../components/ui/FormTextArea";
 import Button from "../../../components/ui/Button";
-import TechStack from "../../../constants/TechStack";
+
 import FormDropdown from "../../../components/ui/FormDropdown";
 import FileUpload from "@/components/ui/FileUpload";
 import { setupDevProfile, uploadDevImage } from "@/services/devProfileService";
@@ -12,6 +12,7 @@ import profileService from "@/services/profileService";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { TechStack } from "@/constants";
 
 function DevProfileForm({ isEditMode = false, existingProfileData = null }) {
   // ---- React Hook Form ----
