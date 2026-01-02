@@ -1,4 +1,4 @@
-import PageLoader from "../components/core/PageLoader";
+import PageLoader from "../components/core/hoc/PageLoader";
 import { lazy } from "react";
 
 export const MainLayout = PageLoader(
