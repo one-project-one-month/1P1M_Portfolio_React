@@ -20,37 +20,37 @@ export default function ProjectCard({
   const [viewCount] = useState(initialViews);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
-  const handleLikeClick = async () => {
-    // Optimistically update the UI
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+  // const handleLikeClick = async () => {
+  //   // Optimistically update the UI
+  //   setLiked((prev) => !prev);
+  //   setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
 
-    try {
-      const response = await onClickReact(project.id);
+  //   try {
+  //     const response = await onClickReact(project.id);
 
-      // If backend says “already reacted” (409), that means user had liked before
-      if (response?.status === 409) {
-        console.log("ℹ️ Already reacted — reverting to unliked state");
-        setLiked(false);
-        setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
-      }
+  //     // If backend says “already reacted” (409), that means user had liked before
+  //     if (response?.status === 409) {
+  //       console.log("ℹ️ Already reacted — reverting to unliked state");
+  //       setLiked(false);
+  //       setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+  //     }
 
-      // If successful
-      else if (response?.ok) {
-        console.log("✅ React success");
-      }
+  //     // If successful
+  //     else if (response?.ok) {
+  //       console.log("✅ React success");
+  //     }
 
-      // If other error
-      else if (response && !response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-    } catch (error) {
-      console.error("❌ Error reacting:", error);
-      // Revert UI if something went wrong
-      setLiked((prev) => !prev);
-      setLikeCount((prev) => (liked ? prev + 1 : prev - 1));
-    }
-  };
+  //     // If other error
+  //     else if (response && !response.ok) {
+  //       throw new Error(`Server returned ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error reacting:", error);
+  //     // Revert UI if something went wrong
+  //     setLiked((prev) => !prev);
+  //     setLikeCount((prev) => (liked ? prev + 1 : prev - 1));
+  //   }
+  // };
 
   const handleViewClick = () => {
     setIsDetailOpen(true);
@@ -96,7 +96,7 @@ export default function ProjectCard({
           {/* Like */}
           <button
             // onClick={toggleLike}
-            onClick={handleLikeClick}
+            onClick={onClickReact}
             className="flex items-center gap-2 hover:scale-105 transition-transform"
           >
             <img

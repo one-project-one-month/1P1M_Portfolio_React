@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
-import { getProjectPortfolioDetails } from "@/services/projectPortfolioService";
+import { getProjectPortfolioDetails } from "@/features/projectportfolio/service/projectPortfolioService";
 import toast from "react-hot-toast";
 
 const ProjectPortfolioDetail = ({ projectId, isOpen, onClose }) => {
