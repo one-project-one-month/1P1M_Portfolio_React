@@ -1,54 +1,49 @@
-import { useState, startTransition } from "react";
-import { useOptimistic } from "react";
+import { useState, useOptimistic, useTransition, useEffect } from "react";
 import { reactToProject } from "../service/projectPortfolioService";
 
-
 export function useHandleReact(initialProjects = []) {
-  const [projects, setProjects] = useState(initialProjects || []);
-
-
-  const [reactedProjects, updateOptimisticProjects] = useOptimistic(
-    projects,
-    (draft, projectId) => {
-      const project = draft.find((p) => p.id === projectId);
-      if (project) project.reaction_count += 1;
-    }
-  );
-
-
+  const [projects, setProjects] = useState(initialProjects);
+  const [isPending, startTransition] = useTransition();
   const [reactedIds, setReactedIds] = useState(new Set());
 
+  useEffect(() => {
+    setProjects(initialProjects);
+  }, [initialProjects]);
+
+  const [reactedProjects, addOptimisticReaction] = useOptimistic(
+    projects,
+    (state, projectId) =>
+      state.map((p) =>
+        p.id === projectId
+          ? { ...p, reaction_count: (p.reaction_count ) + 1 }
+          : p
+      )
+  );
+
   const handleReact = async (projectId) => {
-    if (reactedIds.has(projectId)) {
-      console.warn("Already reacted to this project:", projectId);
-      return; 
-    }
+    if (reactedIds.has(projectId)) return;
 
+    startTransition(async () => {
+      addOptimisticReaction(projectId);
 
-    startTransition(() => updateOptimisticProjects(projectId));
-
-    try {
-      await reactToProject(projectId);
-      setReactedIds((prev) => new Set(prev).add(projectId));
-    } catch (error) {
-      if (error.response?.status === 409) {
-        console.warn("Already reacted", projectId);
-        setReactedIds((prev) => new Set(prev).add(projectId));
-      } else {
-        console.error("Error reacting:", error);
-       
-        startTransition(() =>
-          setProjects((prev) =>
-            prev.map((p) =>
-              p.id === projectId
-                ? { ...p, reaction_count: p.reaction_count - 1 }
-                : p
-            )
+      try {
+        await reactToProject(projectId);
+        
+        
+        setProjects((prev) =>
+          prev.map((p) =>
+            p.id === projectId 
+              ? { ...p, reaction_count: (p.reaction_count || 0) + 1 } 
+              : p
           )
         );
+        setReactedIds((prev) => new Set(prev).add(projectId));
+      } catch (error) {
+        console.error("Reaction failed:", error);
+    
       }
-    }
+    });
   };
 
-  return { reactedProjects:reactedProjects || [], handleReact };
+  return { reactedProjects, handleReact, isPending };
 }

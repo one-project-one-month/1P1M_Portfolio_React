@@ -7,7 +7,7 @@ const ProjectSectionContainer = ({ keyword, sortDirection = "asc" }) => {
   const debounceValue = useDebounce(keyword, 700);
   const [page, setPage] = useState(0);
 
-  const size = 3;
+  const size = 2;
   const sortField = "name";
 
   const { data, isLoading } = useGetProjectPortfolio({
@@ -22,6 +22,7 @@ const ProjectSectionContainer = ({ keyword, sortDirection = "asc" }) => {
 
   return (
     <ProjectSectionView
+    isLoading={isLoading}
       projects={data?.data}
       currentPage={page}
       totalPages={totalPages}

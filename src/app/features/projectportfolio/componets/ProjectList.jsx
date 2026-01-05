@@ -1,20 +1,23 @@
 import ProjectCard from '@/components/ui/ProjectCard'
 import React from 'react'
 import projectImage from "@/assets/ProjectImage.png"
-import { useHandleReact } from '../hooks/usehandleReact'
+import { useHandleReact } from '../hooks/useHandleReact'
 
-const ProjectList = ({projects=[]}) => {
+const ProjectList = ({projects=[],isLoading}) => {
 
 
 
 
   const { reactedProjects, handleReact } = useHandleReact(projects);
+console.log("Projects",projects );
 
 
-
+  console.log("Reacted",reactedProjects);
   
 
 
+if(isLoading) return <>Loading...</>
+  
   return (
  <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -26,7 +29,7 @@ const ProjectList = ({projects=[]}) => {
                        "
         >
           {reactedProjects.length > 0 ? (
-            reactedProjects.map((project) => (
+           reactedProjects.map((project) => (
               <div key={project.id} className="w-full">
                 <ProjectCard
                 
