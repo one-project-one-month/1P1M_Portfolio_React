@@ -1,16 +1,16 @@
 import DevProfile from "@/components/ui/DevProfile";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import SkeletonCard from "./SkeletonCard";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 const DevRegisterSection = ({
   devsLoading,
-  DevProfileDatas = [],
+  DevProfileDatas,
   devsError,
 }) => {
   const navigate = useNavigate();
 
-  
+  const profiles = DevProfileDatas?.data ||  []  
   const handleProfileView = (devId) => {
     const devData = DevProfileDatas.data.find((dev) => dev.dev_id === devId);
     if (!devData) return;
@@ -30,9 +30,17 @@ const DevRegisterSection = ({
     );
   };
 
-  const renderDevs = () => {
-    return DevProfileDatas.data.slice(0, 6).map((devProfile) => (
-      <DevProfile devProfile={devProfile} key={devProfile.dev_id} viewProfile={()=>handleProfileView(devProfile.dev_id)} />
+ const renderDevs = () => {
+    if (profiles.length === 0) {
+        return <div className="col-span-full text-gray-500">No profiles found.</div>;
+    }
+
+    return profiles.slice(0, 6).map((devProfile) => (
+      <DevProfile
+        devProfile={devProfile}
+        key={devProfile.dev_id}
+        viewProfile={() => handleProfileView(devProfile.dev_id)}
+      />
     ));
   };
 

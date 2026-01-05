@@ -1,12 +1,10 @@
-import Button from "@/components/ui/Button";
-import Footer from "@/components/ui/Footer";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useDevProfile } from "@/queries/useDevProfile";
 import { useApprovedProjectsIdeas } from "@/queries/useApprovedProjectIdeas";
-import DevRegisterSection from "../components/DevRegisterSection";
-import ApprovedIdeaSetion from "../components/ApprovedIdeaSetion";
+import DevRegisterSection from "@/features/landing/components/DevRegisterSection"
+import ApprovedIdeaSetion from "@/features/landing/components/ApprovedIdeaSetion";
 
 
 

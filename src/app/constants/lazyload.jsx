@@ -65,7 +65,7 @@ export const ApprovedIdeasAdminPage = PageLoader(
 );
 
 export const LandingPage = PageLoader(
-  lazy(() => import("@/features/user/pages/LandingPage"))
+  lazy(() => import("@/features/landing/page/LandingPage"))
 );
 
 export const DevListPage = lazy(() =>
@@ -76,7 +76,7 @@ export const OpomRegisterPage = PageLoader(
   lazy(() => import("@/features/auth/pages/OpomRegisterPage"))
 );
 export const ProjectPortfolioList = lazy(() =>
-  import("@/features/auth/pages/ProjectPortfolioList")
+  import("@/features/projectportfolio/page/ProjectPortfolioList")
 );
 
 export const ProjectIdeaPage = lazy(() =>

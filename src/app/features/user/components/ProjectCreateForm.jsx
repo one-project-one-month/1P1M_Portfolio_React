@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS, getAuthConfig } from "@/config/apiConfig";
-import { updateProjectPortfolio } from "@/services/projectPortfolioService";
+import { updateProjectPortfolio } from "@/features/projectportfolio/service/projectPortfolioService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import SelectMemeber from "./selectMemeber";

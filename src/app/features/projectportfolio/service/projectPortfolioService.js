@@ -1,32 +1,23 @@
 import apiClient from "@/api/axios";
 import { API_ENDPOINTS } from "@/config/apiConfig";
 
-/**
- * Fetch all project portfolios with pagination, sorting, and search.
- */
-export async function getAllProjectProfiles({
-  page = 0,
-  size = 6,
-  sortField = "name",
-  sortDirection = "desc",
-  keyword = "",
-}) {
-  const params = new URLSearchParams({
-    page,
-    size,
-    sortField,
-    sortDirection,
-  });
 
-  if (keyword.trim() !== "") {
-    params.append("keyword", keyword.trim());
+export const getProjectPortfolio = async ({
+  keyword,
+  page,
+  size,
+  sortField,
+  sortDirection,
+}) => {
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.GET_ALL_PROJECTS, {
+      params: { keyword, page, size, sortField, sortDirection },
+    });
+    return response.data;
+  } catch (error) {
+    throw error || error?.response?.data
   }
-
-  const url = `${API_ENDPOINTS.GET_ALL_PROJECTS}?${params.toString()}`;
-  const response = await apiClient.get(url);
-  return response.data;
-}
-
+};
 /**
  * React (like) to a specific project portfolio.
  */

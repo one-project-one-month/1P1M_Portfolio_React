@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import ProfileProjectCard from "@/components/ui/ProfileProjectCard";
 import ProjectIdeaCard from "@/components/ui/ProjectIdeaCard";
 import profileService from "@/services/profileService";
-import { deleteProjectPortfolio } from "@/services/projectPortfolioService";
+import { deleteProjectPortfolio } from "@/features/projectportfolio/service/projectPortfolioService";
 import toast from "react-hot-toast";
 import {
   emailIconUrl,
