@@ -1,0 +1,74 @@
+# version: "3.8"
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: opom_portfolio_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d opom_portfolio_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    container_name: opom_portfolio_backend
+    image: hlyamhtet/opom-portfolio:latest
+    command:
+      ['java', '-jar', 'app.jar', '--spring.profiles.active=uat,cloudinary']
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/opom_portfolio_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: password123
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: 'true'
+
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: minzayarmaung2002@gmail.com
+      SPRING_MAIL_PASSWORD: vgklvkranagneybo
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: 'true'
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: 'true'
+
+      JWT_SECRET: 0nD+T9h1M4E3+Xvnp8X3z0AOHmT7o3gE4Vw7RkSmc0p4z9Tx6jWvYQ==
+      JWT_EXPIRATIONMS: 3600000
+
+      DEFAULT_ADMIN_PASSWORD: '@Admin_OPOM123'
+
+      CLOUDINARY_CLOUD_NAME: dsylx9zse
+      CLOUDINARY_API_KEY: 323724637428716
+      CLOUDINARY_API_SECRET: ObkjrGOodGjUiw2IFLjCEPJOksE
+
+      GOOGLE_CLIENT-ID: 686561903051-a857ngoihbsfo2u5g1b3e9dh9uiljshb.apps.googleusercontent.com
+      GOOGLE_CLIENT-SECRET: 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
+      GOOGLE_REDIRECT-URI: http://localhost:5173/callback
+
+      GITHUB_CLIENT-ID: Ov23liwQG9sDezMQsqtO
+      GITHUB_CLIENT-SECRET: f91625848701fb9cc0fe269c4ac7a05f9239e320
+    ports:
+      - '8080:8080'
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    depends_on:
+      - postgres-db
+    ports:
+      - '8081:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+volumes:
+  db_data:
