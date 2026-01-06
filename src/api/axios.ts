@@ -1,4 +1,5 @@
-import { API_CONFIG, getAuthToken } from '@/config/api';
+import { API_CONFIG } from '@/config/api';
+import { getSession } from '@/hooks/use-session';
 import axios from 'axios';
 
 const apiClient = axios.create({
@@ -11,9 +12,9 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = getAuthToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const session = getSession();
+    if (session) {
+      config.headers.Authorization = `Bearer ${session.token}`;
     }
     return config;
   },

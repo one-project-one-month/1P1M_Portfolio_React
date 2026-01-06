@@ -1,1 +1,1 @@
-export const SESSION_TOKEN_NAME = 'token';
+export const SESSION_NAME = 'session';

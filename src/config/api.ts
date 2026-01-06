@@ -1,5 +1,3 @@
-import { SESSION_TOKEN_NAME } from '@/constants/auth';
-
 export const API_CONFIG = {
   API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
 
@@ -47,12 +45,4 @@ export const API_ENDPOINTS = {
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {
   return `${API_CONFIG.API_URL}${API_ENDPOINTS[endpoint]}`;
-};
-
-export const getAuthToken = () => {
-  return localStorage.getItem(SESSION_TOKEN_NAME);
-};
-
-export const removeAuthToken = () => {
-  localStorage.removeItem(SESSION_TOKEN_NAME);
 };

@@ -1,49 +1,47 @@
-import { opomIconUrl } from "@/assets/icons/iconUrls";
-import { NavLink} from "react-router-dom";
-import Button from "./button";
-import { getNavLinks } from "@/hooks/use-get-nav-links";
-import { useAppNavigation } from "@/hooks/use-app-navigate";
-
+import { opomIconUrl } from '@/assets/icons/iconUrls';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { getNavLinks } from '@/hooks/use-get-nav-links';
+import { NavLink } from 'react-router-dom';
+import { Button } from './ui/button';
 
 function Navbar() {
+  //sample user role
+  const userRole = 'USER';
 
-    //sample user role
-const userRole="USER"
-
-  const {handleHomeNav,goTo}=useAppNavigation();
-
+  const { handleHomeNav, goTo } = useAppNavigation();
 
   return (
     <nav className=" h-11 flex w-full justify-between items-center py-10">
       <div className="text-2xl text-white">
-        <img src={opomIconUrl} className="cursor-pointer" onClick={()=>handleHomeNav(userRole)} />
+        <img
+          src={opomIconUrl}
+          className="cursor-pointer"
+          onClick={() => handleHomeNav(userRole)}
+        />
       </div>
       {/* nav_links */}
       <div className="font-medium flex gap-x-10 p-1">
-  {getNavLinks().map((link) => (
-    <NavLink
-      key={link.id}
-      
-      to={link.path}
-      className={({ isActive }) =>
-        `relative px-1 py-0.5 transition-all duration-300 ease-in-out
-        ${isActive ? "text-white" : "text-[#ADADADA3]"}`
-      }
-    >
-      <span className="relative">
-        {link.name}
-      
-      </span>
-    </NavLink>
-  ))}
-</div>
+        {getNavLinks().map((link) => (
+          <NavLink
+            key={link.id}
+            to={link.path}
+            className={({ isActive }) =>
+              `relative px-1 py-0.5 transition-all duration-300 ease-in-out
+        ${isActive ? 'text-white' : 'text-[#ADADADA3]'}`
+            }
+          >
+            <span className="relative">{link.name}</span>
+          </NavLink>
+        ))}
+      </div>
 
-
-<Button
-            variant="secondary"
-            size={"primary"}
-            onClick={() => goTo("/callback")}>
-            Create Account</Button>
+      <Button
+        variant="secondary"
+        size={'primary'}
+        onClick={() => goTo('/callback')}
+      >
+        Create Account
+      </Button>
 
       {/* <div>
         {!isAuth ? (
