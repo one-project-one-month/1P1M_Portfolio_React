@@ -3,6 +3,7 @@ import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { getNavLinks } from '@/hooks/use-get-nav-links';
 import { NavLink } from 'react-router-dom';
 import { Button } from './ui/button';
+import CustomHamburger from './custom-hamburger';
 
 function Navbar() {
   //sample user role
@@ -20,7 +21,7 @@ function Navbar() {
         />
       </div>
       {/* nav_links */}
-      <div className="font-medium flex gap-x-10 p-1">
+      <div className="font-medium md:flex gap-x-10 p-1  hidden">
         {getNavLinks().map((link) => (
           <NavLink
             key={link.id}
@@ -35,13 +36,21 @@ function Navbar() {
         ))}
       </div>
 
+
+
+
+      
+
       <Button
+      className='md:block hidden'
         variant="secondary"
         size={'primary'}
         onClick={() => goTo('/callback')}
       >
         Create Account
       </Button>
+
+      <CustomHamburger />
 
       {/* <div>
         {!isAuth ? (
