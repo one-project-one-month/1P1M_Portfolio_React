@@ -1,12 +1,11 @@
-import Title from "@/components/ui/title"
-
+import Title from '@/components/ui/title';
 
 const Idea = () => {
   return (
     <div>
-        <Title />
+      <Title />
     </div>
-  )
-}
+  );
+};
 
-export default Idea
+export default Idea;

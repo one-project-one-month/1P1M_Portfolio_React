@@ -1,12 +1,11 @@
-import Title from '@/components/ui/title'
-
+import Title from '@/components/ui/title';
 
 const ApprovedIdea = () => {
   return (
     <div>
-        <Title />
+      <Title />
     </div>
-  )
-}
+  );
+};
 
-export default ApprovedIdea
+export default ApprovedIdea;
