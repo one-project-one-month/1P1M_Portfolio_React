@@ -1,9 +1,8 @@
-import type { ChangeEvent } from "react";
-
+import type { ChangeEvent } from 'react';
 
 export interface TitleProps {
   title?: string;
-  onCreate?: (() => void) | false; 
+  onCreate?: (() => void) | false;
   showSearch?: boolean;
   showFilter?: boolean;
   searchPlaceholder?: string;
