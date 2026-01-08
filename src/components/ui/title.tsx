@@ -1,20 +1,9 @@
-import React, { useEffect, useRef, useState,type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, } from 'react';
 import { Button } from './button';
+import type { TitleProps } from '@/types/title-props';
 
 
-interface TitleProps {
-  title?: string;
-  onCreate?: (() => void) | false; 
-  showSearch?: boolean;
-  showFilter?: boolean;
-  searchPlaceholder?: string;
-  onSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  filterOptions?: string[];
-  initSelectedFilter?: string;
-  onFilterChange?: (option: string) => void;
-}
-
-const Title: React.FC<TitleProps> = ({
+const Title= ({
   title = "Page Title",
   onCreate = false,
   showSearch = true,
@@ -24,7 +13,7 @@ const Title: React.FC<TitleProps> = ({
   filterOptions = ["Popular", "Newest", "Oldest"],
   initSelectedFilter = "Popular",
   onFilterChange,
-}) => {
+}:TitleProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string>(initSelectedFilter);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
@@ -103,7 +92,7 @@ const Title: React.FC<TitleProps> = ({
           <Button
             variant="primary"
             size="primary"
-            className="h-[44px]"
+            className="h-11"
             onClick={onCreate}
           >
             Create
@@ -121,7 +110,7 @@ const Title: React.FC<TitleProps> = ({
             </div>
 
             {isOpen && (
-              <div className="absolute right-0 w-[187px] bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
+              <div className="absolute right-0 w-46.75 bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
                 {filterOptions.map((option, index) => (
                   <div
                     key={index}

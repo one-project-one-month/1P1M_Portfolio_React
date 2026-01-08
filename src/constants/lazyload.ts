@@ -6,6 +6,11 @@ export const MainLayout = PageLoader(
 );
 
 
+export const AuthLayout=PageLoader(
+  lazy(()=>import('@/components/layouts/auth-layout'))
+)
+
+
 
 export const PortfolioPage=PageLoader(
   lazy(()=>import('@/app/features/portfolio/page'))
@@ -20,6 +25,7 @@ export  const DeveloperPage=PageLoader(
 export const ApprovedIdeaPage=PageLoader(
   lazy(()=>import('@/app/features/projects/approved/page'))
 )
+
 
 
 export const IdeaPage=PageLoader(
