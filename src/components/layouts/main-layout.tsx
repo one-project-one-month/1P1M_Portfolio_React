@@ -1,6 +1,7 @@
 import Background from '@/components/background';
 import Navbar from '@/components/navbar';
 import { Outlet } from 'react-router-dom';
+import Footer from '../footer';
 
 export default function MainLayout() {
   return (
@@ -14,9 +15,9 @@ export default function MainLayout() {
           <Outlet />
         </div>
 
-        {/* <div className="w-11/12 mx-auto">
+        <div className="w-11/12 mx-auto">
           <Footer/>
-        </div> */}
+        </div>
       </div>
     </Background>
   );

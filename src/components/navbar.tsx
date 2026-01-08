@@ -1,6 +1,6 @@
 import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
-import { getNavLinks } from '@/hooks/use-get-nav-links';
+import { getNavLinks } from '@/lib/use-get-nav-links';
 import { NavLink } from 'react-router-dom';
 import { Button } from './ui/button';
 import CustomHamburger from './custom-hamburger';

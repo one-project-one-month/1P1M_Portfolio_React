@@ -1,3 +1,5 @@
+import type { NavLink } from "@/types/nav-props";
+
 export const Platforms = [
   { id: 1, name: 'GitHub', value: 'github' },
   { id: 2, name: 'LinkedIn', value: 'linkedin' },
@@ -14,3 +16,14 @@ export const TechStacks = [
   { id: 5, name: 'Full Stack' },
   { id: 6, name: 'DevOps' },
 ];
+
+
+
+
+export const socials:NavLink[] = [
+  {name: "Facebook", path:"javascript:void(0)",id:1},
+  {name: "LinkedIn", path:"javascript:void(0)",id:2},
+  {name: "Github", path:"https://github.com/one-project-one-month",id:3},
+  {name: "Instagram", path:"javascript:void(0)",id:4}
+]
+
