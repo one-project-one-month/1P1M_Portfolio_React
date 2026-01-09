@@ -16,7 +16,7 @@ export default function MainLayout() {
         </div>
 
         <div className="w-11/12 mx-auto">
-          <Footer/>
+          <Footer />
         </div>
       </div>
     </Background>

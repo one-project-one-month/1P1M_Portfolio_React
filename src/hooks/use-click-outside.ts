@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 export const useClickOutside = <T extends HTMLElement>(
-  callback: (event: MouseEvent | TouchEvent) => void
+  callback: (event: MouseEvent | TouchEvent) => void,
 ) => {
-
   const elementRef = useRef<T>(null);
   const callbackRef = useRef(callback);
 
@@ -21,7 +20,6 @@ export const useClickOutside = <T extends HTMLElement>(
       callbackRef.current(event);
     };
 
-  
     document.addEventListener('mousedown', handler);
     document.addEventListener('touchstart', handler);
 
@@ -29,7 +27,7 @@ export const useClickOutside = <T extends HTMLElement>(
       document.removeEventListener('mousedown', handler);
       document.removeEventListener('touchstart', handler);
     };
-  }, []); 
+  }, []);
 
   return elementRef;
 };

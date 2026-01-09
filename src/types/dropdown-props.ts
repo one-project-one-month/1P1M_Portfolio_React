@@ -6,9 +6,6 @@ export interface DropdownProps {
   selectedValue?: MenuItem | null;
 }
 
-
-
-
 export interface MenuItem {
   id: string | number;
   name: string;
