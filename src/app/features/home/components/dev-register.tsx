@@ -1,9 +1,10 @@
 import DevProfile from '@/components/ui/dev-profile';
 import SkeletonCard from '@/components/ui/skeleton-card';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useNavigate } from 'react-router-dom';
 
 const DevRegisterSection = ({ devsLoading, DevProfileDatas, devsError }) => {
-  const navigate = useNavigate();
+  const {goTo} =useAppNavigation();
 
   const profiles = DevProfileDatas?.data || [];
   const handleProfileView = (devId) => {
@@ -11,7 +12,7 @@ const DevRegisterSection = ({ devsLoading, DevProfileDatas, devsError }) => {
     if (!devData) return;
 
     const username = devData.email.split('@')[0];
-    navigate(`/profile/${username}`, { state: { devData } });
+    goTo(`/profile/${username}`, { state: { devData } });
   };
 
   const renderError = () => {
@@ -49,7 +50,7 @@ const DevRegisterSection = ({ devsLoading, DevProfileDatas, devsError }) => {
         <h1 className="text-5xl">Dev Profile</h1>
         <button
           className="border-b cursor-pointer"
-          onClick={() => navigate('/dev-list')}
+          onClick={() => goTo('/developers')}
         >
           View more
         </button>
