@@ -1,5 +1,5 @@
 import Pagination from '@/components/ui/pagination';
-import type { projectSectionViewType } from '@/types/portfolio.types';
+import type { projectSectionViewType } from '@/types/portfolio.type';
 import ProjectList from './ProjectList';
 
 const ProjectSectionView = ({

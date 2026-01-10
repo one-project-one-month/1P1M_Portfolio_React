@@ -1,5 +1,8 @@
 import { useDebounce } from '@/hooks/use-debounce';
-import type { PortfolioSectionContainerProps } from '@/types/portfolio.types';
+import type {
+  PortfolioProjectType,
+  PortfolioSectionContainerProps,
+} from '@/types/portfolio.type';
 import { useEffect, useState } from 'react';
 import { useGetProjectPortfolio } from '../hooks/use-get-portfolio';
 import ProjectSectionView from './PortfolioSectionView';
@@ -22,8 +25,8 @@ const PortfolioSectionContainer = ({
     size: SIZE,
   });
 
-  const projects = data?.data;
-  const totalPages = data?.meta.totalPages ?? 0;
+  const projects = (data?.data ?? []) as PortfolioProjectType[];
+  const totalPages = data?.meta?.totalPages ?? 0;
 
   useEffect(() => {
     setPage(0);

@@ -1,6 +1,6 @@
 import LeftIcon from '@/assets/icons/left-pagination.png';
 import RightIcon from '@/assets/icons/right-pagination.png';
-import type { ArrowButtonType, PaginationType } from '@/types/pagination.types';
+import type { ArrowButtonType, PaginationType } from '@/types/pagination.type';
 
 export default function Pagination({
   totalPages,

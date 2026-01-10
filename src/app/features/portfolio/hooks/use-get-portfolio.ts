@@ -1,4 +1,4 @@
-import type { GetPortfolioParamsType } from '@/types/portfolio.types';
+import type { GetPortfolioParamsType } from '@/types/portfolio.type';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectPortfolio } from '../services/portfolio-service';
 

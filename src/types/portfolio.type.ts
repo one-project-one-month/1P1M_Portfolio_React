@@ -2,18 +2,36 @@ export type QueryType = {
   query: string | null;
 };
 
+export type DeveloperType = {
+  id: number;
+  name: string;
+  profilePictureUrl?: string;
+  github?: string;
+  linkedIn?: string;
+  aboutDev?: string;
+};
+
 export type PortfolioSectionContainerProps = {
   query: string | null;
   sortDirection: 'asc' | 'desc' | null;
 };
 
 export type PortfolioProjectType = {
-  id: string;
+  id: number;
   name: string;
-  description: string;
   projectPicUrl?: string;
+  description: string;
+  projectLink: string;
+  repoLink: string;
   reaction_count?: number;
+  assignedDevs: {
+    developers: DeveloperType[];
+  };
   view_count?: number;
+  reactedProjectPortfolios: number[];
+  projectPortfolioDetails: {
+    languageAndTools: string[];
+  };
 };
 
 export type projectSectionViewType = {
@@ -43,7 +61,7 @@ export type ProjectCardType = {
 };
 
 export type ProjectPortfolioDetailType = {
-  projectId: string;
+  projectId: number;
   isOpen: boolean;
   onClose: () => void;
 };

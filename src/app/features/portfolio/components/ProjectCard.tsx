@@ -3,7 +3,7 @@ import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
 import ProjectPortfolioDetail from '@/components/project-portfolio-detail';
 import { Button } from '@/components/ui/button';
-import type { ProjectCardType } from '@/types/portfolio.types';
+import type { ProjectCardType } from '@/types/portfolio.type';
 import { useState } from 'react';
 
 export default function ProjectCard({

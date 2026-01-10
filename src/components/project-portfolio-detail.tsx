@@ -1,5 +1,5 @@
 import { getProjectPortfolioDetails } from '@/app/features/portfolio/services/portfolio-service';
-import type { ProjectPortfolioDetailType } from '@/types/portfolio.types';
+import type { ProjectPortfolioDetailType } from '@/types/portfolio.type';
 import { X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 

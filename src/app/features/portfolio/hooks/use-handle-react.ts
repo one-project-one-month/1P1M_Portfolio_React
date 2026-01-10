@@ -1,4 +1,4 @@
-import type { PortfolioProjectType } from '@/types/portfolio.types';
+import type { PortfolioProjectType } from '@/types/portfolio.type';
 import { useOptimistic, useState, useTransition } from 'react';
 import { reactToProject } from '../services/portfolio-service';
 
@@ -6,23 +6,24 @@ export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
   const [projects, setProjects] =
     useState<PortfolioProjectType[]>(initialProjects);
   const [isPending, startTransition] = useTransition();
-  const [reactedIds, setReactedIds] = useState(new Set<string>());
+  const [reactedIds, setReactedIds] = useState(new Set<number>());
 
   // useEffect(() => {
   //   setProjects(initialProjects);
   // }, [initialProjects]);
 
-  const [reactedProjects, addOptimisticReaction] = useOptimistic(
-    projects,
-    (state, projectId: string) =>
-      state.map((p) =>
-        p.id === projectId
-          ? { ...p, reaction_count: (p.reaction_count || 0) + 1 }
-          : p,
-      ),
+  const [reactedProjects, addOptimisticReaction] = useOptimistic<
+    PortfolioProjectType[],
+    number
+  >(projects, (state, projectId) =>
+    state.map((p) =>
+      p.id === projectId
+        ? { ...p, reaction_count: (p.reaction_count || 0) + 1 }
+        : p,
+    ),
   );
 
-  const handleReact = async (projectId: string) => {
+  const handleReact = async (projectId: number) => {
     if (reactedIds.has(projectId)) return;
 
     startTransition(async () => {
