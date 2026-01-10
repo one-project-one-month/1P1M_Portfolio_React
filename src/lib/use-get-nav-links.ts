@@ -1,5 +1,4 @@
-import type { NavLink, UserRole } from "@/types/nav-props";
-
+import type { NavLink, UserRole } from '@/types/nav-props';
 
 export const getNavLinks = (role?: UserRole): NavLink[] => {
   const isAdmin = role === 'USER';

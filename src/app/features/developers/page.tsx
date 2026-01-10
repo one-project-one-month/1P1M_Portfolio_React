@@ -1,13 +1,11 @@
-import Title from "@/components/ui/title"
+import Title from '@/components/ui/title';
 
 const Developer = () => {
   return (
     <div>
-        <Title />
-
-
+      <Title />
     </div>
-  )
-}
+  );
+};
 
-export default Developer
+export default Developer;

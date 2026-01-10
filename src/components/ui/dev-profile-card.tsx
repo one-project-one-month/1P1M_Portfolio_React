@@ -1,35 +1,47 @@
+import type { DevProfileCardProps } from '@/types/dev';
 import { Button } from './button';
 
 import defaultUserImage from '@/assets/user.png';
 
-const DevProfile = ({ devProfile, viewProfile }) => {
+const DevProfileCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
+  const {
+    name,
+    dev_id,
+    aboutDev,
+    email,
+    github,
+    linkedIn,
+    profilePictureUrl,
+    techStack,
+  } = devProfile;
+
   return (
     <div className="max-w-[450px] flex flex-col items-center text-white bg-[#030712] rounded-3xl px-12 py-6">
       <div className="space-y-8">
         <div className="flex justify-start gap-4">
           <img
-            src={devProfile.profilePictureUrl || defaultUserImage}
+            src={profilePictureUrl || defaultUserImage}
             className="w-[104px] h-[106px] rounded-full object-cover"
             alt=""
           />
           <div className="text-left space-y-2">
             <div className="px-4">
               <h2
-                title={devProfile.name}
+                title={name}
                 className="text-2xl truncate  max-w-[200px] md:max-w-[150px] lg:max-w-[200px]"
               >
-                {devProfile.name}
+                {name}
               </h2>
             </div>
             <div className="bg-white/9 border border-white/15 rounded-lg text-sm inline-block px-4 py-2">
-              {devProfile.tech_stack} Developer
+              {techStack} Developer
             </div>
             <div className="px-4">
               <p
-                title={devProfile.aboutDev}
+                title={aboutDev}
                 className="text-sm truncate max-w-[200px] md:max-w-[150px] lg:max-w-[200px]"
               >
-                {devProfile.aboutDev}
+                {aboutDev}
               </p>
             </div>
           </div>
@@ -37,9 +49,9 @@ const DevProfile = ({ devProfile, viewProfile }) => {
 
         <div className="flex justify-start items-center gap-10">
           <div className="flex gap-3">
-            {devProfile.github && (
+            {github && (
               <a
-                href={devProfile.github}
+                href={github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-[17px] h-[16px] flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors"
@@ -58,9 +70,9 @@ const DevProfile = ({ devProfile, viewProfile }) => {
                 </svg>
               </a>
             )}
-            {devProfile.linkedIn && (
+            {linkedIn && (
               <a
-                href={devProfile.linkedIn}
+                href={linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-[17px] h-[16px] flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors"
@@ -79,7 +91,7 @@ const DevProfile = ({ devProfile, viewProfile }) => {
                 </svg>
               </a>
             )}
-            {devProfile.facebook && (
+            {/* {facebook && (
               <a
                 href={devProfile.facebook}
                 target="_blank"
@@ -99,7 +111,7 @@ const DevProfile = ({ devProfile, viewProfile }) => {
                   />
                 </svg>
               </a>
-            )}
+            )} */}
           </div>
           <Button
             variant="primary"
@@ -115,4 +127,4 @@ const DevProfile = ({ devProfile, viewProfile }) => {
   );
 };
 
-export default DevProfile;
+export default DevProfileCard;

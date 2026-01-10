@@ -1,24 +1,23 @@
-import { useEffect, useRef, useState, } from 'react';
-import { Button } from './button';
 import type { TitleProps } from '@/types/title-props';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from './button';
 
-
-const Title= ({
-  title = "Page Title",
+const Title = ({
+  title = 'Page Title',
   onCreate = false,
   showSearch = true,
   showFilter = true,
-  searchPlaceholder = "Search...",
+  searchPlaceholder = 'Search...',
   onSearchChange,
-  filterOptions = ["Popular", "Newest", "Oldest"],
-  initSelectedFilter = "Popular",
+  filterOptions = ['Popular', 'Newest', 'Oldest'],
+  initSelectedFilter = 'Popular',
   onFilterChange,
-}:TitleProps) => {
-  const [selectedFilter, setSelectedFilter] = useState<string>(initSelectedFilter);
+}: TitleProps) => {
+  const [selectedFilter, setSelectedFilter] =
+    useState<string>(initSelectedFilter);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
-  
-  
+
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,14 +26,14 @@ const Title= ({
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSelect = (option: string) => {
     setSelectedFilter(option);
     if (onFilterChange) onFilterChange(option);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   return (
@@ -101,8 +100,8 @@ const Title= ({
 
         {showFilter && (
           <div ref={menuRef} className="relative text-[#F9FAFB] select-none">
-            <div 
-              className="flex justify-center items-center border border-[#99A1AF] rounded-full px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors" 
+            <div
+              className="flex justify-center items-center border border-[#99A1AF] rounded-full px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors"
               onClick={() => setIsOpen(!isOpen)}
             >
               <FilterIcon />
@@ -119,9 +118,7 @@ const Title= ({
                     }`}
                     onClick={() => handleSelect(option)}
                   >
-                    {option === selectedFilter && (
-                      <CheckIcon />
-                    )}
+                    {option === selectedFilter && <CheckIcon />}
                     {option}
                   </div>
                 ))}
@@ -136,21 +133,64 @@ const Title= ({
 
 // Internal Sub-components for cleaner JSX
 const SearchIcon = ({ color }: { color: string }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.0776 14.0999L16.6444 16.6666M15.9036 9.6509C15.9036 13.14 13.0847 15.9685 9.60733 15.9685C6.12998 15.9685 3.31104 13.14 3.31104 9.6509C3.31104 6.16179 6.12998 3.33331 9.60733 3.33331C13.0847 3.33331 15.9036 6.16179 15.9036 9.6509Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M14.0776 14.0999L16.6444 16.6666M15.9036 9.6509C15.9036 13.14 13.0847 15.9685 9.60733 15.9685C6.12998 15.9685 3.31104 13.14 3.31104 9.6509C3.31104 6.16179 6.12998 3.33331 9.60733 3.33331C13.0847 3.33331 15.9036 6.16179 15.9036 9.6509Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const FilterIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 17H14" stroke="#F9FAFB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M7 12H17" stroke="#F9FAFB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M4.5 7H19.5" stroke="#F9FAFB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10 17H14"
+      stroke="#F9FAFB"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M7 12H17"
+      stroke="#F9FAFB"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.5 7H19.5"
+      stroke="#F9FAFB"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const CheckIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 absolute left-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-4 w-4 absolute left-3"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
   </svg>
 );
