@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from '@/config/api';
 import type { GetDevProfiles, GetDevProfilesParams } from '@/types/dev';
 import { AxiosError } from 'axios';
 
-export const newGetDevProfiles = async ({
+export const getDevProfiles = async ({
   keyword,
   page,
   size,

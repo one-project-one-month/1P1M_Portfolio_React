@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ApprovedIdeasSection } from './components/approved-ideas';
-import DevRegisterSection from './components/dev-register';
+import FeaturedDevelopersSectionContainer from './components/dev-register-container';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* End About Section */}
-      <DevRegisterSection />
+      <FeaturedDevelopersSectionContainer />
       <ApprovedIdeasSection />
     </div>
   );

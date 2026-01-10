@@ -1,8 +1,8 @@
 import type { GetDevProfilesParams } from '@/types/dev';
 import { useQuery } from '@tanstack/react-query';
-import { newGetDevProfiles } from '../services/dev-profile-service';
+import { getDevProfiles } from '../services/dev-profile-service';
 
-export const useDevProfile = ({
+export const useDevProfileQuery = ({
   keyword,
   page,
   size,
@@ -12,6 +12,6 @@ export const useDevProfile = ({
   return useQuery({
     queryKey: ['devProfiles', keyword, page, sortDirection, sortField, size],
     queryFn: () =>
-      newGetDevProfiles({ keyword, page, size, sortDirection, sortField }),
+      getDevProfiles({ keyword, page, size, sortDirection, sortField }),
   });
 };
