@@ -14,7 +14,7 @@ const Portfolio = () => {
   const [selectedFilter, setSelectedFilter] = useState('Newest');
   const navigate = useNavigate();
 
-  const handleReact = async (projectId: string) => {
+  const handleReact = async (projectId: number) => {
     try {
       await reactToProject(projectId);
       console.log('👍 Reacted successfully to project:', projectId);
