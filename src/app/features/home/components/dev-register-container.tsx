@@ -1,7 +1,6 @@
 import { useDevProfileQuery } from '../../developers/hooks/use-dev-profile';
 import FeaturedDevelopersSection from './dev-register';
 
-
 const FeaturedDevelopersSectionContainer = () => {
   const { data, isLoading, error } = useDevProfileQuery({
     keyword: '',
@@ -11,13 +10,13 @@ const FeaturedDevelopersSectionContainer = () => {
     sortDirection: 'desc',
   });
 
-
   return (
-<FeaturedDevelopersSection profiles={data?.data}  error={error}   loading={isLoading}/>
-  )
+    <FeaturedDevelopersSection
+      profiles={data?.data}
+      error={error}
+      loading={isLoading}
+    />
+  );
+};
 
-
-
-}
-
-export default FeaturedDevelopersSectionContainer 
+export default FeaturedDevelopersSectionContainer;

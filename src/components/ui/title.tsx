@@ -10,11 +10,10 @@ const Title = ({
   searchPlaceholder = 'Search...',
   onSearchChange,
   filterOptions = ['Popular', 'Newest', 'Oldest'],
-  initSelectedFilter = 'Popular',
+  // initSelectedFilter = 'Popular',
   onFilterChange,
 }: TitleProps) => {
-  const [selectedFilter, setSelectedFilter] =
-    useState<string>(initSelectedFilter);
+  const [selectedFilter, setSelectedFilter] = useState<string>('Popular');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
 
