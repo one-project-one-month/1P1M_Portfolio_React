@@ -7,7 +7,7 @@ import {
   PortfolioPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
-import UserProfile from '../features/developers/UserProfile';
+import UserProfile from '../features/developers/components/user-profile';
 import { authRoutes } from './auth';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 

@@ -26,5 +26,5 @@ export const IdeaPage = PageLoader(
 );
 
 export const UserProfilePage = PageLoader(
-  lazy(() => import('@/app/features/developers/UserProfile')),
+  lazy(() => import('@/app/features/developers/components/user-profile')),
 );
