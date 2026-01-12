@@ -13,9 +13,9 @@ const {goTo}=useAppNavigation()
 
   return (
     <FormBackground className="w-4xl">
-      <form className="flex w-full  gap-x-8">
-        <div className="w-2/4">
-          <FileUpload className='size-56'/>
+      <form className="flex w-full flex-col md:flex-row  gap-x-8">
+        <div className="md:w-2/4 flex justify-center">
+          <FileUpload className='md:size-56'/>
         </div>
 
         <div className="w-full">
