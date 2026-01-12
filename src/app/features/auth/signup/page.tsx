@@ -1,13 +1,11 @@
-import FormField from "@/components/ui/form-field"
-
+import FormField from '@/components/ui/form-field';
 
 const SignupPage = () => {
   return (
     <div>
-
-      <FormField  placeholder="username"/>
+      <FormField placeholder="username" />
     </div>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;

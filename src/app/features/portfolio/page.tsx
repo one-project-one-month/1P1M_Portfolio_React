@@ -1,13 +1,11 @@
-import Title from "@/components/ui/title"
-
+import Title from '@/components/ui/title';
 
 const Portfolio = () => {
   return (
     <div>
-<Title onCreate={()=>{}} />
-
+      <Title onCreate={() => {}} />
     </div>
-  )
-}
+  );
+};
 
-export default Portfolio
+export default Portfolio;
