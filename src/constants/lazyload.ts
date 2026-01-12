@@ -24,3 +24,15 @@ export const ApprovedIdeaPage = PageLoader(
 export const IdeaPage = PageLoader(
   lazy(() => import('@/app/features/projects/ideas/page')),
 );
+
+export const LoginPage = PageLoader(
+  lazy(() => import('@/app/features/auth/login/page')),
+);
+
+export const RegisterPage = PageLoader(
+  lazy(() => import('@/app/features/auth/register/page')),
+);
+
+export const ProfileSetupPage = PageLoader(
+  lazy(() => import('@/app/features/auth/profile-setup/page')),
+);
