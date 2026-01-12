@@ -24,3 +24,7 @@ export const ApprovedIdeaPage = PageLoader(
 export const IdeaPage = PageLoader(
   lazy(() => import('@/app/features/projects/ideas/page')),
 );
+
+export const UserProfilePage = PageLoader(
+  lazy(() => import('@/app/features/developers/UserProfile')),
+);

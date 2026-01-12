@@ -6,7 +6,7 @@ export type DevProfile = {
   github: string;
   linkedIn: string;
   aboutDev: string;
-  techStack: [string];
+  tech_stack: [string];
 };
 
 export interface DevProfileCardProps {

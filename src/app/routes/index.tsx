@@ -7,6 +7,7 @@ import {
   PortfolioPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
+import UserProfile from '../features/developers/UserProfile';
 import { authRoutes } from './auth';
 
 const router = createBrowserRouter([
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       },
       { path: '/approved-ideas', element: <ApprovedIdeaPage /> },
       { path: '/ideas', element: <IdeaPage /> },
+      { path: 'profile/:username', element: <UserProfile /> },
     ],
   },
 

@@ -4,16 +4,8 @@ import { Button } from './button';
 import defaultUserImage from '@/assets/user.png';
 
 const DevProfileCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
-  const {
-    name,
-    dev_id,
-    aboutDev,
-    email,
-    github,
-    linkedIn,
-    profilePictureUrl,
-    techStack,
-  } = devProfile;
+  const { name, aboutDev, github, linkedIn, profilePictureUrl, tech_stack } =
+    devProfile;
 
   return (
     <div className="max-w-[450px] flex flex-col items-center text-white bg-[#030712] rounded-3xl px-12 py-6">
@@ -34,7 +26,7 @@ const DevProfileCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
               </h2>
             </div>
             <div className="bg-white/9 border border-white/15 rounded-lg text-sm inline-block px-4 py-2">
-              {techStack} Developer
+              {tech_stack} Developer
             </div>
             <div className="px-4">
               <p
@@ -75,7 +67,7 @@ const DevProfileCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
                 href={linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-[17px] h-[16px] flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors"
+                className="w-[17px] h-4 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors"
               >
                 <svg
                   width="16"
