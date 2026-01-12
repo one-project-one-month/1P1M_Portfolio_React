@@ -3,13 +3,19 @@ import FormBackground from '@/components/ui/form-background';
 import TextField from '@/components/ui/text-field';
 import SelectMember from './select-member';
 import { Button } from '@/components/ui/button';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { MOCK_AVAILABLE_DEVS, MOCK_SELECTED_MEMBERS } from '@/constants';
 
 const PortfolioForm = () => {
+
+const {goTo}=useAppNavigation()
+
+
   return (
     <FormBackground className="w-4xl">
       <form className="flex w-full  gap-x-8">
-        <div className="w-1/4 ">
-          <FileUpload />
+        <div className="w-2/4">
+          <FileUpload className='size-56'/>
         </div>
 
         <div className="w-full">
@@ -50,9 +56,9 @@ const PortfolioForm = () => {
           />
 
 
-          <SelectMember />
+          <SelectMember selectedMembers={MOCK_SELECTED_MEMBERS} devProfiles={MOCK_AVAILABLE_DEVS}/>
           <div className='justify-self-end flex gap-2'>
-            <Button variant={'black_small_button'} className='text-white'>Cancel</Button>
+            <Button onClick={()=>goTo("/portfolio")} variant={'black_small_button'} className='text-white'>Cancel</Button>
             <Button >Create</Button>
           </div>
         </div>

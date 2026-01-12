@@ -57,7 +57,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
     if (!file) return;
 
-    // 1. Size Validation
+   
     if (file.size > maxSize) {
       const sizeInMB = (maxSize / (1024 * 1024)).toFixed(0);
       const errorMessage = `File size must be less than ${sizeInMB}MB`;
@@ -69,23 +69,22 @@ const FileUpload: React.FC<FileUploadProps> = ({
         alert(errorMessage);
       }
 
-      // Reset input so user can try again immediately
+
       e.target.value = "";
       return;
     }
 
-    // 2. Type Validation & Preview Generation
+  
     if (file.type.startsWith("image/")) {
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
     }
 
-    // 3. Callback
+  
     if (onFileSelect) {
       onFileSelect(file);
     }
 
-    // 4. Reset Input Value
     e.target.value = "";
   };
 
@@ -99,7 +98,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       className={`
         relative overflow-hidden
         bg-[#D9D9D9] hover:bg-[#C5C5C5] 
-        w-[139px] h-[139px] 
+        size-33.5
         flex justify-center items-center 
         rounded-3xl cursor-pointer 
         transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
