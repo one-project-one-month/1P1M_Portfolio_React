@@ -1,6 +1,7 @@
 import {
   AuthLayout,
   LoginPage,
+  OpomRegisterPage,
   ProfileSetupPage,
   RegisterPage,
 } from '@/constants/lazyload';
@@ -14,6 +15,7 @@ export const authRoutes: RouteObject[] = [
     children: [
       { path: 'sign-up', element: <SignupPage /> },
       { path: 'log-in', element: <LoginPage /> },
+      { path: 'opom-register', element: <OpomRegisterPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'setup-profile', element: <ProfileSetupPage /> },
     ],

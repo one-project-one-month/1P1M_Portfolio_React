@@ -23,6 +23,23 @@ export interface ProfileForm {
   linkedIn: string;
   aboutDev: string;
 }
+
+export interface PlatformLink {
+  platformId: string | number;
+  link: string;
+}
+
+export interface OpomRegisterForm {
+  name: string;
+  email: string;
+  phone: string;
+  telegram_username: string;
+  github_url: string;
+  role: string;
+  status: string;
+  platformLinks: PlatformLink[];
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   code: number;

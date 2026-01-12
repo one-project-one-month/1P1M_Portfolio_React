@@ -36,3 +36,7 @@ export const RegisterPage = PageLoader(
 export const ProfileSetupPage = PageLoader(
   lazy(() => import('@/app/features/auth/profile-setup/page')),
 );
+
+export const OpomRegisterPage = PageLoader(
+  lazy(() => import('@/app/features/auth/opom-register/page')),
+);
