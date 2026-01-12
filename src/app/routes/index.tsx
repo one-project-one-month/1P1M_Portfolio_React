@@ -9,6 +9,7 @@ import {
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/UserProfile';
 import { authRoutes } from './auth';
+import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       },
 
       { path: '/portfolio', element: <PortfolioPage /> },
+      {path:'/portfolio/create-portfolio',element:<PortfolioFormview />},
       {
         path: '/developers',
         element: <DeveloperPage />,

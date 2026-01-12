@@ -1,6 +1,6 @@
 import Pagination from '@/components/ui/pagination';
 import type { projectSectionViewType } from '@/types/portfolio.type';
-import ProjectList from './ProjectList';
+import ProjectList from './project-list';
 
 const ProjectSectionView = ({
   isLoading,

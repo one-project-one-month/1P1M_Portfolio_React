@@ -1,9 +1,9 @@
 import Title from '@/components/ui/title';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PortfolioSectionContainer from './components/PortfolioSectionContainer';
+import PortfolioSectionContainer from './components/portfolio-section-container';
 import { reactToProject } from './services/portfolio-service';
-import { getSortDirection } from './utils/get-sort-direction';
+import { getSortDirection } from '../../../lib/get-sort-direction';
 
 const Portfolio = () => {
   const filterOptions = ['Popular', 'Newest', 'Oldest'];
@@ -38,7 +38,7 @@ const Portfolio = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
       <Title
-        onCreate={() => navigate('/create-project')}
+        onCreate={() => navigate('/portfolio/create-portfolio')}
         showSearch
         initSelectedFilter={selectedFilter}
         title="Project Portfolio"

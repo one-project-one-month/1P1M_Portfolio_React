@@ -5,7 +5,7 @@ import type {
 } from '@/types/portfolio.type';
 import { useEffect, useState } from 'react';
 import { useGetProjectPortfolio } from '../hooks/use-get-portfolio';
-import ProjectSectionView from './PortfolioSectionView';
+import ProjectSectionView from './portfolio-section-view';
 
 const SIZE = 2;
 const SORT_FIELD = 'name';

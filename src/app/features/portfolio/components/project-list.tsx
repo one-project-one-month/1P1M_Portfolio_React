@@ -1,7 +1,7 @@
 import projectImage from '@/assets/ProjectImage.png';
 import type { PortfolioProjectType } from '@/types/portfolio.type';
 import { useHandleReact } from '../hooks/use-handle-react';
-import ProjectCard from './ProjectCard';
+import ProjectCard from './project-card';
 
 const ProjectList = ({
   projects,

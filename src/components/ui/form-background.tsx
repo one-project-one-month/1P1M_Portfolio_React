@@ -6,7 +6,7 @@ function FormBackground({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={` rounded-3xl w-[420px] p-8 flex flex-col ${className}`}
+      className={` rounded-3xl  p-8 flex flex-col ${className}`}
       style={{ backgroundColor: '#030712', opacity: 1, ...style }}
       {...props}
     >
