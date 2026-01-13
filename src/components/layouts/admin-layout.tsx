@@ -1,22 +1,26 @@
 import { Outlet } from 'react-router-dom';
 import Background from '../background';
+import Heading from '../heading';
 import Sidebar from '../sidebar';
 
 const AdminLayout = () => {
   return (
- 
-    <Background className="flex w-screen min-h-screen overflow-hidden">
-      
-  
-      <aside className="flex-none h-full  w-2xs ">
-        <Sidebar />
-      </aside>
+    <Background className="w-full h-screen">
+      <div className="flex w-full h-full overflow-hidden">
+        <aside className="w-64 shrink-0 h-full">
+          <Sidebar />
+        </aside>
 
-    
-      <main className="flex-1 h-full overflow-y-auto p-6">
-        <Outlet />
-      </main>
+        <div className="flex-1 flex flex-col h-full">
+          <div className="shrink-0">
+            <Heading />
+          </div>
 
+          <main className="flex-1 overflow-y-auto p-6">
+            <Outlet />
+          </main>
+        </div>
+      </div>
     </Background>
   );
 };

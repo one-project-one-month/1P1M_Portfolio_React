@@ -19,7 +19,7 @@ export default function Background({
       }}
       {...props}
     >
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 h-screen w-full">{children}</div>
     </div>
   );
 }
