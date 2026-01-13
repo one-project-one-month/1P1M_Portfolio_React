@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 
 function Navbar() {
   //sample user role
-  const userRole = 'USER';
+  const userRole = 'ADMIN';
 
   const { handleHomeNav, goTo } = useAppNavigation();
 

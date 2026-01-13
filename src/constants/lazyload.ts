@@ -24,3 +24,11 @@ export const ApprovedIdeaPage = PageLoader(
 export const IdeaPage = PageLoader(
   lazy(() => import('@/app/features/projects/ideas/page')),
 );
+
+export const OpmRegister = PageLoader(
+  lazy(() => import('@/app/features/auth/register/page')),
+);
+
+export const RegisterList = PageLoader(
+  lazy(() => import('@/app/features/opom-register/page')),
+);
