@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { getNavLinks } from '@/lib/use-get-nav-links';
+
 import CustomHamburger from './custom-hamburger';
 import { Button } from './ui/button';
-
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -54,6 +54,11 @@ function Navbar() {
         ))}
       </div>
 
+      <Button
+        className="md:block hidden"
+        variant="secondary"
+        size={'primary'}
+        onClick={() => goTo('/callback')} />
       {/* Desktop Action Button */}
       <div className="hidden md:block">
         <Button variant="secondary" size="primary" onClick={() => goTo('/callback')}>

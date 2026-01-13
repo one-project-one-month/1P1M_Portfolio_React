@@ -13,6 +13,38 @@ export const PortfolioPage = PageLoader(
   lazy(() => import('@/app/features/portfolio/page')),
 );
 
+export const LoginPage = PageLoader(
+  lazy(() => import('@/app/features/auth/login/page')),
+);
+
+export const RegisterPage = PageLoader(
+  lazy(() => import('@/app/features/auth/register/page')),
+);
+
+export const ProfileSetupPage = PageLoader(
+  lazy(() => import('@/app/features/auth/profile-setup/page')),
+);
+
+export const OpomRegisterPage = PageLoader(
+  lazy(() => import('@/app/features/auth/opom-register/page')),
+);
+
+export const ForgotPasswordPage = PageLoader(
+  lazy(() => import('@/app/features/auth/forgot-password/page')),
+);
+
+export const OtpPage = PageLoader(
+  lazy(() => import('@/app/features/auth/otp/page')),
+);
+
+export const CheckPasswordOtpPage = PageLoader(
+  lazy(() => import('@/app/features/auth/check-password-otp/page')),
+);
+
+export const ResetPasswordPage = PageLoader(
+  lazy(() => import('@/app/features/auth/reset-password/page')),
+);
+
 export const DeveloperPage = PageLoader(
   lazy(() => import('@/app/features/developers/page')),
 );
