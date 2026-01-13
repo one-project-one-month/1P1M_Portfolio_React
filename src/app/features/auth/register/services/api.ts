@@ -43,3 +43,26 @@ export async function sendOtpCode(
     };
   }
 }
+
+export async function verifyOtpCode(
+  email: string,
+  otpCode: string,
+): Promise<ApiResponse<SendOTP>> {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.VERIFY_OTP, {
+      email,
+      otpCode,
+    });
+
+    return response.data;
+  } catch (e: unknown) {
+    const err = e as Error;
+    console.error('Error verifying OTP code:', err.message);
+    return {
+      success: false,
+      code: 500,
+      message: err.message,
+      data: null,
+    };
+  }
+}
