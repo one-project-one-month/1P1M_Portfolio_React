@@ -28,3 +28,11 @@ export const IdeaPage = PageLoader(
 export const UserProfilePage = PageLoader(
   lazy(() => import('@/app/features/developers/components/user-profile')),
 );
+
+export const AdminLayout=PageLoader(
+  lazy(()=>import('@/components/layouts/admin-layout'))
+)
+
+export const DashboardPage=PageLoader(
+  lazy(()=>import('@/app/features/dashboard/page'))
+)

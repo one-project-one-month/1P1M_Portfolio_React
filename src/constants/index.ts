@@ -1,5 +1,5 @@
 import type { Member } from '@/types/member';
-import type { NavLink } from '@/types/nav-props';
+import type { AdminNavLink, NavLink } from '@/types/nav-props';
 import { ActivitySquare, ChartColumnIncreasing, ChartGanttIcon, FileText, HardDrive, SquareChartGantt, UserRoundCheck, Users } from 'lucide-react';
 
 export const Platforms = [
@@ -28,7 +28,7 @@ export const socials: NavLink[] = [
 
 
 
-export const ADMIN_NAVS:NavLink[]=[
+export const ADMIN_NAVS:AdminNavLink[]=[
   {id:1,name:"Dashboard",path:"dashboard",icon:ChartGanttIcon},
    {id:2,name:"User Management",path:"user-management",icon:Users},
     {id:3,name:"Idea Management",path:"idea-management",icon:FileText},
