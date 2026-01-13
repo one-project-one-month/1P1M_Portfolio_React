@@ -1,13 +1,10 @@
 import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
-<<<<<<< HEAD
-  ApprovedIdeaPage,
-=======
+ 
   AdminLayout,
   ApprovedIdeaPage,
   DashboardPage,
->>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff
   DeveloperPage,
   IdeaPage,
   PortfolioPage,
@@ -28,20 +25,14 @@ const router = createBrowserRouter([
       },
 
       { path: '/portfolio', element: <PortfolioPage /> },
-<<<<<<< HEAD
-=======
       { path: '/portfolio/create-portfolio', element: <PortfolioFormview /> },
->>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff
       {
         path: '/developers',
         element: <DeveloperPage />,
       },
       { path: '/approved-ideas', element: <ApprovedIdeaPage /> },
       { path: '/ideas', element: <IdeaPage /> },
-<<<<<<< HEAD
-=======
       { path: 'profile/:username', element: <UserProfile /> },
->>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff
     ],
   },
 
