@@ -13,18 +13,6 @@ export const PortfolioPage = PageLoader(
   lazy(() => import('@/app/features/portfolio/page')),
 );
 
-export const DeveloperPage = PageLoader(
-  lazy(() => import('@/app/features/developers/page')),
-);
-
-export const ApprovedIdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/approved/page')),
-);
-
-export const IdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/ideas/page')),
-);
-
 export const LoginPage = PageLoader(
   lazy(() => import('@/app/features/auth/login/page')),
 );
@@ -56,3 +44,27 @@ export const CheckPasswordOtpPage = PageLoader(
 export const ResetPasswordPage = PageLoader(
   lazy(() => import('@/app/features/auth/reset-password/page')),
 );
+
+export const DeveloperPage = PageLoader(
+  lazy(() => import('@/app/features/developers/page')),
+);
+
+export const ApprovedIdeaPage = PageLoader(
+  lazy(() => import('@/app/features/projects/approved/page')),
+);
+
+export const IdeaPage = PageLoader(
+  lazy(() => import('@/app/features/projects/ideas/page')),
+);
+
+export const UserProfilePage = PageLoader(
+  lazy(() => import('@/app/features/developers/components/user-profile')),
+);
+
+export const AdminLayout=PageLoader(
+  lazy(()=>import('@/components/layouts/admin-layout'))
+)
+
+export const DashboardPage=PageLoader(
+  lazy(()=>import('@/app/features/dashboard/page'))
+)

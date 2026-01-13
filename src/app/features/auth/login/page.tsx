@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Background from '@/components/background';
 import LoginForm from './components/login-form';
 
@@ -12,3 +13,10 @@ export default function LoginPage() {
     </main>
   );
 }
+=======
+const page = () => {
+  return <div>page</div>;
+};
+
+export default page;
+>>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff
