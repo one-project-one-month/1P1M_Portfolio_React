@@ -9,12 +9,12 @@ export const getNavLinks = (role?: UserRole): NavLink[] => {
     {
       id: 3,
       name: 'Ideas',
-      path: isAdmin ? '/admin/ideas' : '/ideas',
+      path:  '/ideas',
     },
     {
       id: 4,
-      name: 'Approved Ideas',
-      path: isAdmin ? '/admin/approved-ideas' : '/approved-ideas',
+      name: 'About Us',
+      path: '/about us',
     },
   ];
 

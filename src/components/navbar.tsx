@@ -54,11 +54,7 @@ function Navbar() {
         ))}
       </div>
 
-      <Button
-        className="md:block hidden"
-        variant="secondary"
-        size={'primary'}
-        onClick={() => goTo('/callback')} />
+     
       {/* Desktop Action Button */}
       <div className="hidden md:block">
         <Button variant="secondary" size="primary" onClick={() => goTo('/callback')}>
