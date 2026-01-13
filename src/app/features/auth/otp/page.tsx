@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Background from '@/components/background';
 import FormBackground from '@/components/ui/form-bg';
 import OtpForm from './components/otp-form';
@@ -54,10 +53,3 @@ export default function OtpPage() {
     </Background>
   );
 }
-=======
-const page = () => {
-  return <div>page</div>;
-};
-
-export default page;
->>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Background from '@/components/background';
 import { Button } from '@/components/ui/button';
 import ProfileSetupForm from './components/profile-setup-form';
@@ -46,10 +45,3 @@ export default function ProfileSetupPage() {
     </Background>
   );
 }
-=======
-const page = () => {
-  return <div>page</div>;
-};
-
-export default page;
->>>>>>> 010864a5417c85890ac83db5ba68b65a08b48cff
