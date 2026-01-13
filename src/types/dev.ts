@@ -9,23 +9,16 @@ export type DevProfile = {
   techStack: [string];
 };
 
-
 export interface DevProfileCardProps {
-  devProfile:DevProfile
-  viewProfile:()=>void
+  devProfile: DevProfile;
+  viewProfile: () => void;
 }
-
-
-
 
 export interface FeaturedDevProps {
-  error:Error | null
-  loading:boolean
-  profiles:DevProfile[] | null |undefined
+  error: Error | null;
+  loading: boolean;
+  profiles: DevProfile[] | null | undefined;
 }
-
-
-
 
 export type GetDevProfiles = {
   success: number;

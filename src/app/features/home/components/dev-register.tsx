@@ -1,31 +1,34 @@
 import DevProfileCard from '@/components/ui/dev-profile-card';
 import SkeletonCard from '@/components/ui/skeleton-card';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
-import type {DevProfile, FeaturedDevProps } from '@/types/dev';
+import type { DevProfile, FeaturedDevProps } from '@/types/dev';
 
-
-const FeaturedDevelopersSection = ({profiles,error,loading}:FeaturedDevProps) => {
+const FeaturedDevelopersSection = ({
+  profiles,
+  error,
+  loading,
+}: FeaturedDevProps) => {
   const { goTo } = useAppNavigation();
 
- const devProfiles=profiles ?? []
+  const devProfiles = profiles ?? [];
 
   const handleProfileView = (devData: DevProfile) => {
-   
-    const identifier = devData.name || devData.dev_id; 
-    
+    const identifier = devData.name || devData.dev_id;
+
     goTo(`/profile/${identifier}`, { state: { devData } });
   };
 
   const renderSkeletons = () => {
-      return <SkeletonCard  />
-
+    return <SkeletonCard />;
   };
 
   const renderError = () => (
     <div className="col-span-full py-12 text-center" role="alert">
       <p className="text-lg text-red-400">Unable to load developer profiles.</p>
       <p className="mt-2 text-sm text-gray-500">
-        {error instanceof Error ? error.message : 'Please check your connection.'}
+        {error instanceof Error
+          ? error.message
+          : 'Please check your connection.'}
       </p>
     </div>
   );
@@ -39,23 +42,24 @@ const FeaturedDevelopersSection = ({profiles,error,loading}:FeaturedDevProps) =>
       );
     }
 
-    return devProfiles.slice(0, 6).map((devProfile) => (
-      <DevProfileCard
-        devProfile={devProfile}
-        key={devProfile.dev_id}
-        viewProfile={() => handleProfileView(devProfile)}
-      />
-    ));
+    return devProfiles
+      .slice(0, 6)
+      .map((devProfile) => (
+        <DevProfileCard
+          devProfile={devProfile}
+          key={devProfile.dev_id}
+          viewProfile={() => handleProfileView(devProfile)}
+        />
+      ));
   };
 
   return (
     <section className="flex flex-col justify-center text-center text-gray-200 mb-12">
       <div className="w-full flex justify-between items-end my-8 px-2">
-      
         <h2 className="text-3xl md:text-5xl font-bold">Featured Developers</h2>
-       
-        <a 
-          href="/developers" 
+
+        <a
+          href="/developers"
           className="border-b border-transparent hover:border-gray-200 transition-colors cursor-pointer text-sm md:text-base pb-1"
         >
           View all

@@ -1,6 +1,6 @@
-import React, { type ReactNode } from "react";
-import RightIcon from "@/assets/icons/right-pagination.png";
-import LeftIcon from "@/assets/icons/left-pagination.png";
+import LeftIcon from '@/assets/icons/left-pagination.png';
+import RightIcon from '@/assets/icons/right-pagination.png';
+import React, { type ReactNode } from 'react';
 
 interface PaginationProps {
   totalPages: number | string;
@@ -21,18 +21,18 @@ export default function Pagination({
   onPageChange,
 }: PaginationProps): React.ReactElement | null {
   const finalTotalPages = Math.max(1, Number(totalPages) || 1);
-  
-  
+
   const cur = Math.min(
     Math.max(1, Number(currentPage) + 1 || 1),
-    finalTotalPages
+    finalTotalPages,
   );
 
   const renderPages = (): ReactNode[] => {
-
-    const baseButtonClasses = "w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-300 text-sm font-medium";
-    const activeClasses = "bg-[#9C39FC] text-white font-semibold";
-    const inactiveClasses = "bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28] cursor-pointer";
+    const baseButtonClasses =
+      'w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-300 text-sm font-medium';
+    const activeClasses = 'bg-[#9C39FC] text-white font-semibold';
+    const inactiveClasses =
+      'bg-[#FFFFFF17] text-white border border-[#FFFFFF26] hover:bg-[#FFFFFF28] cursor-pointer';
 
     if (finalTotalPages <= 6) {
       return Array.from({ length: finalTotalPages }, (_, i) => {
@@ -52,30 +52,30 @@ export default function Pagination({
 
     const pages: (number | string)[] = [];
     if (cur <= 3) {
-      pages.push(1, 2, 3, 4, "...", finalTotalPages);
+      pages.push(1, 2, 3, 4, '...', finalTotalPages);
     } else if (cur >= finalTotalPages - 2) {
       pages.push(
         1,
-        "...",
+        '...',
         Math.max(1, finalTotalPages - 3),
         Math.max(1, finalTotalPages - 2),
         Math.max(1, finalTotalPages - 1),
-        finalTotalPages
+        finalTotalPages,
       );
     } else {
       pages.push(
         1,
-        "...",
+        '...',
         Math.max(1, cur - 1),
         cur,
         Math.min(finalTotalPages, cur + 1),
-        "...",
-        finalTotalPages
+        '...',
+        finalTotalPages,
       );
     }
 
     return pages.map((page, idx) => {
-      if (page === "...") {
+      if (page === '...') {
         return (
           <span
             key={`dots-${idx}`}
@@ -99,14 +99,19 @@ export default function Pagination({
     });
   };
 
-  const ArrowButton = ({ icon, onClick, disabled, altText }: ArrowButtonProps) => (
+  const ArrowButton = ({
+    icon,
+    onClick,
+    disabled,
+    altText,
+  }: ArrowButtonProps) => (
     <button
       onClick={onClick}
       disabled={disabled}
       className={`w-10 h-10 flex items-center justify-center rounded-[4px] transition-colors duration-300 ${
         disabled
-          ? "bg-[#1C1F26] opacity-30 cursor-not-allowed"
-          : "bg-[#1C1F26] hover:bg-[#2A2E38] cursor-pointer opacity-100"
+          ? 'bg-[#1C1F26] opacity-30 cursor-not-allowed'
+          : 'bg-[#1C1F26] hover:bg-[#2A2E38] cursor-pointer opacity-100'
       }`}
     >
       <img src={icon} alt={altText} />
