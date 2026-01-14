@@ -1,5 +1,5 @@
-import React, { useState, type KeyboardEvent } from 'react';
 import { X } from 'lucide-react';
+import React, { useState, type KeyboardEvent } from 'react';
 
 interface TagInputProps {
   value: string[];
@@ -25,7 +25,6 @@ const TagInput: React.FC<TagInputProps> = ({
       e.preventDefault();
       addTag();
     } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
-     
       removeTag(value.length - 1);
     }
   };
@@ -49,20 +48,18 @@ const TagInput: React.FC<TagInputProps> = ({
       .split(/[,;]/)
       .map((tag) => tag.trim())
       .filter((tag) => tag && !value.includes(tag));
-    
+
     if (tags.length > 0) {
       onChange([...value, ...tags]);
     }
   };
 
   return (
-    <div className={`relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8 ${className}`}>
-      {label && (
-        <label className="inline-block mb-1">
-          {label}
-        </label>
-      )}
-      
+    <div
+      className={`relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8 ${className}`}
+    >
+      {label && <label className="inline-block mb-1">{label}</label>}
+
       <div className="h-auto min-h-[48px] rounded-lg px-3 py-2 bg-[#FFFFFF17] border border-[#FFFFFF26] text-white transition-all duration-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-purple-500">
         <div className="flex flex-wrap gap-2">
           {value.map((tag, index) => (
@@ -80,7 +77,7 @@ const TagInput: React.FC<TagInputProps> = ({
               </button>
             </span>
           ))}
-          
+
           <input
             type="text"
             value={inputValue}
@@ -102,7 +99,7 @@ const TagInput: React.FC<TagInputProps> = ({
           {error}
         </span>
       )}
-      
+
       <p className="text-xs text-gray-400 mt-1">
         Press Enter or comma to add tags. Paste comma-separated values.
       </p>

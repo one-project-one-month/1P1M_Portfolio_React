@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import { checkEmailExists } from '../../register/services/api';
 import { forgotPassword } from '../services/api';
 
