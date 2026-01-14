@@ -1,5 +1,6 @@
+import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { IoChevronDown } from 'react-icons/io5';
+
 
 export interface DropdownItem {
   id: string | number;
@@ -76,7 +77,7 @@ export default function FormDropdown(props: Props) {
           {selected ? selected.name : placeholder}
         </span>
 
-        <IoChevronDown size={18} className="text-[#F3F4F6]" />
+        <ChevronDown size={18} className="text-[#F3F4F6]" />
       </button>
 
       {isOpen && (

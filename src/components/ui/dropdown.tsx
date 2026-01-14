@@ -1,7 +1,8 @@
 import { useClickOutside } from '@/hooks/use-click-outside';
 import type { DropdownProps, MenuItem } from '@/types/dropdown-props';
+import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { IoChevronDown } from 'react-icons/io5';
+
 
 const Dropdown = ({
   placeholder,
@@ -40,7 +41,7 @@ const Dropdown = ({
         <span className={selected ? 'text-white' : 'text-gray-400'}>
           {selected ? selected.name : placeholder}
         </span>
-        <IoChevronDown size={18} className="text-[#F3F4F6]" />
+        <ChevronDown size={18} className="text-[#F3F4F6]" />
       </button>
 
       {isOpen && (
