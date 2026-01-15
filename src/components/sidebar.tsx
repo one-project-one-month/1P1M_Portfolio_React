@@ -11,10 +11,10 @@ const Sidebar = () => {
         <img src={opomIconUrl} className="" />
       </div>
 
-      <nav className='text-sm'>
+      <nav className="text-sm">
         {ADMIN_NAVS.map((link) => (
           <NavLink
-          key={link.id}
+            key={link.id}
             to={link.path}
             className={({ isActive }) =>
               `flex my-2.5 gap-x-5 p-3 items-center w-full  transition-colors duration-300 ${isActive ? 'border-l-4 border-l-[#9C39FC] bg-slate-800 ' : 'text-white/60 hover:text-white'}`

@@ -1,7 +1,6 @@
 import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
- 
   AdminLayout,
   ApprovedIdeaPage,
   DashboardPage,

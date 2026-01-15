@@ -270,15 +270,8 @@
 
 // // export default Idea;
 
-
-
-
-import React from 'react'
-
 const Idea = () => {
-  return (
-    <div>Idea</div>
-  )
-}
+  return <div>Idea</div>;
+};
 
-export default Idea
+export default Idea;

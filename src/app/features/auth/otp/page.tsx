@@ -1,9 +1,9 @@
 import Background from '@/components/background';
 import FormBackground from '@/components/ui/form-bg';
-import OtpForm from './components/otp-form';
-import { signupWithEmail } from './services/api';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
+import OtpForm from './components/otp-form';
+import { signupWithEmail } from './services/api';
 
 export default function OtpPage() {
   const navigate = useNavigate();
