@@ -14,6 +14,6 @@ import { getApprovedIdeas } from '../services/approved-ideas';
 export function useApproveIdeasQuery(page: number) {
   return useQuery({
     queryKey: ['projects', 'approve-ideas', page],
-    queryFn:()=> getApprovedIdeas(page,6),
+    queryFn: () => getApprovedIdeas(page, 6),
   });
 }

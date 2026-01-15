@@ -45,7 +45,7 @@ import apiClient from '@/api/axios';
 import type { GetApprovedIdeas } from '@/types/project';
 import { AxiosError } from 'axios';
 
-export async function getApprovedIdeas(page=1, size=6) {
+export async function getApprovedIdeas(page = 1, size = 6) {
   try {
     const params = {
       page,

@@ -4,13 +4,8 @@ import ForgotPasswordForm from './components/forgot-password-form';
 import { useForgotPassword } from './hooks/use-forgot-password';
 
 export default function ForgotPasswordPage() {
-  const {
-    email,
-    setEmail,
-    emailError,
-    loading,
-    handleContinue,
-  } = useForgotPassword();
+  const { email, setEmail, emailError, loading, handleContinue } =
+    useForgotPassword();
 
   return (
     <Background className="h-screen flex items-center justify-center">

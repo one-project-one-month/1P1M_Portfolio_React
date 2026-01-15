@@ -1,6 +1,11 @@
-import type { Member } from '@/types/member';
 import type { AdminNavLink, NavLink } from '@/types/nav-props';
-import { ActivitySquare, ChartColumnIncreasing, ChartGanttIcon, FileText, HardDrive, SquareChartGantt, UserRoundCheck, Users } from 'lucide-react';
+import {
+  ChartGanttIcon,
+  FileText,
+  HardDrive,
+  SquareChartGantt,
+  Users,
+} from 'lucide-react';
 
 export const Platforms = [
   { id: 1, name: 'GitHub', value: 'github' },
@@ -26,13 +31,15 @@ export const socials: NavLink[] = [
   { name: 'Instagram', path: 'javascript:void(0)', id: 4 },
 ];
 
-
-
-export const ADMIN_NAVS:AdminNavLink[]=[
-  {id:1,name:"Dashboard",path:"dashboard",icon:ChartGanttIcon},
-   {id:2,name:"User Management",path:"user-management",icon:Users},
-    {id:3,name:"Idea Management",path:"idea-management",icon:FileText},
-     {id:4,name:"Portfolio Management",path:"portfolio-management",icon:HardDrive},
-      {id:5,name:"User Report",path:"user-report",icon:SquareChartGantt}
-
-]
+export const ADMIN_NAVS: AdminNavLink[] = [
+  { id: 1, name: 'Dashboard', path: 'dashboard', icon: ChartGanttIcon },
+  { id: 2, name: 'User Management', path: 'user-management', icon: Users },
+  { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
+  {
+    id: 4,
+    name: 'Portfolio Management',
+    path: 'portfolio-management',
+    icon: HardDrive,
+  },
+  { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
+];

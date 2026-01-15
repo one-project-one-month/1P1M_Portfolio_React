@@ -1,7 +1,7 @@
+import ProjectPortfolioDetail from '@/app/features/portfolio/components/project-portfolio-detail';
 import activeHeartIcon from '@/assets/icons/ActiveHeart.png';
 import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
-import ProjectPortfolioDetail from '@/app/features/portfolio/components/project-portfolio-detail';
 import { Button } from '@/components/ui/button';
 import type { ProjectCardType } from '@/types/portfolio.type';
 import { useState } from 'react';
@@ -10,7 +10,7 @@ export default function ProjectCard({
   image,
   title,
   description,
-  initialLikes = 0, 
+  initialLikes = 0,
   initialViews = 0,
   onClickReact,
   project,
