@@ -40,12 +40,12 @@ export const ProjectCard = ({
   return (
     <div
       className={twMerge(
-        'relative flex w-full flex-col rounded-[10px] bg-[#9333ea] p-3 text-white hover:shadow-lg transition-shadow',
+        'relative flex w-full flex-col rounded-[10px] bg-[#9C39FC] p-3 text-white hover:shadow-lg transition-shadow',
         className,
       )}
     >
       {/* Project Image */}
-      <div className="relative mb-4 w-full overflow-hidden rounded-[8px]">
+      <div className="relative mb-4 w-full overflow-hidden rounded-lg">
         <img src={image} alt={title} className="h-full w-full object-cover" />
       </div>
 
@@ -64,7 +64,7 @@ export const ProjectCard = ({
             {displayMembers.map((member, index) => (
               <div
                 key={member.id}
-                className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-[#9333ea] bg-gray-300"
+                className="relative h-[21px] w-[21px] overflow-hidden rounded-full border-1 border-[#000000] bg-gray-300"
                 style={{ zIndex: displayMembers.length - index }}
               >
                 {member.avatarUrl ? (
@@ -81,7 +81,7 @@ export const ProjectCard = ({
               </div>
             ))}
             {remainingCount > 0 && (
-              <div className="relative z-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#9333ea] bg-gray-100 text-[10px] font-bold text-gray-800">
+              <div className="relative z-0 flex h-[20px] w-[14px] items-center justify-center rounded-full text-[12px] ml-2 text-[#CAD5E2]">
                 +{remainingCount}
               </div>
             )}
@@ -93,7 +93,7 @@ export const ProjectCard = ({
       <div className="mt-auto flex items-center justify-between">
         <span
           className={clsx(
-            'inline-flex items-center rounded-lg px-3 py-1 text-sm font-medium text-white',
+            'inline-flex items-center rounded-md px-4 py-0.5 text-sm font-medium text-white',
             statusColors[status],
           )}
         >

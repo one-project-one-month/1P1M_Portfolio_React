@@ -1,7 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, List, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export const PortfolioHeader = () => {
+const PortfolioHeader = () => {
+  const navigate = useNavigate();
+
+  const handleCreateProject = () => {
+    navigate('/admin/portfolio-management/create-portfolio');
+  };
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-3">
       {/* Title */}
@@ -24,18 +31,21 @@ export const PortfolioHeader = () => {
           <button className="rounded p-1.5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
             <List className="h-6 w-6" />
           </button>
-          <button className="rounded p-1.5 text-[#a855f7] bg-white/10">
+          <button className="rounded p-1.5 text-[#9C39FC] bg-white/10">
             <LayoutGrid className="h-6 w-6" />
           </button>
         </div>
 
-        <div className="h-8 w-[1px] bg-gray-700 hidden sm:block"></div>
-
         {/* Create Button */}
-        <Button className="bg-[#a855f7] hover:bg-[#9333ea] text-white rounded-xl px-6">
+        <Button
+          onClick={handleCreateProject}
+          className="bg-[#9C39FC] text-white text-sm font-medium rounded-lg px-6"
+        >
           Create a project
         </Button>
       </div>
     </div>
   );
 };
+
+export default PortfolioHeader;
