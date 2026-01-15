@@ -1,9 +1,9 @@
 import Title from '@/components/ui/title';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getSortDirection } from '../../../lib/get-sort-direction';
 import PortfolioSectionContainer from './components/portfolio-section-container';
 import { reactToProject } from './services/portfolio-service';
-import { getSortDirection } from '../../../lib/get-sort-direction';
 
 const Portfolio = () => {
   const filterOptions = ['Popular', 'Newest', 'Oldest'];
