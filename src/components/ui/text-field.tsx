@@ -1,6 +1,5 @@
-import React, { forwardRef,type ChangeEvent } from "react";
-import FormField from "@/components/ui/form-field";
-
+import FormField from '@/components/ui/form-field';
+import React, { forwardRef, type ChangeEvent } from 'react';
 
 interface TextFieldProps {
   label: string;
@@ -15,25 +14,22 @@ interface TextFieldProps {
   disabled?: boolean;
 }
 
-
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
       label,
       onChange,
-      placeholder="Enter....",
-      type = "text",
+      placeholder = 'Enter....',
+      type = 'text',
       name,
       id,
       value,
       error,
-      className = "",
-      ...rest 
+      className = '',
+      ...rest
     },
-    ref
+    ref,
   ) => {
-    
-    
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (onChange) {
         onChange(e.target.value);
@@ -47,14 +43,13 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             {label}
           </label>
         )}
-        
+
         <FormField
           ref={ref}
           type={type}
           name={name}
           id={id}
-          
-          value={value ?? ""} 
+          value={value ?? ''}
           placeholder={placeholder}
           onChange={handleChange}
           className={`px-3 py-2 rounded bg-[#222] text-white outline-none ${className}`}
@@ -62,19 +57,19 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         />
 
         {error && (
-          <span 
+          <span
             className="absolute left-0 -bottom-6 text-sm text-[#FB2C36] ms-2"
-            role="alert" 
+            role="alert"
           >
             {error}
           </span>
         )}
       </div>
     );
-  }
+  },
 );
 
 // Helpful for debugging in React DevTools
-TextField.displayName = "TextField";
+TextField.displayName = 'TextField';
 
 export default TextField;

@@ -22,7 +22,6 @@ const IdeaManagement = () => {
             <span className={`text-[${COLORS.secondary}]`}>200</span>
           </div>
 
-          {/* List, grid and filter */}
           <div className="w-1/2 flex items-center justify-end gap-8">
             <div className="flex items-center justify-start gap-6">
               <button

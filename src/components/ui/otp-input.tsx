@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface OtpInputProps {
   value: string;
@@ -47,7 +47,10 @@ export default function OtpInput({
     }
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (disabled) return;
 
     if (e.key === 'Backspace') {
@@ -58,8 +61,7 @@ export default function OtpInput({
         newValue[index] = '';
         onChange(newValue.join(''));
       }
-    }
-    else if (e.key === 'ArrowLeft' && index > 0) {
+    } else if (e.key === 'ArrowLeft' && index > 0) {
       inputRefs.current[index - 1]?.focus();
     } else if (e.key === 'ArrowRight' && index < length - 1) {
       inputRefs.current[index + 1]?.focus();
@@ -71,7 +73,11 @@ export default function OtpInput({
 
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text/plain').replace(/\D/g, '');
-    const newValue = pastedData.slice(0, length).padEnd(length, '').split('').join('');
+    const newValue = pastedData
+      .slice(0, length)
+      .padEnd(length, '')
+      .split('')
+      .join('');
     onChange(newValue);
 
     const nextIndex = Math.min(pastedData.length, length - 1);

@@ -9,7 +9,7 @@ export const getNavLinks = (role?: UserRole): NavLink[] => {
     {
       id: 3,
       name: 'Ideas',
-      path:  '/ideas',
+      path: '/ideas',
     },
     {
       id: 4,
