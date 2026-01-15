@@ -1,12 +1,12 @@
 import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
- 
   AdminLayout,
   ApprovedIdeaPage,
   DashboardPage,
   DeveloperPage,
   IdeaPage,
+  PortfolioManagementPage,
   PortfolioPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
@@ -39,7 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/admin',
     element: <AdminLayout />,
-    children: [{ path: 'dashboard', element: <DashboardPage /> }],
+    children: [
+      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'portfolio-management', element: <PortfolioManagementPage /> },
+    ],
   },
 
   ...authRoutes,
