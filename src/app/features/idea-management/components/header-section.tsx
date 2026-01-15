@@ -1,5 +1,6 @@
 import InputField from '@/components/ui/input-field';
-import { Check, ChevronDown, Grid, List, Search } from 'lucide-react';
+import { COLORS } from '@/constants/colors';
+import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { useState } from 'react';
 
 interface IdeaHeaderProps {
@@ -40,7 +41,7 @@ const HeaderSection = ({
         <div className="flex items-center justify-between mb-24">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Ideas List</h1>
-            <div className="h-1 w-24 bg-amber-500"></div>
+            <div className={`h-1 w-24 bg-[${COLORS.secondary}] `}></div>
           </div>
 
           {/* Search Box */}
@@ -59,7 +60,7 @@ const HeaderSection = ({
 
           <button
             onClick={handleCreateIdea}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white/80 font-medium rounded-lg transition-colors"
+            className={`px-6 py-2 bg-[${COLORS.primary}] hover:bg-purple-700 text-white/80 font-medium rounded-lg transition-colors`}
           >
             Create Idea
           </button>
@@ -69,8 +70,10 @@ const HeaderSection = ({
         <div className="flex items-center justify-between">
           {/* Total Count */}
           <div className="text-white">
-            <span className="text-amber-500 font-semibold">Total - </span>
-            <span className="text-amber-500">{totalIdeas}</span>
+            <span className={`text-[${COLORS.secondary}] font-semibold`}>
+              Total -{' '}
+            </span>
+            <span className={`text-[${COLORS.secondary}]`}>{totalIdeas}</span>
           </div>
 
           {/* View Controls and Filter */}
@@ -79,25 +82,23 @@ const HeaderSection = ({
             <div className="flex items-center gap-2 p-1">
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded transition-colors ${
-                  viewMode === 'list'
-                    ? 'text-purple-500'
-                    : 'text-slate-400 hover:text-white'
-                }`}
+                className="p-2 rounded transition-colors"
+                style={{
+                  color: viewMode === 'list' ? COLORS.primary : 'white',
+                }}
                 title="List View"
               >
                 <List className="w-6 h-6" />
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded transition-colors ${
-                  viewMode === 'grid'
-                    ? 'text-purple-500'
-                    : 'text-slate-400 hover:text-white'
-                }`}
+                className="p-2 rounded transition-colors"
+                style={{
+                  color: viewMode === 'grid' ? COLORS.primary : 'white',
+                }}
                 title="Grid View"
               >
-                <Grid className="w-6 h-6" />
+                <LayoutGrid className="w-6 h-6" />
               </button>
             </div>
 
@@ -105,7 +106,8 @@ const HeaderSection = ({
             <div className="relative">
               <button
                 onClick={() => setFilterOpen(!filterOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-700/40 text-white rounded-lg transition-colors border border-purple-500"
+                className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-700/40 text-white rounded-lg transition-colors border"
+                style={{ borderColor: COLORS.primary }}
               >
                 <span>Filter by Status</span>
                 <ChevronDown
