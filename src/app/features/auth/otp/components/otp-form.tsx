@@ -69,7 +69,9 @@ export default function OtpForm({
         }
       }
     } catch (error) {
-      toast.error('Verification failed. Please try again.', { id: 'verify-otp' });
+      toast.error('Verification failed. Please try again.', {
+        id: 'verify-otp',
+      });
       setError('Please enter the valid code.');
       incrementAttempts();
     }
@@ -127,9 +129,7 @@ export default function OtpForm({
             hasError && errorMessage ? 'text-red-400' : 'text-gray-400'
           }`}
         >
-          {hasError && errorMessage
-            ? errorMessage
-            : "Didn't receive OTP code?"}
+          {hasError && errorMessage ? errorMessage : "Didn't receive OTP code?"}
         </p>
         <button
           onClick={handleResend}

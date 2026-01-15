@@ -1,7 +1,6 @@
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-
 export interface DropdownItem {
   id: string | number;
   name: string;

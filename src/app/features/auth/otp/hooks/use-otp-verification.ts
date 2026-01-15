@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { sendOtpCode, verifyOtpCode } from '../../register/services/api';
 
 interface OtpData {

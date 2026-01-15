@@ -3,7 +3,6 @@ import type { DropdownProps, MenuItem } from '@/types/dropdown-props';
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-
 const Dropdown = ({
   placeholder,
   menuList = [],

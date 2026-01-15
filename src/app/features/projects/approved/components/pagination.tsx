@@ -34,10 +34,7 @@ export default function Pagination({
         </Button>
       ))}
 
-      <Button
-        disabled={!hasNext}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
+      <Button disabled={!hasNext} onClick={() => onPageChange(currentPage + 1)}>
         Next
       </Button>
     </div>

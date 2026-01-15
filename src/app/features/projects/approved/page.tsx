@@ -143,7 +143,6 @@
 
 // // export default ApprovedIdea;
 
-
 // import { useState } from 'react';
 // import Title from '@/components/ui/title';
 // import ApprovedIdeaCard from './components/approved-idea-card';
@@ -168,7 +167,6 @@
 //     <div className="p-8">
 //       <Title />
 
-      
 //       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
 //         {projects.map((idea) => (
 //           <ApprovedIdeaCard key={idea.id} project={idea} />
@@ -190,14 +188,8 @@
 
 // }
 
-
-
-import React from 'react'
-
 const ApprovedIdea = () => {
-  return (
-    <div>ApprovedIdea</div>
-  )
-}
+  return <div>ApprovedIdea</div>;
+};
 
-export default ApprovedIdea
+export default ApprovedIdea;

@@ -1,21 +1,18 @@
+import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-background';
 import TextField from '@/components/ui/text-field';
-import SelectMember from './select-member';
-import { Button } from '@/components/ui/button';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
-
+import SelectMember from './select-member';
 
 const PortfolioForm = () => {
-
-const {goTo}=useAppNavigation()
-
+  const { goTo } = useAppNavigation();
 
   return (
     <FormBackground className="w-4xl">
       <form className="flex w-full flex-col md:flex-row  gap-x-8">
         <div className="md:w-2/4 flex justify-center">
-          <FileUpload className='md:size-56'/>
+          <FileUpload className="md:size-56" />
         </div>
 
         <div className="w-full">
@@ -47,19 +44,26 @@ const {goTo}=useAppNavigation()
             value={''}
           />
 
-
-             <TextField
+          <TextField
             label="Tools Used"
             placeholder="eg.,HTML,CSS,JavaScript,React"
             className="w-full"
             value={''}
           />
 
-
-          <SelectMember selectedMembers={MOCK_SELECTED_MEMBERS} devProfiles={MOCK_AVAILABLE_DEVS}/>
-          <div className='justify-self-end flex gap-2'>
-            <Button onClick={()=>goTo("/portfolio")} variant={'black_small_button'} className='text-white'>Cancel</Button>
-            <Button >Create</Button>
+          <SelectMember
+            selectedMembers={MOCK_SELECTED_MEMBERS}
+            devProfiles={MOCK_AVAILABLE_DEVS}
+          />
+          <div className="justify-self-end flex gap-2">
+            <Button
+              onClick={() => goTo('/portfolio')}
+              variant={'black_small_button'}
+              className="text-white"
+            >
+              Cancel
+            </Button>
+            <Button>Create</Button>
           </div>
         </div>
       </form>
