@@ -90,3 +90,16 @@ export const MOCK_PROJECTS = [
     status: 'Completed' as ProjectStatus,
   },
 ];
+
+export const statusOptions = [
+  { id: 1, name: 'Completed' },
+  { id: 2, name: 'In Progress' },
+  { id: 3, name: 'Unqualified' },
+];
+
+export const teamTypes = [
+  'Frontend Developers',
+  'Backend Developers',
+  'Fullstack Developers',
+  'UI/UX Designers',
+];
