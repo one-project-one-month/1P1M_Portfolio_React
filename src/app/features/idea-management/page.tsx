@@ -1,39 +1,73 @@
-import { ChevronDown, LayoutGrid, List } from 'lucide-react';
-import IdeaCard from './components/IdeaCard';
+import { COLORS } from '@/constants/colors';
+import { Select } from '@radix-ui/themes';
+import { LayoutGrid, List } from 'lucide-react';
+import IdeaCard from './components/idea-card';
+import Pagination from './components/pagination';
 
 const IdeaManagement = () => {
+  const CURRENT_PAGE = 1;
+  const TOTAL_PAGES = 10;
+  const onPageChange = (number: number) =>
+    console.log(`${number} page changed`);
+
   return (
     <div>
       {/* Total and filter by status */}
       <section>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 py-2">
           <div className="w-1/2">
-            <span className="text-[#FFBA00] font-semibold">Total -</span>{' '}
-            <span className="text-[#FFBA00]">200</span>
+            <span className={`text-[${COLORS.secondary}] font-semibold`}>
+              Total -
+            </span>{' '}
+            <span className={`text-[${COLORS.secondary}]`}>200</span>
           </div>
 
           {/* List, grid and filter */}
-          <div className="w-1/2 flex items-center justify-end gap-6">
-            <button type="button" className="text-muted hover:text-[#6F28B3]">
-              <List />
-            </button>
-            <button type="button" className="text-muted hover:text-[#6F28B3]">
-              <LayoutGrid />
-            </button>
+          <div className="w-1/2 flex items-center justify-end gap-8">
+            <div className="flex items-center justify-start gap-6">
+              <button
+                type="button"
+                className={`text-muted hover:text-[${COLORS.primary}]`}
+              >
+                <List />
+              </button>
+              <button
+                type="button"
+                className={`text-muted hover:text-[${COLORS.primary}]`}
+              >
+                <LayoutGrid />
+              </button>
+            </div>
 
-            <button
-              type="button"
-              className="text-white hover:text-[#6F28B3] border border-[#6F28B3] px-4 py-2 rounded-md flex items-center justify-center gap-1"
-            >
-              Filter by Status <ChevronDown className="text-[#6F28B3]" />
-            </button>
+            <Select.Root size="3" defaultValue="default">
+              <Select.Trigger
+                // placeholder="Filter by Status"
+                variant="ghost"
+                radius="large"
+                style={{
+                  border: `1px solid ${COLORS.primary}`,
+                  color: 'white',
+                }}
+                onSelect={(e) => console.log(e.currentTarget)}
+              />
+              <Select.Content position="popper">
+                {/* <Select.Item value="all">All</Select.Item> */}
+                <Select.Item value="default" disabled>
+                  Filter by Status
+                </Select.Item>
+                <Select.Item value="all">All</Select.Item>
+                <Select.Item value="pending">Pending</Select.Item>
+                <Select.Item value="approved">Approved</Select.Item>
+                <Select.Item value="archived">Archived</Select.Item>
+              </Select.Content>
+            </Select.Root>
           </div>
         </div>
       </section>
 
       {/* Idea cards */}
       <section>
-        <div className="grid grid-cols-3 auto-rows-fr gap-y-4 gap-x-6">
+        <div className="grid grid-cols-3 auto-rows-fr gap-y-8 gap-x-12">
           <IdeaCard />
           <IdeaCard />
           <IdeaCard />
@@ -42,6 +76,12 @@ const IdeaManagement = () => {
           <IdeaCard />
         </div>
       </section>
+
+      <Pagination
+        currentPage={CURRENT_PAGE}
+        totalPages={TOTAL_PAGES}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
