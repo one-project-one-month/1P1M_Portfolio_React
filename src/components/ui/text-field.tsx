@@ -52,7 +52,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           value={value ?? ''}
           placeholder={placeholder}
           onChange={handleChange}
-          className={`px-3 py-2 rounded bg-[#222] text-white outline-none ${className}`}
+          className={`w-full rounded bg-[#222] text-white outline-none px-3 py-2  ${className}`}
           {...rest}
         />
 

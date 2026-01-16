@@ -13,7 +13,7 @@ import FormField from '@/components/ui/form-field';
 
 import TrashIcon from '@/assets/icons/trash-icon';
 import { Platforms, TechStacks } from '@/constants';
-import { opomRegister } from './/services/api';
+import { opomRegister } from './services/api';
 import { getToken } from './services/ulits';
 
 interface PlatformLinkState {
