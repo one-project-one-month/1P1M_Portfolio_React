@@ -12,6 +12,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
+import Countdown from '../features/countdown/countdown';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,8 @@ const router = createBrowserRouter([
       { path: '/approved-ideas', element: <ApprovedIdeaPage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
+
+      {path: '/count-down', element: <Countdown/>}
     ],
   },
 
