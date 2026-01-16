@@ -146,112 +146,150 @@ export default function OpomRegisterPage() {
   }, [navigate]);
 
   return (
-    <Background className="h-screen flex items-center justify-center">
-      <FormBackground className="!w-[800px] flex items-center flex-col h-auto p-8">
-        <div className="text-white text-center mb-8">
-          <h1 className="font-sans font-bold text-2xl leading-8">
-            OPOM Register Form
-          </h1>
-        </div>
+    <Background className="h-screen flex items-center ">
+      <div className="w-full h-full flex justify-center p-5 md:p-0 items-center">
+        <FormBackground className="w-full md:w-[532px]  flex mx-auto items-center h-auto  flex-col  p-8">
+          <div className="text-white text-center mb-8">
+            <h1 className="font-sans font-bold text-2xl leading-8">
+              OPOM Register Form
+            </h1>
+          </div>
 
-        {!isLoading && (
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-            <div className="space-y-4 max-w-2xl mx-auto">
-              <FormField
-                placeholder="Name"
-                className="w-full"
-                {...register('name', { required: 'Name is required' })}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message}</p>
-              )}
-
-              <FormField
-                placeholder="Email"
-                className="w-full"
-                {...register('email', { required: 'Email is required' })}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-
-              <Controller
-                name="phone"
-                control={control}
-                rules={{ required: 'Phone number is required' }}
-                render={({ field }) => (
-                  <PhoneInput
-                    {...field}
-                    country="mm"
-                    inputClass="!bg-[#374151] !w-full !h-12 !text-white"
-                  />
+          {!isLoading && (
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+              <div className="space-y-4 max-w-2xl mx-auto">
+                <FormField
+                  placeholder="Name"
+                  className="w-full "
+                  {...register('name', { required: 'Name is required' })}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name.message}</p>
                 )}
-              />
 
-              <Controller
-                name="role"
-                control={control}
-                render={({ field }) => (
-                  <FormDropdown
-                    placeholder="Role"
-                    menuList={TechStacks}
-                    selectedValue={field.value}
-                    onChange={field.onChange}
-                  />
+                <FormField
+                  placeholder="Email"
+                  className="w-full"
+                  {...register('email', { required: 'Email is required' })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
                 )}
-              />
 
-              {platformLinks.map((_, index) => (
-                <div key={index} className="flex gap-4 items-center">
-                  <Controller
-                    name={`platformLinks_${index}`}
-                    control={control}
-                    render={({ field }) => (
-                      <FormDropdown
-                        placeholder="Platform"
-                        menuList={Platforms}
-                        selectedValue={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-
-                  <FormField
-                    placeholder="Platform URL"
-                    {...register(`platformUrl_${index}`)}
-                  />
-
-                  {platformLinks.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removePlatformLink(index)}
-                    >
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
+                <Controller
+                  name="phone"
+                  control={control}
+                  rules={{ required: 'Phone number is required' }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      country="mm"
+                      inputClass="!bg-[#374151] !w-full !h-12 !text-white"
+                    />
                   )}
-                </div>
-              ))}
+                />
 
-              <button
-                type="button"
-                onClick={addPlatformLink}
-                className="text-sm underline"
-              >
-                Add
-              </button>
-            </div>
+                <FormField
+                  placeholder="Telegram username"
+                  className="w-full"
+                  {...register('telegram_username', {
+                    required: 'Telegram username is required',
+                  })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">
+                    {errors.telegram_username?.message}
+                  </p>
+                )}
 
-            <div className="flex justify-end gap-4 mt-8">
-              <Button type="button" onClick={() => reset()}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Registering...' : 'Register'}
-              </Button>
-            </div>
-          </form>
-        )}
-      </FormBackground>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <FormDropdown
+                      placeholder="Role"
+                      menuList={TechStacks}
+                      selectedValue={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+
+                <FormField
+                  placeholder="GitHub Link"
+                  className="w-full"
+                  {...register('github_url', {
+                    required: 'GitHub is required',
+                  })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">
+                    {errors.github_url?.message}
+                  </p>
+                )}
+
+                {platformLinks.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-full grid  gap-3 items-center ${platformLinks.length > 1 ? 'grid-cols-3' : 'grid-cols-3'}`}
+                  >
+                    <Controller
+                      name={`platformLinks_${index}`}
+                      control={control}
+                      render={({ field }) => (
+                        <FormDropdown
+                          placeholder="Platform"
+                          menuList={Platforms}
+                          selectedValue={field.value}
+                          onChange={field.onChange}
+                          className="col-span-1"
+                        />
+                      )}
+                    />
+
+                    <div className="col-span-2">
+                      <div className="flex justify-between gap-2">
+                        {' '}
+                        <FormField
+                          placeholder="Platform URL"
+                          {...register(`platformUrl_${index}`)}
+                          className="w-full"
+                        />
+                        {platformLinks.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removePlatformLink(index)}
+                            className="w-5"
+                          >
+                            <TrashIcon className="w-5 h-5 text-[#99A1AF]" />
+                          </button>
+                        )}
+                      </div>{' '}
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addPlatformLink}
+                  className="text-sm underline text-[#6A7282]"
+                >
+                  Add
+                </button>
+              </div>
+
+              <div className="flex justify-end gap-4 mt-8">
+                <Button type="button" onClick={() => reset()}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Registering...' : 'Register'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </FormBackground>
+      </div>
     </Background>
   );
 }
