@@ -2,7 +2,7 @@ import Pagination from '@/components/ui/pagination';
 import { useEffect } from 'react';
 import { useProjectIdeaQuery } from '../hooks/use-project-ideas';
 import type { ProjectIdeaContainerProps } from '../types/idea-management.types';
-import IdeaCard from './idea-card';
+import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
 
 const ProjectIdeaContainer = ({
@@ -27,6 +27,22 @@ const ProjectIdeaContainer = ({
     }
   }, [data?.meta?.totalItems, onTotalChange]);
 
+  const handleEdit = (id: number) => {
+    console.log(id);
+  };
+  const handleDelete = (id: number) => {
+    console.log(id);
+  };
+  const handleViewDetail = (id: number) => {
+    console.log(id);
+  };
+  const handleStatusChange = (status: 'Pending' | 'Approved' | 'Archived') => {
+    console.log(status);
+  };
+  const handleImportPortfolio = (id: number) => {
+    console.log(id);
+  };
+
   if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
   if (isError || !data?.success)
     return <div className="text-rose-400">Failed to load ideas</div>;
@@ -35,24 +51,24 @@ const ProjectIdeaContainer = ({
 
   return (
     <div>
-      {view === 'list' ? (
+      {view === 'grid' ? (
         <IdeaManagementTable
           data={data.data}
-          onEdit={(id) => console.log('Edit', id)}
-          onDelete={(id) => console.log('Delete', id)}
-          onViewDetail={(id) => console.log('View', id)}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          handleViewDetail={handleViewDetail}
+          handleStatusChange={handleStatusChange}
+          handleImportPortfolio={handleImportPortfolio}
         />
       ) : (
-        <section>
-          <div className="grid grid-cols-3 auto-rows-fr gap-y-8 gap-x-12">
-            <IdeaCard />
-            <IdeaCard />
-            <IdeaCard />
-            <IdeaCard />
-            <IdeaCard />
-            <IdeaCard />
-          </div>
-        </section>
+        <IdeaManagementGrid
+          data={data.data}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          handleViewDetail={handleViewDetail}
+          handleStatusChange={handleStatusChange}
+          handleImportPortfolio={handleImportPortfolio}
+        />
       )}
 
       {onPageChange && totalPages > 1 && (

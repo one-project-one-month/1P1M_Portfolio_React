@@ -1,15 +1,10 @@
 import { MoreVertical } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import type { ProjectIdeaType } from '../types/idea-management.types';
+import type {
+  IdeaManagementTableProps,
+  ProjectIdeaType,
+} from '../types/idea-management.types';
 import Action from './action-button';
-
-interface IdeaManagementTableProps {
-  data: ProjectIdeaType[];
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
-  onViewDetail?: (id: number) => void;
-  onStatusChange?: (id: number) => void;
-}
 
 const truncate = (text: string, max = 35) =>
   text.length > max ? text.slice(0, max) + '...' : text;
@@ -29,9 +24,11 @@ const TOOLTIP_STYLE =
 
 const IdeaManagementTable = ({
   data,
-  onEdit,
-  onDelete,
-  onViewDetail,
+  handleEdit,
+  handleDelete,
+  handleViewDetail,
+  handleStatusChange,
+  handleImportPortfolio,
 }: IdeaManagementTableProps) => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -132,16 +129,26 @@ const IdeaManagementTable = ({
                       <div className="absolute right-full mr-2 top-0 w-44 z-50 flex flex-col gap-1">
                         <Action
                           label="Edit Idea"
-                          onClick={() => onEdit?.(idea.id)}
+                          onClick={() => () => handleEdit(idea.id)}
                         />
                         <Action
                           label="View Detail"
-                          onClick={() => onViewDetail?.(idea.id)}
+                          onClick={() => handleViewDetail(idea.id)}
                         />
                         <Action
                           label="Delete Idea"
                           danger
-                          onClick={() => onDelete?.(idea.id)}
+                          onClick={() => handleDelete(idea.id)}
+                        />
+                        <Action
+                          label="Change Status"
+                          danger
+                          onClick={() => handleStatusChange(idea.status)}
+                        />
+                        <Action
+                          label="Import Portfolio"
+                          danger
+                          onClick={() => handleImportPortfolio(idea.id)}
                         />
                       </div>
                     )}

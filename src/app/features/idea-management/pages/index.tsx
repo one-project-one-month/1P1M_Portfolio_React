@@ -3,7 +3,7 @@ import HeaderSection from '../components/header-section';
 import ProjectIdeaContainer from '../components/project-idea-container';
 
 const IdeaManagement = () => {
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list'); // 'list' or 'grid'
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,12 +31,6 @@ const IdeaManagement = () => {
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
       />
-
-      {/* <Pagination
-        currentPage={CURRENT_PAGE}
-        totalPages={TOTAL_PAGES}
-        onPageChange={onPageChange}
-      /> */}
     </div>
   );
 };

@@ -30,7 +30,7 @@ export interface GetProjectIdeaParams {
 export type GetProjectIdeas = ApiResponseType<ProjectIdeaType[]>;
 
 export type ProjectIdeaContainerProps = {
-  view: string;
+  view: 'list' | 'grid';
   searchQuery?: string;
   selectedFilter?: string;
   page: number;
@@ -38,3 +38,12 @@ export type ProjectIdeaContainerProps = {
   onPageChange?: (page: number) => void;
   onTotalChange?: (total: number) => void;
 };
+
+export interface IdeaManagementTableProps {
+  data: ProjectIdeaType[];
+  handleEdit: (id: number) => void;
+  handleDelete: (id: number) => void;
+  handleViewDetail: (id: number) => void;
+  handleStatusChange: (status: 'Pending' | 'Approved' | 'Archived') => void;
+  handleImportPortfolio: (id: number) => void;
+}
