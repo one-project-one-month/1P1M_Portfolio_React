@@ -1,6 +1,6 @@
 import ProjectImage from '@/assets/ProjectImage.png';
 import UserImage from '@/assets/user.png';
-import { type ProjectStatus } from './components/project-card';
+import type { ProjectStatus } from '@/types/portfolio-management';
 
 export const MOCK_PROJECTS = [
   {
@@ -76,6 +76,36 @@ export const MOCK_PROJECTS = [
   },
   {
     id: '6',
+    image: ProjectImage,
+    title: 'Customizable Workout & Progress Log',
+    teamLeader: 'Ko Aung',
+    members: [
+      { id: '1', name: 'Member 1', avatarUrl: UserImage },
+      { id: '2', name: 'Member 2', avatarUrl: UserImage },
+      { id: '3', name: 'Member 3', avatarUrl: UserImage },
+      { id: '4', name: 'Member 4', avatarUrl: UserImage },
+      { id: '5', name: 'Member 5', avatarUrl: UserImage },
+      { id: '6', name: 'Member 6', avatarUrl: UserImage },
+    ],
+    status: 'Completed' as ProjectStatus,
+  },
+  {
+    id: '7',
+    image: ProjectImage,
+    title: 'Customizable Workout & Progress Log',
+    teamLeader: 'Ko Aung',
+    members: [
+      { id: '1', name: 'Member 1', avatarUrl: UserImage },
+      { id: '2', name: 'Member 2', avatarUrl: UserImage },
+      { id: '3', name: 'Member 3', avatarUrl: UserImage },
+      { id: '4', name: 'Member 4', avatarUrl: UserImage },
+      { id: '5', name: 'Member 5', avatarUrl: UserImage },
+      { id: '6', name: 'Member 6', avatarUrl: UserImage },
+    ],
+    status: 'Completed' as ProjectStatus,
+  },
+  {
+    id: '8',
     image: ProjectImage,
     title: 'Customizable Workout & Progress Log',
     teamLeader: 'Ko Aung',

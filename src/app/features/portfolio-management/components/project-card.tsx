@@ -1,24 +1,11 @@
+import type {
+  ProjectCardProps,
+  ProjectStatus,
+} from '@/types/portfolio-management';
 import { clsx } from 'clsx';
 import { MoreVertical } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
-interface ProjectMember {
-  id: string;
-  name: string;
-  avatarUrl?: string;
-}
-
-export type ProjectStatus = 'Completed' | 'In-Progress' | 'Unqualified';
-
-export interface ProjectCardProps {
-  id: string;
-  image: string;
-  title: string;
-  teamLeader: string;
-  members: ProjectMember[];
-  status: ProjectStatus;
-  className?: string; // Add className prop for flexibility
-}
 
 const statusColors: Record<ProjectStatus, string> = {
   Completed: 'bg-[#00B634]',
@@ -62,9 +49,13 @@ export const ProjectCard = ({
           <span className="text-white/70">Team Members</span>
           <div className="flex items-center -space-x-2">
             {displayMembers.map((member, index) => (
-              <div
+              <Link
                 key={member.id}
-                className="relative h-[21px] w-[21px] overflow-hidden rounded-full border-1 border-[#000000] bg-gray-300"
+                to={`/profile/${member.name}`}
+                state={{
+                  devData: { ...member, profilePictureUrl: member.avatarUrl },
+                }}
+                className="relative h-6 w-6 overflow-hidden rounded-full border border-[#000000] bg-gray-300 block hover:z-50 hover:scale-110 transition-transform cursor-pointer"
                 style={{ zIndex: displayMembers.length - index }}
               >
                 {member.avatarUrl ? (
@@ -78,10 +69,10 @@ export const ProjectCard = ({
                     {member.name.charAt(0)}
                   </div>
                 )}
-              </div>
+              </Link>
             ))}
             {remainingCount > 0 && (
-              <div className="relative z-0 flex h-[20px] w-[14px] items-center justify-center rounded-full text-[12px] ml-2 text-[#CAD5E2]">
+              <div className="relative z-0 flex h-6 w-6 items-center justify-center rounded-full text-[12px] ml-2 text-[#CAD5E2]">
                 +{remainingCount}
               </div>
             )}

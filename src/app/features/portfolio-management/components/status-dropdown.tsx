@@ -1,19 +1,10 @@
 import { useClickOutside } from '@/hooks/use-click-outside';
+import type {
+  DropdownItem,
+  StatusDropdownProps,
+} from '@/types/portfolio-management';
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
-
-export interface DropdownItem {
-  id: string | number;
-  name: string;
-}
-
-export interface StatusDropdownProps {
-  placeholder: string;
-  menuList: DropdownItem[];
-  className?: string;
-  onChange?: (item: DropdownItem) => void;
-  selectedValue?: DropdownItem | null;
-}
 
 const statusColors: Record<string, string> = {
   Completed: 'bg-[#00B634]',
