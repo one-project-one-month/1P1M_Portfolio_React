@@ -23,6 +23,7 @@ export default function RegisterForm() {
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const state = location.state as LocationState | null;
   const emailFromAuth = state?.email ?? '';
 
@@ -171,7 +172,7 @@ export default function RegisterForm() {
         name="regemail"
         id="regemail"
         label="Email"
-        value={emailFromAuth}
+        value={emailFromAuth ?? emailFromAuth}
         placeholder="nora@gmail.com"
         error={emailError}
       />
