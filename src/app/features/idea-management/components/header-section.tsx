@@ -12,6 +12,7 @@ interface IdeaHeaderProps {
   viewMode: string;
   setViewMode: (mode: 'list' | 'grid') => void;
   totalIdeas: number;
+  onCreate: () => void;
 }
 
 const HeaderSection = ({
@@ -22,6 +23,7 @@ const HeaderSection = ({
   viewMode,
   setViewMode,
   totalIdeas,
+  onCreate,
 }: IdeaHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [inputValue, setInputValue] = useState(searchQuery);
@@ -33,11 +35,6 @@ const HeaderSection = ({
 
   const handleSearchIdea = (val: string) => {
     setInputValue(val);
-  };
-
-  const handleCreateIdea = () => {
-    // Handle create idea action
-    console.log('Create idea clicked');
   };
 
   const handleFilterSelect = (filter: string) => {
@@ -70,7 +67,7 @@ const HeaderSection = ({
           </div>
 
           <button
-            onClick={handleCreateIdea}
+            onClick={onCreate}
             className={`px-6 py-2 bg-[${COLORS.primary}] hover:bg-purple-700 text-white/80 font-medium rounded-lg transition-colors`}
           >
             Create Idea
