@@ -41,6 +41,7 @@ export const API_ENDPOINTS = {
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
+  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjects',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {
