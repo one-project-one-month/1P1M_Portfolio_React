@@ -1,8 +1,9 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
-import { Button, DropdownMenu } from '@radix-ui/themes';
+import { Button, Dialog, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical, Eye, Heart } from 'lucide-react';
 import type { IdeaManagementTableProps } from '../types/idea-management.types';
+import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 const IdeaManagementGrid = ({
   data,
@@ -101,7 +102,12 @@ const IdeaManagementGrid = ({
                     Edit Idea
                   </DropdownMenu.Item>
                   <DropdownMenu.Item onClick={() => handleViewDetail(idea.id)}>
-                    View Detail
+                    <Dialog.Root>
+                      <Dialog.Trigger>
+                        <Button>View Detail</Button>
+                      </Dialog.Trigger>
+                      <ProjectIdeaDetailDialog />
+                    </Dialog.Root>
                   </DropdownMenu.Item>
                   <DropdownMenu.Item onClick={() => handleDelete(idea.id)}>
                     Delete Idea
