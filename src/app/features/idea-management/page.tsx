@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import HeaderSection from './components/header-section';
+import IdeaCreateForm from './components/idea-create-form';
 import ProjectIdeaContainer from './components/project-idea-container';
 
 const IdeaManagement = () => {
@@ -8,6 +9,7 @@ const IdeaManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalIdeas, setTotalIdeas] = useState(0);
+  const [createOpen, setCreateOpen] = useState(false); // for idea creation form
   const pageSize = 6;
 
   return (
@@ -20,6 +22,7 @@ const IdeaManagement = () => {
         viewMode={viewMode}
         setViewMode={setViewMode}
         totalIdeas={totalIdeas}
+        onCreate={() => setCreateOpen(true)}
       />
 
       <ProjectIdeaContainer
@@ -30,6 +33,11 @@ const IdeaManagement = () => {
         size={pageSize}
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
+      />
+
+      <IdeaCreateForm
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
       />
     </div>
   );
