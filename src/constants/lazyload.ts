@@ -69,5 +69,5 @@ export const DashboardPage = PageLoader(
   lazy(() => import('@/app/features/dashboard/page')),
 );
 export const IdeaManagementPage = PageLoader(
-  lazy(() => import('@/app/features/idea-management/page')),
+  lazy(() => import('@/app/features/idea-management/pages/index')),
 );

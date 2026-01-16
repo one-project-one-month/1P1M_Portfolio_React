@@ -1,8 +1,8 @@
 import { COLORS } from '@/constants/colors';
 import { Select } from '@radix-ui/themes';
 import { LayoutGrid, List } from 'lucide-react';
-import IdeaCard from './components/idea-card';
-import Pagination from './components/pagination';
+import IdeaCard from '../components/idea-card';
+import Pagination from '../components/pagination';
 
 const IdeaManagement = () => {
   const CURRENT_PAGE = 1;
@@ -11,7 +11,7 @@ const IdeaManagement = () => {
     console.log(`${number} page changed`);
 
   return (
-    <div>
+    <div className="my-10">
       {/* Total and filter by status */}
       <section>
         <div className="flex items-center justify-between mb-6 py-2">
