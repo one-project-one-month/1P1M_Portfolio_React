@@ -7,11 +7,11 @@ import RegisterForm from './components/register-form';
 function RegisterPage() {
   return (
     <Background className="h-screen flex items-center justify-center mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-hidden">
+      <div className="h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-hidden">
         <div className="font-sans text-sm font-semibold leading-8 p-8">
           <div className="h-full flex flex-col justify-center items-center lg:border-r-2 border-[#FFFFFF17] px-60">
             <div className="w-72 text-center mb-12">
-              <h1 className="text-5xl font-bold text-white leading-[1.5]">
+              <h1 className="text-5xl font-bold text-white leading-normal">
                 Join With Us
               </h1>
               <p className="text-gray-200 leading-5 text-center">
@@ -47,7 +47,7 @@ function RegisterPage() {
 
         <div className="flex justify-center items-center">
           <div className="w-full max-w-md lg:max-w-lg">
-            <FormBackground className="h-auto shadow shadow-[#fff]/20">
+            <FormBackground className="h-auto shadow shadow-white/20">
               <RegisterForm />
 
               <div className="flex justify-center gap-8 text-white/60 mt-6">
