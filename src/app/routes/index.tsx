@@ -1,7 +1,6 @@
 import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
- 
   AdminLayout,
   ApprovedIdeaPage,
   DashboardPage,
@@ -11,6 +10,7 @@ import {
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
+import PortfolioManagementPage from '../features/portfolio-management/page';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
 
@@ -39,7 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/admin',
     element: <AdminLayout />,
-    children: [{ path: 'dashboard', element: <DashboardPage /> }],
+    children: [
+      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'portfolio-management', element: <PortfolioManagementPage /> },
+    ],
   },
 
   ...authRoutes,
