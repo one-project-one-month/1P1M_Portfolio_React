@@ -47,8 +47,6 @@ const IdeaManagement = () => {
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
       />
-
-      {/* <ProjectIdeaDetailDialog/> */}
     </div>
   );
 };
