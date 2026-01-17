@@ -3,10 +3,12 @@ import LoginForm from './components/login-form';
 
 export default function LoginPage() {
   return (
-    <main className="w-screen h-screen">
-      <Background className="h-screen flex items-center justify-center">
-        <div className="w-[468px] h-[448px] border border-[#1E2939] rounded-3xl">
-          <LoginForm />
+    <main className="">
+      <Background className="h-screen flex items-center w-full justify-center">
+        <div className=" w-full h-full flex justify-center items-center ">
+        <div className='flex justify-center items-center border border-[#1E2939] rounded-3xl'>
+            <LoginForm />
+        </div>
         </div>
       </Background>
     </main>
