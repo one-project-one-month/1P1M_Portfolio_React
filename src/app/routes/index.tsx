@@ -5,6 +5,7 @@ import {
   ApprovedIdeaPage,
   DashboardPage,
   DeveloperPage,
+  IdeaManagementPage,
   IdeaPage,
   PortfolioPage,
 } from '@/constants/lazyload';
@@ -38,7 +39,11 @@ const router = createBrowserRouter([
   {
     path: '/admin',
     element: <AdminLayout />,
-    children: [{ path: 'dashboard', element: <DashboardPage /> }],
+    children: [
+      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'idea-management', element: <IdeaManagementPage /> },
+      { path: 'idea-management/edit', element: <IdeaManagementPage /> },
+    ],
   },
 
   ...authRoutes,
