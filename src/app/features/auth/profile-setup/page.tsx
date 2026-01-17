@@ -40,9 +40,9 @@ export default function ProfileSetupPage() {
             </div>
           </div>
         </div>
-      <div className='flex h-screen gap-1.5 justify-center items-center '>
+        <div className="flex h-screen gap-1.5 justify-center items-center ">
           <ProfileSetupForm />
-      </div>
+        </div>
       </div>
     </Background>
   );
