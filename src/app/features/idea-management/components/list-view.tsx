@@ -30,11 +30,11 @@ const IdeaManagementTable = ({
   handleImportPortfolio,
 }: IdeaManagementTableProps) => {
   return (
-    <div className="max-w-7xl mx-auto overflow-x-auto">
+    <div className="mx-auto overflow-x-auto">
       <div className="rounded-xl border border-slate-700 bg-slate-900/20">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-white text-sm uppercase">
+            <tr className="border-b border-slate-700 text-white text-bold text-lg">
               {[
                 'Idea Name',
                 'Submitter',
