@@ -1,23 +1,22 @@
-import React from 'react'
-import { EllipseColon } from '@/styles/elipse-colon'
+import { EllipseColon } from '@/styles/elipse-colon';
+import React from 'react';
 
 export type CountdownItem = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 type CountdownTimerProps = {
-  items: CountdownItem[]
-}
+  items: CountdownItem[];
+};
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ items }) => {
   return (
     <div className="flex items-center gap-[19px]">
       {items.map((item, index) => (
         <React.Fragment key={item.label}>
-          
-          <div className="flex flex-col h-[150.76px] w-[97.76px] items-center">
-            <div className="w-[97.76px] h-[97.76px] flex items-center justify-center rounded-xl bg-black text-white text-[48px] font-semibold border border-[#9C39FC] shadow-[1px_4px_4px_0px_rgba(156,57,252,1)]">
+          <div className="flex flex-col w-fit items-center">
+            <div className="size-fit p-5 flex items-center justify-center rounded-xl bg-black text-white text-6xl font-semibold border border-[#9C39FC] shadow-[1px_4px_4px_0px_rgba(156,57,252,0.3)]">
               {item.value}
             </div>
 
@@ -30,7 +29,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ items }) => {
         </React.Fragment>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default CountdownTimer
+export default CountdownTimer;
