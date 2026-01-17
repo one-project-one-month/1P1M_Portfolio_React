@@ -1,32 +1,47 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
 import { Badge, Button, Dialog } from '@radix-ui/themes';
-import { X } from 'lucide-react';
+import { PenLine } from 'lucide-react';
+import type { ReactNode } from 'react';
 
-const ProjectIdeaDetailDialog = () => {
+type ProjectIdeaDetailDialogProps = {
+  trigger?: ReactNode;
+};
+
+const ProjectIdeaDetailDialog = ({ trigger }: ProjectIdeaDetailDialogProps) => {
   return (
     <Dialog.Root>
-      <Dialog.Trigger>
-        <Button>Edit profile</Button>
-      </Dialog.Trigger>
+      <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
 
       <Dialog.Content
         size="4"
         maxWidth="758px"
-        style={{ background: 'black', color: 'white' }}
+        style={{ background: 'black', color: 'white', padding: '60px' }}
       >
         <div className="flex justify-between items-center mb-6">
-          <Dialog.Title size="7" style={{ marginBottom: 0 }}>
-            Project Details
-          </Dialog.Title>
-          <Dialog.Close>
-            <Button variant="ghost">
-              <X className="text-muted" size={35} />
-            </Button>
-          </Dialog.Close>
+          <div>
+            <Dialog.Title size="7" style={{ marginBottom: 0 }}>
+              Project Details
+            </Dialog.Title>
+            <div
+              style={{
+                borderBottom: `7px solid ${COLORS.secondary}`,
+                borderRadius: '15px',
+                maxWidth: '50px',
+              }}
+            />
+          </div>
+          <Button
+            size="3"
+            variant="solid"
+            style={{ background: COLORS.primary }}
+          >
+            <PenLine size={18} />
+            Edit
+          </Button>
         </div>
 
-        <div className="flex flex-col gap-y-8">
+        <div className="flex flex-col gap-y-10">
           {/* Idea name */}
           <div>
             <div className="flex items-center gap-4 font-semibold mb-2">
@@ -121,7 +136,9 @@ const ProjectIdeaDetailDialog = () => {
                 <img src={sampleUserImgUrl} className="size-10 rounded-full" />
                 <div>
                   <h4 className="text-lg font-semibold">Cilian Murphy</h4>
-                  <p className="text-sm">username123123@gmail.com</p>
+                  <Dialog.Description>
+                    username123123@gmail.com
+                  </Dialog.Description>
                 </div>
               </div>
             </div>
@@ -131,30 +148,12 @@ const ProjectIdeaDetailDialog = () => {
                 <img src={sampleUserImgUrl} className="size-10 rounded-full" />
                 <div>
                   <h4 className="text-lg font-semibold">Cilian Murphy</h4>
-                  <p className="text-sm">username123123@gmail.com</p>
+                  <Dialog.Description>
+                    username123123@gmail.com
+                  </Dialog.Description>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Buttons */}
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <Button
-              size="3"
-              variant="outline"
-              className="w-full"
-              style={{ border: `1px solid ${COLORS.primary}`, color: 'white' }}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="3"
-              variant="solid"
-              className="w-full"
-              style={{ background: COLORS.primary }}
-            >
-              Edit Idea
-            </Button>
           </div>
         </div>
       </Dialog.Content>
