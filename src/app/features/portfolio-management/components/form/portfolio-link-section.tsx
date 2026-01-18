@@ -1,66 +1,96 @@
+import InputField from '@/components/ui/input-field';
+import { FilePlus } from 'lucide-react';
+import React from 'react';
+import { uploadFile } from '../../services/attachment-service';
+
 interface PortfolioLinkSectionProps {
   projectLink: string;
   setProjectLink: (link: string) => void;
-  projectLinkName: string;
-  setProjectLinkName: (name: string) => void;
+  projectLinkName?: string;
+  setProjectLinkName?: (name: string) => void;
   isReadOnly: boolean;
 }
 
 export const PortfolioLinkSection = ({
   projectLink,
   setProjectLink,
-  projectLinkName,
-  setProjectLinkName,
   isReadOnly,
 }: PortfolioLinkSectionProps) => {
-  return (
-    <div className="space-y-6 text-white">
-      <h2 className="text-lg font-medium">Project Link</h2>
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-      <div className="space-y-4">
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Link Name (Optional)</label>
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const uploadedFile = await uploadFile(file);
+        setProjectLink(uploadedFile.url);
+      } catch (error) {
+        console.error('Upload failed', error);
+      }
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    if (isReadOnly) return;
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      try {
+        const uploadedFile = await uploadFile(file);
+        setProjectLink(uploadedFile.url);
+      } catch (error) {
+        console.error('Upload failed', error);
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-lg font-medium text-white">Attachment</h2>
+
+      <div className="space-y-6">
+        <div className="flex flex-col space-y-1">
+          <label className="text-sm font-medium text-[#F9FAFB]">
+            Add Link of your project
+          </label>
           {isReadOnly ? (
-            <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
-              {projectLinkName || '-'}
-            </p>
+            <div className="px-3 py-2 bg-[#1e293b] rounded-md text-[#6A7282] min-h-[40px] text-sm flex items-center">
+              {projectLink || 'No link provided'}
+            </div>
           ) : (
-            <input
-              type="text"
-              value={projectLinkName}
-              onChange={(e) => setProjectLinkName(e.target.value)}
-              placeholder="e.g., GitHub Repository, Live Demo"
-              className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
-            />
-          )}
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Project URL*</label>
-          {isReadOnly ? (
-            projectLink ? (
-              <a
-                href={projectLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block px-3 py-2 bg-[#1e293b] rounded-md text-[#9C39FC] hover:text-[#a855f7] min-h-[40px] transition-colors"
-              >
-                {projectLink}
-              </a>
-            ) : (
-              <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white/50 min-h-[40px]">
-                No link added
-              </p>
-            )
-          ) : (
-            <input
-              type="url"
+            <InputField
+              className="text-sm text-[#6A7282] w-full"
+              placeholder="http://"
               value={projectLink}
               onChange={(e) => setProjectLink(e.target.value)}
-              placeholder="https://github.com/your-project"
-              className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
             />
           )}
         </div>
+
+        {!isReadOnly && (
+          <div
+            className="border-2 border-dashed border-[#FFFFFF26] rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-[#FFFFFF05] transition-colors cursor-pointer bg-[#FFFFFF17]"
+            onClick={() => fileInputRef.current?.click()}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileUpload}
+              accept=".svg,.png,.jpg,.jpeg,.gif"
+            />
+            <div className="bg-[#FFFFFF17] p-3 rounded-full mb-3">
+              <FilePlus className="text-gray-400" size={24} />
+            </div>
+            <p className="text-sm text-[#6A7282]">Add File</p>
+          </div>
+        )}
       </div>
     </div>
   );

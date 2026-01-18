@@ -18,10 +18,8 @@ export const PortfolioTypeLang = ({
 }: PortfolioTypeLangProps) => {
   return (
     <div className="space-y-6 text-white">
-      <h2 className="text-lg font-medium">Type & Technologies</h2>
       <div className="flex gap-6 flex-wrap">
         <div className="space-y-1 w-[200px]">
-          <label className="text-sm font-medium">Type</label>
           {isReadOnly ? (
             <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
               {projectType?.name || '-'}
@@ -46,7 +44,6 @@ export const PortfolioTypeLang = ({
           )}
         </div>
         <div className="flex-1 space-y-1 min-w-[200px]">
-          <label className="text-sm font-medium">Languages / Tools</label>
           {isReadOnly ? (
             <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
               {languages || '-'}

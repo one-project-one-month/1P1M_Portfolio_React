@@ -148,6 +148,10 @@ export const usePortfolioForm = ({
     setTeams(teams.filter((t) => t.id !== teamId));
   };
 
+  const handleUpdateTeam = (updatedTeam: TeamData) => {
+    setTeams(teams.map((t) => (t.id === updatedTeam.id ? updatedTeam : t)));
+  };
+
   const getTitle = () => {
     switch (mode) {
       case 'create':
@@ -206,6 +210,7 @@ export const usePortfolioForm = ({
     handleAddTeam,
     handleSaveTeamMembers,
     handleRemoveTeam,
+    handleUpdateTeam,
     getTitle,
     getModalTeamName,
     getModalInitialMembers,

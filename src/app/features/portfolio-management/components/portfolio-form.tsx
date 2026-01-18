@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import type { ProjectData } from '../constants/data';
 import { usePortfolioForm } from '../hooks/use-portfolio-form';
-import AddMemberModal from './add-member-modal';
 import { PortfolioBasicInfo } from './form/portfolio-basic-info';
 import { PortfolioLinkSection } from './form/portfolio-link-section';
 import { PortfolioTeamSection } from './form/portfolio-team-section';
@@ -49,11 +48,13 @@ const PortfolioForm = ({
     setProjectLinkName,
     isModalOpen,
     setIsModalOpen,
+    activeTeamId,
     setActiveTeamId,
     handleSaveForm,
     handleAddTeam,
     handleSaveTeamMembers,
     handleRemoveTeam,
+    handleUpdateTeam,
     getTitle,
     getModalTeamName,
     getModalInitialMembers,
@@ -108,7 +109,15 @@ const PortfolioForm = ({
             teams={teams}
             handleAddTeam={handleAddTeam}
             handleRemoveTeam={handleRemoveTeam}
+            onUpdateTeam={handleUpdateTeam}
+            handleSaveTeamMembers={handleSaveTeamMembers}
+            activeTeamId={activeTeamId}
+            setActiveTeamId={setActiveTeamId}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
             isReadOnly={isReadOnly}
+            getModalTeamName={getModalTeamName}
+            getModalInitialMembers={getModalInitialMembers}
           />
 
           <div className="h-px bg-[#FFFFFF]/15" />
@@ -151,19 +160,7 @@ const PortfolioForm = ({
           </div>
         </div>
       </div>
-
-      {!isReadOnly && (
-        <AddMemberModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setActiveTeamId(null);
-          }}
-          teamName={getModalTeamName()}
-          initialMembers={getModalInitialMembers()}
-          onSave={handleSaveTeamMembers}
-        />
-      )}
+      {/* Modal is now inside PortfolioTeamSection */}
     </div>
   );
 };
