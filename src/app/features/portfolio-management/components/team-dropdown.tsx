@@ -1,5 +1,5 @@
 import type { TeamDropdownProps } from '@/types/portfolio-management';
-import { teamTypes } from '../constants';
+import { teamTypes } from '../constants/data';
 
 const TeamDropdown = ({ onAddTeam }: TeamDropdownProps) => {
   return (

@@ -6,7 +6,7 @@ import type { DropdownItem, TeamType } from '@/types/portfolio-management';
 import { List, Plus, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { statusOptions } from '../constants';
+import { statusOptions } from '../constants/data';
 import AddMemberModal from './add-member-modal';
 import StatusDropdown from './status-dropdown';
 import TeamForm from './team-create-form';
@@ -68,24 +68,18 @@ const PortfolioCreateForm = () => {
   return (
     <div className="max-h-screen text-[#F9FAFB]">
       <div className="mx-auto">
-        {/* Header */}
-
         <div className="bg-slate-900 rounded-lg border border-[#FFFFFF]/15 p-6 flex flex-col h-[87vh]">
           <h1 className="text-xl font-semibold mb-6">Create Portfolio</h1>
 
           <div className="flex-1 overflow-y-auto pr-6 pl-1 custom-scrollbar space-y-6">
             <div className="h-px bg-[#FFFFFF]/15" />
-            {/* Project Basic Information */}
             <div className="space-y-6">
               <h2 className="text-lg font-medium">Project Basic Information</h2>
 
               <div className="flex flex-col md:flex-row gap-6">
-                {/* Image Upload */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <FileUpload className="w-[153px] h-[153px] bg-[#0F172B]/60 border rounded-lg cursor-pointer hover:bg-[#FFFFFF20]" />
                 </div>
-
-                {/* Form Fields */}
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex flex-col space-y-1">
                     <label className="text-sm font-medium">Project Name*</label>
