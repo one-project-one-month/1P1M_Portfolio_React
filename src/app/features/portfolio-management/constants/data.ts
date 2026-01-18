@@ -42,8 +42,10 @@ export interface ProjectData {
   status: ProjectStatus;
   startDate: string;
   completedDate: string | null;
-  projectType: ProjectType;
-  languages: string;
+  technologies: {
+    projectType: ProjectType;
+    languages: string;
+  }[];
   teams: TeamData[];
   projectLink?: Attachment; // Single attachment - either a link or uploaded file
 }
@@ -110,8 +112,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'Completed',
     startDate: 'Nov 15, 2025',
     completedDate: 'Dec 15, 2025',
-    projectType: { id: 6, name: 'Machine Learning' },
-    languages: 'Python, TensorFlow, React, FastAPI, PostgreSQL',
+    technologies: [
+      {
+        projectType: { id: 6, name: 'Machine Learning' },
+        languages: 'Python, TensorFlow, React, FastAPI, PostgreSQL',
+      },
+    ],
     teams: [
       {
         id: 'team-1-1',
@@ -204,8 +210,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'In Progress',
     startDate: 'Dec 10, 2025',
     completedDate: null,
-    projectType: { id: 3, name: 'Fullstack Developers' },
-    languages: 'React, Node.js, Python, MongoDB, AWS',
+    technologies: [
+      {
+        projectType: { id: 3, name: 'Fullstack Developers' },
+        languages: 'React, Node.js, Python, MongoDB, AWS',
+      },
+    ],
     teams: [
       {
         id: 'team-2-1',
@@ -305,8 +315,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'Unqualified',
     startDate: 'Jan 4, 2025',
     completedDate: null,
-    projectType: { id: 2, name: 'Backend Developers' },
-    languages: 'Python, spaCy, Flask, MySQL, Docker',
+    technologies: [
+      {
+        projectType: { id: 2, name: 'Backend Developers' },
+        languages: 'Python, spaCy, Flask, MySQL, Docker',
+      },
+    ],
     teams: [
       {
         id: 'team-3-1',
@@ -427,8 +441,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'In Progress',
     startDate: 'Feb 9, 2025',
     completedDate: null,
-    projectType: { id: 6, name: 'Machine Learning' },
-    languages: 'Python, Scikit-learn, Apache Kafka, Spark, Redis',
+    technologies: [
+      {
+        projectType: { id: 6, name: 'Machine Learning' },
+        languages: 'Python, Scikit-learn, Apache Kafka, Spark, Redis',
+      },
+    ],
     teams: [
       {
         id: 'team-4-1',
@@ -542,8 +560,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'Unqualified',
     startDate: 'Mar 28, 2025',
     completedDate: null,
-    projectType: { id: 2, name: 'Backend Developers' },
-    languages: 'Solidity, Web3.js, React, Node.js, IPFS',
+    technologies: [
+      {
+        projectType: { id: 2, name: 'Backend Developers' },
+        languages: 'Solidity, Web3.js, React, Node.js, IPFS',
+      },
+    ],
     teams: [
       {
         id: 'team-5-1',
@@ -664,8 +686,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'Completed',
     startDate: 'Apr 20, 2025',
     completedDate: 'May 20, 2025',
-    projectType: { id: 3, name: 'Fullstack Developers' },
-    languages: 'Ethereum, Solidity, React, TypeScript, PostgreSQL',
+    technologies: [
+      {
+        projectType: { id: 3, name: 'Fullstack Developers' },
+        languages: 'Ethereum, Solidity, React, TypeScript, PostgreSQL',
+      },
+    ],
     teams: [
       {
         id: 'team-6-1',
@@ -780,8 +806,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'In Progress',
     startDate: 'May 3, 2025',
     completedDate: null,
-    projectType: { id: 3, name: 'Fullstack Developers' },
-    languages: 'Vue.js, Node.js, Express, MongoDB, AES-256',
+    technologies: [
+      {
+        projectType: { id: 3, name: 'Fullstack Developers' },
+        languages: 'Vue.js, Node.js, Express, MongoDB, AES-256',
+      },
+    ],
     teams: [
       {
         id: 'team-7-1',
@@ -902,8 +932,12 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
     status: 'In Progress',
     startDate: 'Jun 5, 2025',
     completedDate: null,
-    projectType: { id: 6, name: 'Machine Learning' },
-    languages: 'Python, JavaScript, Chrome Extension API, FastAPI, XGBoost',
+    technologies: [
+      {
+        projectType: { id: 6, name: 'Machine Learning' },
+        languages: 'Python, JavaScript, Chrome Extension API, FastAPI, XGBoost',
+      },
+    ],
     teams: [
       {
         id: 'team-8-1',

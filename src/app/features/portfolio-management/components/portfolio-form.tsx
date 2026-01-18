@@ -37,10 +37,10 @@ const PortfolioForm = ({
     setCompletedDate,
     status,
     setStatus,
-    projectType,
-    setProjectType,
-    languages,
-    setLanguages,
+    technologies,
+    handleAddTechnology,
+    handleRemoveTechnology,
+    handleUpdateTechnology,
     teams,
     projectLink,
     setProjectLink,
@@ -48,7 +48,7 @@ const PortfolioForm = ({
     setProjectLinkName,
     isModalOpen,
     setIsModalOpen,
-    activeTeamId,
+    // activeTeamId,
     setActiveTeamId,
     handleSaveForm,
     handleAddTeam,
@@ -96,10 +96,10 @@ const PortfolioForm = ({
           <div className="h-px bg-[#FFFFFF]/15" />
 
           <PortfolioTypeLang
-            projectType={projectType}
-            setProjectType={setProjectType}
-            languages={languages}
-            setLanguages={setLanguages}
+            technologies={technologies}
+            onAddTechnology={handleAddTechnology}
+            onRemoveTechnology={handleRemoveTechnology}
+            onUpdateTechnology={handleUpdateTechnology}
             isReadOnly={isReadOnly}
           />
 
@@ -111,7 +111,7 @@ const PortfolioForm = ({
             handleRemoveTeam={handleRemoveTeam}
             onUpdateTeam={handleUpdateTeam}
             handleSaveTeamMembers={handleSaveTeamMembers}
-            activeTeamId={activeTeamId}
+            // activeTeamId={activeTeamId}
             setActiveTeamId={setActiveTeamId}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}

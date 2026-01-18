@@ -16,6 +16,11 @@ interface UsePortfolioFormProps {
   onSave?: (data: Partial<ProjectData>) => void;
 }
 
+export interface TechnologyEntry {
+  projectType: DropdownItem | null;
+  languages: string;
+}
+
 export const usePortfolioForm = ({
   mode,
   initialData,
@@ -39,10 +44,11 @@ export const usePortfolioForm = ({
       ? statusOptions.find((s) => s.name === initialData.status) || null
       : null,
   );
-  const [projectType, setProjectType] = useState<DropdownItem | null>(
-    initialData?.projectType || null,
+
+  const [technologies, setTechnologies] = useState<TechnologyEntry[]>(
+    initialData?.technologies || [{ projectType: null, languages: '' }],
   );
-  const [languages, setLanguages] = useState(initialData?.languages || '');
+
   const [teams, setTeams] = useState<TeamData[]>(initialData?.teams || []);
   const [projectLink, setProjectLink] = useState<string>(
     initialData?.projectLink?.url || '',
@@ -65,15 +71,40 @@ export const usePortfolioForm = ({
           ? statusOptions.find((s) => s.name === initialData.status) || null
           : null,
       );
-      setProjectType(initialData.projectType || null);
-      setLanguages(initialData.languages || '');
+      setTechnologies(
+        initialData.technologies || [{ projectType: null, languages: '' }],
+      );
       setTeams(initialData.teams || []);
       setProjectLink(initialData.projectLink?.url || '');
       setProjectLinkName(initialData.projectLink?.name || '');
     }
   }, [initialData]);
 
+  const handleAddTechnology = () => {
+    setTechnologies([...technologies, { projectType: null, languages: '' }]);
+  };
+
+  const handleRemoveTechnology = (index: number) => {
+    setTechnologies(technologies.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateTechnology = (
+    index: number,
+    field: keyof TechnologyEntry,
+    value: any,
+  ) => {
+    const newTechnologies = [...technologies];
+    newTechnologies[index] = { ...newTechnologies[index], [field]: value };
+    setTechnologies(newTechnologies);
+  };
+
   const handleSaveForm = () => {
+    // Filter out technologies with no project type selected
+    const validTechnologies = technologies.filter(
+      (t): t is { projectType: DropdownItem; languages: string } =>
+        t.projectType !== null,
+    );
+
     const formData: Partial<ProjectData> = {
       id: initialData?.id,
       projectName,
@@ -82,8 +113,7 @@ export const usePortfolioForm = ({
       startDate,
       completedDate: completedDate || null,
       status: status?.name as ProjectData['status'],
-      projectType: projectType as ProjectData['projectType'],
-      languages,
+      technologies: validTechnologies as ProjectData['technologies'],
       teams,
       projectLink: projectLink
         ? {
@@ -192,10 +222,11 @@ export const usePortfolioForm = ({
     setCompletedDate,
     status,
     setStatus,
-    projectType,
-    setProjectType,
-    languages,
-    setLanguages,
+    technologies,
+    setTechnologies,
+    handleAddTechnology,
+    handleRemoveTechnology,
+    handleUpdateTechnology,
     teams,
     setTeams,
     projectLink,

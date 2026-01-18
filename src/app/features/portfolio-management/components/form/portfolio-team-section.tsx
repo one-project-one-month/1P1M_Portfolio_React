@@ -14,7 +14,7 @@ interface PortfolioTeamSectionProps {
     selectedMembers: ModalMember[],
     teamName: string,
   ) => void;
-  activeTeamId: string | null;
+  // activeTeamId removed as it's unused
   setActiveTeamId: (id: string | null) => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -29,7 +29,7 @@ export const PortfolioTeamSection = ({
   handleRemoveTeam,
   onUpdateTeam,
   handleSaveTeamMembers,
-  activeTeamId,
+  // activeTeamId,
   setActiveTeamId,
   isModalOpen,
   setIsModalOpen,

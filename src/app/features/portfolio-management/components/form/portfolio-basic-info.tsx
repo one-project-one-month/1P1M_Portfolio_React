@@ -1,3 +1,4 @@
+import FileUpload from '@/components/ui/file-upload';
 import type { DropdownItem } from '@/types/portfolio-management';
 import type { ProjectData } from '../../constants/data';
 import { statusOptions } from '../../constants/data';
@@ -48,8 +49,8 @@ export const PortfolioBasicInfo = ({
               />
             </div>
           ) : (
-            <div className="w-[153px] h-[153px] bg-[#0F172B]/60 border border-[#FFFFFF]/15 rounded-lg flex items-center justify-center text-white/50">
-              No Image
+            <div className="shrink-0">
+              <FileUpload className="w-[153px] h-[153px] bg-[#0F172B]/60 border rounded-lg cursor-pointer hover:bg-[#FFFFFF20]" />
             </div>
           )}
         </div>
