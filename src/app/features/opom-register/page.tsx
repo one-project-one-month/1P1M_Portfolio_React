@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
 
-import Background from '@/components/background';
 import { Button } from '@/components/ui/button';
 import FormBackground from '@/components/ui/form-bg';
 import FormDropdown from '@/components/ui/form-dropdown';
@@ -13,8 +12,7 @@ import FormField from '@/components/ui/form-field';
 
 import TrashIcon from '@/assets/icons/trash-icon';
 import { Platforms, TechStacks } from '@/constants';
-import { opomRegister } from './/services/api';
-import { getToken } from './services/ulits';
+import { opomRegister } from './services/api';
 
 interface PlatformLinkState {
   id: number;
@@ -132,21 +130,21 @@ export default function OpomRegisterPage() {
     }
   };
 
-  useEffect(() => {
-    try {
-      const token = getToken();
-      if (!token) {
-        navigate('/auth/register');
-      } else {
-        setIsLoading(false);
-      }
-    } catch {
-      navigate('/auth/register');
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   try {
+  //     const token = getToken();
+  //     if (!token) {
+  //       navigate('/auth/register');
+  //     } else {
+  //       setIsLoading(false);
+  //     }
+  //   } catch {
+  //     navigate('/auth/register');
+  //   }
+  // }, [navigate]);
 
   return (
-    <Background className="h-screen flex items-center ">
+    <div className="h-screen flex items-center ">
       <div className="w-full h-full flex justify-center p-5 md:p-0 items-center">
         <FormBackground className="w-full md:w-[532px]  flex mx-auto items-center h-auto  flex-col  p-8">
           <div className="text-white text-center mb-8">
@@ -155,7 +153,7 @@ export default function OpomRegisterPage() {
             </h1>
           </div>
 
-          {!isLoading && (
+          {true && (
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
               <div className="space-y-4 max-w-2xl mx-auto">
                 <FormField
@@ -290,6 +288,6 @@ export default function OpomRegisterPage() {
           )}
         </FormBackground>
       </div>
-    </Background>
+    </div>
   );
 }

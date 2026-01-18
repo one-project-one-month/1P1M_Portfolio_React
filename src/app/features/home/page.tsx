@@ -25,7 +25,7 @@ export default function HomePage() {
           <button
             type="button"
             className="border border-white rounded-full text-sm lg:text-lg cursor-pointer py-4 px-10"
-            onClick={() => navigate('/auth/opom-register')}
+            onClick={() => navigate('/opom-register')}
           >
             Register Now
           </button>
