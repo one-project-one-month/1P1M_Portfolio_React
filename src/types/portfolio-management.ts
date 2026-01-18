@@ -2,6 +2,7 @@ export type TeamType = {
   id: string;
   name: string;
   count: number;
+  members: Member[];
 };
 
 export type TeamDropdownProps = {
@@ -18,6 +19,7 @@ export interface Member {
   email?: string;
   profilePictureUrl?: string;
   avatarUrl?: string; // Added avatarUrl for compatibility with ProjectCard
+  role?: 'Team Leader' | 'Member';
 }
 
 export interface ProjectCardProps {

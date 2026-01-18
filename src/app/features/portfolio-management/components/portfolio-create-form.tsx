@@ -2,38 +2,67 @@ import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormTextArea from '@/components/ui/form-textarea';
 import InputField from '@/components/ui/input-field';
-import { useClickOutside } from '@/hooks/use-click-outside';
 import type { DropdownItem, TeamType } from '@/types/portfolio-management';
 import { List, Plus, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { statusOptions } from '../constants';
+import AddMemberModal from './add-member-modal';
 import StatusDropdown from './status-dropdown';
 import TeamForm from './team-create-form';
-import TeamDropdown from './team-dropdown';
 
 const PortfolioCreateForm = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<DropdownItem | null>(null);
-  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
   const [addedTeams, setAddedTeams] = useState<TeamType[]>([]);
-
-  const teamDropdownRef = useClickOutside<HTMLDivElement>(() =>
-    setIsTeamDropdownOpen(false),
+  const [activeModalTeamId, setActiveModalTeamId] = useState<string | null>(
+    null,
   );
-
-  const handleAddTeam = (teamName: string) => {
-    if (!addedTeams.find((team) => team.name === teamName)) {
-      setAddedTeams([
-        ...addedTeams,
-        { id: crypto.randomUUID(), name: teamName, count: 0 },
-      ]);
-    }
-    setIsTeamDropdownOpen(false);
-  };
 
   const handleRemoveTeam = (id: string) => {
     setAddedTeams(addedTeams.filter((team) => team.id !== id));
+  };
+
+  const handleAddMemberToTeam = (selectedUsers: any[], teamName: string) => {
+    if (activeModalTeamId) {
+      if (activeModalTeamId === 'new-team') {
+        // Create new team
+        setAddedTeams([
+          ...addedTeams,
+          {
+            id: crypto.randomUUID(),
+            name: teamName,
+            count: selectedUsers.length,
+            members: selectedUsers,
+          },
+        ]);
+      } else {
+        // Update existing team
+        setAddedTeams(
+          addedTeams.map((team) => {
+            if (team.id === activeModalTeamId) {
+              const newMembers = selectedUsers.filter(
+                (newUser) =>
+                  !team.members.some((existing) => existing.id === newUser.id),
+              );
+
+              const updatedTeam = {
+                ...team,
+                name: teamName, // Update name if changed
+                count: team.members.length + newMembers.length,
+                members: [...team.members, ...newMembers],
+              };
+
+              if (newMembers.length === 0 && team.name === teamName)
+                return team;
+
+              return updatedTeam;
+            }
+            return team;
+          }),
+        );
+      }
+    }
   };
 
   return (
@@ -121,33 +150,50 @@ const PortfolioCreateForm = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium">Team Management</h2>
-                <div className="flex gap-3 relative" ref={teamDropdownRef}>
+                <div className="flex gap-3 relative">
                   <Button className="text-[#99A1AF] border border-[#FFFFFF]/15 text-lg font-medium rounded-lg hover:bg-white/10 bg-transparent px-3 py-1.5 flex gap-1 items-center">
                     <List className="h-6 w-6" />
                     List View
                   </Button>
                   <Button
                     className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-3 py-1.5 text-[#F9FAFB] gap-1 relative"
-                    onClick={() => setIsTeamDropdownOpen(!isTeamDropdownOpen)}
+                    onClick={() => setActiveModalTeamId('new-team')}
                   >
                     <Plus size={18} />
                     Add Team
                   </Button>
-
-                  {isTeamDropdownOpen && (
-                    <TeamDropdown onAddTeam={handleAddTeam} />
-                  )}
                 </div>
               </div>
 
               {/* Added Teams List */}
               <TeamForm
                 addedTeams={addedTeams}
-                handleRemoveTeam={handleRemoveTeam}
+                onAddMemberClick={(teamId) => setActiveModalTeamId(teamId)}
+                onUpdateTeam={(updatedTeam) => {
+                  setAddedTeams(
+                    addedTeams.map((t) =>
+                      t.id === updatedTeam.id ? updatedTeam : t,
+                    ),
+                  );
+                }}
+                onDeleteTeam={handleRemoveTeam}
               />
             </div>
 
             <div className="h-px bg-[#FFFFFF]/15" />
+
+            {/* Modal */}
+            <AddMemberModal
+              isOpen={!!activeModalTeamId}
+              onClose={() => setActiveModalTeamId(null)}
+              teamName={
+                activeModalTeamId === 'new-team'
+                  ? `Team ${addedTeams.length + 1} `
+                  : addedTeams.find((t) => t.id === activeModalTeamId)?.name ||
+                    ''
+              }
+              onSave={handleAddMemberToTeam}
+            />
 
             {/* Attachment */}
             <div className="space-y-6">
