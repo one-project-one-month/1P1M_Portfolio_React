@@ -38,8 +38,8 @@ export default function HomePage() {
           </div>
           <button
             type="button"
-            className="w-[211px] h-[60px] border-[1.4px] border-[#FFBA00] rounded-[8px] px-[34px] py-[14px]  gap-[8px] font-semibold"
-            onClick={() => navigate('/auth/opom-register')}
+            className="border border-white rounded-full text-sm lg:text-lg cursor-pointer py-4 px-10"
+            onClick={() => navigate('/opom-register')}
           >
             Register Now
           </button>

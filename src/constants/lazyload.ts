@@ -26,7 +26,7 @@ export const ProfileSetupPage = PageLoader(
 );
 
 export const OpomRegisterPage = PageLoader(
-  lazy(() => import('@/app/features/auth/opom-register/page')),
+  lazy(() => import('@/app/features/opom-register/page')),
 );
 
 export const ForgotPasswordPage = PageLoader(
