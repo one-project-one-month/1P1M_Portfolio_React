@@ -1,7 +1,7 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
 import { Eye, Heart } from 'lucide-react';
-import type { IdeaManagementTableProps } from '../types/idea-management.types';
+import type { IdeaManagementTableType } from '../types/idea-management.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
 const IdeaManagementGrid = ({
@@ -10,13 +10,12 @@ const IdeaManagementGrid = ({
   handleDelete,
   handleViewDetail,
   handleStatusChange,
-  handleImportPortfolio,
-}: IdeaManagementTableProps) => {
+}: IdeaManagementTableType) => {
   return (
-    <div className="grid grid-cols-3 auto-rows-fr gap-y-8 gap-x-12">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
       {/* {data.map((idea) => ( */}
       <div
-        className={`px-4 py-6 md:px-8 md:py-10 space-y-4 md:space-y-6 rounded-lg bg-[${COLORS.primary}]`}
+        className={`px-4 py-6 md:px-6 md:py-8 space-y-4 md:space-y-6 rounded-lg bg-[${COLORS.primary}]`}
       >
         {/* Title and status */}
         <div className="flex items-start md:items-center justify-between gap-2 md:gap-4">
@@ -81,7 +80,7 @@ const IdeaManagementGrid = ({
 
         {/* Like, view and edit */}
         <div className="flex items-center justify-between p-1 md:p-2">
-          <div className="w-1/2 flex items-center justify-start gap-4 md:gap-8">
+          <div className="w-1/2 flex items-center justify-start gap-2 md:gap-6">
             <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
               <Heart className="w-4 h-4 md:w-5 md:h-5" />
               {/* {idea.reaction_count} */}
@@ -91,7 +90,7 @@ const IdeaManagementGrid = ({
               <Eye className="w-4 h-4 md:w-5 md:h-5" />
               {/* TODO: change to dynamic count later */}
               <span>
-                1.1 <span>K</span>
+                1.1<span>K</span>
               </span>
             </span>
           </div>
@@ -103,7 +102,6 @@ const IdeaManagementGrid = ({
               handleViewDetail={handleViewDetail}
               handleDelete={handleDelete}
               handleStatusChange={handleStatusChange}
-              handleImportPortfolio={handleImportPortfolio}
             />
           </div>
         </div>

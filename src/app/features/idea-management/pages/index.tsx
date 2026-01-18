@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import HeaderSection from '../components/header-section';
 import IdeaCreateForm from '../components/idea-create-form';
 import ProjectIdeaContainer from '../components/project-idea-container';
+import ProjectIdeaHeaderSection from '../components/project-idea-header-section';
 
 const IdeaManagement = () => {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>(() => {
@@ -15,21 +15,19 @@ const IdeaManagement = () => {
   const [createOpen, setCreateOpen] = useState(false); // for idea creation form
   const pageSize = 6;
 
-  // Save view mode to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('idea-management-view-mode', viewMode);
   }, [viewMode]);
 
   return (
     <div>
-      <HeaderSection
+      <ProjectIdeaHeaderSection
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         selectedFilter={selectedFilter}
         setSelectedFilter={setSelectedFilter}
         viewMode={viewMode}
         setViewMode={setViewMode}
-        totalIdeas={totalIdeas}
         onCreate={() => setCreateOpen(true)}
       />
 
@@ -41,6 +39,7 @@ const IdeaManagement = () => {
         size={pageSize}
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
+        totalIdeas={totalIdeas}
       />
 
       <IdeaCreateForm

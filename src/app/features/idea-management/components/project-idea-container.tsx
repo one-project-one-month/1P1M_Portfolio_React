@@ -1,4 +1,5 @@
 import Pagination from '@/components/ui/pagination';
+import { COLORS } from '@/constants/colors';
 import { useEffect } from 'react';
 import { useProjectIdeaQuery } from '../hooks/use-project-ideas';
 import type { ProjectIdeaContainerProps } from '../types/idea-management.types';
@@ -13,6 +14,7 @@ const ProjectIdeaContainer = ({
   size,
   onPageChange,
   onTotalChange,
+  totalIdeas,
 }: ProjectIdeaContainerProps) => {
   const { data, isLoading, isError } = useProjectIdeaQuery({
     page,
@@ -70,19 +72,22 @@ const ProjectIdeaContainer = ({
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
-          handleImportPortfolio={handleImportPortfolio}
         />
       )}
 
-      {onPageChange && totalPages > 1 && (
-        <div className="mt-8">
+      <div className="flex items-center justify-between mt-14">
+        {/* Total Count */}
+        <span className={`text-[${COLORS.secondary}] font-semibold`}>
+          Total - {totalIdeas}
+        </span>
+        {onPageChange && totalPages > 1 && (
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
