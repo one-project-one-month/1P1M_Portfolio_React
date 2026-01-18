@@ -1,14 +1,24 @@
+import Curve from '@/styles/curve';
 import { useNavigate } from 'react-router-dom';
 import { ApprovedIdeasSection } from './components/approved-ideas';
+import type { CountdownItem } from './components/countdown-component';
+import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const countdownItems: CountdownItem[] = [
+    { value: '03', label: 'Days' },
+    { value: '05', label: 'Hours' },
+    { value: '40', label: 'Minutes' },
+    { value: '30', label: 'Seconds' },
+  ];
 
   return (
     <div className="">
       {/* Start Welcome Page Content */}
-      <section className="flex flex-col items-center justify-center text-center text-white h-[80vh] mb-8">
+      <section className="flex flex-col items-center justify-center  text-center text-white h-[80vh] mt-14">
+        <Curve className="absolute top-[90px] w-screen h-[356px] z-0 pointer-events-none" />
         <div className="text-4xl lg:text-8xl">
           <h1>An Open Space For</h1>
           <h1>
@@ -17,8 +27,12 @@ export default function HomePage() {
           </h1>
         </div>
 
-        <div className="mt-8">
-          <div className="text-lg lg:text-2xl text-[#B4BCD0] mb-8">
+        <div className="p-4 mt-2.5">
+          <CountdownTimer items={countdownItems} />
+        </div>
+
+        <div className="mt-8 flex-col items-center">
+          <div className="text-lg lg:text-xl text-[#B4BCD0] mb-8">
             <p>Meet the new standard of modern software development</p>
             <p>Team Work, sprints, and product roadmaps.</p>
           </div>
