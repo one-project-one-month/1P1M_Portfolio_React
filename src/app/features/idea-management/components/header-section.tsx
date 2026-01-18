@@ -46,10 +46,12 @@ const HeaderSection = ({
     <>
       {/* Header Section */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-24">
+        <div className="flex items-center justify-between my-4">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Ideas List</h1>
-            <div className={`h-1 w-24 bg-[${COLORS.secondary}] `}></div>
+            <h1 className="text-5xl font-bold text-white mb-2">Ideas List</h1>
+            <div
+              className={`h-1.5 w-24 rounded-lg bg-[${COLORS.secondary}] `}
+            ></div>
           </div>
 
           {/* Search Box */}
@@ -68,14 +70,14 @@ const HeaderSection = ({
 
           <button
             onClick={onCreate}
-            className={`px-6 py-2 bg-[${COLORS.primary}] hover:bg-purple-700 text-white/80 font-medium rounded-lg transition-colors`}
+            className={`px-6 py-2 bg-[${COLORS.primary}] hover:bg-purple-700 text-white/80 rounded-lg transition-colors`}
           >
             Create Idea
           </button>
         </div>
 
         {/* Total Count and Filters Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-10">
           {/* Total Count */}
           <div className="text-white">
             <span className={`text-[${COLORS.secondary}] font-semibold`}>

@@ -16,7 +16,7 @@ export type ProjectIdeaType = {
   reaction_count: number;
   projectTypes: string[];
   reactedProjects: number[];
-  status: 'Pending' | 'Approved' | 'Archived';
+  status: 'PENDING' | 'APPROVED' | 'ARCHIVED';
 };
 
 export interface GetProjectIdeaParams {
@@ -40,10 +40,11 @@ export type ProjectIdeaContainerProps = {
 };
 
 export interface IdeaManagementTableProps {
+  type: 'list' | 'grid';
   data: ProjectIdeaType[];
   handleEdit: (id: number) => void;
   handleDelete: (id: number) => void;
   handleViewDetail: (id: number) => void;
-  handleStatusChange: (status: 'Pending' | 'Approved' | 'Archived') => void;
+  handleStatusChange: (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => void;
   handleImportPortfolio: (id: number) => void;
 }

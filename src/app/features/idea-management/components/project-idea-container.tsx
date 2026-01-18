@@ -36,24 +36,27 @@ const ProjectIdeaContainer = ({
   const handleViewDetail = (id: number) => {
     console.log(id);
   };
-  const handleStatusChange = (status: 'Pending' | 'Approved' | 'Archived') => {
+  const handleStatusChange = (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => {
     console.log(status);
   };
   const handleImportPortfolio = (id: number) => {
     console.log(id);
   };
 
-  if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
-  if (isError || !data?.success)
-    return <div className="text-rose-400">Failed to load ideas</div>;
+  // if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
 
+  // if (isError || !data?.success)
+  //   return <div className="text-rose-400">Failed to load ideas</div>;
+
+  // Ensure children always receive an array (empty when no data).
+  const items = data?.data ?? [];
   const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
 
   return (
     <div>
-      {view === 'grid' ? (
+      {view === 'list' ? (
         <IdeaManagementTable
-          data={data.data}
+          // data={items}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
@@ -62,7 +65,7 @@ const ProjectIdeaContainer = ({
         />
       ) : (
         <IdeaManagementGrid
-          data={data.data}
+          // data={items}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
