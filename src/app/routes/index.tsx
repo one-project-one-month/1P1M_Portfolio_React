@@ -6,11 +6,12 @@ import {
   DashboardPage,
   DeveloperPage,
   IdeaPage,
+  PortfolioManagementPage,
   PortfolioPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
-import PortfolioManagementPage from '../features/portfolio-management/page';
+import PortfolioCreateForm from '../features/portfolio-management/components/portfolio-create-form';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
 
@@ -41,7 +42,14 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { path: 'dashboard', element: <DashboardPage /> },
-      { path: 'portfolio-management', element: <PortfolioManagementPage /> },
+      {
+        path: 'portfolio-management',
+        element: <PortfolioManagementPage />,
+      },
+      {
+        path: 'portfolio-management/create-portfolio',
+        element: <PortfolioCreateForm />,
+      },
     ],
   },
 

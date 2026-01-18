@@ -1,8 +1,8 @@
 import Background from '@/components/background';
 import FormBackground from '@/components/ui/form-bg';
-import OtpForm from '../otp/components/otp-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import OtpForm from '../otp/components/otp-form';
 
 export default function CheckPasswordOtpPage() {
   const navigate = useNavigate();

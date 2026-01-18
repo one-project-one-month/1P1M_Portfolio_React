@@ -1,7 +1,8 @@
 import Pagination from '@/components/ui/pagination';
 import { useState } from 'react';
-import ManagementControlBar from './components/management-control-bar';
+import PortfolioHeader from './components/portfolio-header';
 import PortfolioListView from './components/portfolio-list-view';
+import { ProjectCard } from './components/project-card';
 import { usePortfolioManagement } from './hooks/use-portfolio-management';
 
 const PortfolioManagementPage = () => {
@@ -20,18 +21,10 @@ const PortfolioManagementPage = () => {
 
   return (
     <div className="flex flex-col w-full h-full px-6 py-8">
-      <div className="mb-12">
-        <h1 className="text-5xl font-bold text-white leading-[48px] mb-1.5">
-          Project Portfolio Management
-        </h1>
-        <div className="w-[157px] h-1.5 bg-[#FFBA00] rounded" />
-      </div>
-      <ManagementControlBar
-        title="Project Portfolio Management"
+      <PortfolioHeader
         onSearch={handleSearch}
         viewMode={viewMode}
         onChangeViewMode={setViewMode}
-        onCreateProject={() => console.log('Create Project')}
         onFilterByStatus={handleStatusFilter}
       />
 
@@ -39,9 +32,30 @@ const PortfolioManagementPage = () => {
         {viewMode === 'list' ? (
           <PortfolioListView data={paginatedData} onDelete={deleteProject} />
         ) : (
-          <p className="text-white text-center text-opacity-50">
-            Content Placeholder
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 overflow-x-hidden">
+            {paginatedData.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-white/50 text-lg">No projects found</p>
+              </div>
+            ) : (
+              paginatedData.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  id={project.id.toString()}
+                  image={project.image}
+                  title={project.title}
+                  teamLeader={project.leader}
+                  members={project.members}
+                  status={
+                    project.status === 'In Progress'
+                      ? 'In-Progress'
+                      : (project.status as any)
+                  }
+                  onDelete={(id) => deleteProject(parseInt(id))}
+                />
+              ))
+            )}
+          </div>
         )}
       </div>
 

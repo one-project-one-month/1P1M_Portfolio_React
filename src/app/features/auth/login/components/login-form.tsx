@@ -90,7 +90,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <FormBackground className="flex items-center justify-around flex-col w-full h-full">
+      <FormBackground className="flex items-center justify-around flex-col w-fit h-fit">
         {/* Heading */}
         <div className="text-white">
           <h1 className="font-sans font-bold text-2xl leading-8 mb-2">

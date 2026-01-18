@@ -5,7 +5,10 @@ interface HamburgerProps {
   onToggle: () => void;
 }
 
-const CustomHamburger: React.FC<HamburgerProps> = ({ isOpen=false, onToggle }) => {
+const CustomHamburger: React.FC<HamburgerProps> = ({
+  isOpen = false,
+  onToggle,
+}) => {
   return (
     <button
       onClick={onToggle}

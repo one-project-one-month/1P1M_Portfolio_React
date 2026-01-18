@@ -1,17 +1,26 @@
 import { useClickOutside } from '@/hooks/use-click-outside';
-import type { DropdownProps, MenuItem } from '@/types/dropdown-props';
+import type {
+  DropdownItem,
+  StatusDropdownProps,
+} from '@/types/portfolio-management';
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const Dropdown = ({
+const statusColors: Record<string, string> = {
+  Completed: 'bg-[#00B634]',
+  'In Progress': 'bg-[#FF9900]',
+  Unqualified: 'bg-[#7D7D7D]',
+};
+
+const StatusDropdown = ({
   placeholder,
   menuList = [],
   className = '',
   onChange,
   selectedValue,
-}: DropdownProps) => {
+}: StatusDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<MenuItem | null>(
+  const [selected, setSelected] = useState<DropdownItem | null>(
     selectedValue || null,
   );
 
@@ -21,10 +30,15 @@ const Dropdown = ({
     setSelected(selectedValue || null);
   }, [selectedValue]);
 
-  const handleSelect = (item: MenuItem) => {
+  const handleSelect = (item: DropdownItem) => {
     setSelected(item);
     setIsOpen(false);
     onChange?.(item);
+  };
+
+  const getBackgroundColor = (statusName?: string) => {
+    if (!statusName) return 'bg-[#FFFFFF17]';
+    return statusColors[statusName] || 'bg-[#FFFFFF17]';
   };
 
   return (
@@ -32,7 +46,8 @@ const Dropdown = ({
       <button
         type="button"
         className={`h-12 w-full appearance-none rounded-lg px-4 py-3
-          bg-[#FFFFFF17] border border-[#FFFFFF26]
+          ${getBackgroundColor(selected?.name)}
+          border border-[#FFFFFF26]
           text-white flex items-center justify-between focus:outline-none 
           focus:ring-2 focus:ring-purple-500 ${className}`}
         onClick={() => setIsOpen(!isOpen)}
@@ -44,11 +59,13 @@ const Dropdown = ({
       </button>
 
       {isOpen && (
-        <ul className="absolute z-10 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-auto">
-          {menuList.map((item: MenuItem) => (
+        <ul className="absolute z-10 mt-1 w-full bg-[#1F2937] border border-[#FFFFFF26] rounded-lg shadow-lg max-h-60 overflow-auto">
+          {menuList.map((item: DropdownItem) => (
             <li
               key={item.id}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100 text-gray-700"
+              className={`px-4 py-3 cursor-pointer text-white hover:opacity-90 ${
+                statusColors[item.name] || 'hover:bg-gray-700'
+              }`}
               onClick={() => handleSelect(item)}
             >
               {item.name}
@@ -60,4 +77,4 @@ const Dropdown = ({
   );
 };
 
-export default Dropdown;
+export default StatusDropdown;
