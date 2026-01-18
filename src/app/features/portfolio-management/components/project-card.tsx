@@ -5,7 +5,7 @@ import type {
 } from '@/types/portfolio-management';
 import { clsx } from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
@@ -30,6 +30,7 @@ export const ProjectCard = ({
   className,
   onDelete,
 }: ExtendedProjectCardProps) => {
+  const navigate = useNavigate();
   const displayMembers = members.slice(0, 3);
   const remainingCount = Math.max(0, members.length - 3);
 
@@ -65,13 +66,13 @@ export const ProjectCard = ({
     }
   }, [showSuccessToast]);
 
-  const handleView = (projectId: string | number) => {
-    console.log('View project:', projectId);
+  const handleView = () => {
+    navigate(`/admin/portfolio-management/view-project-portfolio/${id}`);
     setIsMenuOpen(false);
   };
 
-  const handleEdit = (projectId: string | number) => {
-    console.log('Edit project:', projectId);
+  const handleEdit = () => {
+    navigate(`/admin/portfolio-management/edit-portfolio/${id}`);
     setIsMenuOpen(false);
   };
 

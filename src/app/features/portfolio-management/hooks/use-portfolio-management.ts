@@ -69,6 +69,24 @@ export const usePortfolioManagement = () => {
     }
   };
 
+  const updateProject = (updatedData: Partial<ProjectData>) => {
+    if (!updatedData.id) return;
+
+    setPortfolioData((prevData) =>
+      prevData.map((project) => {
+        if (project.id === updatedData.id) {
+          return {
+            ...project,
+            ...updatedData,
+            title:
+              updatedData.projectName || updatedData.title || project.title,
+          };
+        }
+        return project;
+      }),
+    );
+  };
+
   const resetData = () => {
     setPortfolioData(PORTFOLIO_MANAGEMENT_DATA);
     setSearchQuery('');
@@ -88,6 +106,7 @@ export const usePortfolioManagement = () => {
     handleStatusFilter,
     clearStatusFilter,
     deleteProject,
+    updateProject,
     resetData,
   };
 };

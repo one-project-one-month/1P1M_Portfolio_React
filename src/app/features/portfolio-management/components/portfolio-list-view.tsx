@@ -1,5 +1,6 @@
 import DeleteDialog from '@/components/ui/delete-dialog';
 import Tooltip from '@/components/ui/tooltip';
+import { useNavigate } from 'react-router-dom';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
 import { usePortfolioActions } from '../hooks/use-portfolio-actions';
 import { ProjectActionMenu } from './project-action-menu';
@@ -62,6 +63,8 @@ interface PortfolioListViewProps {
 }
 
 const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
+  const navigate = useNavigate();
+
   const {
     openMenuId,
     deleteProjectId,
@@ -72,6 +75,14 @@ const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
     showSuccessToast,
     setShowSuccessToast,
   } = usePortfolioActions();
+
+  const handleView = (projectId: number | string) => {
+    navigate(`/admin/portfolio-management/view-project-portfolio/${projectId}`);
+  };
+
+  const handleEdit = (projectId: number | string) => {
+    navigate(`/admin/portfolio-management/edit-portfolio/${projectId}`);
+  };
 
   const handleConfirmDelete = () => {
     if (deleteProjectId !== null) {
@@ -165,8 +176,8 @@ const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
                       projectId={project.id}
                       isOpen={openMenuId === project.id}
                       onToggle={() => handleMenuClick(project.id)}
-                      onView={(id) => console.log('View', id)}
-                      onEdit={(id) => console.log('Edit', id)}
+                      onView={(id) => handleView(id as number)}
+                      onEdit={(id) => handleEdit(id as number)}
                       onDelete={(id) => handleDeleteClick(id as number)}
                     />
                   </TableCell>

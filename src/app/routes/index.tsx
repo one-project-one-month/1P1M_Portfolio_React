@@ -11,7 +11,9 @@ import {
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
-import PortfolioCreateForm from '../features/portfolio-management/components/portfolio-create-form';
+import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
+import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
+import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
 
@@ -48,7 +50,15 @@ const router = createBrowserRouter([
       },
       {
         path: 'portfolio-management/create-portfolio',
-        element: <PortfolioCreateForm />,
+        element: <CreatePortfolioPage />,
+      },
+      {
+        path: 'portfolio-management/view-project-portfolio/:projectId',
+        element: <ViewPortfolioPage />,
+      },
+      {
+        path: 'portfolio-management/edit-portfolio/:projectId',
+        element: <EditPortfolioPage />,
       },
     ],
   },
