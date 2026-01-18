@@ -186,6 +186,12 @@ const PortfolioCreateForm = () => {
                   : addedTeams.find((t) => t.id === activeModalTeamId)?.name ||
                     ''
               }
+              initialMembers={
+                activeModalTeamId === 'new-team'
+                  ? []
+                  : addedTeams.find((t) => t.id === activeModalTeamId)
+                      ?.members || []
+              }
               onSave={handleAddMemberToTeam}
             />
 

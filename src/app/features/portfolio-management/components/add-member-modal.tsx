@@ -8,6 +8,7 @@ interface AddMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   teamName: string;
+  initialMembers?: Member[];
   onSave: (selectedUsers: Member[], teamName: string) => void;
 }
 
@@ -15,6 +16,7 @@ const AddMemberModal = ({
   isOpen,
   onClose,
   teamName,
+  initialMembers = [],
   onSave,
 }: AddMemberModalProps) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,10 +26,10 @@ const AddMemberModal = ({
 
   useEffect(() => {
     setCurrentTeamName(teamName);
-    setSelectedUsers([]);
+    setSelectedUsers(initialMembers);
     setSearchQuery('');
     setOpenDropdownId(null);
-  }, [teamName, isOpen]);
+  }, [teamName, isOpen, initialMembers]);
 
   if (!isOpen) return null;
 
