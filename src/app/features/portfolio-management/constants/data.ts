@@ -155,6 +155,17 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
   },
 ];
 
+export const MOCK_USERS = [
+  { id: '1', name: 'Bora', email: 'Bora@gmail.com', avatarUrl: UserImage },
+  { id: '2', name: 'Thura', email: 'Thura@gmail.com', avatarUrl: UserImage },
+  { id: '3', name: 'Min', email: 'Min@gmail.com', avatarUrl: UserImage },
+  { id: '4', name: 'Kyaw', email: 'Kyaw@gmail.com', avatarUrl: UserImage },
+  { id: '5', name: 'Su', email: 'Su@gmail.com', avatarUrl: UserImage },
+  { id: '6', name: 'Su', email: 'Su@gmail.com', avatarUrl: UserImage },
+  { id: '7', name: 'Su', email: 'Su@gmail.com', avatarUrl: UserImage },
+  { id: '8', name: 'Su', email: 'Su@gmail.com', avatarUrl: UserImage },
+];
+
 export const statusOptions = [
   { id: 1, name: 'Completed' },
   { id: 2, name: 'In Progress' },
