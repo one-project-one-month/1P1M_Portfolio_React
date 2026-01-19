@@ -49,12 +49,12 @@ export const usePortfolioForm = ({
     initialData?.technologies || [{ projectType: null, languages: '' }],
   );
 
+  const [projectImage, setProjectImage] = useState<string>(
+    initialData?.image || '',
+  );
   const [teams, setTeams] = useState<TeamData[]>(initialData?.teams || []);
   const [projectLink, setProjectLink] = useState<string>(
-    initialData?.projectLink?.url || '',
-  );
-  const [projectLinkName, setProjectLinkName] = useState<string>(
-    initialData?.projectLink?.name || '',
+    initialData?.projectLink || '',
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,9 +74,9 @@ export const usePortfolioForm = ({
       setTechnologies(
         initialData.technologies || [{ projectType: null, languages: '' }],
       );
+      setProjectImage(initialData.image || '');
       setTeams(initialData.teams || []);
-      setProjectLink(initialData.projectLink?.url || '');
-      setProjectLinkName(initialData.projectLink?.name || '');
+      setProjectLink(initialData.projectLink || '');
     }
   }, [initialData]);
 
@@ -115,16 +115,9 @@ export const usePortfolioForm = ({
       status: status?.name as ProjectData['status'],
       technologies: validTechnologies as ProjectData['technologies'],
       teams,
-      projectLink: projectLink
-        ? {
-            id: `link-${Date.now()}`,
-            name: projectLinkName || projectLink,
-            type: 'link',
-            url: projectLink,
-          }
-        : undefined,
+      projectLink,
       leader: initialData?.leader || '',
-      image: initialData?.image || '',
+      image: projectImage,
       members: teams.flatMap((t) => t.members),
     };
     onSave?.(formData);
@@ -227,12 +220,12 @@ export const usePortfolioForm = ({
     handleAddTechnology,
     handleRemoveTechnology,
     handleUpdateTechnology,
+    projectImage,
+    setProjectImage,
     teams,
     setTeams,
     projectLink,
     setProjectLink,
-    projectLinkName,
-    setProjectLinkName,
     isModalOpen,
     setIsModalOpen,
     activeTeamId,

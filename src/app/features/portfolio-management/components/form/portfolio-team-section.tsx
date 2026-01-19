@@ -9,12 +9,11 @@ interface PortfolioTeamSectionProps {
   teams: TeamData[];
   handleAddTeam: () => void;
   handleRemoveTeam: (teamId: string) => void;
-  onUpdateTeam: (updatedTeam: TeamData) => void; // Added for TeamForm
+  onUpdateTeam: (updatedTeam: TeamData) => void;
   handleSaveTeamMembers: (
     selectedMembers: ModalMember[],
     teamName: string,
   ) => void;
-  // activeTeamId removed as it's unused
   setActiveTeamId: (id: string | null) => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -29,7 +28,6 @@ export const PortfolioTeamSection = ({
   handleRemoveTeam,
   onUpdateTeam,
   handleSaveTeamMembers,
-  // activeTeamId,
   setActiveTeamId,
   isModalOpen,
   setIsModalOpen,

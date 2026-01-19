@@ -44,8 +44,8 @@ const PortfolioForm = ({
     teams,
     projectLink,
     setProjectLink,
-    projectLinkName,
-    setProjectLinkName,
+    projectImage,
+    setProjectImage,
     isModalOpen,
     setIsModalOpen,
     // activeTeamId,
@@ -90,6 +90,8 @@ const PortfolioForm = ({
             setStartDate={setStartDate}
             completedDate={completedDate}
             setCompletedDate={setCompletedDate}
+            projectImage={projectImage}
+            setProjectImage={setProjectImage}
             isReadOnly={isReadOnly}
           />
 
@@ -111,7 +113,6 @@ const PortfolioForm = ({
             handleRemoveTeam={handleRemoveTeam}
             onUpdateTeam={handleUpdateTeam}
             handleSaveTeamMembers={handleSaveTeamMembers}
-            // activeTeamId={activeTeamId}
             setActiveTeamId={setActiveTeamId}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
@@ -125,8 +126,6 @@ const PortfolioForm = ({
           <PortfolioLinkSection
             projectLink={projectLink}
             setProjectLink={setProjectLink}
-            projectLinkName={projectLinkName}
-            setProjectLinkName={setProjectLinkName}
             isReadOnly={isReadOnly}
           />
 
@@ -160,7 +159,6 @@ const PortfolioForm = ({
           </div>
         </div>
       </div>
-      {/* Modal is now inside PortfolioTeamSection */}
     </div>
   );
 };
