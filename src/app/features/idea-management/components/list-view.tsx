@@ -1,25 +1,19 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { Text, Tooltip } from '@radix-ui/themes';
 import type {
-  IdeaManagementTableProps,
+  IdeaManagementTableType,
   ProjectIdeaType,
 } from '../types/idea-management.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
-const truncate = (text: string, max = 35) =>
+const truncate = (text: string, max = 25) =>
   text.length > max ? text.slice(0, max) + '...' : text;
 
 const statusColor: Record<ProjectIdeaType['status'], string> = {
-  APPROVED: 'text-green-400',
-  PENDING: 'text-yellow-400',
-  ARCHIVED: 'text-gray-400',
+  APPROVED: '#7CCF00',
+  PENDING: '#FD9A00',
+  ARCHIVED: '#A6A09B',
 };
-
-const TOOLTIP_STYLE =
-  'absolute left-1/2 -translate-x-1/2 bottom-full mb-3 ' +
-  'bg-white/10 backdrop-blur-md text-white text-sm ' +
-  'px-4 py-2 rounded-md shadow-xl border border-white/20 ' +
-  'opacity-0 invisible group-hover:opacity-100 group-hover:visible ' +
-  'transition-all duration-300 z-20 w-max max-w-[200px] text-center';
 
 const IdeaManagementTable = ({
   // data,
@@ -27,14 +21,13 @@ const IdeaManagementTable = ({
   handleDelete,
   handleViewDetail,
   handleStatusChange,
-  handleImportPortfolio,
-}: IdeaManagementTableProps) => {
+}: IdeaManagementTableType) => {
   return (
     <div className="mx-auto overflow-x-auto">
       <div className="rounded-xl border border-slate-700 bg-slate-900/20">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-white text-bold text-lg">
+            <tr className="border-b border-slate-700 text-white text-bold text-xl">
               {[
                 'Idea Name',
                 'Submitter',
@@ -57,30 +50,29 @@ const IdeaManagementTable = ({
               className="hover:bg-slate-800/40"
             >
               {/* Idea Name */}
-              <td className="py-6 px-6">
-                <div className="relative group text-center text-white font-medium">
-                  {/* {truncate(idea.projectName)}
-                    {idea.projectName.length > 35 && (
-                      <div className={TOOLTIP_STYLE}>{idea.projectName}</div>
-                    )} */}
-                  smart order & booking
+              <td className="py-4">
+                <div className="relative group text-center text-white font-medium capitalize">
+                  <Tooltip content="smart order & booking">
+                    <Text as="div" size="4">
+                      {truncate('smart order & booking')}
+                    </Text>
+                  </Tooltip>
                 </div>
               </td>
 
               {/* Developer */}
-              <td className="py-6 px-6">
+              <td className="py-4">
                 <div className="flex justify-center items-center gap-3">
                   <img
                     src={sampleUserImgUrl}
-                    alt="username"
-                    className="w-8 h-8 rounded-full object-cover border border-slate-700"
+                    className="size-10 rounded-full object-cover"
                   />
                   {/* <img
                       src={idea.profilePictureUrl}
                       alt={idea.devName}
-                      className="w-8 h-8 rounded-full object-cover border border-slate-700"
+                    className="size-10 rounded-full object-cover"
                     /> */}
-                  <span className="text-slate-300 text-sm capitalize">
+                  <span className="text-slate-300 text-sm capitalize font-semibold">
                     {/* {idea.devName} */}
                     annette black
                   </span>
@@ -88,25 +80,24 @@ const IdeaManagementTable = ({
               </td>
 
               {/* React Count */}
-              <td className="py-6 px-6 text-center text-slate-400">
+              <td className="py-4 text-center text-slate-400">
                 {/* {idea.reaction_count} */}
                 30
               </td>
 
               {/* Leader */}
-              <td className="py-6 px-6 text-sm text-slate-300">
+              <td className="py-4 text-sm text-slate-300">
                 <div className="flex items-center justify-center gap-3">
                   <img
                     src={sampleUserImgUrl}
-                    alt="username"
-                    className="w-8 h-8 rounded-full object-cover border border-slate-700"
+                    className="size-10 rounded-full object-cover"
                   />
                   {/* <img
                       src={idea.profilePictureUrl}
                       alt={idea.devName}
-                      className="w-8 h-8 rounded-full object-cover border border-slate-700"
+                    className="size-10 rounded-full object-cover"
                     /> */}
-                  <span className="text-slate-300 text-sm capitalize">
+                  <span className="text-slate-300 text-sm capitalize font-semibold">
                     {/* {idea.devName} */}
                     annette black
                   </span>
@@ -114,9 +105,10 @@ const IdeaManagementTable = ({
               </td>
 
               {/* Status */}
-              <td className="py-6 px-6 text-center text-sm">
+              <td className="py-4 text-center text-sm">
                 <span
-                  className={`${statusColor['PENDING']} font-semibold px-2 py-1 rounded-md bg-white/5 capitalize`}
+                  className="capitalize"
+                  style={{ color: statusColor['PENDING'] }}
                 >
                   {/* {idea.status} */}
                   pending
@@ -124,7 +116,7 @@ const IdeaManagementTable = ({
               </td>
 
               {/* Actions */}
-              <td className="py-6 px-6 text-center relative">
+              <td className="py-4 text-center relative">
                 <ProjectIdeaDropDown
                   type="list"
                   // data={data}
@@ -132,7 +124,6 @@ const IdeaManagementTable = ({
                   handleViewDetail={handleViewDetail}
                   handleDelete={handleDelete}
                   handleStatusChange={handleStatusChange}
-                  handleImportPortfolio={handleImportPortfolio}
                 />
               </td>
             </tr>

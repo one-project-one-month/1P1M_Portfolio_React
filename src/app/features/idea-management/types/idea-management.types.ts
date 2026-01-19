@@ -37,14 +37,25 @@ export type ProjectIdeaContainerProps = {
   size: number;
   onPageChange?: (page: number) => void;
   onTotalChange?: (total: number) => void;
+  totalIdeas: number;
 };
 
-export interface IdeaManagementTableProps {
+export type IdeaManagementTableType = {
   type: 'list' | 'grid';
   data: ProjectIdeaType[];
   handleEdit: (id: number) => void;
   handleDelete: (id: number) => void;
   handleViewDetail: (id: number) => void;
   handleStatusChange: (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => void;
-  handleImportPortfolio: (id: number) => void;
-}
+};
+
+export type IdeaHeaderType = {
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+  selectedFilter: string;
+  setSelectedFilter: (filter: string) => void;
+  viewMode: string;
+  setViewMode: (mode: 'list' | 'grid') => void;
+  totalIdeas: number;
+  onCreate: () => void;
+};
