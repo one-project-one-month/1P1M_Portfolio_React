@@ -1,4 +1,5 @@
 import ModalWrapper from '@/components/modal-wrapper';
+import DatePicker from '@/components/ui/date-picker';
 import TextField from '@/components/ui/text-field';
 
 type timelineProps = {
@@ -20,11 +21,13 @@ const TimelineForm = ({ isOpen, setIsOpen }: timelineProps) => {
           label="Update Description"
           placeholder="Description"
         />
-        <TextField
-          className="text-xl font-medium"
-          label="Event Title"
-          placeholder="Enter your title..."
-        />
+        <div className="">
+          <h3 className=" font-semibold text-xl">Detail Date</h3>
+          <div className="flex  gap-x-6 justify-around">
+            <DatePicker label="Start Date" />
+            <DatePicker label="End Date" />
+          </div>
+        </div>
       </div>
     </ModalWrapper>
   );
