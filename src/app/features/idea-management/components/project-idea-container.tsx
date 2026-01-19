@@ -1,4 +1,5 @@
 import Pagination from '@/components/ui/pagination';
+import { COLORS } from '@/constants/colors';
 import { useEffect } from 'react';
 import { useProjectIdeaQuery } from '../hooks/use-project-ideas';
 import type { ProjectIdeaContainerProps } from '../types/idea-management.types';
@@ -13,6 +14,7 @@ const ProjectIdeaContainer = ({
   size,
   onPageChange,
   onTotalChange,
+  totalIdeas,
 }: ProjectIdeaContainerProps) => {
   const { data, isLoading, isError } = useProjectIdeaQuery({
     page,
@@ -36,24 +38,27 @@ const ProjectIdeaContainer = ({
   const handleViewDetail = (id: number) => {
     console.log(id);
   };
-  const handleStatusChange = (status: 'Pending' | 'Approved' | 'Archived') => {
+  const handleStatusChange = (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => {
     console.log(status);
   };
   const handleImportPortfolio = (id: number) => {
     console.log(id);
   };
 
-  if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
-  if (isError || !data?.success)
-    return <div className="text-rose-400">Failed to load ideas</div>;
+  // if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
 
+  // if (isError || !data?.success)
+  //   return <div className="text-rose-400">Failed to load ideas</div>;
+
+  // Ensure children always receive an array (empty when no data).
+  const items = data?.data ?? [];
   const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
 
   return (
     <div>
-      {view === 'grid' ? (
+      {view === 'list' ? (
         <IdeaManagementTable
-          data={data.data}
+          // data={items}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
@@ -62,24 +67,27 @@ const ProjectIdeaContainer = ({
         />
       ) : (
         <IdeaManagementGrid
-          data={data.data}
+          // data={items}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
-          handleImportPortfolio={handleImportPortfolio}
         />
       )}
 
-      {onPageChange && totalPages > 1 && (
-        <div className="mt-8">
+      <div className="flex items-center justify-between mt-14">
+        {/* Total Count */}
+        <span className={`text-[${COLORS.secondary}] font-semibold`}>
+          Total - {totalIdeas}
+        </span>
+        {onPageChange && totalPages > 1 && (
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

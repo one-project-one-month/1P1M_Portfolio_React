@@ -4,6 +4,7 @@ import type { ApiResponseType } from '@/types/api-response.type';
 import type {
   GetPortfolioParamsType,
   PortfolioProjectType,
+  ProjectRequestBody,
 } from '@/types/portfolio.type';
 
 export async function reactToProject(projectId: number) {
@@ -42,5 +43,18 @@ export async function getProjectPortfolioDetails(projectId: string) {
     return response.data;
   } catch (error: any) {
     throw error?.response?.data || error;
+  }
+}
+
+export async function createProjectPortfolio(requestBody: ProjectRequestBody) {
+  try {
+    const url = `${API_ENDPOINTS.GET_PROJECT_PORTFOLIO}`;
+    const response = await apiClient.post(url, requestBody);
+
+    return response.data;
+  } catch (error: any) {
+    throw (
+      error.response?.data?.message ?? { message: 'Failed to create project' }
+    );
   }
 }
