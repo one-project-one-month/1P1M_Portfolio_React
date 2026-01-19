@@ -5,7 +5,7 @@ import {
   type ProjectStatus,
 } from '../constants/data';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 6;
 
 export const usePortfolioManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
