@@ -35,7 +35,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     return (
       <div className="relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8">
         {label && (
-          <label className="inline-block mb-1" htmlFor={id}>
+          <label className="inline-block mb-1 text-xl" htmlFor={id}>
             {label}
           </label>
         )}

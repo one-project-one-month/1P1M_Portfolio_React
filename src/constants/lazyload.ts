@@ -72,6 +72,11 @@ export const DashboardPage = PageLoader(
 export const IdeaManagementPage = PageLoader(
   lazy(() => import('@/app/features/idea-management/pages/index')),
 );
+
+export const TimelineManagementPage = PageLoader(
+  lazy(() => import('@/app/features/timeline-management/page.tsx')),
+);
+
 export const IdeaManagementEditPage = PageLoader(
   lazy(() => import('@/app/features/idea-management/pages/edit')),
 );
