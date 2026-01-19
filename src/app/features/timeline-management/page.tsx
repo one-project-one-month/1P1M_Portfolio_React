@@ -1,25 +1,30 @@
 import SearchBox from '@/app/features/timeline-management/components/search-box.tsx';
-import TimelineGrid from '@/app/features/timeline-management/components/timeline-gird.tsx';
+import TimelineGrid from '@/app/features/timeline-management/components/timeline-grid.tsx';
 import TimelineList from '@/app/features/timeline-management/components/timeline-list.tsx';
+import { useTimeline } from '@/app/features/timeline-management/hooks/use-timeline.ts';
+import type { StatusOption } from '@/app/features/timeline-management/types.ts';
 import FilterAssets from '@/components/ui/filter-assets.tsx';
 import Pagination from '@/components/ui/pagination';
 import Title from '@/components/ui/title';
 import { useState } from 'react';
+import TimelineForm from './components/timeline-form';
 
 const TimelineManagement = () => {
-  const [curPage, setCurPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentLayout, setCurrentLayout] = useState<'list' | 'grid'>('list');
-  const [selectedStatus, setSelectedStatus] = useState<
-    StatusOption | undefined
-  >();
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedStatus,
+    setSelectedStatus,
+    currentLayout,
+    setCurrentLayout,
+    filteredData,
+    curPage,
+    setCurPage,
+  } = useTimeline();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const totalPages = 99;
-
-  interface StatusOption {
-    id: string;
-    name: string;
-  }
 
   const statusOptions: StatusOption[] = [
     { id: '1', name: 'Active' },
@@ -27,13 +32,10 @@ const TimelineManagement = () => {
     { id: '3', name: 'Finished' },
   ];
 
-  const handleLayoutChange = (layout: 'list' | 'grid') => {
-    console.log(`Layout changed to: ${layout}`);
-    setCurrentLayout(layout);
-  };
-
   const handleCreate = () => {
+    setIsOpen((val) => !val);
     console.log('Create Project Clicked...');
+    console.log(isOpen);
   };
 
   return (
@@ -58,7 +60,7 @@ const TimelineManagement = () => {
             showLayout={true}
             // Layout Props
             viewLayout={currentLayout}
-            onChangeLayout={handleLayoutChange}
+            onChangeLayout={setCurrentLayout}
             // Dropdown Props
             filterOption={statusOptions}
             selectedFilter={selectedStatus}
@@ -70,12 +72,24 @@ const TimelineManagement = () => {
           />
         </div>
       </div>
+
+      <TimelineForm isOpen={isOpen} setIsOpen={setIsOpen} />
       {/*-------- End Filter Bar --------*/}
 
       {/*-------- Start Listing Timeline --------*/}
 
-      <div className="grow">
-        {currentLayout === 'grid' ? <TimelineGrid /> : <TimelineList />}
+      <div className="grow overflow-y-auto">
+        {filteredData.length > 0 ? (
+          currentLayout === 'grid' ? (
+            <TimelineGrid data={filteredData} />
+          ) : (
+            <TimelineList data={filteredData} />
+          )
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+            <p>No timelines found matching your criteria.</p>
+          </div>
+        )}
       </div>
 
       {/*-------- End Listing Timeline --------*/}
