@@ -5,6 +5,7 @@ import FilterAssets from '@/components/ui/filter-assets.tsx';
 import Pagination from '@/components/ui/pagination';
 import Title from '@/components/ui/title';
 import { useState } from 'react';
+import TimelineForm from './components/timeline-form';
 
 const TimelineManagement = () => {
   const [curPage, setCurPage] = useState(0);
@@ -13,6 +14,8 @@ const TimelineManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState<
     StatusOption | undefined
   >();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const totalPages = 99;
 
@@ -33,7 +36,9 @@ const TimelineManagement = () => {
   };
 
   const handleCreate = () => {
+    setIsOpen((val) => !val);
     console.log('Create Project Clicked...');
+    console.log(isOpen);
   };
 
   return (
@@ -70,6 +75,8 @@ const TimelineManagement = () => {
           />
         </div>
       </div>
+
+      <TimelineForm isOpen={isOpen} setIsOpen={setIsOpen} />
       {/*-------- End Filter Bar --------*/}
 
       {/*-------- Start Listing Timeline --------*/}
