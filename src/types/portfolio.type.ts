@@ -65,3 +65,12 @@ export type ProjectPortfolioDetailType = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+export interface ProjectRequestBody {
+  name: string;
+  description: string;
+  projectLink?: string;
+  repoLink?: string;
+  languageAndTools: string[];
+  developerEmails: string[];
+}
