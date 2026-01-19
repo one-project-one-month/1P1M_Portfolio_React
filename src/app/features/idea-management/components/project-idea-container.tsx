@@ -1,8 +1,8 @@
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { useEffect } from 'react';
-import { useProjectIdeaQuery } from '../hooks/use-project-ideas';
-import type { ProjectIdeaContainerProps } from '../types/idea-management.types';
+import { useGetProjectIdea } from '../hooks/use-project-ideas';
+import type { ProjectIdeaContainerPropsType } from '../types/project-idea.types';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
 
@@ -15,8 +15,8 @@ const ProjectIdeaContainer = ({
   onPageChange,
   onTotalChange,
   totalIdeas,
-}: ProjectIdeaContainerProps) => {
-  const { data, isLoading, isError } = useProjectIdeaQuery({
+}: ProjectIdeaContainerPropsType) => {
+  const { data, isLoading, isError } = useGetProjectIdea({
     page,
     size,
     keyword: searchQuery,
