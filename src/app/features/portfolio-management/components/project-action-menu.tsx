@@ -3,7 +3,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { forwardRef } from 'react';
 
 const actionButtonClass =
-  'text-xs text-[#F9FAFB] hover:bg-white/50 transition-colors w-full rounded-none py-1 px-2 !bg-transparent !h-auto justify-center font-normal shadow-none border-none';
+  'text-xs text-[#F9FAFB] hover:text-[#9C39FC] transition-colors w-full rounded-none py-1 px-2 !bg-transparent !h-auto justify-center font-normal shadow-none border-none';
 
 interface ProjectActionMenuProps {
   projectId: number | string;
