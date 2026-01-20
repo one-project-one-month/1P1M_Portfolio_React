@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 interface ConfirmationModalProps {
+  id: number;
   isOpen: boolean;
   title: string;
   subtitle?: string;
@@ -37,11 +38,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
       {/* Modal box */}
       <div
-        className={`
-                relative w-[410px] bg-[#000000] border-2 border-[#364153] text-[#99A1AF] 
-                text-center rounded-3xl p-6 max-w-md shadow-2xl
-                transition-all duration-300 ease-out transform
-                ${isOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}
+        className={`relative w-[410px] bg-[#000000] border-2 border-[#364153] text-[#99A1AF] text-center rounded-3xl p-6 max-w-md shadow-2xl transition-all duration-300 ease-out transform ${isOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}
             `}
       >
         <h2 className="text-xl font-semibold text-white">{title}</h2>
@@ -50,6 +47,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
         <div className="flex justify-center gap-3 mt-10">
           <button
+            type="button"
             onClick={onCancel}
             className="border border-[#6A7282] hover:border-white/70 hover:text-white rounded-md transition-colors px-4 py-2"
           >
@@ -57,6 +55,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={onConfirm}
             className="bg-[#C10007] text-white rounded hover:bg-red-700 transition-colors px-4 py-2 font-medium"
           >
@@ -70,17 +69,15 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
 export default ConfirmationModal;
 
-// ------------------------------- usage of this component -----------------------------
+// ----- usage of this component ----- //
 
-{
-  /* 
+/* 
     // import this 
     import { useState } from 'react';
     import ConfirmationModal from '@/components/ui/confirm-model';
 
     // add this 
   const [open, setOpen] = useState(false);
-
 
     <div>
       <button onClick={() => setOpen(true)}>
@@ -90,7 +87,7 @@ export default ConfirmationModal;
       <ConfirmationModal
         isOpen={open}
         title="Are you sure to delete?"
-        subtitle="The project portfolio will be delected. Are you really want to delete it?"
+        subtitle="The project portfolio will be deleted. Are you really want to delete it?"
         rejectText="No Bro" // optional - default is : Cancel
         confirmText="Confirm" // optional - default is : Delete
         onCancel={() => setOpen(false)}
@@ -99,8 +96,5 @@ export default ConfirmationModal;
           setOpen(false);
         }}
       />
-    </div>    
-    
-    
+    </div>        
 */
-}

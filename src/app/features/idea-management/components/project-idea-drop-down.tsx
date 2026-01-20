@@ -1,7 +1,7 @@
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import type { IdeaManagementTableType } from '../types/idea-management.types';
+import type { IdeaManagementTableType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 export const ProjectIdeaDropDown = ({
@@ -51,7 +51,7 @@ export const ProjectIdeaDropDown = ({
         <DropdownMenu.Item onClick={() => handleStatusChange('APPROVED')}>
           Change Status
         </DropdownMenu.Item>
-        <DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
           <NavLink to="/admin/idea-management/edit">Import Portfolio</NavLink>
         </DropdownMenu.Item>
       </DropdownMenu.Content>

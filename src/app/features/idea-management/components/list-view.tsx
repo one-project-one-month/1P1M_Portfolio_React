@@ -1,9 +1,9 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Text, Tooltip } from '@radix-ui/themes';
 import type {
-  IdeaManagementTableType,
+  ProjectIdeaTableType,
   ProjectIdeaType,
-} from '../types/idea-management.types';
+} from '../types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
 const truncate = (text: string, max = 25) =>
@@ -21,7 +21,7 @@ const IdeaManagementTable = ({
   handleDelete,
   handleViewDetail,
   handleStatusChange,
-}: IdeaManagementTableType) => {
+}: ProjectIdeaTableType) => {
   return (
     <div className="mx-auto overflow-x-auto">
       <div className="rounded-xl border border-slate-700 bg-slate-900/20">
