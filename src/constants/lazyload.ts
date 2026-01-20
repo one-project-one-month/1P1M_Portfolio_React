@@ -71,6 +71,7 @@ export const DashboardPage = PageLoader(
 
 export const PortfolioManagementPage = PageLoader(
   lazy(() => import('@/app/features/portfolio-management/page')),
+);
 export const IdeaManagementPage = PageLoader(
   lazy(() => import('@/app/features/idea-management/pages/index')),
 );
