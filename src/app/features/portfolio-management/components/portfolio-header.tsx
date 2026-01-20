@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import ManagementControlBar from './management-control-bar';
 
-type ProjectStatus = 'In Progress' | 'Completed' | 'Unqualified';
+type FilterStatus = 'All' | 'In Progress' | 'Completed' | 'Unqualified';
 
 interface PortfolioHeaderProps {
   onSearch?: (query: string) => void;
   viewMode?: 'list' | 'gallery';
   onChangeViewMode?: (mode: 'list' | 'gallery') => void;
-  onFilterByStatus?: (status: ProjectStatus) => void;
+  onFilterByStatus?: (status: FilterStatus) => void;
 }
 
 const PortfolioHeader = ({

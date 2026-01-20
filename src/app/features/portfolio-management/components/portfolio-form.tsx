@@ -25,30 +25,15 @@ const PortfolioForm = ({
   onClose,
 }: PortfolioFormProps) => {
   const {
+    form,
     isReadOnly,
     isEdit,
-    projectName,
-    setProjectName,
-    description,
-    setDescription,
-    startDate,
-    setStartDate,
-    completedDate,
-    setCompletedDate,
-    status,
-    setStatus,
-    technologies,
+    technologyFields,
     handleAddTechnology,
     handleRemoveTechnology,
     handleUpdateTechnology,
-    teams,
-    projectLink,
-    setProjectLink,
-    projectImage,
-    setProjectImage,
     isModalOpen,
     setIsModalOpen,
-    // activeTeamId,
     setActiveTeamId,
     handleSaveForm,
     handleAddTeam,
@@ -80,25 +65,15 @@ const PortfolioForm = ({
 
           <PortfolioBasicInfo
             initialData={initialData}
-            projectName={projectName}
-            setProjectName={setProjectName}
-            status={status}
-            setStatus={setStatus}
-            description={description}
-            setDescription={setDescription}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            completedDate={completedDate}
-            setCompletedDate={setCompletedDate}
-            projectImage={projectImage}
-            setProjectImage={setProjectImage}
+            form={form}
             isReadOnly={isReadOnly}
           />
 
           <div className="h-px bg-[#FFFFFF]/15" />
 
           <PortfolioTypeLang
-            technologies={technologies}
+            form={form}
+            technologyFields={technologyFields}
             onAddTechnology={handleAddTechnology}
             onRemoveTechnology={handleRemoveTechnology}
             onUpdateTechnology={handleUpdateTechnology}
@@ -108,7 +83,7 @@ const PortfolioForm = ({
           <div className="h-px bg-[#FFFFFF]/15" />
 
           <PortfolioTeamSection
-            teams={teams}
+            form={form}
             handleAddTeam={handleAddTeam}
             handleRemoveTeam={handleRemoveTeam}
             onUpdateTeam={handleUpdateTeam}
@@ -123,15 +98,10 @@ const PortfolioForm = ({
 
           <div className="h-px bg-[#FFFFFF]/15" />
 
-          <PortfolioLinkSection
-            projectLink={projectLink}
-            setProjectLink={setProjectLink}
-            isReadOnly={isReadOnly}
-          />
+          <PortfolioLinkSection form={form} isReadOnly={isReadOnly} />
 
           <div className="h-px bg-[#FFFFFF]/15" />
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-4 pb-4">
             {isReadOnly ? (
               <Button

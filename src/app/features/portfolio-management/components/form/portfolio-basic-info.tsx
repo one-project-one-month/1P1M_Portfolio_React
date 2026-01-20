@@ -2,43 +2,23 @@ import FileUpload from '@/components/ui/file-upload';
 import type { DropdownItem } from '@/types/portfolio-management';
 import { ChevronDown } from 'lucide-react';
 import React, { useRef, useState } from 'react';
+import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { ProjectData } from '../../constants/data';
 import { statusOptions } from '../../constants/data';
+import type { PortfolioFormValues } from '../../portfolio-schema';
 import { uploadProjectImage } from '../../services/image-upload-service';
 import StatusDropdown from '../status-dropdown';
 import DatePickerDialog from './date-picker-dialog';
 
 interface PortfolioBasicInfoProps {
   initialData?: ProjectData | null;
-  projectName: string;
-  setProjectName: (name: string) => void;
-  status: DropdownItem | null;
-  setStatus: (status: DropdownItem | null) => void;
-  description: string;
-  setDescription: (desc: string) => void;
-  startDate: string;
-  setStartDate: (date: string) => void;
-  completedDate: string;
-  setCompletedDate: (date: string) => void;
-  projectImage: string;
-  setProjectImage: (image: string) => void;
+  form: UseFormReturn<PortfolioFormValues>;
   isReadOnly: boolean;
 }
 
 export const PortfolioBasicInfo = ({
   initialData,
-  projectName,
-  setProjectName,
-  status,
-  setStatus,
-  description,
-  setDescription,
-  startDate,
-  setStartDate,
-  completedDate,
-  setCompletedDate,
-  projectImage,
-  setProjectImage,
+  form,
   isReadOnly,
 }: PortfolioBasicInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -46,6 +26,13 @@ export const PortfolioBasicInfo = ({
   const [activeDateField, setActiveDateField] = useState<'start' | 'complete'>(
     'start',
   );
+
+  const projectName = form.watch('projectName');
+  const description = form.watch('description');
+  const startDate = form.watch('startDate');
+  const completedDate = form.watch('completedDate');
+  const status = form.watch('status');
+  const projectImage = form.watch('projectImage');
 
   const openDatePicker = (field: 'start' | 'complete') => {
     setActiveDateField(field);
@@ -57,7 +44,7 @@ export const PortfolioBasicInfo = ({
     if (file) {
       try {
         const imageUrl = await uploadProjectImage(file);
-        setProjectImage(imageUrl);
+        form.setValue('projectImage', imageUrl);
       } catch (error) {
         console.error('Image upload failed', error);
       }
@@ -75,7 +62,6 @@ export const PortfolioBasicInfo = ({
       <h2 className="text-lg font-medium">Project Basic Information</h2>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Project Image */}
         <div className="shrink-0">
           <input
             type="file"
@@ -107,7 +93,6 @@ export const PortfolioBasicInfo = ({
         </div>
 
         <div className="flex-1 flex flex-col justify-between gap-4">
-          {/* Project Name */}
           <div className="flex flex-col space-y-1">
             <label className="text-sm font-medium">Project Name*</label>
             {isReadOnly ? (
@@ -115,17 +100,33 @@ export const PortfolioBasicInfo = ({
                 {projectName || '-'}
               </p>
             ) : (
-              <input
-                type="text"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
-                placeholder="Enter your project name"
-                className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
+              <Controller
+                control={form.control}
+                name="projectName"
+                render={({ field, fieldState }) => (
+                  <div>
+                    <input
+                      type="text"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter your project name"
+                      className={`w-full px-3 py-2 bg-[#0F172B] border rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC] ${
+                        fieldState.error
+                          ? 'border-red-500'
+                          : 'border-[#FFFFFF]/15'
+                      }`}
+                    />
+                    {fieldState.error && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
               />
             )}
           </div>
 
-          {/* Status */}
           <div className="space-y-1">
             <label className="text-sm font-medium">Status</label>
             {isReadOnly ? (
@@ -133,12 +134,20 @@ export const PortfolioBasicInfo = ({
                 {status?.name || '-'}
               </p>
             ) : (
-              <StatusDropdown
-                placeholder="Select current status"
-                menuList={statusOptions}
-                selectedValue={status}
-                onChange={setStatus}
-                className="text-sm text-[#6A7282]"
+              <Controller
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <StatusDropdown
+                    placeholder="Select current status"
+                    menuList={statusOptions}
+                    selectedValue={field.value}
+                    onChange={(value: DropdownItem | null) =>
+                      field.onChange(value)
+                    }
+                    className="text-sm text-[#6A7282]"
+                  />
+                )}
               />
             )}
           </div>
@@ -152,16 +161,21 @@ export const PortfolioBasicInfo = ({
             {description || '-'}
           </p>
         ) : (
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Provide details about your project"
-            className="w-full h-32 px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC] resize-none"
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <textarea
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Provide details about your project"
+                className="w-full h-32 px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC] resize-none"
+              />
+            )}
           />
         )}
       </div>
 
-      {/* Dates */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-1">
           <label className="text-sm font-medium">Start Date*</label>
@@ -170,19 +184,26 @@ export const PortfolioBasicInfo = ({
               {startDate || '-'}
             </p>
           ) : (
-            <div
-              onClick={() => !isReadOnly && openDatePicker('start')}
-              className={`w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white min-h-[42px] flex items-center justify-between ${
-                !isReadOnly
-                  ? 'cursor-pointer hover:border-[#9C39FC] transition-colors'
-                  : ''
-              }`}
-            >
-              <span className={startDate ? 'text-white' : 'text-[#6A7282]'}>
-                {startDate || 'e.g., Nov 15, 2025'}
-              </span>
-              {!startDate && !isReadOnly && (
-                <ChevronDown className="h-4 w-4 text-[#6A7282]" />
+            <div>
+              <div
+                onClick={() => !isReadOnly && openDatePicker('start')}
+                className={`w-full px-3 py-2 bg-[#0F172B] border rounded-md text-white min-h-[42px] flex items-center justify-between ${
+                  !isReadOnly
+                    ? 'cursor-pointer hover:border-[#9C39FC] transition-colors'
+                    : ''
+                } ${form.formState.errors.startDate ? 'border-red-500' : 'border-[#FFFFFF]/15'}`}
+              >
+                <span className={startDate ? 'text-white' : 'text-[#6A7282]'}>
+                  {startDate || 'e.g., Nov 15, 2025'}
+                </span>
+                {!startDate && !isReadOnly && (
+                  <ChevronDown className="h-4 w-4 text-[#6A7282]" />
+                )}
+              </div>
+              {form.formState.errors.startDate && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.startDate.message}
+                </p>
               )}
             </div>
           )}
@@ -229,9 +250,9 @@ export const PortfolioBasicInfo = ({
         }
         onSelect={(date) => {
           if (activeDateField === 'start') {
-            setStartDate(date);
+            form.setValue('startDate', date);
           } else {
-            setCompletedDate(date);
+            form.setValue('completedDate', date);
           }
         }}
       />

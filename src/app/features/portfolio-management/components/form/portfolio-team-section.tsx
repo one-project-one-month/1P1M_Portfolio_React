@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button';
 import type { Member as ModalMember } from '@/types/portfolio-management';
 import { Plus } from 'lucide-react';
+import type { UseFormReturn } from 'react-hook-form';
 import type { TeamData } from '../../constants/data';
+import type { PortfolioFormValues } from '../../portfolio-schema';
 import AddMemberModal from '../add-member-modal';
 import TeamForm from '../team-create-form';
 
 interface PortfolioTeamSectionProps {
-  teams: TeamData[];
+  form: UseFormReturn<PortfolioFormValues>;
   handleAddTeam: () => void;
   handleRemoveTeam: (teamId: string) => void;
   onUpdateTeam: (updatedTeam: TeamData) => void;
@@ -23,7 +25,7 @@ interface PortfolioTeamSectionProps {
 }
 
 export const PortfolioTeamSection = ({
-  teams,
+  form,
   handleAddTeam,
   handleRemoveTeam,
   onUpdateTeam,
@@ -35,16 +37,14 @@ export const PortfolioTeamSection = ({
   getModalTeamName,
   getModalInitialMembers,
 }: PortfolioTeamSectionProps) => {
+  const teams = form.watch('teams');
+
   return (
     <div className="space-y-6 text-white">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-medium">Team Management</h2>
         {!isReadOnly && (
           <div className="flex gap-3 relative">
-            {/* <Button className="text-[#99A1AF] border border-[#FFFFFF]/15 text-lg font-medium rounded-lg hover:bg-white/10 bg-transparent px-3 py-1.5 flex gap-1 items-center">
-                            <List className="h-6 w-6" />
-                            List View
-                        </Button> */}
             <Button
               className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-3 py-1.5 text-[#F9FAFB] gap-1 relative"
               onClick={handleAddTeam}
