@@ -5,7 +5,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { buttonVariants } from '@/styles/button-variants';
 import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { IdeaHeaderType } from '../types/idea-management.types';
+import type { ProjectIdeaHeaderType } from '../types/project-idea.types';
 
 const ProjectIdeaHeaderSection = ({
   searchQuery,
@@ -15,7 +15,7 @@ const ProjectIdeaHeaderSection = ({
   viewMode,
   setViewMode,
   onCreate,
-}: IdeaHeaderType) => {
+}: ProjectIdeaHeaderType) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [inputValue, setInputValue] = useState(searchQuery);
   const debouncedSearch = useDebounce(inputValue, 800);

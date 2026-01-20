@@ -1,7 +1,7 @@
 import { COLORS } from '@/constants/colors';
 import { Button, Radio } from '@radix-ui/themes';
 
-const IdeaStatus = () => {
+const ProjectIdeaStatus = () => {
   return (
     <div className="border">
       <h2 className="text-xl">Change the idea status!</h2>
@@ -74,4 +74,4 @@ const IdeaStatus = () => {
   );
 };
 
-export default IdeaStatus;
+export default ProjectIdeaStatus;

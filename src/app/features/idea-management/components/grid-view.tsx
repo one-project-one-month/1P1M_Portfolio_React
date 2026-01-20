@@ -1,7 +1,7 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
 import { Eye, Heart } from 'lucide-react';
-import type { IdeaManagementTableType } from '../types/idea-management.types';
+import type { ProjectIdeaTableType } from '../types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
 const IdeaManagementGrid = ({
@@ -10,7 +10,7 @@ const IdeaManagementGrid = ({
   handleDelete,
   handleViewDetail,
   handleStatusChange,
-}: IdeaManagementTableType) => {
+}: ProjectIdeaTableType) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
       {/* {data.map((idea) => ( */}
