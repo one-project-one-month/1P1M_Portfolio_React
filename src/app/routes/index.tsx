@@ -5,12 +5,15 @@ import {
   ApprovedIdeaPage,
   DashboardPage,
   DeveloperPage,
+  IdeaManagementEditPage,
+  IdeaManagementPage,
   IdeaPage,
   PortfolioManagementPage,
   PortfolioPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
+import OpomRegisterPage from '../features/opom-register/page';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
@@ -29,6 +32,7 @@ const router = createBrowserRouter([
 
       { path: '/portfolio', element: <PortfolioPage /> },
       { path: '/portfolio/create-portfolio', element: <PortfolioFormview /> },
+      { path: 'opom-register', element: <OpomRegisterPage /> },
       {
         path: '/developers',
         element: <DeveloperPage />,
@@ -60,6 +64,8 @@ const router = createBrowserRouter([
         path: 'portfolio-management/edit-portfolio/:projectId',
         element: <EditPortfolioPage />,
       },
+      { path: 'idea-management', element: <IdeaManagementPage /> },
+      { path: 'idea-management/edit', element: <IdeaManagementEditPage /> },
     ],
   },
 

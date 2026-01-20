@@ -18,13 +18,7 @@ export interface TeamData {
   members: Member[];
 }
 
-export interface Attachment {
-  id: string;
-  name: string;
-  type: 'file' | 'link';
-  url: string;
-  size?: number;
-}
+// Attachment interface removed as it's no longer used
 
 export interface ProjectType {
   id: number;
@@ -47,7 +41,7 @@ export interface ProjectData {
     languages: string;
   }[];
   teams: TeamData[];
-  projectLink?: Attachment; // Single attachment - either a link or uploaded file
+  projectLink?: string; // Simplified to just a URL string
 }
 
 // Project Types available in the form
@@ -169,12 +163,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-1-1',
-      name: 'GitHub Repository',
-      type: 'link',
-      url: 'https://github.com/example/career-predictor',
-    },
+    projectLink: 'https://github.com/example/career-predictor',
   },
   {
     id: 2,
@@ -246,12 +235,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-2-1',
-      name: 'Live Demo',
-      type: 'link',
-      url: 'https://elearning-demo.example.com',
-    },
+    projectLink: 'https://elearning-demo.example.com',
   },
   {
     id: 3,
@@ -386,12 +370,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-3-1',
-      name: 'API Documentation',
-      type: 'link',
-      url: 'https://api-docs.example.com',
-    },
+    projectLink: 'https://api-docs.example.com',
   },
   {
     id: 4,
@@ -498,12 +477,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-4-1',
-      name: 'Model Metrics Report',
-      type: 'link',
-      url: 'https://metrics.example.com',
-    },
+    projectLink: 'https://metrics.example.com',
   },
   {
     id: 5,
@@ -624,12 +598,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-5-1',
-      name: 'Smart Contract Code',
-      type: 'link',
-      url: 'https://github.com/example/credential-verify',
-    },
+    projectLink: 'https://github.com/example/credential-verify',
   },
   {
     id: 6,
@@ -750,12 +719,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-6-1',
-      name: 'Demo Video',
-      type: 'link',
-      url: 'https://youtube.com/example-evoting',
-    },
+    projectLink: 'https://youtube.com/example-evoting',
   },
   {
     id: 7,
@@ -863,12 +827,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-7-1',
-      name: 'Figma Designs',
-      type: 'link',
-      url: 'https://figma.com/example-phr',
-    },
+    projectLink: 'https://figma.com/example-phr',
   },
   {
     id: 8,
@@ -1010,12 +969,7 @@ export const PORTFOLIO_MANAGEMENT_DATA: ProjectData[] = [
         ],
       },
     ],
-    projectLink: {
-      id: 'att-8-1',
-      name: 'Chrome Web Store Link',
-      type: 'link',
-      url: 'https://chrome.google.com/example-phishing',
-    },
+    projectLink: 'https://chrome.google.com/example-phishing',
   },
 ];
 

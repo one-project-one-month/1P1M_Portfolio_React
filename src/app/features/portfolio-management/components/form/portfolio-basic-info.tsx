@@ -1,8 +1,12 @@
 import FileUpload from '@/components/ui/file-upload';
 import type { DropdownItem } from '@/types/portfolio-management';
+import { ChevronDown } from 'lucide-react';
+import React, { useRef, useState } from 'react';
 import type { ProjectData } from '../../constants/data';
 import { statusOptions } from '../../constants/data';
+import { uploadProjectImage } from '../../services/image-upload-service';
 import StatusDropdown from '../status-dropdown';
+import DatePickerDialog from './date-picker-dialog';
 
 interface PortfolioBasicInfoProps {
   initialData?: ProjectData | null;
@@ -16,6 +20,8 @@ interface PortfolioBasicInfoProps {
   setStartDate: (date: string) => void;
   completedDate: string;
   setCompletedDate: (date: string) => void;
+  projectImage: string;
+  setProjectImage: (image: string) => void;
   isReadOnly: boolean;
 }
 
@@ -31,8 +37,39 @@ export const PortfolioBasicInfo = ({
   setStartDate,
   completedDate,
   setCompletedDate,
+  projectImage,
+  setProjectImage,
   isReadOnly,
 }: PortfolioBasicInfoProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [activeDateField, setActiveDateField] = useState<'start' | 'complete'>(
+    'start',
+  );
+
+  const openDatePicker = (field: 'start' | 'complete') => {
+    setActiveDateField(field);
+    setDatePickerOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const imageUrl = await uploadProjectImage(file);
+        setProjectImage(imageUrl);
+      } catch (error) {
+        console.error('Image upload failed', error);
+      }
+    }
+  };
+
+  const triggerFileUpload = () => {
+    if (!isReadOnly) {
+      fileInputRef.current?.click();
+    }
+  };
+
   return (
     <div className="space-y-6 text-white">
       <h2 className="text-lg font-medium">Project Basic Information</h2>
@@ -40,17 +77,31 @@ export const PortfolioBasicInfo = ({
       <div className="flex flex-col md:flex-row gap-6">
         {/* Project Image */}
         <div className="shrink-0">
-          {initialData?.image ? (
-            <div className="w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15">
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
+          {projectImage || initialData?.image ? (
+            <div
+              className={`w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${!isReadOnly ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              onClick={triggerFileUpload}
+            >
               <img
-                src={initialData.image}
+                src={projectImage || initialData?.image || ''}
                 alt="Project"
                 className="w-full h-full object-cover"
               />
             </div>
           ) : (
-            <div className="shrink-0">
-              <FileUpload className="w-[153px] h-[153px] bg-[#0F172B]/60 border rounded-lg cursor-pointer hover:bg-[#FFFFFF20]" />
+            <div className="shrink-0" onClick={triggerFileUpload}>
+              <div
+                className={`w-[153px] h-[153px] rounded-lg flex items-center justify-center ${!isReadOnly ? 'cursor-pointer' : ''}`}
+              >
+                <FileUpload className="pointer-events-none" />
+              </div>
             </div>
           )}
         </div>
@@ -119,13 +170,21 @@ export const PortfolioBasicInfo = ({
               {startDate || '-'}
             </p>
           ) : (
-            <input
-              type="text"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              placeholder="e.g., Nov 15, 2025"
-              className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
-            />
+            <div
+              onClick={() => !isReadOnly && openDatePicker('start')}
+              className={`w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white min-h-[42px] flex items-center justify-between ${
+                !isReadOnly
+                  ? 'cursor-pointer hover:border-[#9C39FC] transition-colors'
+                  : ''
+              }`}
+            >
+              <span className={startDate ? 'text-white' : 'text-[#6A7282]'}>
+                {startDate || 'e.g., Nov 15, 2025'}
+              </span>
+              {!startDate && !isReadOnly && (
+                <ChevronDown className="h-4 w-4 text-[#6A7282]" />
+              )}
+            </div>
           )}
         </div>
         <div className="space-y-1">
@@ -137,16 +196,45 @@ export const PortfolioBasicInfo = ({
               {completedDate || '-'}
             </p>
           ) : (
-            <input
-              type="text"
-              value={completedDate || ''}
-              onChange={(e) => setCompletedDate(e.target.value)}
-              placeholder="e.g., Dec 15, 2025"
-              className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
-            />
+            <div
+              onClick={() => !isReadOnly && openDatePicker('complete')}
+              className={`w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white min-h-[42px] flex items-center justify-between ${
+                !isReadOnly
+                  ? 'cursor-pointer hover:border-[#9C39FC] transition-colors'
+                  : ''
+              }`}
+            >
+              <span className={completedDate ? 'text-white' : 'text-[#6A7282]'}>
+                {completedDate || 'e.g., Dec 15, 2025'}
+              </span>
+              {!completedDate && !isReadOnly && (
+                <ChevronDown className="h-4 w-4 text-[#6A7282]" />
+              )}
+            </div>
           )}
         </div>
       </div>
+
+      <DatePickerDialog
+        isOpen={datePickerOpen}
+        onClose={() => setDatePickerOpen(false)}
+        selectedDate={
+          activeDateField === 'start'
+            ? startDate
+              ? new Date(startDate)
+              : null
+            : completedDate
+              ? new Date(completedDate)
+              : null
+        }
+        onSelect={(date) => {
+          if (activeDateField === 'start') {
+            setStartDate(date);
+          } else {
+            setCompletedDate(date);
+          }
+        }}
+      />
     </div>
   );
 };
