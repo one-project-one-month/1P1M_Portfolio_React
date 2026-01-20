@@ -2,13 +2,19 @@ import type {
   DropdownItem,
   Member as ModalMember,
 } from '@/types/portfolio-management';
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import type { PortfolioFormMode } from '../components/portfolio-form';
 import {
   statusOptions,
   type ProjectData,
   type TeamData,
 } from '../constants/data';
+import {
+  portfolioFormSchema,
+  type PortfolioFormValues,
+} from '../portfolio-schema';
 
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
@@ -29,99 +35,79 @@ export const usePortfolioForm = ({
   const isReadOnly = mode === 'view';
   const isEdit = mode === 'edit';
 
-  const [projectName, setProjectName] = useState(
-    initialData?.projectName || '',
-  );
-  const [description, setDescription] = useState(
-    initialData?.description || '',
-  );
-  const [startDate, setStartDate] = useState(initialData?.startDate || '');
-  const [completedDate, setCompletedDate] = useState(
-    initialData?.completedDate || '',
-  );
-  const [status, setStatus] = useState<DropdownItem | null>(
-    initialData?.status
-      ? statusOptions.find((s) => s.name === initialData.status) || null
-      : null,
-  );
+  const form = useForm<PortfolioFormValues>({
+    resolver: zodResolver(portfolioFormSchema),
+    defaultValues: {
+      projectName: initialData?.projectName || '',
+      description: initialData?.description || '',
+      startDate: initialData?.startDate || '',
+      completedDate: initialData?.completedDate ?? '',
+      status: initialData?.status
+        ? statusOptions.find((s) => s.name === initialData.status) || null
+        : null,
+      technologies: initialData?.technologies?.map((t) => ({
+        projectType: t.projectType,
+        languages: t.languages,
+      })) || [{ projectType: null, languages: '' }],
+      teams: initialData?.teams || [],
+      projectLink: initialData?.projectLink || '',
+      projectImage: initialData?.image || '',
+    },
+  });
 
-  const [technologies, setTechnologies] = useState<TechnologyEntry[]>(
-    initialData?.technologies || [{ projectType: null, languages: '' }],
-  );
-
-  const [projectImage, setProjectImage] = useState<string>(
-    initialData?.image || '',
-  );
-  const [teams, setTeams] = useState<TeamData[]>(initialData?.teams || []);
-  const [projectLink, setProjectLink] = useState<string>(
-    initialData?.projectLink || '',
-  );
+  const {
+    fields: technologyFields,
+    append: appendTechnology,
+    remove: removeTechnology,
+    update: updateTechnology,
+  } = useFieldArray({
+    control: form.control,
+    name: 'technologies',
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (initialData) {
-      setProjectName(initialData.projectName || '');
-      setDescription(initialData.description || '');
-      setStartDate(initialData.startDate || '');
-      setCompletedDate(initialData.completedDate || '');
-      setStatus(
-        initialData.status
-          ? statusOptions.find((s) => s.name === initialData.status) || null
-          : null,
-      );
-      setTechnologies(
-        initialData.technologies || [{ projectType: null, languages: '' }],
-      );
-      setProjectImage(initialData.image || '');
-      setTeams(initialData.teams || []);
-      setProjectLink(initialData.projectLink || '');
-    }
-  }, [initialData]);
-
   const handleAddTechnology = () => {
-    setTechnologies([...technologies, { projectType: null, languages: '' }]);
+    appendTechnology({ projectType: null, languages: '' });
   };
 
   const handleRemoveTechnology = (index: number) => {
-    setTechnologies(technologies.filter((_, i) => i !== index));
+    removeTechnology(index);
   };
 
   const handleUpdateTechnology = (
     index: number,
     field: keyof TechnologyEntry,
-    value: any,
+    value: unknown,
   ) => {
-    const newTechnologies = [...technologies];
-    newTechnologies[index] = { ...newTechnologies[index], [field]: value };
-    setTechnologies(newTechnologies);
+    const currentTech = form.getValues(`technologies.${index}`);
+    updateTechnology(index, { ...currentTech, [field]: value });
   };
 
-  const handleSaveForm = () => {
-    // Filter out technologies with no project type selected
-    const validTechnologies = technologies.filter(
+  const handleSaveForm = form.handleSubmit((data) => {
+    const validTechnologies = data.technologies.filter(
       (t): t is { projectType: DropdownItem; languages: string } =>
         t.projectType !== null,
     );
 
     const formData: Partial<ProjectData> = {
       id: initialData?.id,
-      projectName,
-      title: projectName,
-      description,
-      startDate,
-      completedDate: completedDate || null,
-      status: status?.name as ProjectData['status'],
+      projectName: data.projectName,
+      title: data.projectName,
+      description: data.description,
+      startDate: data.startDate,
+      completedDate: data.completedDate || null,
+      status: data.status?.name as ProjectData['status'],
       technologies: validTechnologies as ProjectData['technologies'],
-      teams,
-      projectLink,
+      teams: data.teams,
+      projectLink: data.projectLink,
       leader: initialData?.leader || '',
-      image: projectImage,
-      members: teams.flatMap((t) => t.members),
+      image: data.projectImage,
+      members: data.teams.flatMap((t) => t.members),
     };
     onSave?.(formData);
-  };
+  });
 
   const handleAddTeam = () => {
     setActiveTeamId('new-team');
@@ -140,6 +126,8 @@ export const usePortfolioForm = ({
       role: m.role,
     }));
 
+    const currentTeams = form.getValues('teams');
+
     if (activeTeamId === 'new-team') {
       const newTeam: TeamData = {
         id: `team-${Date.now()}`,
@@ -147,10 +135,11 @@ export const usePortfolioForm = ({
         count: members.length,
         members: members,
       };
-      setTeams([...teams, newTeam]);
+      form.setValue('teams', [...currentTeams, newTeam]);
     } else if (activeTeamId) {
-      setTeams(
-        teams.map((team) => {
+      form.setValue(
+        'teams',
+        currentTeams.map((team) => {
           if (team.id === activeTeamId) {
             return {
               ...team,
@@ -168,11 +157,19 @@ export const usePortfolioForm = ({
   };
 
   const handleRemoveTeam = (teamId: string) => {
-    setTeams(teams.filter((t) => t.id !== teamId));
+    const currentTeams = form.getValues('teams');
+    form.setValue(
+      'teams',
+      currentTeams.filter((t) => t.id !== teamId),
+    );
   };
 
   const handleUpdateTeam = (updatedTeam: TeamData) => {
-    setTeams(teams.map((t) => (t.id === updatedTeam.id ? updatedTeam : t)));
+    const currentTeams = form.getValues('teams');
+    form.setValue(
+      'teams',
+      currentTeams.map((t) => (t.id === updatedTeam.id ? updatedTeam : t)),
+    );
   };
 
   const getTitle = () => {
@@ -189,6 +186,7 @@ export const usePortfolioForm = ({
   };
 
   const getModalTeamName = () => {
+    const teams = form.getValues('teams');
     if (activeTeamId === 'new-team') {
       return `Team ${teams.length + 1}`;
     }
@@ -196,6 +194,7 @@ export const usePortfolioForm = ({
   };
 
   const getModalInitialMembers = () => {
+    const teams = form.getValues('teams');
     if (activeTeamId === 'new-team') {
       return [];
     }
@@ -203,29 +202,13 @@ export const usePortfolioForm = ({
   };
 
   return {
+    form,
     isReadOnly,
     isEdit,
-    projectName,
-    setProjectName,
-    description,
-    setDescription,
-    startDate,
-    setStartDate,
-    completedDate,
-    setCompletedDate,
-    status,
-    setStatus,
-    technologies,
-    setTechnologies,
+    technologyFields,
     handleAddTechnology,
     handleRemoveTechnology,
     handleUpdateTechnology,
-    projectImage,
-    setProjectImage,
-    teams,
-    setTeams,
-    projectLink,
-    setProjectLink,
     isModalOpen,
     setIsModalOpen,
     activeTeamId,

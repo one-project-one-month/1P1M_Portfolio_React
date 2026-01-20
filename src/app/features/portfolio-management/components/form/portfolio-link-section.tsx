@@ -1,17 +1,18 @@
 import InputField from '@/components/ui/input-field';
-// React import removed as not used
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import type { PortfolioFormValues } from '../../portfolio-schema';
 
 interface PortfolioLinkSectionProps {
-  projectLink: string;
-  setProjectLink: (link: string) => void;
+  form: UseFormReturn<PortfolioFormValues>;
   isReadOnly: boolean;
 }
 
 export const PortfolioLinkSection = ({
-  projectLink,
-  setProjectLink,
+  form,
   isReadOnly,
 }: PortfolioLinkSectionProps) => {
+  const projectLink = form.watch('projectLink');
+
   return (
     <div className="space-y-6">
       <h2 className="text-lg font-medium text-white">Project Link</h2>
@@ -26,11 +27,17 @@ export const PortfolioLinkSection = ({
               {projectLink || 'No link provided'}
             </div>
           ) : (
-            <InputField
-              className="text-sm text-[#6A7282] w-full"
-              placeholder="http://"
-              value={projectLink}
-              onChange={(e) => setProjectLink(e.target.value)}
+            <Controller
+              control={form.control}
+              name="projectLink"
+              render={({ field }) => (
+                <InputField
+                  className="text-sm text-[#6A7282] w-full"
+                  placeholder="http://"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
           )}
         </div>

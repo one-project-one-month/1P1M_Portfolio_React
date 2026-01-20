@@ -45,8 +45,12 @@ export const usePortfolioManagement = () => {
     setCurrentPage(0);
   };
 
-  const handleStatusFilter = (status: ProjectStatus) => {
-    setStatusFilter(status);
+  const handleStatusFilter = (status: ProjectStatus | 'All') => {
+    if (status === 'All') {
+      setStatusFilter(null);
+    } else {
+      setStatusFilter(status);
+    }
     setCurrentPage(0);
   };
 
