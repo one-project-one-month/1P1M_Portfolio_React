@@ -17,6 +17,7 @@ const PortfolioManagementPage = () => {
     handleSearch,
     handleStatusFilter,
     deleteProject,
+    updateProjectStatus,
   } = usePortfolioManagement();
 
   return (
@@ -30,7 +31,11 @@ const PortfolioManagementPage = () => {
 
       <div className="flex-1 mt-6 bg-transparent">
         {viewMode === 'list' ? (
-          <PortfolioListView data={paginatedData} onDelete={deleteProject} />
+          <PortfolioListView
+            data={paginatedData}
+            onDelete={deleteProject}
+            onStatusChange={updateProjectStatus}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-hidden">
             {paginatedData.length === 0 ? (

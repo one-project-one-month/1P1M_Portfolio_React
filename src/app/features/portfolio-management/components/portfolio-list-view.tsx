@@ -1,8 +1,10 @@
 import DeleteDialog from '@/components/ui/delete-dialog';
 import Tooltip from '@/components/ui/tooltip';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
 import { usePortfolioActions } from '../hooks/use-portfolio-actions';
+import ChangeStatusDialog from './change-status-dialog';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
 
@@ -60,10 +62,18 @@ const CellText = ({
 interface PortfolioListViewProps {
   data: ProjectData[];
   onDelete: (id: number) => void;
+  onStatusChange?: (id: number, status: ProjectStatus) => void;
 }
 
-const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
+const PortfolioListView = ({
+  data,
+  onDelete,
+  onStatusChange,
+}: PortfolioListViewProps) => {
   const navigate = useNavigate();
+  const [statusDialogProjectId, setStatusDialogProjectId] = useState<
+    number | null
+  >(null);
 
   const {
     openMenuId,
@@ -91,6 +101,19 @@ const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
       setShowSuccessToast(true);
     }
   };
+
+  const handleStatusClick = (projectId: number) => {
+    setStatusDialogProjectId(projectId);
+  };
+
+  const handleStatusConfirm = (newStatus: ProjectStatus) => {
+    if (statusDialogProjectId !== null) {
+      onStatusChange?.(statusDialogProjectId, newStatus);
+      setStatusDialogProjectId(null);
+    }
+  };
+
+  const currentProject = data.find((p) => p.id === statusDialogProjectId);
 
   return (
     <>
@@ -151,11 +174,12 @@ const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
                   </TableCell>
 
                   <TableCell centered>
-                    <span
-                      className={`font-medium text-sm ${getStatusColor(project.status)}`}
+                    <button
+                      onClick={() => handleStatusClick(project.id)}
+                      className={`font-medium text-sm cursor-pointer hover:underline transition-colors ${getStatusColor(project.status)}`}
                     >
                       {project.status}
-                    </span>
+                    </button>
                   </TableCell>
 
                   <TableCell centered>
@@ -201,6 +225,13 @@ const PortfolioListView = ({ data, onDelete }: PortfolioListViewProps) => {
             action cannot be undone.
           </>
         }
+      />
+
+      <ChangeStatusDialog
+        isOpen={statusDialogProjectId !== null}
+        onClose={() => setStatusDialogProjectId(null)}
+        onConfirm={handleStatusConfirm}
+        currentStatus={currentProject?.status}
       />
 
       {showSuccessToast && (
