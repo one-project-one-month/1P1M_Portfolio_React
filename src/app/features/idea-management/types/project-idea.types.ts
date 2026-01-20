@@ -43,6 +43,7 @@ export type ProjectIdeaContainerPropsType = {
   onPageChange?: (page: number) => void;
   onTotalChange?: (total: number) => void;
   totalIdeas: number;
+  onEditIdea: () => void;
 };
 
 export type ProjectIdeaTableType = {
@@ -72,3 +73,16 @@ export type ProjectIdeasResponseType = ApiResponseType<ProjectIdeaType[]>;
 export type ProjectIdeaByIdResponseType = ApiResponseType<ProjectIdeaType>;
 export type ProjectIdeaUpdateResponseType =
   ApiResponseType<UpdateProjectIdeaType>;
+
+// For Idea Creation Form
+export interface IdeaCreateFormValues {
+  name: string;
+  description: string;
+  projectTypes: string[];
+}
+
+export interface IdeaCreateFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (values: IdeaCreateFormValues) => void;
+}

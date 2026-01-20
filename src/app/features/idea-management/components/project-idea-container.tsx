@@ -15,6 +15,7 @@ const ProjectIdeaContainer = ({
   onPageChange,
   onTotalChange,
   totalIdeas,
+  onEditIdea,
 }: ProjectIdeaContainerPropsType) => {
   const { data, isLoading, isError } = useGetProjectIdea({
     page,
@@ -31,6 +32,7 @@ const ProjectIdeaContainer = ({
 
   const handleEdit = (id: number) => {
     console.log(id);
+    onEditIdea();
   };
   const handleDelete = (id: number) => {
     console.log(id);
@@ -56,6 +58,17 @@ const ProjectIdeaContainer = ({
 
   return (
     <div>
+      {onEditIdea && (
+        <div className="mb-8 flex justify-end">
+          <button
+            className="rounded-lg bg-[#A855F7] px-6 py-2 text-sm font-semibold text-white hover:bg-[#9333EA]"
+            onClick={onEditIdea}
+          >
+            Mock Edit Dialog
+          </button>
+        </div>
+      )}
+
       {view === 'list' ? (
         <IdeaManagementTable
           // data={items}
