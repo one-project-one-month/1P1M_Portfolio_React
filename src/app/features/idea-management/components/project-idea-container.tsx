@@ -1,3 +1,4 @@
+import ConfirmationModal from '@/components/ui/confirm-modal';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { useEffect, useState } from 'react';
@@ -31,6 +32,8 @@ const ProjectIdeaContainer = ({
 
   const [editInitialValues, setEditInitialValues] =
     useState<IdeaEditFormValues | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     if (data?.meta?.totalItems && onTotalChange) {
@@ -38,6 +41,7 @@ const ProjectIdeaContainer = ({
     }
   }, [data?.meta?.totalItems, onTotalChange]);
 
+  /* ============ Idea Edit =============== */
   const MOCK_EDIT_VALUES: IdeaEditFormValues = {
     projectName: 'Smart Order & Booking Management System',
     description:
@@ -57,9 +61,13 @@ const ProjectIdeaContainer = ({
     });
     setEditOpen(true);
   };
+
+  /* ============ Idea Delete =============== */
   const handleDelete = (id: number) => {
-    console.log(id);
+    setDeleteId(id);
+    setDeleteOpen(true);
   };
+
   const handleViewDetail = (id: number) => {
     console.log(id);
   };
@@ -120,6 +128,27 @@ const ProjectIdeaContainer = ({
         onSubmit={(values) => {
           // call update API
           setEditOpen(false);
+        }}
+      />
+
+      <ConfirmationModal
+        id={deleteId ?? -1}
+        isOpen={deleteOpen}
+        title="Delete Project Idea?"
+        subtitle="Are you sure you want to delete this (project idea)? This action cannot be undone"
+        rejectText="Cancel"
+        confirmText="Delete"
+        onCancel={() => {
+          setDeleteOpen(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId === null) return;
+
+          console.log('Deleting idea:', deleteId);
+
+          setDeleteOpen(false);
+          setDeleteId(null);
         }}
       />
     </div>
