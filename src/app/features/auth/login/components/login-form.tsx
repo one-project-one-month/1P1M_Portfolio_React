@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { NavLink, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '@/hooks/use-auth';
+import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
-import type { LoginData } from '../services/types';
+
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -14,7 +17,9 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const { handleRoute } = useAppNavigation();
+
+  const { saveAuth } = useAuth();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
@@ -68,17 +73,26 @@ export default function LoginForm() {
         setError(response.message || 'Login failed');
       }
 
-      toast.success('Login successfully!');
+      const userInfo = {
+        username: response.data?.username,
+        userId: response.data?.userId,
+        role: response.data?.role,
+      };
+
+      saveAuth(userInfo);
       console.log('Login successful:', response.data);
 
-      const data = response.data as LoginData;
-      if (data.isNewUserLogin) {
-        navigate('/auth/setup-profile');
-      } else if (data.role == 'ADMIN') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      const data = response.data as LoginResponse;
+
+      handleRoute(data?.role, data?.isNewUserLogin);
+
+      // if (data.isNewUserLogin) {
+      //   navigate('/auth/setup-profile');
+      // } else if (data.role == 'ADMIN') {
+      //   navigate('/');
+      // } else {
+      //   navigate('/');
+      // }
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);
@@ -90,7 +104,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <FormBackground className="flex items-center justify-around flex-col w-full h-full">
+      <FormBackground className="flex items-center justify-around flex-col w-fit h-fit">
         {/* Heading */}
         <div className="text-white">
           <h1 className="font-sans font-bold text-2xl leading-8 mb-2">

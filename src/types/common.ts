@@ -40,10 +40,18 @@ export interface OpomRegisterForm {
   platformLinks: PlatformLink[];
 }
 
+export interface Meta {
+  totalItems: number;
+  totalPages: number;
+  currentPage: 0;
+  method: string;
+  endpoint: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   code: number;
   message: string;
-  data?: T | null;
-  error?: Error;
+  meta?: Meta;
+  data: T;
 }

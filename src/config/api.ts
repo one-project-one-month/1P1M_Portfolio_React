@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  API_URL: import.meta.env.VITE_API_URL || 'http://18.140.211.96:8080',
 
   // OAuth Configuration
   GITHUB_CLIENT_ID:
@@ -41,6 +41,7 @@ export const API_ENDPOINTS = {
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
+  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjects',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

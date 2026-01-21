@@ -26,7 +26,7 @@ export const ProfileSetupPage = PageLoader(
 );
 
 export const OpomRegisterPage = PageLoader(
-  lazy(() => import('@/app/features/auth/opom-register/page')),
+  lazy(() => import('@/app/features/opom-register/page')),
 );
 
 export const ForgotPasswordPage = PageLoader(
@@ -67,4 +67,19 @@ export const AdminLayout = PageLoader(
 
 export const DashboardPage = PageLoader(
   lazy(() => import('@/app/features/dashboard/page')),
+);
+
+export const PortfolioManagementPage = PageLoader(
+  lazy(() => import('@/app/features/portfolio-management/page')),
+);
+export const IdeaManagementPage = PageLoader(
+  lazy(() => import('@/app/features/idea-management/pages/index')),
+);
+
+export const TimelineManagementPage = PageLoader(
+  lazy(() => import('@/app/features/timeline-management/page.tsx')),
+);
+
+export const IdeaManagementEditPage = PageLoader(
+  lazy(() => import('@/app/features/idea-management/pages/edit')),
 );

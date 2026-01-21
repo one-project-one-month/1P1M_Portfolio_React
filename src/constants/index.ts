@@ -1,5 +1,6 @@
 import type { AdminNavLink, NavLink } from '@/types/nav-props';
 import {
+  CalendarClock,
   ChartGanttIcon,
   FileText,
   HardDrive,
@@ -41,5 +42,8 @@ export const ADMIN_NAVS: AdminNavLink[] = [
     path: 'portfolio-management',
     icon: HardDrive,
   },
+  { id: 3, name: 'Schedule', path: 'timeline-management', icon: CalendarClock },
   { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
 ];
+
+export const PROJECT_TYPE_OPTIONS = ['Mobile', 'Website', 'Desktop', 'Game'];
