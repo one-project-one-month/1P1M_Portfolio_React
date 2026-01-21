@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
 
+import { useAppNavigation } from '@/hooks/use-app-navigate';
 import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
@@ -16,7 +17,7 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const { handleRoute } = useAppNavigation();
 
   const { saveAuth } = useAuth();
 
@@ -83,17 +84,15 @@ export default function LoginForm() {
 
       const data = response.data as LoginResponse;
 
-      console.log('API Response', data);
+      handleRoute(data?.role, data?.isNewUserLogin);
 
-      console.log(userInfo);
-
-      if (data.isNewUserLogin) {
-        navigate('/auth/setup-profile');
-      } else if (data.role == 'ADMIN') {
-        navigate('/');
-      } else {
-        navigate('/');
-      }
+      // if (data.isNewUserLogin) {
+      //   navigate('/auth/setup-profile');
+      // } else if (data.role == 'ADMIN') {
+      //   navigate('/');
+      // } else {
+      //   navigate('/');
+      // }
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);

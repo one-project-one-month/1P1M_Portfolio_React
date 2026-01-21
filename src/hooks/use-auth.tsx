@@ -7,14 +7,12 @@ import {
   type ReactNode,
 } from 'react';
 
-// 1. Define the Shape of your Auth Data
 export interface Auth {
-  userId: number | null;
-  username: string | null;
-  role: 'ADMIN' | 'USER' | null;
+  userId: number | null | undefined;
+  username: string | null | undefined;
+  role: 'ADMIN' | 'USER' | null | undefined;
 }
 
-// 2. Define what the Hook provides to your components
 interface AuthContextType {
   auth: Auth;
   saveAuth: (auth: Auth) => Promise<void>;
