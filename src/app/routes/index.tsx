@@ -8,12 +8,16 @@ import {
   IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
+  PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisterPage from '../features/opom-register/page';
+import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
+import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
+import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
 
@@ -45,6 +49,22 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { path: 'dashboard', element: <DashboardPage /> },
+      {
+        path: 'portfolio-management',
+        element: <PortfolioManagementPage />,
+      },
+      {
+        path: 'portfolio-management/create-portfolio',
+        element: <CreatePortfolioPage />,
+      },
+      {
+        path: 'portfolio-management/view-project-portfolio/:projectId',
+        element: <ViewPortfolioPage />,
+      },
+      {
+        path: 'portfolio-management/edit-portfolio/:projectId',
+        element: <EditPortfolioPage />,
+      },
       { path: 'idea-management', element: <IdeaManagementPage /> },
       { path: 'idea-management/edit', element: <IdeaManagementPage /> },
       { path: 'timeline-management', element: <TimelineManagementPage /> },
