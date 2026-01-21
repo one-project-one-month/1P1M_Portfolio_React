@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  API_URL: import.meta.env.VITE_API_URL || 'http://18.140.211.96:8080',
 
   // OAuth Configuration
   GITHUB_CLIENT_ID:
