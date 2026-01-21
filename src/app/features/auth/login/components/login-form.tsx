@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
-import type { LoginResponse } from '../services/types';
+
+import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -72,6 +73,7 @@ export default function LoginForm() {
       }
 
       const userInfo = {
+        username: response.data?.username,
         userId: response.data?.userId,
         role: response.data?.role,
       };
@@ -83,10 +85,12 @@ export default function LoginForm() {
 
       console.log('API Response', data);
 
+      console.log(userInfo);
+
       if (data.isNewUserLogin) {
         navigate('/auth/setup-profile');
       } else if (data.role == 'ADMIN') {
-        navigate('/admin');
+        navigate('/');
       } else {
         navigate('/');
       }

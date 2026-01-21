@@ -1,7 +1,7 @@
 import apiClient from '@/api/axios';
 import { API_ENDPOINTS } from '@/config/api';
+import type { LoginResponse } from '@/types/auth';
 import type { ApiResponse } from './response';
-import type { LoginResponse } from './types';
 
 export async function loginWithEmailPassword(
   email: string,
