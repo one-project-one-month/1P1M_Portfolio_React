@@ -63,7 +63,6 @@ const ProjectIdeaContainer = ({
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
-          handleImportPortfolio={handleImportPortfolio}
         />
       ) : (
         <IdeaManagementGrid

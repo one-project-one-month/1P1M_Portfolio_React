@@ -1,7 +1,7 @@
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import type { IdeaManagementTableType } from '../types/project-idea.types';
+import type { ProjectIdeaTableType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 export const ProjectIdeaDropDown = ({
@@ -11,7 +11,7 @@ export const ProjectIdeaDropDown = ({
   handleViewDetail,
   handleDelete,
   handleStatusChange,
-}: IdeaManagementTableType) => {
+}: ProjectIdeaTableType) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>

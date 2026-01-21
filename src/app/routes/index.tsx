@@ -46,9 +46,8 @@ const router = createBrowserRouter([
     children: [
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'idea-management', element: <IdeaManagementPage /> },
-      { path: 'idea-management/edit', element: <IdeaManagementPage /> },
-      { path: 'timeline-management', element: <TimelineManagementPage /> },
       { path: 'idea-management/edit', element: <IdeaManagementEditPage /> },
+      { path: 'timeline-management', element: <TimelineManagementPage /> },
     ],
   },
 

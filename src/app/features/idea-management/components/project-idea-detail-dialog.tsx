@@ -1,7 +1,9 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { Button } from '@/components/ui/button';
 import { COLORS } from '@/constants/colors';
-import { Badge, Button, Dialog } from '@radix-ui/themes';
-import { PenLine } from 'lucide-react';
+import { buttonVariants } from '@/styles/button-variants';
+import { Badge, Dialog } from '@radix-ui/themes';
+import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 type ProjectIdeaDetailDialogProps = {
@@ -16,11 +18,11 @@ const ProjectIdeaDetailDialog = ({ trigger }: ProjectIdeaDetailDialogProps) => {
       <Dialog.Content
         size="4"
         maxWidth="758px"
-        style={{ background: 'black', color: 'white', padding: '60px' }}
+        className="bg-black! text-white px-16! py-12! rounded-3xl!"
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-start mb-6">
           <div>
-            <Dialog.Title size="7" style={{ marginBottom: 0 }}>
+            <Dialog.Title size="7" className="mb-0!">
               Project Details
             </Dialog.Title>
             <div
@@ -31,14 +33,9 @@ const ProjectIdeaDetailDialog = ({ trigger }: ProjectIdeaDetailDialogProps) => {
               }}
             />
           </div>
-          <Button
-            size="3"
-            variant="solid"
-            style={{ background: COLORS.primary }}
-          >
-            <PenLine size={18} />
-            Edit
-          </Button>
+          <Dialog.Close>
+            <X className="cursor-pointer" size={30} />
+          </Dialog.Close>
         </div>
 
         <div className="flex flex-col gap-y-10">
@@ -50,23 +47,26 @@ const ProjectIdeaDetailDialog = ({ trigger }: ProjectIdeaDetailDialogProps) => {
                 variant="outline"
                 size="3"
                 radius="full"
-                style={{ border: '1px solid #7CCF00', color: '#7CCF00' }}
+                className="px-4! py-2! border border-[#7CCF00]! text-[#7CCF00]!"
               >
                 Approved
               </Badge>
-              <Badge variant="outline" color="amber" size="3" radius="full">
+              {/* <Badge
+                variant="outline"
+                className="px-4! py-2! text-[#FD9A00]! border border-[#FD9A00]!"
+                size="3"
+                radius="full"
+              >
                 Pending
               </Badge>
               <Badge
-                variant="outline"
                 size="3"
                 highContrast
                 radius="full"
-                className="border"
-                style={{ color: 'white' }}
+                className="px-4! py-2! border bg-black border-[#A6A09B]! text-[#A6A09B]!"
               >
                 Archived
-              </Badge>
+              </Badge> */}
             </div>
             <p className="text-gray-400">Smart ordering and banking system</p>
           </div>
@@ -154,6 +154,18 @@ const ProjectIdeaDetailDialog = ({ trigger }: ProjectIdeaDetailDialogProps) => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex items-center justify-between gap-6">
+            <Dialog.Close>
+              <Button
+                className={`lg:w-1/2 bg-black! border! border-[#9C39FC]! ${buttonVariants({ variant: 'secondary' })}`}
+              >
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Button className="lg:w-1/2 text-lg">Edit Idea</Button>
           </div>
         </div>
       </Dialog.Content>
