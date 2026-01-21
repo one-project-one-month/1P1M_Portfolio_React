@@ -30,7 +30,7 @@ const IdeaManagement = () => {
         viewMode={viewMode}
         setViewMode={setViewMode}
         onCreate={() => setCreateOpen(true)}
-      />{' '}
+      />
       <ProjectIdeaContainer
         view={viewMode}
         searchQuery={searchQuery}
