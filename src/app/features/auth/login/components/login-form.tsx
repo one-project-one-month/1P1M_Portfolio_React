@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+
+import { useAuth } from '@/hooks/use-auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
-import type { LoginData } from '../services/types';
+import type { LoginResponse } from '../services/types';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -15,6 +16,8 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const { saveAuth } = useAuth();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
@@ -68,10 +71,18 @@ export default function LoginForm() {
         setError(response.message || 'Login failed');
       }
 
-      toast.success('Login successfully!');
+      const userInfo = {
+        userId: response.data?.userId,
+        role: response.data?.role,
+      };
+
+      saveAuth(userInfo);
       console.log('Login successful:', response.data);
 
-      const data = response.data as LoginData;
+      const data = response.data as LoginResponse;
+
+      console.log('API Response', data);
+
       if (data.isNewUserLogin) {
         navigate('/auth/setup-profile');
       } else if (data.role == 'ADMIN') {
