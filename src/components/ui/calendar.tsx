@@ -77,20 +77,16 @@ export function Calendar({
       setSelectedDate(clickedDate);
       onSelect?.(clickedDate);
     } else {
-      // Range mode
       if (!rangeStart || (rangeStart && rangeEnd)) {
-        // Start new range
         setRangeStart(clickedDate);
         setRangeEnd(null);
         onRangeSelect?.(clickedDate, null);
       } else if (rangeStart && !rangeEnd) {
-        // Complete range
         if (clickedDate < rangeStart) {
           setRangeEnd(rangeStart);
           setRangeStart(clickedDate);
           onRangeSelect?.(clickedDate, rangeStart);
         } else if (clickedDate.getTime() === rangeStart.getTime()) {
-          // Same date clicked, reset
           setRangeStart(null);
           setRangeEnd(null);
           onRangeSelect?.(null, null);
@@ -159,7 +155,6 @@ export function Calendar({
     const firstDay = getFirstDayOfMonth(currentDate);
     const days = [];
 
-    // Previous month days (grayed out)
     const prevMonthDays = getDaysInMonth(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
     );
@@ -175,7 +170,6 @@ export function Calendar({
       );
     }
 
-    // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       const selected = isDateSelected(day);
       const inRange = isDateInRange(day);
@@ -201,8 +195,7 @@ export function Calendar({
       );
     }
 
-    // Next month days (grayed out)
-    const remainingDays = 42 - days.length; // 6 rows * 7 days
+    const remainingDays = 42 - days.length;
     for (let day = 1; day <= remainingDays; day++) {
       days.push(
         <button
@@ -220,7 +213,6 @@ export function Calendar({
 
   return (
     <div className="flex w-[326px] flex-col gap-4 rounded-[30px] bg-white p-6 shadow-[0_0_15px_0_#9C39FC]">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-[25px] font-bold text-[#380675]">
           {monthNames[currentDate.getMonth()]}, {currentDate.getFullYear()}
@@ -243,9 +235,7 @@ export function Calendar({
         </div>
       </div>
 
-      {/* Calendar Grid */}
       <div className="rounded-lg bg-white p-2">
-        {/* Day names */}
         <div className="mb-4 grid grid-cols-7 gap-0">
           {dayNames.map((day) => (
             <div
@@ -257,9 +247,10 @@ export function Calendar({
           ))}
         </div>
 
-        {/* Days grid */}
         <div className="grid grid-cols-7 gap-0">{renderDays()}</div>
       </div>
     </div>
   );
 }
+
+export default Calendar;

@@ -91,6 +91,14 @@ export const usePortfolioManagement = () => {
     );
   };
 
+  const updateProjectStatus = (id: number, newStatus: ProjectStatus) => {
+    setPortfolioData((prevData) =>
+      prevData.map((project) =>
+        project.id === id ? { ...project, status: newStatus } : project,
+      ),
+    );
+  };
+
   const resetData = () => {
     setPortfolioData(PORTFOLIO_MANAGEMENT_DATA);
     setSearchQuery('');
@@ -111,6 +119,7 @@ export const usePortfolioManagement = () => {
     clearStatusFilter,
     deleteProject,
     updateProject,
+    updateProjectStatus,
     resetData,
   };
 };
