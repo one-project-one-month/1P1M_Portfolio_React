@@ -2,13 +2,13 @@ import type { UseFormReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
-import type { IdeaEditValues, IdeaStatus } from './index';
+import type { IdeaEditFormValues } from '../../types/project-idea.types';
 
 export default function EditStep3({
   form,
   onClose,
 }: {
-  form: UseFormReturn<IdeaEditValues>;
+  form: UseFormReturn<IdeaEditFormValues>;
   onClose: () => void;
 }) {
   return (
@@ -32,22 +32,22 @@ export default function EditStep3({
             <StatusOption
               title="Pending"
               desc="This idea is waiting for review or further action."
-              checked={field.value === 'Pending'}
-              onSelect={() => field.onChange('Pending')}
+              checked={field.value === 'PENDING'}
+              onSelect={() => field.onChange('PENDING')}
             />
 
             <StatusOption
               title="Approved"
               desc="This idea is accepted and ready to move forward."
-              checked={field.value === 'Approved'}
-              onSelect={() => field.onChange('Approved')}
+              checked={field.value === 'APPROVED'}
+              onSelect={() => field.onChange('APPROVED')}
             />
 
             <StatusOption
               title="Archived"
               desc="This idea is stored for reference and not active right now."
-              checked={field.value === 'Archived'}
-              onSelect={() => field.onChange('Archived')}
+              checked={field.value === 'ARCHIVED'}
+              onSelect={() => field.onChange('ARCHIVED')}
             />
 
             {fieldState.error?.message && (
@@ -89,7 +89,7 @@ function StatusOption({
   checked,
   onSelect,
 }: {
-  title: IdeaStatus;
+  title: 'Pending' | 'Approved' | 'Archived';
   desc: string;
   checked: boolean;
   onSelect: () => void;

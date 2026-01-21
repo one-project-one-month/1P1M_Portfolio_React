@@ -4,7 +4,10 @@ import type { UseFormReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
-import type { IdeaEditValues, Leader } from './index';
+import type {
+  IdeaEditFormValues,
+  Leader,
+} from '../../types/project-idea.types';
 
 export default function EditStep2({
   form,
@@ -12,14 +15,14 @@ export default function EditStep2({
   onBack,
   onNext,
 }: {
-  form: UseFormReturn<IdeaEditValues>;
+  form: UseFormReturn<IdeaEditFormValues>;
   leaders: Leader[];
   onBack: () => void;
   onNext: () => void;
 }) {
   const [leaderQuery, setLeaderQuery] = useState('');
 
-  const leaderId = form.watch('leaderId');
+  const leaderId = form.watch('dev_id');
   const currentLeader = useMemo(
     () => leaders.find((l) => l.id === leaderId) ?? null,
     [leaders, leaderId],
@@ -79,7 +82,7 @@ export default function EditStep2({
       {/* Results list */}
       <Controller
         control={form.control}
-        name="leaderId"
+        name="dev_id"
         rules={{ validate: (v) => (v ? true : 'Select a leader') }}
         render={({ field, fieldState }) => (
           <div>

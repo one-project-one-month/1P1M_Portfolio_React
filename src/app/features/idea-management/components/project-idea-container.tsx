@@ -1,10 +1,14 @@
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetProjectIdea } from '../hooks/use-project-ideas';
-import type { ProjectIdeaContainerPropsType } from '../types/project-idea.types';
+import type {
+  IdeaEditFormValues,
+  ProjectIdeaContainerPropsType,
+} from '../types/project-idea.types';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
+import ProjectIdeaEditDialog from './project-idea-edit-dialog/index';
 
 const ProjectIdeaContainer = ({
   view,
@@ -15,7 +19,8 @@ const ProjectIdeaContainer = ({
   onPageChange,
   onTotalChange,
   totalIdeas,
-  onEditIdea,
+  editOpen,
+  setEditOpen,
 }: ProjectIdeaContainerPropsType) => {
   const { data, isLoading, isError } = useGetProjectIdea({
     page,
@@ -24,15 +29,33 @@ const ProjectIdeaContainer = ({
     sortField: selectedFilter,
   });
 
+  const [editInitialValues, setEditInitialValues] =
+    useState<IdeaEditFormValues | null>(null);
+
   useEffect(() => {
     if (data?.meta?.totalItems && onTotalChange) {
       onTotalChange(data.meta.totalItems);
     }
   }, [data?.meta?.totalItems, onTotalChange]);
 
-  const handleEdit = (id: number) => {
-    console.log(id);
-    onEditIdea();
+  const MOCK_EDIT_VALUES: IdeaEditFormValues = {
+    projectName: 'Smart Order & Booking Management System',
+    description:
+      'A web-based system that allows customers to book tables and place food orders online...',
+    projectTypes: ['Website'],
+    dev_id: 1,
+    status: 'APPROVED',
+  };
+
+  const handleEdit = (idea: IdeaEditFormValues) => {
+    setEditInitialValues({
+      projectName: idea.projectName ?? '',
+      description: idea.description ?? '',
+      projectTypes: idea.projectTypes ?? [],
+      dev_id: idea.dev_id ?? null,
+      status: idea.status ?? 'PENDING',
+    });
+    setEditOpen(true);
   };
   const handleDelete = (id: number) => {
     console.log(id);
@@ -58,17 +81,6 @@ const ProjectIdeaContainer = ({
 
   return (
     <div>
-      {onEditIdea && (
-        <div className="mb-8 flex justify-end">
-          <button
-            className="rounded-lg bg-[#A855F7] px-6 py-2 text-sm font-semibold text-white hover:bg-[#9333EA]"
-            onClick={onEditIdea}
-          >
-            Mock Edit Dialog
-          </button>
-        </div>
-      )}
-
       {view === 'list' ? (
         <IdeaManagementTable
           // data={items}
@@ -101,6 +113,16 @@ const ProjectIdeaContainer = ({
           />
         )}
       </div>
+
+      <ProjectIdeaEditDialog
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        initialValues={editInitialValues ?? MOCK_EDIT_VALUES}
+        onSubmit={(values) => {
+          // call update API
+          setEditOpen(false);
+        }}
+      />
     </div>
   );
 };

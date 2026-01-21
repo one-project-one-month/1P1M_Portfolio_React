@@ -3,19 +3,6 @@ import IdeaCreateForm from '../components/idea-create-form';
 import ProjectIdeaContainer from '../components/project-idea-container';
 import ProjectIdeaHeaderSection from '../components/project-idea-header-section';
 
-import ProjectIdeaEditDialog, {
-  type IdeaEditValues,
-} from '../components/project-idea-edit-dialog/index';
-
-const MOCK_EDIT_VALUES: IdeaEditValues = {
-  name: 'Smart Order & Booking Management System',
-  description:
-    'A web-based system that allows customers to book tables and place food orders online...',
-  projectTypes: ['Website'],
-  leaderId: 1,
-  status: 'Approved',
-};
-
 const IdeaManagement = () => {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>(() => {
     const storedView = localStorage.getItem('idea-management-view-mode');
@@ -26,20 +13,8 @@ const IdeaManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalIdeas, setTotalIdeas] = useState(0);
   const [createOpen, setCreateOpen] = useState(false); // for idea creation form
-  const pageSize = 6;
-
   const [editOpen, setEditOpen] = useState(false);
-  const [editInitialValues, setEditInitialValues] =
-    useState<IdeaEditValues>(MOCK_EDIT_VALUES);
-
-  function openMockEdit() {
-    setEditInitialValues(MOCK_EDIT_VALUES);
-    setEditOpen(true);
-  }
-
-  function closeEdit() {
-    setEditOpen(false);
-  }
+  const pageSize = 6;
 
   useEffect(() => {
     localStorage.setItem('idea-management-view-mode', viewMode);
@@ -66,22 +41,13 @@ const IdeaManagement = () => {
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
         totalIdeas={totalIdeas}
-        onEditIdea={openMockEdit}
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
       />
 
       <IdeaCreateForm
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
-      />
-
-      <ProjectIdeaEditDialog
-        isOpen={editOpen}
-        onClose={closeEdit}
-        initialValues={editInitialValues}
-        onSubmit={(values) => {
-          console.log('Mock update payload:', values);
-          closeEdit();
-        }}
       />
     </div>
   );

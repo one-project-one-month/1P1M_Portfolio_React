@@ -6,14 +6,14 @@ import FormTextArea from '@/components/ui/form-textarea';
 import InputField from '@/components/ui/input-field';
 import { PROJECT_TYPE_OPTIONS } from '@/constants';
 
-import type { IdeaEditValues } from './index';
+import type { IdeaEditFormValues } from '../../types/project-idea.types';
 
 export default function EditStep1({
   form,
   onClose,
   onNext,
 }: {
-  form: UseFormReturn<IdeaEditValues>;
+  form: UseFormReturn<IdeaEditFormValues>;
   onClose: () => void;
   onNext: () => void;
 }) {
@@ -30,7 +30,7 @@ export default function EditStep1({
       <div className="space-y-8">
         <Controller
           control={form.control}
-          name="name"
+          name="projectName"
           rules={{
             required: 'Project idea name is required',
             minLength: { value: 2, message: 'Minimum 2 characters' },

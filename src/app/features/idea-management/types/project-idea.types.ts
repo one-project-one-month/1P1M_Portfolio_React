@@ -43,13 +43,14 @@ export type ProjectIdeaContainerPropsType = {
   onPageChange?: (page: number) => void;
   onTotalChange?: (total: number) => void;
   totalIdeas: number;
-  onEditIdea: () => void;
+  editOpen: boolean;
+  setEditOpen: (open: boolean) => void;
 };
 
 export type ProjectIdeaTableType = {
   type: 'list' | 'grid';
   data: ProjectIdeaType[];
-  handleEdit: (id: number) => void;
+  handleEdit: (idea: ProjectIdeaType) => void;
   handleDelete: (id: number) => void;
   handleViewDetail: (id: number) => void;
   handleStatusChange: (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => void;
@@ -76,7 +77,7 @@ export type ProjectIdeaUpdateResponseType =
 
 // For Idea Creation Form
 export interface IdeaCreateFormValues {
-  name: string;
+  projectName: string;
   description: string;
   projectTypes: string[];
 }
@@ -85,4 +86,29 @@ export interface IdeaCreateFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (values: IdeaCreateFormValues) => void;
+}
+
+export type IdeaEditFormValues = IdeaCreateFormValues & {
+  dev_id: number;
+  status: 'PENDING' | 'APPROVED' | 'ARCHIVED';
+};
+
+export type LeaderRole = 'Backend' | 'Frontend' | 'UI | UX Designer';
+export type Step = 0 | 1 | 2;
+
+export type Leader = {
+  id: number;
+  name: string;
+  email: string;
+  role: LeaderRole;
+  avatarUrl?: string;
+};
+
+export interface IdeaEditFormProps extends Omit<
+  IdeaCreateFormProps,
+  'onSubmit'
+> {
+  initialValues: IdeaEditFormValues;
+  onSubmit?: (value: IdeaEditFormValues) => void;
+  availableLeaders?: Leader[];
 }
