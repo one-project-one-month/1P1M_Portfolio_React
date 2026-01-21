@@ -18,9 +18,20 @@ export const useAppNavigation = () => {
     navigate(-1);
   };
 
+  const handleRoute = (role: 'ADMIN' | 'USER', isNewUser?: boolean) => {
+    if (role === 'ADMIN') {
+      goTo('/admin');
+    } else if (isNewUser && role === 'USER') {
+      goTo('/');
+    } else {
+      goTo('/auth/setup-profile');
+    }
+  };
+
   return {
     goTo,
     goBack,
     handleHomeNav,
+    handleRoute,
   };
 };
