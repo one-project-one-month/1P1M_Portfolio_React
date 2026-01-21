@@ -11,9 +11,10 @@ const IdeaManagement = () => {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalIdeas, setTotalIdeas] = useState(0); // for total ideas
-  const [createOpen, setCreateOpen] = useState(false);
-  const pageSize = 6; // for pagination
+  const [totalIdeas, setTotalIdeas] = useState(0);
+  const [createOpen, setCreateOpen] = useState(false); // for idea creation form
+  const [editOpen, setEditOpen] = useState(false);
+  const pageSize = 6;
 
   useEffect(() => {
     localStorage.setItem('idea-management-view-mode', viewMode);
@@ -39,6 +40,8 @@ const IdeaManagement = () => {
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
         totalIdeas={totalIdeas}
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
       />
       <IdeaCreateForm
         isOpen={createOpen}
