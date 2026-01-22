@@ -56,7 +56,6 @@ export default function LoginForm() {
     setEmailErrorMsg(emailErr);
     setPasswordErrorMsg(passwordErr);
 
-    // Show/hide errors based on validation results
     setShowEmailError(!!emailErr);
     setShowPasswordError(!!passwordErr);
 
@@ -73,11 +72,15 @@ export default function LoginForm() {
         setError(response.message || 'Login failed');
       }
 
+      console.log('RES', response);
+
       const userInfo = {
         username: response.data?.username,
         userId: response.data?.userId,
         role: response.data?.role,
       };
+
+      console.log('USER INFO', userInfo);
 
       saveAuth(userInfo);
       console.log('Login successful:', response.data);
@@ -85,14 +88,6 @@ export default function LoginForm() {
       const data = response.data as LoginResponse;
 
       handleRoute(data?.role, data?.isNewUserLogin);
-
-      // if (data.isNewUserLogin) {
-      //   navigate('/auth/setup-profile');
-      // } else if (data.role == 'ADMIN') {
-      //   navigate('/');
-      // } else {
-      //   navigate('/');
-      // }
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);

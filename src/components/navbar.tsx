@@ -57,7 +57,7 @@ function Navbar({ Auth }: NavbarProps) {
         ))}
       </div>
 
-      {Auth ? (
+      {Auth.userId && Auth.username ? (
         <div className="hidden md:flex items-center gap-3">
           {/* must change to pf url later */}
           <div className="rounded-full">
@@ -70,7 +70,7 @@ function Navbar({ Auth }: NavbarProps) {
           <Button
             variant="secondary"
             size="primary"
-            onClick={() => goTo('/callback')}
+            onClick={() => goTo('/auth/sign-up')}
           >
             Create Account
           </Button>
