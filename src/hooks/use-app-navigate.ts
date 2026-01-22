@@ -21,7 +21,7 @@ export const useAppNavigation = () => {
   const handleRoute = (role: 'ADMIN' | 'USER', isNewUser?: boolean) => {
     if (role === 'ADMIN') {
       goTo('/admin');
-    } else if (isNewUser && role === 'USER') {
+    } else if (!isNewUser && role === 'USER') {
       goTo('/');
     } else {
       goTo('/auth/setup-profile');
