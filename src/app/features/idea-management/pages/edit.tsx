@@ -31,7 +31,7 @@ const IdeaManagementEdit = () => {
                 <label htmlFor="project-status">Status</label>
                 <Select.Root size="3" defaultValue="PENDING">
                   <Select.Trigger
-                    id="project-status"
+                    id="status"
                     radius="large"
                     className="text-white! py-6! bg-[#FFFFFF17]!"
                   />
