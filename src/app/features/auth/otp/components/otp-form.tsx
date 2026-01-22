@@ -105,7 +105,7 @@ export default function OtpForm({
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 ">
+    <div className="w-full  flex flex-col items-center gap-4 ">
       <div className="text-center">
         <h2 className="text-white text-3xl font-semibold mb-2">
           OTP Verification
@@ -113,7 +113,7 @@ export default function OtpForm({
         <p className="text-gray-400 text-lg">We send a code to {email}</p>
       </div>
 
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-2">
         <OtpInput
           value={otpValue}
           onChange={handleOtpChange}
