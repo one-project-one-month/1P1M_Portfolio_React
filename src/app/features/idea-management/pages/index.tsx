@@ -13,6 +13,7 @@ const IdeaManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalIdeas, setTotalIdeas] = useState(0);
   const [createOpen, setCreateOpen] = useState(false); // for idea creation form
+  const [editOpen, setEditOpen] = useState(false);
   const pageSize = 6;
 
   useEffect(() => {
@@ -30,7 +31,6 @@ const IdeaManagement = () => {
         setViewMode={setViewMode}
         onCreate={() => setCreateOpen(true)}
       />
-
       <ProjectIdeaContainer
         view={viewMode}
         searchQuery={searchQuery}
@@ -40,8 +40,9 @@ const IdeaManagement = () => {
         onPageChange={setCurrentPage}
         onTotalChange={setTotalIdeas}
         totalIdeas={totalIdeas}
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
       />
-
       <IdeaCreateForm
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}

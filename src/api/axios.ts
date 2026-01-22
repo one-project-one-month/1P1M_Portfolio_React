@@ -1,4 +1,3 @@
-import { API_CONFIG } from '@/config/api';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 interface FailedRequest {
@@ -7,7 +6,7 @@ interface FailedRequest {
 }
 
 const apiClient = axios.create({
-  baseURL: API_CONFIG.API_URL,
+  baseURL: '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -57,7 +56,6 @@ apiClient.interceptors.response.use(
         processQueue(refreshError);
 
         localStorage.removeItem('user');
-        window.location.href = '/auth/log-in';
 
         return Promise.reject(refreshError);
       } finally {
