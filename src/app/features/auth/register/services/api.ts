@@ -18,7 +18,6 @@ export async function checkEmailExists(
       success: false,
       code: 500,
       message: err.message,
-      data: null,
     };
   }
 }
@@ -39,7 +38,6 @@ export async function sendOtpCode(
       success: false,
       code: 500,
       message: err.message,
-      data: null,
     };
   }
 }
@@ -62,7 +60,6 @@ export async function verifyOtpCode(
       success: false,
       code: 500,
       message: err.message,
-      data: null,
     };
   }
 }
