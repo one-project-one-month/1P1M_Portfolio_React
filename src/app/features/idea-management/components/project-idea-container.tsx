@@ -1,10 +1,15 @@
+import ConfirmationModal from '@/components/ui/confirm-modal';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetProjectIdea } from '../hooks/use-project-ideas';
-import type { ProjectIdeaContainerPropsType } from '../types/project-idea.types';
+import type {
+  IdeaEditFormValues,
+  ProjectIdeaContainerPropsType,
+} from '../types/project-idea.types';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
+import ProjectIdeaEditDialog from './project-idea-edit-dialog/index';
 
 const ProjectIdeaContainer = ({
   view,
@@ -15,6 +20,8 @@ const ProjectIdeaContainer = ({
   onPageChange,
   onTotalChange,
   totalIdeas,
+  editOpen,
+  setEditOpen,
 }: ProjectIdeaContainerPropsType) => {
   const { data, isLoading, isError } = useGetProjectIdea({
     page,
@@ -23,18 +30,44 @@ const ProjectIdeaContainer = ({
     sortField: selectedFilter,
   });
 
+  const [editInitialValues, setEditInitialValues] =
+    useState<IdeaEditFormValues | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
   useEffect(() => {
     if (data?.meta?.totalItems && onTotalChange) {
       onTotalChange(data.meta.totalItems);
     }
   }, [data?.meta?.totalItems, onTotalChange]);
 
-  const handleEdit = (id: number) => {
-    console.log(id);
+  /* ============ Idea Edit =============== */
+  const MOCK_EDIT_VALUES: IdeaEditFormValues = {
+    projectName: 'Smart Order & Booking Management System',
+    description:
+      'A web-based system that allows customers to book tables and place food orders online...',
+    projectTypes: ['Website'],
+    dev_id: 1,
+    status: 'APPROVED',
   };
+
+  const handleEdit = (idea: IdeaEditFormValues) => {
+    setEditInitialValues({
+      projectName: idea.projectName ?? '',
+      description: idea.description ?? '',
+      projectTypes: idea.projectTypes ?? [],
+      dev_id: idea.dev_id ?? null,
+      status: idea.status ?? 'PENDING',
+    });
+    setEditOpen(true);
+  };
+
+  /* ============ Idea Delete =============== */
   const handleDelete = (id: number) => {
-    console.log(id);
+    setDeleteId(id);
+    setDeleteOpen(true);
   };
+
   const handleViewDetail = (id: number) => {
     console.log(id);
   };
@@ -63,7 +96,6 @@ const ProjectIdeaContainer = ({
           handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
-          handleImportPortfolio={handleImportPortfolio}
         />
       ) : (
         <IdeaManagementGrid
@@ -88,6 +120,37 @@ const ProjectIdeaContainer = ({
           />
         )}
       </div>
+
+      <ProjectIdeaEditDialog
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        initialValues={editInitialValues ?? MOCK_EDIT_VALUES}
+        onSubmit={(values) => {
+          // call update API
+          setEditOpen(false);
+        }}
+      />
+
+      <ConfirmationModal
+        id={deleteId ?? -1}
+        isOpen={deleteOpen}
+        title="Delete Project Idea?"
+        subtitle="Are you sure you want to delete this (project idea)? This action cannot be undone"
+        rejectText="Cancel"
+        confirmText="Delete"
+        onCancel={() => {
+          setDeleteOpen(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId === null) return;
+
+          console.log('Deleting idea:', deleteId);
+
+          setDeleteOpen(false);
+          setDeleteId(null);
+        }}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
-import ConfirmationModal from '@/components/ui/confirm-model';
+import ConfirmationModal from '@/components/ui/confirm-modal';
 import { Avatar, Badge, Button, IconButton } from '@radix-ui/themes';
 import { Check, List, Plus, SquarePen, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
