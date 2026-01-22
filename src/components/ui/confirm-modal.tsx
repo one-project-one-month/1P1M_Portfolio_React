@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 interface ConfirmationModalProps {
-  id: number;
   isOpen: boolean;
   title: string;
   subtitle?: string;

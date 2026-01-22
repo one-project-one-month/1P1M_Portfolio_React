@@ -172,7 +172,6 @@ export default function RegisterForm() {
         name="regemail"
         id="regemail"
         label="Email"
-        value={emailFromAuth ?? emailFromAuth}
         placeholder="nora@gmail.com"
         error={emailError}
       />

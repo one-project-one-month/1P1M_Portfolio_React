@@ -16,7 +16,7 @@ const IdeaManagementEdit = () => {
 
       {/* Basic information */}
       <form action="" method="">
-        <div className="flex flex-col border-y border-[gray]! py-6 gap-y-6 pe-8 h-[620px] overflow-y-scroll">
+        <div className="flex flex-col border-y border-[#FFFFFF17]! py-6 gap-y-6 pe-8 h-[620px] overflow-y-scroll">
           <h3 className="text-lg font-semibold">Project Basic Information</h3>
 
           {/* Img & name */}
@@ -31,7 +31,7 @@ const IdeaManagementEdit = () => {
                 <label htmlFor="project-status">Status</label>
                 <Select.Root size="3" defaultValue="PENDING">
                   <Select.Trigger
-                    id="project-status"
+                    id="status"
                     radius="large"
                     className="text-white! py-6! bg-[#FFFFFF17]!"
                   />
@@ -82,12 +82,15 @@ const IdeaManagementEdit = () => {
         <div className="flex justify-end items-center pt-6 gap-6">
           <Button
             variant="outline"
-            className="text-[gray]! border! border-[gray]! cursor-pointer!"
+            className="text-[#FFFFFF17]! border! border-[#FFFFFF17]! cursor-pointer!"
             size="4"
           >
             Cancel
           </Button>
-          <PrimaryButton className={buttonVariants({ variant: 'primary' })}>
+          <PrimaryButton
+            type="submit"
+            className={buttonVariants({ variant: 'primary' })}
+          >
             Update
           </PrimaryButton>
         </div>

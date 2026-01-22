@@ -1,8 +1,9 @@
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import type { IdeaManagementTableType } from '../types/project-idea.types';
+import type { ProjectIdeaTableType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
+import ProjectIdeaStatusDialog from './project-idea-status-dialog';
 
 export const ProjectIdeaDropDown = ({
   type,
@@ -11,7 +12,7 @@ export const ProjectIdeaDropDown = ({
   handleViewDetail,
   handleDelete,
   handleStatusChange,
-}: IdeaManagementTableType) => {
+}: ProjectIdeaTableType) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
@@ -33,6 +34,7 @@ export const ProjectIdeaDropDown = ({
         <DropdownMenu.Item onClick={() => handleEdit(1)}>
           Edit Idea
         </DropdownMenu.Item>
+
         <ProjectIdeaDetailDialog
           trigger={
             <DropdownMenu.Item
@@ -45,12 +47,25 @@ export const ProjectIdeaDropDown = ({
             </DropdownMenu.Item>
           }
         />
+
         <DropdownMenu.Item onClick={() => handleDelete(1)}>
           Delete Idea
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={() => handleStatusChange('APPROVED')}>
-          Change Status
-        </DropdownMenu.Item>
+
+        <ProjectIdeaStatusDialog
+          devId={1}
+          trigger={
+            <DropdownMenu.Item
+              onSelect={(e) => {
+                e.preventDefault();
+                handleStatusChange('APPROVED');
+              }}
+            >
+              Change Status
+            </DropdownMenu.Item>
+          }
+        />
+
         <DropdownMenu.Item asChild>
           <NavLink to="/admin/idea-management/edit">Import Portfolio</NavLink>
         </DropdownMenu.Item>

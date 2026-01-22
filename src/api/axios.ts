@@ -1,39 +1,66 @@
-import { API_CONFIG } from '@/config/api';
-import { getSession } from '@/hooks/use-session';
-import axios from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
+interface FailedRequest {
+  resolve: (token?: string) => void;
+  reject: (err: any) => void;
+}
 
 const apiClient = axios.create({
-  baseURL: API_CONFIG.API_URL,
+  baseURL: '/api',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    const session = getSession();
-    if (session) {
-      config.headers.Authorization = `Bearer ${session.token}`;
+let isRefreshing = false;
+let failedQueue: FailedRequest[] = [];
+
+const processQueue = (error: any = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+  });
+  failedQueue = [];
+};
 
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    const status = error.response?.status;
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
-    if (status === 401) {
-      console.error('Authentication error:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => apiClient(originalRequest))
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        await apiClient.post('/portfolio/api/v1/auth/users/refresh');
+
+        processQueue(null);
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError);
+
+        localStorage.removeItem('user');
+
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
 
     return Promise.reject(error);

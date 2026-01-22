@@ -12,8 +12,10 @@ export const useProjectForm = () => {
       description: '',
       repoLink: '',
       projectLink: '',
-      languageAndTools: '',
-      developerEmails: [],
+      startDate: '',
+      completedDate: '',
+      technologies: [],
+      teamIds: [],
     },
   });
 
