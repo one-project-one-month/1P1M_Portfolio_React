@@ -80,3 +80,14 @@ export const TimelineManagementPage = PageLoader(
 export const IdeaManagementEditPage = PageLoader(
   lazy(() => import('@/app/features/idea-management/pages/edit')),
 );
+
+export const UserManagement = PageLoader(
+  lazy(() => import('@/app/features/user-management/pages/index')),
+);
+
+export const UserManagementViewDetail = PageLoader(
+  lazy(
+    () =>
+      import('@/app/features/user-management/components/user-management-view-detail'),
+  ),
+);
