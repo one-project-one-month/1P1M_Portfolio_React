@@ -11,6 +11,8 @@ import {
   PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
+  UserManagement,
+  UserManagementViewDetail,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
@@ -67,6 +69,12 @@ const router = createBrowserRouter([
       },
       { path: 'idea-management', element: <IdeaManagementPage /> },
       { path: 'idea-management/edit', element: <IdeaManagementEditPage /> },
+      { path: 'user-management', element: <UserManagement /> },
+      {
+        path: 'register-user/view-detail',
+        element: <UserManagementViewDetail />,
+      },
+
       { path: 'timeline-management', element: <TimelineManagementPage /> },
     ],
   },
