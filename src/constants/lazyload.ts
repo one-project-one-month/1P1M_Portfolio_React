@@ -88,3 +88,14 @@ export const IdeaManagementEditPage = PageLoader(
       import('@/app/features/idea-management/pages/idea-management-edit-page'),
   ),
 );
+
+export const UserManagement = PageLoader(
+  lazy(() => import('@/app/features/user-management/pages/index')),
+);
+
+export const UserManagementViewDetail = PageLoader(
+  lazy(
+    () =>
+      import('@/app/features/user-management/components/user-management-view-detail'),
+  ),
+);
