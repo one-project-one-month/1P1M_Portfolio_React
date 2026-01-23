@@ -1,81 +1,30 @@
-import ConfirmationModal from '@/components/ui/confirm-modal';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
-import { useEffect, useState } from 'react';
 import { useGetProjectIdea } from '../hooks/use-project-ideas';
-import type {
-  IdeaEditFormValues,
-  ProjectIdeaContainerPropsType,
-} from '../types/project-idea.types';
+import type { ProjectIdeaContainerPropsType } from '../types/project-idea.types';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
-import ProjectIdeaEditDialog from './project-idea-edit-dialog/index';
 
 const ProjectIdeaContainer = ({
   view,
-  searchQuery,
-  selectedFilter,
-  page,
-  size,
+  filter,
+  currentPage,
+  pageSize,
   onPageChange,
-  onTotalChange,
-  totalIdeas,
-  editOpen,
-  setEditOpen,
 }: ProjectIdeaContainerPropsType) => {
   const { data, isLoading, isError } = useGetProjectIdea({
-    page,
-    size,
-    keyword: searchQuery,
-    sortField: selectedFilter,
+    page: currentPage,
+    size: pageSize,
+    keyword: filter.search,
+    sortField: filter.status,
   });
-
-  const [editInitialValues, setEditInitialValues] =
-    useState<IdeaEditFormValues | null>(null);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (data?.meta?.totalItems && onTotalChange) {
-      onTotalChange(data.meta.totalItems);
-    }
-  }, [data?.meta?.totalItems, onTotalChange]);
-
-  /* ============ Idea Edit =============== */
-  const MOCK_EDIT_VALUES: IdeaEditFormValues = {
-    projectName: 'Smart Order & Booking Management System',
-    description:
-      'A web-based system that allows customers to book tables and place food orders online...',
-    projectTypes: ['Website'],
-    dev_id: 1,
-    status: 'APPROVED',
-  };
-
-  const handleEdit = (idea: IdeaEditFormValues) => {
-    setEditInitialValues({
-      projectName: idea.projectName ?? '',
-      description: idea.description ?? '',
-      projectTypes: idea.projectTypes ?? [],
-      dev_id: idea.dev_id ?? null,
-      status: idea.status ?? 'PENDING',
-    });
-    setEditOpen(true);
-  };
-
-  /* ============ Idea Delete =============== */
-  const handleDelete = (id: number) => {
-    setDeleteId(id);
-    setDeleteOpen(true);
-  };
 
   const handleViewDetail = (id: number) => {
     console.log(id);
   };
+
   const handleStatusChange = (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => {
     console.log(status);
-  };
-  const handleImportPortfolio = (id: number) => {
-    console.log(id);
   };
 
   // if (isLoading) return <div className="text-slate-400">Loading ideas...</div>;
@@ -85,24 +34,22 @@ const ProjectIdeaContainer = ({
 
   // Ensure children always receive an array (empty when no data).
   const items = data?.data ?? [];
-  const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
+  const totalItems = data?.meta?.totalItems;
+  const totalPages = data?.meta
+    ? Math.ceil(data.meta.totalItems / pageSize)
+    : 0;
 
   return (
     <div>
       {view === 'list' ? (
         <IdeaManagementTable
           // data={items}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
-          handleImportPortfolio={handleImportPortfolio}
         />
       ) : (
         <IdeaManagementGrid
           // data={items}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
           handleViewDetail={handleViewDetail}
           handleStatusChange={handleStatusChange}
         />
@@ -111,47 +58,16 @@ const ProjectIdeaContainer = ({
       <div className="flex items-center justify-between mt-14">
         {/* Total Count */}
         <span className={`text-[${COLORS.secondary}] font-semibold`}>
-          Total - {totalIdeas}
+          Total - {totalItems}
         </span>
         {onPageChange && totalPages > 1 && (
           <Pagination
-            currentPage={page}
+            currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
         )}
       </div>
-
-      <ProjectIdeaEditDialog
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        initialValues={editInitialValues ?? MOCK_EDIT_VALUES}
-        onSubmit={(values) => {
-          // call update API
-          setEditOpen(false);
-        }}
-      />
-
-      <ConfirmationModal
-        id={deleteId ?? -1}
-        isOpen={deleteOpen}
-        title="Delete Project Idea?"
-        subtitle="Are you sure you want to delete this (project idea)? This action cannot be undone"
-        rejectText="Cancel"
-        confirmText="Delete"
-        onCancel={() => {
-          setDeleteOpen(false);
-          setDeleteId(null);
-        }}
-        onConfirm={() => {
-          if (deleteId === null) return;
-
-          console.log('Deleting idea:', deleteId);
-
-          setDeleteOpen(false);
-          setDeleteId(null);
-        }}
-      />
     </div>
   );
 };

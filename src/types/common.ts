@@ -7,7 +7,7 @@ export interface SendOTP {
 }
 
 export interface Profile {
-  dev_id: string;
+  dev_id: number;
   name?: string;
   techStacks?: string[];
   github?: string;
@@ -53,5 +53,5 @@ export interface ApiResponse<T> {
   code: number;
   message: string;
   meta?: Meta;
-  data: T;
+  data?: T;
 }

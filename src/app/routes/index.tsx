@@ -66,9 +66,11 @@ const router = createBrowserRouter([
         element: <EditPortfolioPage />,
       },
       { path: 'idea-management', element: <IdeaManagementPage /> },
-      { path: 'idea-management/edit', element: <IdeaManagementPage /> },
+      {
+        path: 'idea-management/portfolio/import',
+        element: <IdeaManagementEditPage />,
+      },
       { path: 'timeline-management', element: <TimelineManagementPage /> },
-      { path: 'idea-management/edit', element: <IdeaManagementEditPage /> },
     ],
   },
 

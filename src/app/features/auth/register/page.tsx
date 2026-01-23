@@ -6,9 +6,9 @@ import RegisterForm from './components/register-form';
 
 function RegisterPage() {
   return (
-    <Background className="h-screen flex items-center justify-center mx-auto">
+    <Background className="h-screen flex  mx-auto">
       <div className="h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-hidden">
-        <div className="font-sans text-sm font-semibold leading-8 p-8">
+        <div className="hidden lg:block font-sans text-sm font-semibold leading-8 p-8">
           <div className="h-full flex flex-col justify-center items-center lg:border-r-2 border-[#FFFFFF17] px-60">
             <div className="w-72 text-center mb-12">
               <h1 className="text-5xl font-bold text-white leading-normal">

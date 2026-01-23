@@ -14,9 +14,7 @@ const IdeaManagementGrid = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
       {/* {data.map((idea) => ( */}
-      <div
-        className={`px-4 py-6 md:px-6 md:py-8 space-y-4 md:space-y-6 rounded-lg bg-[${COLORS.primary}]`}
-      >
+      <div className="px-4 py-6 md:px-6 md:py-8 space-y-4 md:space-y-6 rounded-xl bg-black">
         {/* Title and status */}
         <div className="flex items-start md:items-center justify-between gap-2 md:gap-4">
           <h3 className="capitalize text-lg sm:text-xl md:text-2xl font-bold text-white line-clamp-2 flex-1">
@@ -41,11 +39,15 @@ const IdeaManagementGrid = ({
         {/* Project types */}
         <div className="flex items-center justify-start gap-2 md:gap-x-4 flex-wrap">
           {/* {idea.projectTypes.map((item) => ( */}
-          <span className="border border-black px-3 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize">
+          <span
+            className={`border border-[${COLORS.primary}]! px-3 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize`}
+          >
             {/* {item} */}
             mobile
           </span>
-          <span className="border border-black px-3 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize">
+          <span
+            className={`border border-[${COLORS.primary}]! px-3 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize`}
+          >
             {/* {item} */}
             website
           </span>
@@ -55,7 +57,7 @@ const IdeaManagementGrid = ({
         {/* Submitter and leader */}
         <div className="flex items-center justify-between gap-x-4 md:gap-x-8 lg:gap-x-16">
           <div className="w-1/2 flex items-center justify-between gap-2">
-            <span className="text-xs md:text-sm text-muted whitespace-nowrap">
+            <span className="text-sm md:text-lg text-muted whitespace-nowrap">
               Submitter:
             </span>
             <img
@@ -65,7 +67,7 @@ const IdeaManagementGrid = ({
             />
           </div>
           <div className="w-1/2 flex items-center justify-between gap-2">
-            <span className="text-xs md:text-sm text-muted whitespace-nowrap">
+            <span className="text-sm md:text-lg text-muted whitespace-nowrap">
               Leader:
             </span>
             <img

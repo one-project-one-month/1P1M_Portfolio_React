@@ -1,7 +1,7 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
-import ConfirmationModal from '@/components/ui/confirm-model';
+import ConfirmationModal from '@/components/ui/confirm-modal';
 import { Avatar, Badge, Button, IconButton } from '@radix-ui/themes';
-import { Check, List, Plus, SquarePen, Trash2, X } from 'lucide-react';
+import { Check, Plus, SquarePen, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 const TeamManagement = () => {
@@ -12,26 +12,14 @@ const TeamManagement = () => {
     <div className="border-t-2 border-[#FFFFFF17]! flex flex-col gap-y-5 py-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Team Management</h3>
-        {/* Buttons */}
-        <div className="flex items-center gap-4">
-          <Button
-            radius="large"
-            size="2"
-            variant="ghost"
-            className="border! border-[gray]! text-[gray]! cursor-pointer!"
-          >
-            <List size={20} />
-            List View
-          </Button>
-          <Button
-            radius="large"
-            size="2"
-            className="bg-[#6F28B3]! cursor-pointer!"
-          >
-            <Plus size={20} />
-            Add Team
-          </Button>
-        </div>
+        <Button
+          radius="large"
+          size="2"
+          className="bg-[#6F28B3]! cursor-pointer!"
+        >
+          <Plus size={20} />
+          Add Team
+        </Button>
       </div>
 
       {/* Developers */}
@@ -119,7 +107,7 @@ const TeamManagement = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <div className="relative inline-block">
               <Avatar
                 src={sampleUserImgUrl}
                 size="4"
@@ -127,6 +115,7 @@ const TeamManagement = () => {
                 radius="full"
                 color="gray"
                 variant="solid"
+                className="relative"
               />
               <IconButton
                 type="button"
@@ -134,10 +123,10 @@ const TeamManagement = () => {
                 className="absolute -top-1 -right-1 bg-red-500! rounded-full! p-1! cursor-pointer!"
                 onClick={() => setOpenModel(true)}
               >
-                <X />
+                <X className="w-3 h-3" />
               </IconButton>
             </div>
-            <div className="relative">
+            <div className="relative inline-block">
               <Avatar
                 size="4"
                 color="gray"
@@ -151,7 +140,7 @@ const TeamManagement = () => {
                 className="absolute -top-1 -right-1 bg-red-500! rounded-full! p-1! cursor-pointer!"
                 onClick={() => setOpenModel(true)}
               >
-                <X />
+                <X className="w-3 h-3" />
               </IconButton>
             </div>
             <IconButton

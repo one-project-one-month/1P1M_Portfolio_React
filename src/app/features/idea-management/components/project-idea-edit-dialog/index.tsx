@@ -1,10 +1,8 @@
+import FormBackground from '@/components/ui/form-bg';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-import FormBackground from '@/components/ui/form-bg';
-
 import EditStep1 from './edit-step-1';
 import EditStep2 from './edit-step-2';
 import EditStep3 from './edit-step-3';
@@ -43,8 +41,8 @@ const MOCK_LEADERS: Leader[] = [
 export default function ProjectIdeaEditDialog({
   isOpen,
   onClose,
-  onSubmit,
   initialValues,
+  onSubmit,
   availableLeaders = MOCK_LEADERS,
 }: IdeaEditFormProps) {
   const [step, setStep] = useState<Step>(0);
@@ -62,19 +60,19 @@ export default function ProjectIdeaEditDialog({
 
   const goNext = async () => {
     if (step === 0) {
-      const ok = await form.trigger([
-        'projectName',
-        'description',
-        'projectTypes',
-      ]);
-      if (!ok) return;
+      // const ok = await form.trigger([
+      //   'projectName',
+      //   'description',
+      //   'projectTypes',
+      // ]);
+      // if (!ok) return;
       setStep(1);
       return;
     }
 
     if (step === 1) {
-      const ok = await form.trigger(['dev_id']);
-      if (!ok) return;
+      // const ok = await form.trigger(['dev_id']);
+      // if (!ok) return;
       setStep(2);
     }
   };
