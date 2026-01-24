@@ -1,12 +1,6 @@
-import { useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import SignUpFormContainer from './components/sign-up-form-container';
 
 const SignupPage = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const oauthProcessingRef = useRef(false);
-
   // useEffect(() => {
   //   const searchParams = new URLSearchParams(location.search);
   //   const code = searchParams.get('code');

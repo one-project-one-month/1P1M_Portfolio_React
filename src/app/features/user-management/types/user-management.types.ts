@@ -17,7 +17,7 @@ export const userManagementSchema = z.object({
 });
 
 export type GetUserManagementParamsType = {
-  keyword: string;
+  keyword: string | undefined;
   page?: number;
   size?: number;
   sortField?: string;
@@ -37,8 +37,9 @@ export type UserManagementContainePropsType = {
 };
 
 export type UserManagementTableType = {
-  // type: 'list' | 'grid';
-  data: UserManagementType[];
+  status?: any;
+  type?: 'list' | 'grid';
+  data?: any;
   handleEdit: (id: number) => void;
   handleViewDetail: (id: number) => void;
   handleBanned: (id: number) => void;

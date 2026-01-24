@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react';
-import type { Step } from './index';
+import type { Step } from '../../types/project-idea.types';
 
 export default function Stepper({ step }: { step: Step }) {
   const steps = [

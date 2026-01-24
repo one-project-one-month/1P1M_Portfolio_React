@@ -4,10 +4,10 @@ import ConfirmationModal from '@/components/ui/confirm-modal.tsx';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const TimelineList: React.FC<Timeline> = ({ data }: Timeline) => {
+const TimelineList: React.FC<Timeline> = ({ data }: any) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Timeline>(null);
+  const [editData, setEditData] = useState<any | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -68,7 +68,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: Timeline) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
-          {data.map((item, index) => (
+          {data.map((item: any, index: any) => (
             <tr
               key={item.id}
               className="hover:bg-white/2 transition-colors group"

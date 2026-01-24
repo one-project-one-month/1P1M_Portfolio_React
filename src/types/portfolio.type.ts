@@ -61,7 +61,7 @@ export type ProjectCardType = {
 };
 
 export type ProjectPortfolioDetailType = {
-  projectId: number;
+  projectId: string;
   isOpen: boolean;
   onClose: () => void;
 };

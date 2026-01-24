@@ -201,32 +201,27 @@ const UserPortfolioInfo = ({
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          {Links.map((link, index) => (
-            <>
-              <label htmlFor="project-desc" className="text-[#F9FAFB]">
+          {Links.map((link) => (
+            <div key={link.key} className="flex flex-col gap-2">
+              {' '}
+              {/* Wrapper div instead of Fragment */}
+              <label htmlFor={link.key} className="text-[#F9FAFB]">
                 {link.label}
               </label>
               <Controller
-                key={index}
                 control={form.control}
-                name={link.key}
+                name="projectName"
                 render={({ field, fieldState }) => (
-                  <>
-                    <InputField
-                      value={field.value}
-                      onChange={field.onChange}
-                      className="w-full"
-                      placeholder={link.placeholder}
-                    />
-                    {fieldState.error && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {fieldState.error.message}
-                      </p>
-                    )}
-                  </>
+                  <InputField
+                    {...field}
+                    // Ensure value is never null or an object for this specific input
+                    value={typeof field.value === 'string' ? field.value : ''}
+                    className="w-full"
+                    placeholder="Enter your project name"
+                  />
                 )}
               />
-            </>
+            </div>
           ))}
         </div>
         {/* <Controller

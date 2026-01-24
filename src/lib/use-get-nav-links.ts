@@ -1,8 +1,6 @@
-import type { NavLink, UserRole } from '@/types/nav-props';
+import type { NavLink } from '@/types/nav-props';
 
-export const getNavLinks = (role?: UserRole): NavLink[] => {
-  const isAdmin = role === 'USER';
-
+export const getNavLinks = (): NavLink[] => {
   const links: NavLink[] = [
     { id: 1, name: 'Portfolio', path: '/portfolio' },
     { id: 2, name: 'Dev Profiles', path: '/developers' },
