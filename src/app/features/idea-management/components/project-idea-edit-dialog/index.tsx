@@ -41,8 +41,8 @@ const MOCK_LEADERS: Leader[] = [
 export default function ProjectIdeaEditDialog({
   isOpen,
   onClose,
-  onSubmit,
   initialValues,
+  onSubmit,
   availableLeaders = MOCK_LEADERS,
 }: IdeaEditFormProps) {
   const [step, setStep] = useState<Step>(0);

@@ -8,28 +8,31 @@ import { useEffect, useState } from 'react';
 import type { ProjectIdeaHeaderType } from '../types/project-idea.types';
 
 const ProjectIdeaHeaderSection = ({
-  searchQuery,
-  setSearchQuery,
-  selectedFilter,
-  setSelectedFilter,
+  filter,
+  setFilter,
   viewMode,
   setViewMode,
   onCreate,
 }: ProjectIdeaHeaderType) => {
+  const [inputValue, setInputValue] = useState(filter.search);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(searchQuery);
   const debouncedSearch = useDebounce(inputValue, 800);
 
   useEffect(() => {
-    setSearchQuery(debouncedSearch);
-  }, [debouncedSearch, setSearchQuery]);
+    if (debouncedSearch !== filter.search) {
+      setFilter({
+        ...filter,
+        search: debouncedSearch,
+      });
+    }
+  }, [debouncedSearch]);
 
   const handleSearchIdea = (val: string) => {
     setInputValue(val);
   };
 
-  const handleFilterSelect = (filter: string) => {
-    setSelectedFilter(filter);
+  const handleStatus = (status: string) => {
+    setFilter({ ...filter, status });
     setFilterOpen(false);
   };
 
@@ -98,11 +101,11 @@ const ProjectIdeaHeaderSection = ({
                   {['All', 'Pending', 'Approved', 'Archived'].map((status) => (
                     <button
                       key={status}
-                      onClick={() => handleFilterSelect(status)}
+                      onClick={() => handleStatus(status)}
                       className="w-full text-left px-4 py-2 text-white bg-[#0f172a] transition-colors flex items-center gap-3 border border-white/60 rounded-lg"
                     >
                       <div className="w-4 h-4 flex items-center justify-center">
-                        {selectedFilter === status && (
+                        {filter.status === status && (
                           <Check className="w-4 h-4 text-white" />
                         )}
                       </div>
