@@ -6,7 +6,7 @@ import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { Link } from 'react-router-dom';
 export const UserManagementDropDown = ({
   type,
-  data,
+
   handleEdit,
   handleViewDetail,
 }: UserManagementTableType) => {

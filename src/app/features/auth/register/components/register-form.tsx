@@ -6,10 +6,6 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { checkEmailExists, sendOtpCode } from '../services/api';
 
-interface LocationState {
-  email?: string;
-}
-
 export default function RegisterForm() {
   const [emailError, setEmailError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');

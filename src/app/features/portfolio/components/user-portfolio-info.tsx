@@ -211,7 +211,7 @@ const UserPortfolioInfo = ({
               <Controller
                 control={form.control}
                 name="projectName"
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <InputField
                     {...field}
                     // Ensure value is never null or an object for this specific input
