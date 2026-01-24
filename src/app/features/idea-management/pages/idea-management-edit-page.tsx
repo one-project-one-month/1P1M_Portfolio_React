@@ -82,7 +82,7 @@ const IdeaManagementEdit = () => {
         <div className="flex justify-end items-center pt-6 gap-6">
           <Button
             variant="outline"
-            className="text-[#FFFFFF17]! border! border-[#FFFFFF17]! cursor-pointer!"
+            className="border! border-[gray]! text-white! cursor-pointer!"
             size="4"
           >
             Cancel

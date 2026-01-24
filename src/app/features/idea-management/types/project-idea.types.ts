@@ -26,6 +26,9 @@ export const updateProjectIdeaSchema = projectIdeaSchema.omit({
   reaction_count: true,
 });
 
+export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
+export type UpdateProjectIdeaType = z.infer<typeof updateProjectIdeaSchema>;
+
 export type GetProjectIdeaParamsType = {
   keyword?: string;
   page?: number;
@@ -34,17 +37,19 @@ export type GetProjectIdeaParamsType = {
   sortDirection?: 'asc' | 'desc';
 };
 
+export type FilterType = {
+  status: string;
+  search: string;
+};
+
 export type ProjectIdeaContainerPropsType = {
   view: 'list' | 'grid';
-  searchQuery?: string;
-  selectedFilter?: string;
-  page: number;
-  size: number;
-  onPageChange?: (page: number) => void;
-  onTotalChange?: (total: number) => void;
-  totalIdeas: number;
-  editOpen: boolean;
-  setEditOpen: (open: boolean) => void;
+  filter: FilterType;
+  setFilter: (val: FilterType) => void;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onEdit: (isEdit: boolean) => void;
 };
 
 export type ProjectIdeaTableType = {
@@ -57,23 +62,12 @@ export type ProjectIdeaTableType = {
 };
 
 export type ProjectIdeaHeaderType = {
-  searchQuery: string;
-  setSearchQuery: (val: string) => void;
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
-  viewMode: string;
+  filter: FilterType;
+  setFilter: (val: FilterType) => void;
+  viewMode: 'list' | 'grid';
   setViewMode: (mode: 'list' | 'grid') => void;
   onCreate: () => void;
 };
-
-export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
-export type UpdateProjectIdeaType = z.infer<typeof updateProjectIdeaSchema>;
-
-// With axios response
-export type ProjectIdeasResponseType = ApiResponseType<ProjectIdeaType[]>;
-export type ProjectIdeaByIdResponseType = ApiResponseType<ProjectIdeaType>;
-export type ProjectIdeaUpdateResponseType =
-  ApiResponseType<UpdateProjectIdeaType>;
 
 // For Idea Creation Form
 export interface IdeaCreateFormValues {
@@ -89,6 +83,7 @@ export interface IdeaCreateFormProps {
 }
 
 export type IdeaEditFormValues = IdeaCreateFormValues & {
+  id: number;
   dev_id: number;
   status: 'PENDING' | 'APPROVED' | 'ARCHIVED';
 };
@@ -112,3 +107,10 @@ export interface IdeaEditFormProps extends Omit<
   onSubmit?: (value: IdeaEditFormValues) => void;
   availableLeaders?: Leader[];
 }
+
+// PLEASE WRITE ONLY API RESPONSE TYPE BELOW
+// With axios response
+export type ProjectIdeasResponseType = ApiResponseType<ProjectIdeaType[]>;
+export type ProjectIdeaByIdResponseType = ApiResponseType<ProjectIdeaType>;
+export type ProjectIdeaUpdateResponseType =
+  ApiResponseType<UpdateProjectIdeaType>;
