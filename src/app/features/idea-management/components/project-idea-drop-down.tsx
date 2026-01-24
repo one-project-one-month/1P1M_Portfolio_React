@@ -1,44 +1,47 @@
 import ConfirmationModal from '@/components/ui/confirm-modal';
+import { useToast } from '@/components/ui/toast-provider';
 import { Button, DropdownMenu } from '@radix-ui/themes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { deleteProjectIdea } from '../services/project-idea.service';
 import type {
-  IdeaEditFormValues,
-  ProjectIdeaTableType,
+  ProjectIdeaDeleteResponseType,
+  ProjectIdeaDropDownPropsType,
 } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 import ProjectIdeaEditDialog from './project-idea-edit-dialog';
 import ProjectIdeaStatusDialog from './project-idea-status-dialog';
 
-const MOCK_EDIT_VALUES: IdeaEditFormValues = {
-  id: 1,
-  projectName: 'Smart Order & Booking Management System',
-  description:
-    'A web-based system that allows customers to book tables and place food orders online...',
-  projectTypes: ['website', 'mobile'],
-  dev_id: 1,
-  status: 'APPROVED',
-};
-
 export const ProjectIdeaDropDown = ({
   type,
-  // data,
-  handleViewDetail,
-  handleStatusChange,
-}: ProjectIdeaTableType) => {
+  data,
+}: ProjectIdeaDropDownPropsType) => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-  const handleEdit = (id: number) => {
-    console.log(id);
-    setEditOpen(false);
-  };
+  const { mutate: deleteMutate, isPending: deletePending } = useMutation<
+    ProjectIdeaDeleteResponseType,
+    AxiosError<{ message: string }>,
+    { id: number }
+  >({
+    mutationFn: ({ id }: { id: number }) => deleteProjectIdea(id),
+    onSuccess: (success) => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
+      addToast(success.message, 'success');
+      setDeleteOpen(false);
+    },
+    onError: (error) => {
+      setDeleteOpen(true);
+      addToast(error.message, 'error');
+    },
+  });
 
-  // const handleDelete = (id: number) => {
-  //   console.log(id);
-  // setDeleteOpen(false)
-  // };
+  const handleDelete = (id: number) => deleteMutate({ id });
 
   return (
     <>
@@ -58,8 +61,14 @@ export const ProjectIdeaDropDown = ({
             )}
           </Button>
         </DropdownMenu.Trigger>
+
         <DropdownMenu.Content color="gray" variant="soft">
-          <DropdownMenu.Item onClick={() => setEditOpen(true)}>
+          <DropdownMenu.Item
+            onSelect={(e) => {
+              e.preventDefault();
+              setEditDialogOpen(true);
+            }}
+          >
             Edit Idea
           </DropdownMenu.Item>
 
@@ -68,12 +77,12 @@ export const ProjectIdeaDropDown = ({
               <DropdownMenu.Item
                 onSelect={(e) => {
                   e.preventDefault();
-                  handleViewDetail(1);
                 }}
               >
                 View Details
               </DropdownMenu.Item>
             }
+            data={data}
           />
 
           <DropdownMenu.Item onClick={() => setDeleteOpen(true)}>
@@ -81,17 +90,16 @@ export const ProjectIdeaDropDown = ({
           </DropdownMenu.Item>
 
           <ProjectIdeaStatusDialog
-            devId={1}
             trigger={
               <DropdownMenu.Item
                 onSelect={(e) => {
                   e.preventDefault();
-                  handleStatusChange('APPROVED');
                 }}
               >
                 Change Status
               </DropdownMenu.Item>
             }
+            data={data}
           />
 
           <DropdownMenu.Item asChild>
@@ -102,26 +110,20 @@ export const ProjectIdeaDropDown = ({
         </DropdownMenu.Content>
       </DropdownMenu.Root>
 
-      <ProjectIdeaEditDialog
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        initialValues={MOCK_EDIT_VALUES}
-        onSubmit={() => handleEdit(1)}
-      />
-
       <ConfirmationModal
         isOpen={deleteOpen}
         title="Delete Project Idea?"
-        subtitle="Are you sure you want to delete this (project idea)? This action cannot be undone"
+        subtitle="Are you sure you want to delete this (project idea)? This action cannot be undone."
         rejectText="Cancel"
         confirmText="Delete"
-        onCancel={() => {
-          setDeleteOpen(false);
-        }}
-        onConfirm={() => {
-          console.log('Deleting idea:');
-          setDeleteOpen(false);
-        }}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={() => handleDelete(data.id)}
+      />
+
+      <ProjectIdeaEditDialog
+        data={data}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
       />
     </>
   );

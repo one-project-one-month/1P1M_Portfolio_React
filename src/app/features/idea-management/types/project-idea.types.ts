@@ -1,6 +1,8 @@
 import type { ApiResponseType } from '@/types/api-response.type';
+import type { ReactNode } from 'react';
 import z from 'zod';
 
+// TYPE VALIDATION WITH ZOD
 export const ProjectIdeaStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
@@ -13,8 +15,10 @@ const projectIdeaSchema = z.object({
   projectName: z.string(),
   description: z.string(),
   profilePictureUrl: z.string(),
+  devName: z.string(),
   reaction_count: z.number(),
   projectTypes: z.array(z.string()),
+  reactedProjects: z.array(z.number()),
   status: z.enum([
     ProjectIdeaStatus.PENDING,
     ProjectIdeaStatus.APPROVED,
@@ -22,13 +26,36 @@ const projectIdeaSchema = z.object({
   ]),
 });
 
-export const updateProjectIdeaSchema = projectIdeaSchema.omit({
+export const createProjectIdeaSchema = projectIdeaSchema.pick({
+  projectName: true,
+  description: true,
+  projectTypes: true,
+});
+
+export const editProjectIdeaSchema = projectIdeaSchema.omit({
+  id: true,
   reaction_count: true,
 });
 
-export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
-export type UpdateProjectIdeaType = z.infer<typeof updateProjectIdeaSchema>;
+export const updateProjectIdeaStatusSchema = projectIdeaSchema.pick({
+  status: true,
+});
 
+export const deleteProjectIdeaSchema = projectIdeaSchema.pick({
+  id: true,
+});
+
+export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
+export type CreateProjectIdeaType = z.infer<typeof createProjectIdeaSchema>;
+export type EditProjectIdeaType = z.infer<typeof editProjectIdeaSchema>;
+export type UpdateProjectIdeaStatusType = z.infer<
+  typeof updateProjectIdeaStatusSchema
+>;
+export type DeleteProjectIdeaType = z.infer<typeof deleteProjectIdeaSchema>;
+
+// ------------------------------------- //
+
+// CUSTOM TYPE VALIDATION
 export type GetProjectIdeaParamsType = {
   keyword?: string;
   page?: number;
@@ -44,7 +71,7 @@ export type FilterType = {
 
 export type ProjectIdeaContainerPropsType = {
   view: 'list' | 'grid';
-  filter: FilterType;
+  filter?: FilterType;
   setFilter: (val: FilterType) => void;
   currentPage: number;
   pageSize: number;
@@ -52,16 +79,12 @@ export type ProjectIdeaContainerPropsType = {
   onEdit: (isEdit: boolean) => void;
 };
 
-export type ProjectIdeaTableType = {
+export type ProjectIdeaDropDownPropsType = {
   type: 'list' | 'grid';
-  data: ProjectIdeaType[];
-  handleEdit: (idea: ProjectIdeaType) => void;
-  handleDelete: (id: number) => void;
-  handleViewDetail: (id: number) => void;
-  handleStatusChange: (status: 'PENDING' | 'APPROVED' | 'ARCHIVED') => void;
+  data: ProjectIdeaType;
 };
 
-export type ProjectIdeaHeaderType = {
+export type ProjectIdeaHeaderPropsType = {
   filter: FilterType;
   setFilter: (val: FilterType) => void;
   viewMode: 'list' | 'grid';
@@ -69,23 +92,9 @@ export type ProjectIdeaHeaderType = {
   onCreate: () => void;
 };
 
-// For Idea Creation Form
-export interface IdeaCreateFormValues {
-  projectName: string;
-  description: string;
-  projectTypes: string[];
-}
-
-export interface IdeaCreateFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit?: (values: IdeaCreateFormValues) => void;
-}
-
-export type IdeaEditFormValues = IdeaCreateFormValues & {
-  id: number;
-  dev_id: number;
-  status: 'PENDING' | 'APPROVED' | 'ARCHIVED';
+export type ProjectIdeaEditFormPropsType = {
+  data: ProjectIdeaType;
+  trigger?: ReactNode;
 };
 
 export type LeaderRole = 'Backend' | 'Frontend' | 'UI | UX Designer';
@@ -99,18 +108,14 @@ export type Leader = {
   avatarUrl?: string;
 };
 
-export interface IdeaEditFormProps extends Omit<
-  IdeaCreateFormProps,
-  'onSubmit'
-> {
-  initialValues: IdeaEditFormValues;
-  onSubmit?: (value: IdeaEditFormValues) => void;
-  availableLeaders?: Leader[];
-}
-
 // PLEASE WRITE ONLY API RESPONSE TYPE BELOW
 // With axios response
 export type ProjectIdeasResponseType = ApiResponseType<ProjectIdeaType[]>;
 export type ProjectIdeaByIdResponseType = ApiResponseType<ProjectIdeaType>;
-export type ProjectIdeaUpdateResponseType =
-  ApiResponseType<UpdateProjectIdeaType>;
+export type ProjectIdeaCreateResponseType =
+  ApiResponseType<CreateProjectIdeaType>;
+export type ProjectIdeaEditResponseType = ApiResponseType<EditProjectIdeaType>;
+export type ProjectIdeaStatusUpdateResponseType =
+  ApiResponseType<UpdateProjectIdeaStatusType>;
+export type ProjectIdeaDeleteResponseType =
+  ApiResponseType<DeleteProjectIdeaType>;
