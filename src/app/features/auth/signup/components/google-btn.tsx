@@ -1,16 +1,14 @@
 import { googleIconUrl } from '@/assets/icons/iconUrls';
+import { API_CONFIG } from '@/config/api';
 import { useState } from 'react';
 
 const GoogleBtn = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const CLIENT_ID =
-    '686561903051-a857ngoihbsfo2u5g1b3e9dh9uiljshb.apps.googleusercontent.com';
-
   const REDIRECT_URI = `${window.location.origin}/auth/sign-up`;
 
   const params = new URLSearchParams({
-    client_id: CLIENT_ID,
+    client_id: API_CONFIG.GITHUB_CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     response_type: 'code',
     scope: 'email profile',

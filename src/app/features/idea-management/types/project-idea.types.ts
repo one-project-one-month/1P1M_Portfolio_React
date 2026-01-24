@@ -108,8 +108,6 @@ export type Leader = {
   avatarUrl?: string;
 };
 
-// PLEASE WRITE ONLY API RESPONSE TYPE BELOW
-// With axios response
 export type ProjectIdeasResponseType = ApiResponseType<ProjectIdeaType[]>;
 export type ProjectIdeaByIdResponseType = ApiResponseType<ProjectIdeaType>;
 export type ProjectIdeaCreateResponseType =

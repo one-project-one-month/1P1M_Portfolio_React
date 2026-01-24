@@ -2,7 +2,6 @@ import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
-  ApprovedIdeaPage,
   DashboardPage,
   DeveloperPage,
   IdeaManagementEditPage,
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
         path: '/developers',
         element: <DeveloperPage />,
       },
-      { path: '/approved-ideas', element: <ApprovedIdeaPage /> },
+
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
     ],
