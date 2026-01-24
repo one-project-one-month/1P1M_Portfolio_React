@@ -5,10 +5,10 @@ import InputField from '@/components/ui/input-field';
 import { buttonVariants } from '@/styles/button-variants';
 import { Button, Select, TextField } from '@radix-ui/themes';
 import TeamManagement from '../components/team-management';
-import { useUpdateProjectIdea } from '../hooks/use-project-ideas';
+import { useEditProjectIdea } from '../hooks/use-project-ideas';
 
 const IdeaManagementEdit = () => {
-  const { mutate, isPending } = useUpdateProjectIdea();
+  const { mutate, isPending } = useEditProjectIdea();
 
   return (
     <div className="rounded-xl bg-[#0F172B] p-6 text-white">

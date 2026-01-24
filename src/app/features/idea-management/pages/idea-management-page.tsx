@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useViewMode } from '../../../../hooks/use-view-mode';
-import IdeaCreateForm from '../components/idea-create-form';
 import ProjectIdeaContainer from '../components/project-idea-container';
 import ProjectIdeaHeaderSection from '../components/project-idea-header-section';
 
@@ -46,10 +45,6 @@ const IdeaManagement = () => {
           setPagination({ ...pagination, currentPage: page })
         }
         onEdit={(isEdit) => setModals({ ...modals, edit: isEdit })}
-      />
-      <IdeaCreateForm
-        isOpen={modals.create}
-        onClose={() => setModals({ ...modals, create: false })}
       />
     </div>
   );

@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { IdeaEditFormValues } from '../types/project-idea.types';
+import type {
+  EditProjectIdeaType,
+  UpdateProjectIdeaStatusType,
+} from '../types/project-idea.types';
 
 function StatusOption({
   title,
@@ -46,9 +49,15 @@ function StatusOption({
 }
 
 const ProjectIdeaStatus = ({
-  form,
+  type,
+  statusChangeForm,
+  editForm,
+  isPending,
 }: {
-  form: UseFormReturn<IdeaEditFormValues>;
+  type: 'status-change-form' | 'edit-form';
+  statusChangeForm?: UseFormReturn<UpdateProjectIdeaStatusType> | undefined;
+  editForm?: UseFormReturn<Partial<EditProjectIdeaType>> | undefined;
+  isPending: boolean;
 }) => {
   return (
     <div className="space-y-10">
@@ -62,41 +71,80 @@ const ProjectIdeaStatus = ({
         </p>
       </div>
 
-      <Controller
-        control={form.control}
-        name="status"
-        rules={{ required: 'Select a status' }}
-        render={({ field, fieldState }) => (
-          <div className="space-y-10">
-            <StatusOption
-              title="Pending"
-              desc="This idea is waiting for review or further action."
-              checked={field.value === 'PENDING'}
-              onSelect={() => field.onChange('PENDING')}
-            />
+      {type === 'edit-form' && editForm && (
+        <Controller
+          control={editForm.control}
+          name="status"
+          rules={{ required: 'Select a status' }}
+          render={({ field, fieldState }) => (
+            <div className="space-y-10">
+              <StatusOption
+                title="Pending"
+                desc="This idea is waiting for review or further action."
+                checked={field.value === 'PENDING'}
+                onSelect={() => field.onChange('PENDING')}
+              />
 
-            <StatusOption
-              title="Approved"
-              desc="This idea is accepted and ready to move forward."
-              checked={field.value === 'APPROVED'}
-              onSelect={() => field.onChange('APPROVED')}
-            />
+              <StatusOption
+                title="Approved"
+                desc="This idea is accepted and ready to move forward."
+                checked={field.value === 'APPROVED'}
+                onSelect={() => field.onChange('APPROVED')}
+              />
 
-            <StatusOption
-              title="Archived"
-              desc="This idea is stored for reference and not active right now."
-              checked={field.value === 'ARCHIVED'}
-              onSelect={() => field.onChange('ARCHIVED')}
-            />
+              <StatusOption
+                title="Archived"
+                desc="This idea is stored for reference and not active right now."
+                checked={field.value === 'ARCHIVED'}
+                onSelect={() => field.onChange('ARCHIVED')}
+              />
 
-            {fieldState.error?.message && (
-              <p className="text-sm font-bold text-red-500">
-                {fieldState.error.message}
-              </p>
-            )}
-          </div>
-        )}
-      />
+              {fieldState.error?.message && (
+                <p className="text-sm font-bold text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+      )}
+      {type === 'status-change-form' && statusChangeForm && (
+        <Controller
+          control={statusChangeForm.control}
+          name="status"
+          rules={{ required: 'Select a status' }}
+          render={({ field, fieldState }) => (
+            <div className="space-y-10">
+              <StatusOption
+                title="Pending"
+                desc="This idea is waiting for review or further action."
+                checked={field.value === 'PENDING'}
+                onSelect={() => field.onChange('PENDING')}
+              />
+
+              <StatusOption
+                title="Approved"
+                desc="This idea is accepted and ready to move forward."
+                checked={field.value === 'APPROVED'}
+                onSelect={() => field.onChange('APPROVED')}
+              />
+
+              <StatusOption
+                title="Archived"
+                desc="This idea is stored for reference and not active right now."
+                checked={field.value === 'ARCHIVED'}
+                onSelect={() => field.onChange('ARCHIVED')}
+              />
+
+              {fieldState.error?.message && (
+                <p className="text-sm font-bold text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+      )}
 
       <div className="mt-8 flex items-center justify-between gap-6">
         <Dialog.Close>
@@ -105,6 +153,7 @@ const ProjectIdeaStatus = ({
             variant="primary"
             size="primary"
             className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
+            disabled={isPending}
           >
             Cancel
           </Button>
@@ -115,8 +164,9 @@ const ProjectIdeaStatus = ({
           variant="primary"
           size="primary"
           className="flex-1 bg-[#A855F7] text-white hover:bg-[#9333EA]"
+          disabled={isPending}
         >
-          Update
+          {isPending ? 'Updating...' : 'Update'}
         </Button>
       </div>
     </div>

@@ -1,22 +1,37 @@
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/ui/input-field';
+import { useToast } from '@/components/ui/toast-provider';
 import { COLORS } from '@/constants/colors';
 import { useDebounce } from '@/hooks/use-debounce';
 import { buttonVariants } from '@/styles/button-variants';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog } from '@radix-ui/themes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { ProjectIdeaHeaderType } from '../types/project-idea.types';
+import { useForm } from 'react-hook-form';
+import { createProjectIdea } from '../services/project-idea.service';
+import {
+  createProjectIdeaSchema,
+  type CreateProjectIdeaType,
+  type ProjectIdeaCreateResponseType,
+  type ProjectIdeaHeaderPropsType,
+} from '../types/project-idea.types';
+import IdeaCreateForm from './idea-create-form';
 
 const ProjectIdeaHeaderSection = ({
   filter,
   setFilter,
   viewMode,
   setViewMode,
-  onCreate,
-}: ProjectIdeaHeaderType) => {
+}: ProjectIdeaHeaderPropsType) => {
   const [inputValue, setInputValue] = useState(filter.search);
   const [filterOpen, setFilterOpen] = useState(false);
   const debouncedSearch = useDebounce(inputValue, 800);
+  const [isOpen, setIsOpen] = useState(false);
+  const { addToast } = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (debouncedSearch !== filter.search) {
@@ -26,6 +41,38 @@ const ProjectIdeaHeaderSection = ({
       });
     }
   }, [debouncedSearch]);
+
+  const form = useForm<CreateProjectIdeaType>({
+    resolver: zodResolver(createProjectIdeaSchema),
+    values: {
+      projectName: '',
+      description: '',
+      projectTypes: [],
+    },
+    mode: 'onSubmit',
+  });
+
+  const { mutate, isPending } = useMutation<
+    ProjectIdeaCreateResponseType,
+    AxiosError<{ message: string }>,
+    { formData: CreateProjectIdeaType }
+  >({
+    mutationFn: ({ formData }: { formData: CreateProjectIdeaType }) =>
+      createProjectIdea(formData),
+    onSuccess: (success) => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
+      addToast(success.message, 'success');
+      setIsOpen(true);
+      form.reset();
+    },
+    onError: (error) => {
+      addToast(error.message, 'error');
+      setIsOpen(false);
+    },
+  });
+
+  const handleCreate = (formData: CreateProjectIdeaType) =>
+    mutate({ formData });
 
   const handleSearchIdea = (val: string) => {
     setInputValue(val);
@@ -117,12 +164,22 @@ const ProjectIdeaHeaderSection = ({
             </div>
 
             {/* Create button */}
-            <Button
-              onClick={onCreate}
-              className={buttonVariants({ variant: 'primary' })}
-            >
-              Create Idea
-            </Button>
+            <Dialog.Root open={isOpen}>
+              <Dialog.Trigger>
+                <Button
+                  type="button"
+                  className={buttonVariants({ variant: 'primary' })}
+                >
+                  Create Idea
+                </Button>
+              </Dialog.Trigger>
+
+              <IdeaCreateForm
+                form={form}
+                handleCreate={handleCreate}
+                isPending={isPending}
+              />
+            </Dialog.Root>
           </div>
         </div>
       </div>
