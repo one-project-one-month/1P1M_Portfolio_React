@@ -1,17 +1,18 @@
 import type {
+  EditProjectIdeaType,
   GetProjectIdeaParamsType,
+  ProjectIdeaEditResponseType,
   ProjectIdeasResponseType,
-  ProjectIdeaUpdateResponseType,
-  UpdateProjectIdeaType,
 } from '@/app/features/idea-management/types/project-idea.types';
 import { useToast } from '@/components/ui/toast-provider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import {
+  editProjectIdea,
   getProjectIdea,
-  updateProjectIdea,
 } from '../services/project-idea.service';
 
+// GET
 export const useGetProjectIdea = ({
   keyword,
   page,
@@ -23,25 +24,27 @@ export const useGetProjectIdea = ({
     queryKey: ['project-idea', keyword, page, sortDirection, sortField, size],
     queryFn: () =>
       getProjectIdea({ keyword, page, size, sortDirection, sortField }),
+    placeholderData: (previousData) => previousData,
   });
 };
 
-export const useUpdateProjectIdea = () => {
+// UPDATE
+export const useEditProjectIdea = () => {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation<
-    ProjectIdeaUpdateResponseType,
+    ProjectIdeaEditResponseType,
     AxiosError<{ message: string }>,
-    { id: number; formData: UpdateProjectIdeaType }
+    { id: number; formData: EditProjectIdeaType }
   >({
     mutationFn: ({
       id,
       formData,
     }: {
       id: number;
-      formData: UpdateProjectIdeaType;
-    }) => updateProjectIdea(id, formData),
+      formData: EditProjectIdeaType;
+    }) => editProjectIdea(id, formData),
     onSuccess: (success) => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(success.message, 'success');
