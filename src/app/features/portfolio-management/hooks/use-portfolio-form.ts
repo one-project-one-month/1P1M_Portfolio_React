@@ -15,6 +15,10 @@ import {
   portfolioFormSchema,
   type PortfolioFormValues,
 } from '../portfolio-schema';
+import {
+  addTeamMember,
+  createProjectPortfolio,
+} from '../services/portfolio-management-service';
 
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
@@ -72,8 +76,13 @@ export const usePortfolioForm = ({
     appendTechnology({ projectType: null, languages: '' });
   };
 
-  const handleRemoveTechnology = (index: number) => {
+  const handleRemoveTechnology = async (index: number) => {
+    const techToRemove = technologyFields[index];
+    // Optimistic removal from UI form
     removeTechnology(index);
+
+    if (initialData?.id && techToRemove) {
+    }
   };
 
   const handleUpdateTechnology = (
@@ -85,28 +94,58 @@ export const usePortfolioForm = ({
     updateTechnology(index, { ...currentTech, [field]: value });
   };
 
-  const handleSaveForm = form.handleSubmit((data) => {
-    const validTechnologies = data.technologies.filter(
-      (t): t is { projectType: DropdownItem; languages: string } =>
-        t.projectType !== null,
-    );
+  const handleSaveForm = form.handleSubmit(async (data) => {
+    try {
+      // Get Team IDs from localStorage
+      const storedTeamIds = localStorage.getItem('temp_portfolio_team_ids');
+      const teamIds: number[] = storedTeamIds ? JSON.parse(storedTeamIds) : [];
 
-    const formData: Partial<ProjectData> = {
-      id: initialData?.id,
-      projectName: data.projectName,
-      title: data.projectName,
-      description: data.description,
-      startDate: data.startDate,
-      completedDate: data.completedDate || null,
-      status: data.status?.name as ProjectData['status'],
-      technologies: validTechnologies as ProjectData['technologies'],
-      teams: data.teams,
-      projectLink: data.projectLink,
-      leader: initialData?.leader || '',
-      image: data.projectImage,
-      members: data.teams.flatMap((t) => t.members),
-    };
-    onSave?.(formData);
+      const payload = {
+        name: data.projectName,
+        projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
+        description: data.description,
+        projectLink: data.projectLink,
+        repoLink: data.projectLink,
+        teamIds: teamIds,
+        languageAndTools: data.technologies.flatMap((tech) =>
+          tech.languages.split(',').map((lang) => ({
+            name: lang.trim(),
+            type: tech.projectType?.name || 'Language',
+          })),
+        ),
+      };
+
+      await createProjectPortfolio(payload);
+
+      // Cleanup localStorage
+      localStorage.removeItem('temp_portfolio_team_ids');
+
+      const validTechnologies = data.technologies.filter(
+        (t): t is { projectType: DropdownItem; languages: string } =>
+          t.projectType !== null,
+      );
+
+      const formData: Partial<ProjectData> = {
+        id: initialData?.id,
+        projectName: data.projectName,
+        title: data.projectName,
+        description: data.description,
+        startDate: data.startDate,
+        completedDate: data.completedDate || null,
+        status: data.status?.name as ProjectData['status'],
+        technologies: validTechnologies as ProjectData['technologies'],
+        teams: data.teams,
+        projectLink: data.projectLink,
+        leader: initialData?.leader || '',
+        image: data.projectImage,
+        members: data.teams.flatMap((t) => t.members),
+      };
+
+      onSave?.(formData);
+    } catch (error) {
+      console.error('Failed to create project portfolio:', error);
+      // Handle error (show toast etc)
+    }
   });
 
   const handleAddTeam = () => {
@@ -152,6 +191,30 @@ export const usePortfolioForm = ({
         }),
       );
     }
+
+    // API Call for adding members if team already exists
+    if (
+      activeTeamId &&
+      !activeTeamId.toString().startsWith('team-') &&
+      activeTeamId !== 'new-team'
+    ) {
+      const teams = form.getValues('teams');
+      // Find new members by comparing with existing
+      const existingMembers =
+        teams.find((t) => t.id === activeTeamId)?.members || [];
+      const newMembers = members.filter(
+        (m) => !existingMembers.some((em) => em.id === m.id),
+      );
+
+      newMembers.forEach((m) => {
+        if (m.id) {
+          addTeamMember(activeTeamId, m.id, m.role || 'Member').catch(
+            console.error,
+          );
+        }
+      });
+    }
+
     setIsModalOpen(false);
     setActiveTeamId(null);
   };

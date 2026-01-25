@@ -1,5 +1,10 @@
 import type { TeamType } from '@/types/portfolio-management';
 import { useEffect, useState } from 'react';
+import {
+  createTeam,
+  deleteTeam as deleteTeamApi,
+  removeTeamMember as removeTeamMemberApi,
+} from '../services/portfolio-management-service';
 
 export const useTeamCard = (
   team: TeamType,
@@ -21,19 +26,47 @@ export const useTeamCard = (
     setEditedTeam(team);
   }, [team]);
 
-  const handleSave = () => {
-    onUpdate(editedTeam);
-    setIsEditing(false);
-    setOpenMemberActionId(null);
+  const handleSave = async () => {
+    try {
+      const response = await createTeam(editedTeam);
+
+      if (response && response.data && response.data.id) {
+        // Store team ID in localStorage
+        const storedIds = localStorage.getItem('temp_portfolio_team_ids');
+        const teamIds = storedIds ? JSON.parse(storedIds) : [];
+        if (!teamIds.includes(response.data.id)) {
+          teamIds.push(response.data.id);
+          localStorage.setItem(
+            'temp_portfolio_team_ids',
+            JSON.stringify(teamIds),
+          );
+        }
+
+        onUpdate(editedTeam);
+        setIsEditing(false);
+        setOpenMemberActionId(null);
+      }
+    } catch (error) {
+      console.error('Failed to create team:', error);
+    }
   };
 
-  const handleRemoveMember = (memberId: string | number) => {
+  const handleRemoveMember = async (memberId: string | number) => {
+    // Optimistic update
     const updatedMembers = editedTeam.members.filter((m) => m.id !== memberId);
     setEditedTeam({
       ...editedTeam,
       count: updatedMembers.length,
       members: updatedMembers,
     });
+
+    if (!team.id.toString().startsWith('team-') && memberId) {
+      try {
+        await removeTeamMemberApi(team.id, memberId);
+      } catch (error) {
+        console.error('Failed to remove member:', error);
+      }
+    }
   };
 
   const initiateDeleteTeam = () => {
@@ -51,6 +84,10 @@ export const useTeamCard = (
 
     if (deleteContext.type === 'TEAM') {
       onDelete(team.id);
+      // If team has real ID, call API
+      if (!team.id.toString().startsWith('team-')) {
+        deleteTeamApi(team.id).catch((err) => console.error(err));
+      }
     } else if (deleteContext.type === 'MEMBER' && deleteContext.id) {
       handleRemoveMember(deleteContext.id);
     }
