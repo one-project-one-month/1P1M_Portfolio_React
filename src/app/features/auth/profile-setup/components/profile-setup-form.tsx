@@ -137,8 +137,6 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
   }
 
   var onSubmit: SubmitHandler<FormValues> = async function (data) {
-    console.log(auth);
-
     if (!auth.userId) {
       console.log('NO user id');
 
