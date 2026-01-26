@@ -41,7 +41,7 @@ const UserManagement = ({
           </thead>
 
           <tbody className="divide-y divide-slate-800">
-            {data.map((user) => (
+            {data.map((user: any) => (
               <tr
                 // key={idea.id}
                 className="hover:bg-slate-800/40"
@@ -85,6 +85,7 @@ const UserManagement = ({
                 <td className="py-4 text-center relative">
                   <UserManagementDropDown
                     // type="list"
+
                     handleEdit={handleEdit}
                     handleViewDetail={handleViewDetail}
                     handleBanned={handleBanned}

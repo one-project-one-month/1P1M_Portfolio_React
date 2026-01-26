@@ -1,8 +1,8 @@
+import { MOCK_USERS } from '@/app/features/portfolio-management/constants/data';
 import { Button } from '@/components/ui/button';
 import type { Member } from '@/types/portfolio-management';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { MOCK_USERS } from '../constants/data';
 
 interface AddMemberModalProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ const AddMemberModal = ({
   if (!isOpen) return null;
 
   const filteredUsers = MOCK_USERS.filter(
-    (user) =>
+    (user: any) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );

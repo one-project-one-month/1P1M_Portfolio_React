@@ -1,5 +1,5 @@
+import TeamCard from '@/app/features/portfolio-management/components/team-card';
 import type { TeamType } from '@/types/portfolio-management';
-import TeamCard from './team-card';
 
 interface TeamFormProps {
   addedTeams: TeamType[];

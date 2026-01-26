@@ -19,7 +19,7 @@ export async function forgotPassword(
       success: false,
       code: 500,
       message: err.message,
-      data: null,
+      data: undefined,
     };
   }
 }
