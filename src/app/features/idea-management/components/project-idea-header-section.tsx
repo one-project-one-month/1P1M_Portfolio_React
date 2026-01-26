@@ -9,8 +9,8 @@ import { Dialog } from '@radix-ui/themes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { createProjectIdea } from '../services/project-idea.service';
 import {
   createProjectIdeaSchema,
@@ -21,34 +21,40 @@ import {
 import IdeaCreateForm from './idea-create-form';
 
 const ProjectIdeaHeaderSection = ({
-  filter,
-  setFilter,
   viewMode,
   setViewMode,
+  filter,
+  setFilter,
 }: ProjectIdeaHeaderPropsType) => {
   const [inputValue, setInputValue] = useState(filter.search);
   const [open, setOpen] = useState({
     filter: false,
     create: false,
   });
-  // const [filterOpen, setFilterOpen] = useState(false);
-  // const [isOpen, setIsOpen] = useState(false);
   const debouncedSearch = useDebounce(inputValue, 800);
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
+  // Search
+  const handleSearch = useCallback(() => {
+    setFilter({ ...filter, search: debouncedSearch });
+  }, [debouncedSearch, setFilter, filter]);
+
   useEffect(() => {
     if (debouncedSearch !== filter.search) {
-      setFilter({
-        ...filter,
-        search: debouncedSearch,
-      });
+      handleSearch();
     }
-  }, [debouncedSearch]);
+  }, [debouncedSearch, filter.search, handleSearch]);
+
+  // Status
+  const handleStatus = (status: string) => {
+    setFilter({ ...filter, status });
+    setOpen({ ...open, create: false });
+  };
 
   const form = useForm<CreateProjectIdeaType>({
     resolver: zodResolver(createProjectIdeaSchema),
-    values: {
+    defaultValues: {
       projectName: '',
       description: '',
       projectTypes: [],
@@ -72,21 +78,11 @@ const ProjectIdeaHeaderSection = ({
     },
     onError: (error) => {
       addToast(error.message, 'error');
-      setOpen({ ...open, create: true });
     },
   });
 
-  const handleCreate = (formData: CreateProjectIdeaType) =>
+  const handleCreate: SubmitHandler<CreateProjectIdeaType> = (formData) =>
     mutate({ formData });
-
-  const handleSearchIdea = (val: string) => {
-    setInputValue(val);
-  };
-
-  const handleStatus = (status: string) => {
-    setFilter({ ...filter, status });
-    setOpen({ ...open, create: false });
-  };
 
   return (
     <>
@@ -111,7 +107,7 @@ const ProjectIdeaHeaderSection = ({
               type="text"
               placeholder="Search by project title"
               value={inputValue}
-              onChange={(e) => handleSearchIdea(e.target.value)}
+              onChange={(e) => setInputValue(e.target.value)}
               className="w-full pl-12"
             />
           </div>
@@ -144,7 +140,7 @@ const ProjectIdeaHeaderSection = ({
               >
                 <span>Filter by Status</span>
                 <ChevronDown
-                  className={`w-4 h-4 text-purple-500 transition-transform ${!open.filter ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 text-purple-500 transition-transform ${open.filter ? 'rotate-180' : ''}`}
                 />
               </button>
 
@@ -196,4 +192,4 @@ const ProjectIdeaHeaderSection = ({
   );
 };
 
-export default ProjectIdeaHeaderSection;
+export default memo(ProjectIdeaHeaderSection);

@@ -12,12 +12,12 @@ export const ProjectIdeaStatus = {
 const projectIdeaSchema = z.object({
   id: z.number(),
   dev_id: z.number(),
-  projectName: z.string(),
-  description: z.string(),
+  projectName: z.string().min(1, 'Project idea name is required'),
+  description: z.string().min(1, 'Description is required'),
   profilePictureUrl: z.string(),
   devName: z.string(),
   reaction_count: z.number(),
-  projectTypes: z.array(z.string()),
+  projectTypes: z.array(z.string()).min(1, 'Select at least one project type'),
   reactedProjects: z.array(z.number()),
   status: z.enum([
     ProjectIdeaStatus.PENDING,
@@ -72,11 +72,9 @@ export type FilterType = {
 export type ProjectIdeaContainerPropsType = {
   view: 'list' | 'grid';
   filter?: FilterType;
-  setFilter: (val: FilterType) => void;
   currentPage: number;
   pageSize: number;
   onPageChange: (page: number) => void;
-  onEdit: (isEdit: boolean) => void;
 };
 
 export type ProjectIdeaDropDownPropsType = {
@@ -89,7 +87,6 @@ export type ProjectIdeaHeaderPropsType = {
   setFilter: (val: FilterType) => void;
   viewMode: 'list' | 'grid';
   setViewMode: (mode: 'list' | 'grid') => void;
-  onCreate: () => void;
 };
 
 export type ProjectIdeaEditFormPropsType = {

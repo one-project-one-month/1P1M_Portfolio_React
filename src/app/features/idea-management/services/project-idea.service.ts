@@ -64,7 +64,7 @@ export const editProjectIdea = async (
 ) => {
   try {
     const response = await apiClient.patch<ProjectIdeaEditResponseType>(
-      `/portfolio/api/v1/project-idea/updateProjectIdea/${id}`,
+      `${API_ENDPOINTS.PROJECT_IDEA}/${id}`,
       formData,
     );
     return response.data;
@@ -85,7 +85,7 @@ export const updateProjectIdeaStatus = async (
 ) => {
   try {
     const response = await apiClient.patch<ProjectIdeaStatusUpdateResponseType>(
-      `/portfolio/api/v1/project-idea/${id}`,
+      `${API_ENDPOINTS.PROJECT_IDEA}/${id}`,
       formData,
     );
     return response.data;
@@ -103,7 +103,7 @@ export const updateProjectIdeaStatus = async (
 export const deleteProjectIdea = async (id: number) => {
   try {
     const response = await apiClient.delete<ProjectIdeaDeleteResponseType>(
-      `/portfolio/api/v1/project-idea/${id}`,
+      `${API_ENDPOINTS.PROJECT_IDEA}/${id}`,
     );
     return response.data;
   } catch (error) {

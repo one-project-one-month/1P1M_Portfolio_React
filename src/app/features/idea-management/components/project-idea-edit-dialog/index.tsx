@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@radix-ui/themes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { editProjectIdea } from '../../services/project-idea.service';
 import {
@@ -51,7 +51,7 @@ export default function ProjectIdeaEditDialog({
     mode: 'onSubmit',
   });
 
-  const goNext = async () => {
+  const goNext = useCallback(async () => {
     if (step === 0) {
       const ok = await form.trigger([
         'projectName',
@@ -68,11 +68,11 @@ export default function ProjectIdeaEditDialog({
       if (!ok) return;
       setStep(2);
     }
-  };
+  }, [step, form]);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     setStep((s) => (s === 0 ? 0 : ((s - 1) as Step)));
-  };
+  }, []);
 
   const { mutate, isPending } = useMutation<
     ProjectIdeaEditResponseType,
