@@ -16,7 +16,7 @@ export default function EditStep1({
   return (
     <div className="space-y-10">
       <div>
-        <h2 className="text-3xl">Update the idea information!</h2>
+        <Dialog.Title size="7">Update the idea information!</Dialog.Title>
         <p className="mt-2 text-sm text-[#9CA3AF]">
           Choose a status to reflect the current progress and next step of this
           idea.
@@ -26,7 +26,7 @@ export default function EditStep1({
       <div className="space-y-8">
         <Controller
           control={form.control}
-          name="projectName"
+          name="projectIdeaName"
           rules={{
             required: 'Project idea name is required',
             minLength: { value: 2, message: 'Minimum 2 characters' },

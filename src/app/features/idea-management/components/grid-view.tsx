@@ -17,7 +17,7 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
               {/* Title and status */}
               <div className="flex items-start md:items-center justify-between gap-2 md:gap-4">
                 <h3 className="capitalize text-lg sm:text-xl md:text-2xl font-bold text-white line-clamp-2 flex-1">
-                  {idea.projectName}
+                  {idea.projectIdeaName}
                 </h3>
                 <span className="px-3 md:px-6 py-1 text-xs md:text-sm text-white rounded-md capitalize bg-[#00A63E] whitespace-nowrap">
                   {idea.status}

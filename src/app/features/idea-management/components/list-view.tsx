@@ -42,9 +42,9 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                   {/* Idea Name */}
                   <td className="py-4">
                     <div className="relative group text-center text-white font-medium capitalize">
-                      <Tooltip content={idea.projectName}>
+                      <Tooltip content={idea.projectIdeaName}>
                         <Text as="div" size="4">
-                          {truncate(`${idea.projectName}`)}
+                          {truncate(`${idea.projectIdeaName}`)}
                         </Text>
                       </Tooltip>
                     </div>

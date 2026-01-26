@@ -41,7 +41,7 @@ export default function ProjectIdeaEditDialog({
     >,
     defaultValues: {
       dev_id: data.dev_id ?? null,
-      projectName: data.projectName ?? '',
+      projectIdeaName: data.projectIdeaName ?? '',
       description: data.description ?? '',
       profilePictureUrl: data.profilePictureUrl ?? '',
       devName: data.devName ?? '',
@@ -54,7 +54,7 @@ export default function ProjectIdeaEditDialog({
   const goNext = useCallback(async () => {
     if (step === 0) {
       const ok = await form.trigger([
-        'projectName',
+        'projectIdeaName',
         'description',
         'projectTypes',
       ]);

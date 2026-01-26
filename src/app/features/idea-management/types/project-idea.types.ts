@@ -12,7 +12,7 @@ export const ProjectIdeaStatus = {
 const projectIdeaSchema = z.object({
   id: z.number(),
   dev_id: z.number(),
-  projectName: z.string().min(1, 'Project idea name is required'),
+  projectIdeaName: z.string().min(1, 'Project idea name is required'),
   description: z.string().min(1, 'Description is required'),
   profilePictureUrl: z.string(),
   devName: z.string(),
@@ -27,7 +27,7 @@ const projectIdeaSchema = z.object({
 });
 
 export const createProjectIdeaSchema = projectIdeaSchema.pick({
-  projectName: true,
+  projectIdeaName: true,
   description: true,
   projectTypes: true,
 });
