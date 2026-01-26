@@ -1,35 +1,85 @@
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/ui/input-field';
+import { useToast } from '@/components/ui/toast-provider';
 import { COLORS } from '@/constants/colors';
 import { useDebounce } from '@/hooks/use-debounce';
 import { buttonVariants } from '@/styles/button-variants';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog } from '@radix-ui/themes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { ProjectIdeaHeaderType } from '../types/project-idea.types';
+import { useForm } from 'react-hook-form';
+import { createProjectIdea } from '../services/project-idea.service';
+import {
+  createProjectIdeaSchema,
+  type CreateProjectIdeaType,
+  type ProjectIdeaCreateResponseType,
+  type ProjectIdeaHeaderPropsType,
+} from '../types/project-idea.types';
+import IdeaCreateForm from './idea-create-form';
 
 const ProjectIdeaHeaderSection = ({
-  searchQuery,
-  setSearchQuery,
-  selectedFilter,
-  setSelectedFilter,
+  filter,
+  setFilter,
   viewMode,
   setViewMode,
-  onCreate,
-}: ProjectIdeaHeaderType) => {
+}: ProjectIdeaHeaderPropsType) => {
+  const [inputValue, setInputValue] = useState(filter.search);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(searchQuery);
   const debouncedSearch = useDebounce(inputValue, 800);
+  const [isOpen, setIsOpen] = useState(false);
+  const { addToast } = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    setSearchQuery(debouncedSearch);
-  }, [debouncedSearch, setSearchQuery]);
+    if (debouncedSearch !== filter.search) {
+      setFilter({
+        ...filter,
+        search: debouncedSearch,
+      });
+    }
+  }, [debouncedSearch]);
+
+  const form = useForm<CreateProjectIdeaType>({
+    resolver: zodResolver(createProjectIdeaSchema),
+    values: {
+      projectName: '',
+      description: '',
+      projectTypes: [],
+    },
+    mode: 'onSubmit',
+  });
+
+  const { mutate, isPending } = useMutation<
+    ProjectIdeaCreateResponseType,
+    AxiosError<{ message: string }>,
+    { formData: CreateProjectIdeaType }
+  >({
+    mutationFn: ({ formData }: { formData: CreateProjectIdeaType }) =>
+      createProjectIdea(formData),
+    onSuccess: (success) => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
+      addToast(success.message, 'success');
+      setIsOpen(true);
+      form.reset();
+    },
+    onError: (error) => {
+      addToast(error.message, 'error');
+      setIsOpen(false);
+    },
+  });
+
+  const handleCreate = (formData: CreateProjectIdeaType) =>
+    mutate({ formData });
 
   const handleSearchIdea = (val: string) => {
     setInputValue(val);
   };
 
-  const handleFilterSelect = (filter: string) => {
-    setSelectedFilter(filter);
+  const handleStatus = (status: string) => {
+    setFilter({ ...filter, status });
     setFilterOpen(false);
   };
 
@@ -98,11 +148,11 @@ const ProjectIdeaHeaderSection = ({
                   {['All', 'Pending', 'Approved', 'Archived'].map((status) => (
                     <button
                       key={status}
-                      onClick={() => handleFilterSelect(status)}
+                      onClick={() => handleStatus(status)}
                       className="w-full text-left px-4 py-2 text-white bg-[#0f172a] transition-colors flex items-center gap-3 border border-white/60 rounded-lg"
                     >
                       <div className="w-4 h-4 flex items-center justify-center">
-                        {selectedFilter === status && (
+                        {filter.status === status && (
                           <Check className="w-4 h-4 text-white" />
                         )}
                       </div>
@@ -114,12 +164,22 @@ const ProjectIdeaHeaderSection = ({
             </div>
 
             {/* Create button */}
-            <Button
-              onClick={onCreate}
-              className={buttonVariants({ variant: 'primary' })}
-            >
-              Create Idea
-            </Button>
+            <Dialog.Root open={isOpen}>
+              <Dialog.Trigger>
+                <Button
+                  type="button"
+                  className={buttonVariants({ variant: 'primary' })}
+                >
+                  Create Idea
+                </Button>
+              </Dialog.Trigger>
+
+              <IdeaCreateForm
+                form={form}
+                handleCreate={handleCreate}
+                isPending={isPending}
+              />
+            </Dialog.Root>
           </div>
         </div>
       </div>

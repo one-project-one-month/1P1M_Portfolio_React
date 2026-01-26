@@ -74,6 +74,20 @@ export const createProjectPortfolio = async (
   return response.data;
 };
 
+export const updateProjectPortfolio = async (
+  projectPortfolioId: number | string,
+  data: Partial<CreateProjectPortfolioRequest>,
+) => {
+  const response = await apiClient.patch(
+    API_ENDPOINTS.UPDATE_PROJECT_PATCH,
+    data,
+    {
+      params: { projectPortfolioId },
+    },
+  );
+  return response.data;
+};
+
 // Team Member Management
 export const addTeamMember = async (
   teamId: number | string,
@@ -111,7 +125,7 @@ export const updateProjectStatus = async (
   projectPortfolioId: number | string,
   status: string,
 ) => {
-  const response = await apiClient.post(
+  const response = await apiClient.patch(
     API_ENDPOINTS.UPDATE_PROJECT_STATUS_V2,
     {
       projectPortfolioId,
@@ -149,6 +163,25 @@ export const getAllProjectPortfolios = async (
     params: {
       page,
       size,
+      sortDirection,
+      keyword,
+    },
+  });
+  return response.data;
+};
+
+export const getAllProfiles = async (
+  page = 0,
+  size = 20,
+  sortField = 'name',
+  sortDirection = 'desc',
+  keyword = '',
+) => {
+  const response = await apiClient.get(API_ENDPOINTS.GET_PROFILE, {
+    params: {
+      page,
+      size,
+      sortField,
       sortDirection,
       keyword,
     },

@@ -23,9 +23,20 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     image: item.projectPicUrl || '',
     startDate: '2024-01-01', // Fallback
     completedDate: null,
-    technologies: item.languageAndTools || [],
-    teams: item.teams || [],
+    technologies:
+      item.languageAndTools?.map((t: any) => ({
+        projectType: { id: 0, name: t.type },
+        languages: t.name,
+      })) || [],
+    teams:
+      item.teams?.map((t: any) => ({
+        id: t.id?.toString() || '',
+        name: t.teamName || t.name || 'Unnamed Team',
+        count: t.members?.length || 0,
+        members: t.members || [],
+      })) || [],
     description: item.description || '',
     projectLink: item.projectLink || '',
+    repoLink: item.repoLink || '',
   };
 };

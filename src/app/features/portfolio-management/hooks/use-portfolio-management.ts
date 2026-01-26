@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
-import { getAllProjectPortfolios } from '../services/portfolio-management-service';
 import { mapApiToProjectData } from '../utils/helpers';
+import { useDeleteProject, useGetAllProjects } from './use-portfolio-query';
 
 const ITEMS_PER_PAGE = 10; // Matched with default API size
 
@@ -12,37 +12,25 @@ export const usePortfolioManagement = () => {
   const [portfolioData, setPortfolioData] = useState<ProjectData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    data: response,
+    isLoading,
+    refetch,
+  } = useGetAllProjects(currentPage, ITEMS_PER_PAGE, 'desc', searchQuery);
 
-  // Fetch data
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await getAllProjectPortfolios(
-        currentPage,
-        ITEMS_PER_PAGE,
-        'desc',
-        searchQuery,
-      );
-      if (response && response.success === 1) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mappedData = response.data.map((item: any) =>
-          mapApiToProjectData(item),
-        );
-        setPortfolioData(mappedData);
-        setTotalCount(response.meta.totalItems);
-        setTotalPages(response.meta.totalPages);
-      }
-    } catch (error) {
-      console.error('Failed to fetch projects', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentPage, searchQuery]);
+  const deleteProjectMutation = useDeleteProject();
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (response && response.success === 1) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mappedData = response.data.map((item: any) =>
+        mapApiToProjectData(item),
+      );
+      setPortfolioData(mappedData);
+      setTotalCount(response.meta.totalItems);
+      setTotalPages(response.meta.totalPages);
+    }
+  }, [response]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -64,14 +52,14 @@ export const usePortfolioManagement = () => {
   };
 
   const deleteProject = async (id: number) => {
-    setPortfolioData((prevData) =>
-      prevData.filter((project) => project.id !== id),
-    );
+    try {
+      await deleteProjectMutation.mutateAsync(id);
+    } catch (error) {
+      console.error('Failed to delete project', error);
+    }
   };
 
-  const updateProject = () => {
-    // Logic for updating local state if needed (placeholder for now)
-  };
+  const updateProject = () => {};
 
   const updateProjectStatus = (id: number, newStatus: ProjectStatus) => {
     setPortfolioData((prevData) =>
@@ -85,7 +73,8 @@ export const usePortfolioManagement = () => {
     setSearchQuery('');
     setStatusFilter(null);
     setCurrentPage(0);
-    fetchData();
+
+    refetch();
   };
 
   return {

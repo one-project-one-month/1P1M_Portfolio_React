@@ -2,6 +2,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 interface CalendarProps {
+  onChange?: (date: Date | null) => void;
+  value?: Date | null;
   onSelect?: (date: Date | null) => void;
   onRangeSelect?: (start: Date | null, end: Date | null) => void;
   mode?: 'single' | 'range';

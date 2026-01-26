@@ -2,7 +2,6 @@ import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
-  ApprovedIdeaPage,
   DashboardPage,
   DeveloperPage,
   IdeaManagementEditPage,
@@ -11,10 +10,13 @@ import {
   PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
+  UserManagement,
+  UserManagementViewDetail,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisterPage from '../features/opom-register/page';
+import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
@@ -25,6 +27,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PortfolioErrorBoundary />,
     children: [
       {
         index: true,
@@ -38,7 +41,7 @@ const router = createBrowserRouter([
         path: '/developers',
         element: <DeveloperPage />,
       },
-      { path: '/approved-ideas', element: <ApprovedIdeaPage /> },
+
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
     ],
@@ -52,23 +55,36 @@ const router = createBrowserRouter([
       {
         path: 'portfolio-management',
         element: <PortfolioManagementPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/create-portfolio',
         element: <CreatePortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/view-project-portfolio/:projectId',
         element: <ViewPortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/edit-portfolio/:projectId',
         element: <EditPortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       { path: 'idea-management', element: <IdeaManagementPage /> },
-      { path: 'idea-management/edit', element: <IdeaManagementPage /> },
+      {
+        path: 'idea-management/portfolio/import',
+        element: <IdeaManagementEditPage />,
+      },
+
+      { path: 'user-management', element: <UserManagement /> },
+      {
+        path: 'register-user/view-detail',
+        element: <UserManagementViewDetail />,
+      },
+
       { path: 'timeline-management', element: <TimelineManagementPage /> },
-      { path: 'idea-management/edit', element: <IdeaManagementEditPage /> },
     ],
   },
 

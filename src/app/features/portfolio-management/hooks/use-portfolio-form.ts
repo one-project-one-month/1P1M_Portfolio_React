@@ -1,7 +1,4 @@
-import type {
-  DropdownItem,
-  Member as ModalMember,
-} from '@/types/portfolio-management';
+import type { Member as ModalMember } from '@/types/portfolio-management';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -15,10 +12,13 @@ import {
   portfolioFormSchema,
   type PortfolioFormValues,
 } from '../portfolio-schema';
+import { type CreateProjectPortfolioRequest } from '../services/portfolio-management-service';
 import {
-  addTeamMember,
-  createProjectPortfolio,
-} from '../services/portfolio-management-service';
+  useAddTeamMember,
+  useCreateProject,
+  useCreateTeam,
+  useUpdateProject,
+} from './use-portfolio-query';
 
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
@@ -27,7 +27,7 @@ interface UsePortfolioFormProps {
 }
 
 export interface TechnologyEntry {
-  projectType: DropdownItem | null;
+  projectType: string;
   languages: string;
 }
 
@@ -50,11 +50,12 @@ export const usePortfolioForm = ({
         ? statusOptions.find((s) => s.name === initialData.status) || null
         : null,
       technologies: initialData?.technologies?.map((t) => ({
-        projectType: t.projectType,
+        projectType: t.projectType.name,
         languages: t.languages,
-      })) || [{ projectType: null, languages: '' }],
+      })) || [{ projectType: '', languages: '' }],
       teams: initialData?.teams || [],
       projectLink: initialData?.projectLink || '',
+      repoLink: initialData?.repoLink || '',
       projectImage: initialData?.image || '',
     },
   });
@@ -73,7 +74,7 @@ export const usePortfolioForm = ({
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
   const handleAddTechnology = () => {
-    appendTechnology({ projectType: null, languages: '' });
+    appendTechnology({ projectType: '', languages: '' });
   };
 
   const handleRemoveTechnology = async (index: number) => {
@@ -94,6 +95,65 @@ export const usePortfolioForm = ({
     updateTechnology(index, { ...currentTech, [field]: value });
   };
 
+  const createProjectMutation = useCreateProject();
+  const updateProjectMutation = useUpdateProject();
+  const createTeamMutation = useCreateTeam({
+    onMutate: async (newTeam) => {
+      // Snapshot
+      const previousTeams = form.getValues('teams');
+
+      // Optimistic Update
+      const optimisticTeam: TeamData = {
+        id: `team-${Date.now()}`, // Temporary ID
+        name: newTeam.name,
+        count: newTeam.members.length,
+        members: newTeam.members.map((m) => ({
+          ...m,
+          id: m.id || Date.now(),
+        })),
+      };
+
+      form.setValue('teams', [...previousTeams, optimisticTeam]);
+
+      return { previousTeams };
+    },
+    onError: (err, newTeam, context: any) => {
+      if (context?.previousTeams) {
+        form.setValue('teams', context.previousTeams);
+      }
+      console.error('Failed to create team via modal', err);
+    },
+    onSuccess: (response, variables) => {
+      if (response && response.data && response.data.id) {
+        const currentTeams = form.getValues('teams');
+        const updatedTeams = currentTeams.map((t) => {
+          if (
+            t.name === variables.name &&
+            t.members.length === variables.members.length &&
+            t.id.startsWith('team-')
+          ) {
+            return { ...t, id: response.data.id.toString() };
+          }
+          return t;
+        });
+        form.setValue('teams', updatedTeams);
+
+        // LocalStorage logic
+        const storedIds = localStorage.getItem('temp_portfolio_team_ids');
+        const teamIds = storedIds ? JSON.parse(storedIds) : [];
+        if (!teamIds.includes(response.data.id)) {
+          teamIds.push(response.data.id);
+          localStorage.setItem(
+            'temp_portfolio_team_ids',
+            JSON.stringify(teamIds),
+          );
+        }
+      }
+    },
+  });
+
+  const addTeamMemberMutation = useAddTeamMember();
+
   const handleSaveForm = form.handleSubmit(async (data) => {
     try {
       // Get Team IDs from localStorage
@@ -105,24 +165,53 @@ export const usePortfolioForm = ({
         projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
         description: data.description,
         projectLink: data.projectLink,
-        repoLink: data.projectLink,
+        repoLink: data.repoLink,
         teamIds: teamIds,
         languageAndTools: data.technologies.flatMap((tech) =>
           tech.languages.split(',').map((lang) => ({
             name: lang.trim(),
-            type: tech.projectType?.name || 'Language',
+            type: tech.projectType || 'Language',
           })),
         ),
       };
 
-      await createProjectPortfolio(payload);
+      if (initialData?.id) {
+        // Calculate diff for update
+        const updatePayload: Partial<CreateProjectPortfolioRequest> = {};
+
+        if (data.projectName !== initialData.projectName) {
+          updatePayload.name = data.projectName;
+        }
+        if (data.description !== initialData.description) {
+          updatePayload.description = data.description;
+        }
+        if (data.projectImage !== initialData.image) {
+          updatePayload.projectPicUrl = data.projectImage;
+        }
+        if (data.projectLink !== initialData.projectLink) {
+          updatePayload.projectLink = data.projectLink;
+        }
+        if (data.repoLink !== initialData.repoLink) {
+          updatePayload.repoLink = data.repoLink;
+        }
+
+        // Only call update if there are changes
+        if (Object.keys(updatePayload).length > 0) {
+          await updateProjectMutation.mutateAsync({
+            id: initialData.id,
+            data: updatePayload,
+          });
+        }
+      } else {
+        await createProjectMutation.mutateAsync(payload);
+      }
 
       // Cleanup localStorage
       localStorage.removeItem('temp_portfolio_team_ids');
 
       const validTechnologies = data.technologies.filter(
-        (t): t is { projectType: DropdownItem; languages: string } =>
-          t.projectType !== null,
+        (t): t is { projectType: string; languages: string } =>
+          t.projectType !== '',
       );
 
       const formData: Partial<ProjectData> = {
@@ -133,9 +222,13 @@ export const usePortfolioForm = ({
         startDate: data.startDate,
         completedDate: data.completedDate || null,
         status: data.status?.name as ProjectData['status'],
-        technologies: validTechnologies as ProjectData['technologies'],
+        technologies: validTechnologies.map((t) => ({
+          projectType: { id: 0, name: t.projectType },
+          languages: t.languages,
+        })),
         teams: data.teams,
         projectLink: data.projectLink,
+        repoLink: data.repoLink,
         leader: initialData?.leader || '',
         image: data.projectImage,
         members: data.teams.flatMap((t) => t.members),
@@ -143,8 +236,7 @@ export const usePortfolioForm = ({
 
       onSave?.(formData);
     } catch (error) {
-      console.error('Failed to create project portfolio:', error);
-      // Handle error (show toast etc)
+      console.error('Failed to save project portfolio:', error);
     }
   });
 
@@ -153,7 +245,7 @@ export const usePortfolioForm = ({
     setIsModalOpen(true);
   };
 
-  const handleSaveTeamMembers = (
+  const handleSaveTeamMembers = async (
     selectedMembers: ModalMember[],
     teamName: string,
   ) => {
@@ -167,6 +259,33 @@ export const usePortfolioForm = ({
 
     const currentTeams = form.getValues('teams');
 
+    // API Call for adding members if team already exists
+    if (
+      activeTeamId &&
+      !activeTeamId.toString().startsWith('team-') &&
+      activeTeamId !== 'new-team'
+    ) {
+      // Find new members by comparing with existing
+      const existingMembers =
+        currentTeams.find((t) => String(t.id) === String(activeTeamId))
+          ?.members || [];
+      const newMembers = members.filter(
+        (m) => !existingMembers.some((em) => em.id === m.id),
+      );
+
+      newMembers.forEach((m) => {
+        if (m.id) {
+          addTeamMemberMutation
+            .mutateAsync({
+              teamId: activeTeamId,
+              memberId: m.id,
+              roleInTeam: m.role || 'Member',
+            })
+            .catch(console.error);
+        }
+      });
+    }
+
     if (activeTeamId === 'new-team') {
       const newTeam: TeamData = {
         id: `team-${Date.now()}`,
@@ -174,12 +293,13 @@ export const usePortfolioForm = ({
         count: members.length,
         members: members,
       };
-      form.setValue('teams', [...currentTeams, newTeam]);
+
+      createTeamMutation.mutate(newTeam);
     } else if (activeTeamId) {
       form.setValue(
         'teams',
         currentTeams.map((team) => {
-          if (team.id === activeTeamId) {
+          if (String(team.id) === String(activeTeamId)) {
             return {
               ...team,
               name: teamName,
@@ -190,29 +310,6 @@ export const usePortfolioForm = ({
           return team;
         }),
       );
-    }
-
-    // API Call for adding members if team already exists
-    if (
-      activeTeamId &&
-      !activeTeamId.toString().startsWith('team-') &&
-      activeTeamId !== 'new-team'
-    ) {
-      const teams = form.getValues('teams');
-      // Find new members by comparing with existing
-      const existingMembers =
-        teams.find((t) => t.id === activeTeamId)?.members || [];
-      const newMembers = members.filter(
-        (m) => !existingMembers.some((em) => em.id === m.id),
-      );
-
-      newMembers.forEach((m) => {
-        if (m.id) {
-          addTeamMember(activeTeamId, m.id, m.role || 'Member').catch(
-            console.error,
-          );
-        }
-      });
     }
 
     setIsModalOpen(false);
@@ -261,7 +358,9 @@ export const usePortfolioForm = ({
     if (activeTeamId === 'new-team') {
       return [];
     }
-    return teams.find((t) => t.id === activeTeamId)?.members || [];
+    return (
+      teams.find((t) => String(t.id) === String(activeTeamId))?.members || []
+    );
   };
 
   return {

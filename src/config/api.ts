@@ -2,19 +2,13 @@ export const API_CONFIG = {
   API_URL: import.meta.env.VITE_API_URL || 'http://3.26.96.212:8080',
 
   // OAuth Configuration
-  GITHUB_CLIENT_ID:
-    import.meta.env.VITE_GITHUB_CLIENT_ID || 'Ov23liwQG9sDezMQsqtO',
-  GOOGLE_CLIENT_ID:
-    import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-    '686561903051-a857ngoihbsfo2u5g1b3e9dh9uiljshb.apps.googleusercontent.com',
+  GITHUB_CLIENT_ID: import.meta.env.VITE_GITHUB_CLIENT_ID,
+  GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 
   // OAuth Redirect URIs
-  GITHUB_REDIRECT_URI:
-    import.meta.env.VITE_GITHUB_REDIRECT_URI ||
-    'http://localhost:5173/login/oauth2/code/github',
-  GOOGLE_REDIRECT_URI:
-    import.meta.env.VITE_GOOGLE_REDIRECT_URI ||
-    'http://localhost:5173/callback',
+  GITHUB_REDIRECT_URI: import.meta.env.VITE_GITHUB_REDIRECT_URI,
+
+  GOOGLE_REDIRECT_URI: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
 };
 
 export const API_ENDPOINTS = {
@@ -47,9 +41,11 @@ export const API_ENDPOINTS = {
   CREATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   TEAM_MEMBERS_V2: '/portfolio/api/v2/project-portfolio/teams/members',
   UPDATE_PROJECT_STATUS_V2: '/portfolio/api/v2/project-portfolio/update-status',
+  UPDATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   LANGUAGE_AND_TOOL_V2: '/portfolio/api/v2/project-portfolio/language-and-tool',
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

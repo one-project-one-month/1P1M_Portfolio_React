@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/use-debounce';
 import type { Member } from '@/types/portfolio-management';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { MOCK_USERS } from '../constants/data';
+import { useGetAllProfiles } from '../hooks/use-portfolio-query';
 
 interface AddMemberModalProps {
   isOpen: boolean;
@@ -22,7 +23,28 @@ const AddMemberModal = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<Member[]>([]);
   const [currentTeamName, setCurrentTeamName] = useState(teamName);
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<number | string | null>(
+    null,
+  );
+
+  const debouncedSearch = useDebounce(searchQuery, 300);
+
+  const { data: usersData } = useGetAllProfiles(
+    0,
+    20,
+    'name',
+    'desc',
+    debouncedSearch,
+  );
+
+  const users: Member[] =
+    usersData?.data?.map((u: any) => ({
+      id: u.dev_id,
+      name: u.name,
+      email: u.email,
+      avatarUrl: u.profilePictureUrl || undefined,
+      role: 'Member',
+    })) || [];
 
   useEffect(() => {
     setCurrentTeamName(teamName);
@@ -33,18 +55,11 @@ const AddMemberModal = ({
 
   if (!isOpen) return null;
 
-  const filteredUsers = MOCK_USERS.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredUsers = users;
 
   const hasLeader = selectedUsers.some((u) => u.role === 'Team Leader');
 
-  const handleAddUser = (
-    user: (typeof MOCK_USERS)[0],
-    role: 'Team Leader' | 'Member',
-  ) => {
+  const handleAddUser = (user: Member, role: 'Team Leader' | 'Member') => {
     if (!selectedUsers.some((u) => u.id === user.id)) {
       setSelectedUsers([...selectedUsers, { ...user, role }]);
     }
@@ -131,7 +146,9 @@ const AddMemberModal = ({
                             onClick={(e) => {
                               e.stopPropagation();
                               setOpenDropdownId(
-                                openDropdownId === user.id ? null : user.id,
+                                openDropdownId === user.id
+                                  ? null
+                                  : user.id || null,
                               );
                             }}
                             className="bg-[#9C39FC] hover:bg-[#8B31E0] rounded-sm text-white text-xs px-4 py-1.5 h-8"

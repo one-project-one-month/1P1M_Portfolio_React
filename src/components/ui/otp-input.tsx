@@ -85,7 +85,7 @@ export default function OtpInput({
   };
 
   return (
-    <div className="flex gap-3 justify-center">
+    <div className="flex gap-2  justify-center">
       {Array.from({ length }, (_, index) => (
         <input
           key={index}

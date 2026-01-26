@@ -1,13 +1,18 @@
 import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
+import type { Auth } from '@/hooks/use-auth';
 import { getNavLinks } from '@/lib/use-get-nav-links';
+import { UserIcon } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
 import CustomHamburger from './custom-hamburger';
 import { Button } from './ui/button';
 
-function Navbar() {
+interface NavbarProps {
+  Auth: Auth;
+}
+
+function Navbar({ Auth }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const { handleHomeNav, goTo } = useAppNavigation();
 
@@ -52,16 +57,27 @@ function Navbar() {
         ))}
       </div>
 
+      {Auth.userId && Auth.username ? (
+        <div className="hidden md:flex items-center gap-3">
+          {/* must change to pf url later */}
+          <div className="rounded-full">
+            <UserIcon color="white" />
+          </div>
+          <h3 className="text-white">{Auth.username}</h3>
+        </div>
+      ) : (
+        <div className="hidden md:block">
+          <Button
+            variant="secondary"
+            size="primary"
+            onClick={() => goTo('/auth/sign-up')}
+          >
+            Create Account
+          </Button>
+        </div>
+      )}
+
       {/* Desktop Action Button */}
-      <div className="hidden md:block">
-        <Button
-          variant="secondary"
-          size="primary"
-          onClick={() => goTo('/callback')}
-        >
-          Create Account
-        </Button>
-      </div>
 
       <div
         className={`fixed  inset-0 bg-black flex flex-col justify-start p-6 gap-8 text-xl font-medium transition-all duration-500 md:hidden z-[100] ${

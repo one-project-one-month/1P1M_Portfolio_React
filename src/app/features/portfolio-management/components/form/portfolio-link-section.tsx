@@ -12,15 +12,40 @@ export const PortfolioLinkSection = ({
   isReadOnly,
 }: PortfolioLinkSectionProps) => {
   const projectLink = form.watch('projectLink');
+  const repoLink = form.watch('repoLink');
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-medium text-white">Project Link</h2>
+      <h2 className="text-lg font-medium text-white">Links</h2>
 
       <div className="space-y-6">
         <div className="flex flex-col space-y-1">
           <label className="text-sm font-medium text-[#F9FAFB]">
-            Add Link of your project
+            GitHub link
+          </label>
+          {isReadOnly ? (
+            <div className="px-3 py-2 bg-[#1e293b] rounded-md text-[#6A7282] min-h-[40px] text-sm flex items-center">
+              {repoLink || 'No link provided'}
+            </div>
+          ) : (
+            <Controller
+              control={form.control}
+              name="repoLink"
+              render={({ field }) => (
+                <InputField
+                  className="text-sm text-[#6A7282] w-full"
+                  placeholder="https://12345github.com"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
+            />
+          )}
+        </div>
+
+        <div className="flex flex-col space-y-1">
+          <label className="text-sm font-medium text-[#F9FAFB]">
+            Project link
           </label>
           {isReadOnly ? (
             <div className="px-3 py-2 bg-[#1e293b] rounded-md text-[#6A7282] min-h-[40px] text-sm flex items-center">
@@ -33,7 +58,7 @@ export const PortfolioLinkSection = ({
               render={({ field }) => (
                 <InputField
                   className="text-sm text-[#6A7282] w-full"
-                  placeholder="http://"
+                  placeholder="www.finkoff.com"
                   value={field.value}
                   onChange={(e) => field.onChange(e.target.value)}
                 />

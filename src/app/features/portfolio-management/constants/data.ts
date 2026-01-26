@@ -41,7 +41,8 @@ export interface ProjectData {
     languages: string;
   }[];
   teams: TeamData[];
-  projectLink?: string; // Simplified to just a URL string
+  projectLink?: string;
+  repoLink?: string;
 }
 
 // Project Types available in the form
