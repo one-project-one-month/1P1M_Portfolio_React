@@ -2,6 +2,7 @@ import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
+  AdminProfilePage,
   DashboardPage,
   DeveloperPage,
   IdeaManagementEditPage,
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
       },
 
       { path: 'timeline-management', element: <TimelineManagementPage /> },
+      { path: 'admin-profile', element: <AdminProfilePage /> },
     ],
   },
 
