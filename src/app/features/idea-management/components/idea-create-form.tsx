@@ -109,7 +109,7 @@ export default function IdeaCreateForm({
                       <button
                         key={type}
                         type="button"
-                        className="flex items-center gap-2 text-sm"
+                        className="flex items-center gap-2 text-sm capitalize"
                         onClick={() => {
                           const next = checked
                             ? field.value.filter((t) => t !== type)
