@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
 
 import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
@@ -16,6 +17,8 @@ export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const { setUserInfo } = useUserInfoStore();
 
   const { handleRoute } = useAppNavigation();
 
@@ -75,14 +78,15 @@ export default function LoginForm() {
       console.log('RES', response);
 
       const userInfo = {
-        username: response.data?.username,
-        userId: response.data?.userId,
-        role: response.data?.role,
+        username: response.data?.username ?? '',
+        userId: response.data?.userId ?? 0,
+        role: response.data?.role ?? 'USER',
       };
 
       console.log('USER INFO', userInfo);
 
       saveAuth(userInfo);
+      setUserInfo(userInfo);
       console.log('Login successful:', response.data);
 
       const data = response.data as LoginResponse;
