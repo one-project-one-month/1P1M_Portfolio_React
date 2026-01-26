@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-
-import { useAuth } from '@/hooks/use-auth';
 import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
 
@@ -21,8 +19,6 @@ export default function LoginForm() {
   const { setUserInfo } = useUserInfoStore();
 
   const { handleRoute } = useAppNavigation();
-
-  const { saveAuth } = useAuth();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
@@ -84,8 +80,8 @@ export default function LoginForm() {
       };
 
       console.log('USER INFO', userInfo);
+      console.log('Login successful:', response.data?.role);
 
-      saveAuth(userInfo);
       setUserInfo(userInfo);
       console.log('Login successful:', response.data);
 
