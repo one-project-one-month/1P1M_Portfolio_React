@@ -51,11 +51,7 @@ const PortfolioManagementPage = () => {
                   title={project.title}
                   teamLeader={project.leader}
                   members={project.members}
-                  status={
-                    project.status === 'In Progress'
-                      ? 'In-Progress'
-                      : (project.status as any)
-                  }
+                  status={project.status}
                   onDelete={(id) => deleteProject(parseInt(id))}
                 />
               ))

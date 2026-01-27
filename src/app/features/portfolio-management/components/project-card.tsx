@@ -11,8 +11,9 @@ import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
 
 const statusColors: Record<ProjectStatus, string> = {
+  Planning: 'bg-[#155DFC]',
   Completed: 'bg-[#00B634]',
-  'In-Progress': 'bg-[#FF9900]',
+  'In Progress': 'bg-[#FF9900]',
   Unqualified: 'bg-[#7D7D7D]',
 };
 
@@ -159,7 +160,7 @@ export const ProjectCard = ({
             onView={handleView}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
-            menuPosition="left"
+            menuPosition="top-right"
             triggerClassName="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           />
         </div>

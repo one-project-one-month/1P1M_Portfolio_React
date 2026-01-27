@@ -136,82 +136,88 @@ const PortfolioListView = ({
                 </td>
               </tr>
             ) : (
-              data.map((project) => (
-                <tr
-                  key={project.id}
-                  className="border-b border-[#99A1AF] h-[76px] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-                >
-                  <TableCell>
-                    <div className="group flex items-center gap-3 cursor-pointer">
-                      <img
-                        src={project.image}
-                        alt={project.leader}
-                        className="w-11 h-11 rounded-full object-cover border-2 border-transparent group-hover:border-[#9C39FC] transition-colors"
-                      />
-                      <span className="text-white text-base font-medium group-hover:text-[#9C39FC] transition-colors line-clamp-1">
-                        {project.leader}
-                      </span>
-                    </div>
-                  </TableCell>
+              data.map((project, index) => {
+                const isLastRow = index >= data.length - 2;
+                const menuPosition = isLastRow ? 'top-right' : 'bottom-right';
 
-                  <TableCell centered>
-                    <Tooltip
-                      content={project.title}
-                      className="bg-[#6A7282] text-sm leading-5"
-                    >
-                      <CellText size="base" bold>
-                        <span className="line-clamp-1">{project.title}</span>
-                      </CellText>
-                    </Tooltip>
-                  </TableCell>
+                return (
+                  <tr
+                    key={project.id}
+                    className="border-b border-[#99A1AF] h-[76px] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                  >
+                    <TableCell>
+                      <div className="group flex items-center gap-3 cursor-pointer">
+                        <img
+                          src={project.image}
+                          alt={project.leader}
+                          className="w-11 h-11 rounded-full object-cover border-2 border-transparent group-hover:border-[#9C39FC] transition-colors"
+                        />
+                        <span className="text-white text-base font-medium group-hover:text-[#9C39FC] transition-colors line-clamp-1">
+                          {project.leader}
+                        </span>
+                      </div>
+                    </TableCell>
 
-                  <TableCell centered>
-                    <CellText size="base" color="[#99A1AF]">
-                      {project.members.length}
-                    </CellText>
-                  </TableCell>
-
-                  <TableCell centered>
-                    <CellText
-                      size="base"
-                      color={getStatusColor(project.status)}
-                    >
-                      <span
-                        className={`font-medium text-sm transition-colors ${getStatusColor(project.status)}`}
+                    <TableCell centered>
+                      <Tooltip
+                        content={project.title}
+                        className="bg-[#6A7282] text-sm leading-5"
                       >
-                        {project.status}
-                      </span>
-                    </CellText>
-                  </TableCell>
+                        <CellText size="base" bold>
+                          <span className="line-clamp-1">{project.title}</span>
+                        </CellText>
+                      </Tooltip>
+                    </TableCell>
 
-                  <TableCell centered>
-                    <CellText size="sm" bold>
-                      {project.startDate}
-                    </CellText>
-                  </TableCell>
+                    <TableCell centered>
+                      <CellText size="base" color="[#99A1AF]">
+                        {project.members.length}
+                      </CellText>
+                    </TableCell>
 
-                  <TableCell centered>
-                    <CellText size="sm" bold>
-                      {project.completedDate || '-'}
-                    </CellText>
-                  </TableCell>
+                    <TableCell centered>
+                      <CellText
+                        size="base"
+                        color={getStatusColor(project.status)}
+                      >
+                        <span
+                          className={`font-medium text-sm transition-colors ${getStatusColor(project.status)}`}
+                        >
+                          {project.status}
+                        </span>
+                      </CellText>
+                    </TableCell>
 
-                  <TableCell>
-                    <ProjectActionMenu
-                      ref={menuRef}
-                      projectId={project.id}
-                      isOpen={openMenuId === project.id}
-                      onToggle={() => handleMenuClick(project.id)}
-                      onView={(id) => handleView(id as number)}
-                      onEdit={(id) => handleEdit(id as number)}
-                      onDelete={(id) => handleDeleteClick(id as number)}
-                      onStatusChange={(id) =>
-                        setStatusDialogProjectId(id as number)
-                      }
-                    />
-                  </TableCell>
-                </tr>
-              ))
+                    <TableCell centered>
+                      <CellText size="sm" bold>
+                        {project.startDate}
+                      </CellText>
+                    </TableCell>
+
+                    <TableCell centered>
+                      <CellText size="sm" bold>
+                        {project.completedDate || '-'}
+                      </CellText>
+                    </TableCell>
+
+                    <TableCell>
+                      <ProjectActionMenu
+                        ref={menuRef}
+                        projectId={project.id}
+                        isOpen={openMenuId === project.id}
+                        onToggle={() => handleMenuClick(project.id)}
+                        onView={(id) => handleView(id as number)}
+                        onEdit={(id) => handleEdit(id as number)}
+                        onDelete={(id) => handleDeleteClick(id as number)}
+                        onStatusChange={(id) =>
+                          setStatusDialogProjectId(id as number)
+                        }
+                        menuPosition={menuPosition}
+                      />
+                    </TableCell>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

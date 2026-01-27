@@ -15,7 +15,13 @@ interface ProjectActionMenuProps {
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
   onStatusChange?: (id: number | string, status: string) => void;
-  menuPosition?: 'right' | 'left';
+  menuPosition?:
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-right'
+    | 'top-left'
+    | 'left-start'
+    | 'right-start';
   triggerClassName?: string;
 }
 
@@ -32,7 +38,7 @@ export const ProjectActionMenu = forwardRef<
       onEdit,
       onDelete,
       onStatusChange,
-      menuPosition = 'right',
+      menuPosition = 'bottom-right',
       triggerClassName = 'p-1 hover:bg-white/10 rounded-full transition-colors text-white/70 hover:text-white',
     },
     ref,
@@ -53,8 +59,26 @@ export const ProjectActionMenu = forwardRef<
       onStatusChange?.(id, 'In Progress');
     };
 
-    const menuPositionClass =
-      menuPosition === 'right' ? 'right-8 top-8' : 'right-0 top-full mt-2';
+    const getMenuPositionClass = (position: string) => {
+      switch (position) {
+        case 'bottom-right':
+          return 'right-0 top-full mt-2';
+        case 'bottom-left':
+          return 'left-0 top-full mt-2';
+        case 'top-right':
+          return 'right-0 bottom-full mb-2 origin-bottom-right';
+        case 'top-left':
+          return 'left-0 bottom-full mb-2 origin-bottom-left';
+        case 'left-start':
+          return 'right-full top-0 mr-2 origin-top-right';
+        case 'right-start':
+          return 'left-full top-0 ml-2 origin-top-left';
+        default:
+          return 'right-0 top-full mt-2';
+      }
+    };
+
+    const menuPositionClass = getMenuPositionClass(menuPosition);
 
     return (
       <div className="flex items-center justify-center relative">
