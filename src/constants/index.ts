@@ -53,4 +53,4 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
 ];
 
-export const PROJECT_TYPE_OPTIONS = ['Mobile', 'Website', 'Desktop', 'Game'];
+export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];

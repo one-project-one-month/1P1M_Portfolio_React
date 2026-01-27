@@ -9,8 +9,8 @@ import { Dialog } from '@radix-ui/themes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { Check, ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { createProjectIdea } from '../services/project-idea.service';
 import {
   createProjectIdeaSchema,
@@ -21,37 +21,48 @@ import {
 import IdeaCreateForm from './idea-create-form';
 
 const ProjectIdeaHeaderSection = ({
-  filter,
-  setFilter,
   viewMode,
   setViewMode,
+  filter,
+  setFilter,
 }: ProjectIdeaHeaderPropsType) => {
   const [inputValue, setInputValue] = useState(filter.search);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [open, setOpen] = useState({
+    filter: false,
+    create: false,
+  });
   const debouncedSearch = useDebounce(inputValue, 800);
-  const [isOpen, setIsOpen] = useState(false);
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
+  // Search
+  const handleSearch = useCallback(() => {
+    setFilter({ ...filter, search: debouncedSearch });
+  }, [debouncedSearch, setFilter, filter]);
+
   useEffect(() => {
     if (debouncedSearch !== filter.search) {
-      setFilter({
-        ...filter,
-        search: debouncedSearch,
-      });
+      handleSearch();
     }
-  }, [debouncedSearch]);
+  }, [debouncedSearch, filter.search, handleSearch]);
+
+  // Status
+  const handleStatus = (status: string) => {
+    setFilter({ ...filter, status });
+    setOpen({ ...open, create: false });
+  };
 
   const form = useForm<CreateProjectIdeaType>({
     resolver: zodResolver(createProjectIdeaSchema),
-    values: {
-      projectName: '',
+    defaultValues: {
+      projectIdeaName: '',
       description: '',
       projectTypes: [],
     },
     mode: 'onSubmit',
   });
 
+  // Create
   const { mutate, isPending } = useMutation<
     ProjectIdeaCreateResponseType,
     AxiosError<{ message: string }>,
@@ -62,26 +73,16 @@ const ProjectIdeaHeaderSection = ({
     onSuccess: (success) => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(success.message, 'success');
-      setIsOpen(true);
+      setOpen({ ...open, create: false });
       form.reset();
     },
     onError: (error) => {
       addToast(error.message, 'error');
-      setIsOpen(false);
     },
   });
 
-  const handleCreate = (formData: CreateProjectIdeaType) =>
+  const handleCreate: SubmitHandler<CreateProjectIdeaType> = (formData) =>
     mutate({ formData });
-
-  const handleSearchIdea = (val: string) => {
-    setInputValue(val);
-  };
-
-  const handleStatus = (status: string) => {
-    setFilter({ ...filter, status });
-    setFilterOpen(false);
-  };
 
   return (
     <>
@@ -106,7 +107,7 @@ const ProjectIdeaHeaderSection = ({
               type="text"
               placeholder="Search by project title"
               value={inputValue}
-              onChange={(e) => handleSearchIdea(e.target.value)}
+              onChange={(e) => setInputValue(e.target.value)}
               className="w-full pl-12"
             />
           </div>
@@ -134,16 +135,16 @@ const ProjectIdeaHeaderSection = ({
             {/* Filter by Status Dropdown */}
             <div className="relative">
               <button
-                onClick={() => setFilterOpen(!filterOpen)}
+                onClick={() => setOpen({ ...open, filter: !open.filter })}
                 className={`flex items-center gap-2 px-6 py-2 bg-transparent hover:bg-slate-700/40 text-white rounded-lg transition-colors border border-[#6F28B3]!`}
               >
                 <span>Filter by Status</span>
                 <ChevronDown
-                  className={`w-4 h-4 text-purple-500 transition-transform ${filterOpen ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 text-purple-500 transition-transform ${open.filter ? 'rotate-180' : ''}`}
                 />
               </button>
 
-              {filterOpen && (
+              {open.filter && (
                 <div className="absolute left-0 mt-1 w-full min-w-40 flex flex-col gap-1 z-10">
                   {['All', 'Pending', 'Approved', 'Archived'].map((status) => (
                     <button
@@ -164,11 +165,15 @@ const ProjectIdeaHeaderSection = ({
             </div>
 
             {/* Create button */}
-            <Dialog.Root open={isOpen}>
+            <Dialog.Root
+              open={open.create}
+              onOpenChange={(value) => setOpen({ ...open, create: value })}
+            >
               <Dialog.Trigger>
                 <Button
                   type="button"
                   className={buttonVariants({ variant: 'primary' })}
+                  onClick={() => setOpen({ ...open, create: !open.create })}
                 >
                   Create Idea
                 </Button>
@@ -187,4 +192,4 @@ const ProjectIdeaHeaderSection = ({
   );
 };
 
-export default ProjectIdeaHeaderSection;
+export default memo(ProjectIdeaHeaderSection);

@@ -17,34 +17,28 @@ const IdeaManagement = () => {
     totalItems: 0,
   });
 
-  const [modals, setModals] = useState({
-    create: false,
-    edit: false,
-  });
-
   useEffect(() => {
-    localStorage.setItem('idea-management-view-mode', viewMode);
+    if (localStorage.getItem('idea-management-view-mode') !== viewMode) {
+      localStorage.setItem('idea-management-view-mode', viewMode);
+    }
   }, [viewMode]);
 
   return (
     <div>
       <ProjectIdeaHeaderSection
         viewMode={viewMode}
+        setViewMode={setViewMode}
         filter={filter}
         setFilter={setFilter}
-        setViewMode={setViewMode}
-        onCreate={() => setModals({ ...modals, create: true })}
       />
       <ProjectIdeaContainer
         view={viewMode}
         filter={filter}
-        setFilter={setFilter}
         currentPage={pagination.currentPage}
         pageSize={PAGE_SIZE}
         onPageChange={(page) =>
           setPagination({ ...pagination, currentPage: page })
         }
-        onEdit={(isEdit) => setModals({ ...modals, edit: isEdit })}
       />
     </div>
   );

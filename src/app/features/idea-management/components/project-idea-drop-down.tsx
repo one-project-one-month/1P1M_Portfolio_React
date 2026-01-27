@@ -24,6 +24,7 @@ export const ProjectIdeaDropDown = ({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
+  // DELETE
   const { mutate: deleteMutate } = useMutation<
     ProjectIdeaDeleteResponseType,
     AxiosError<{ message: string }>,

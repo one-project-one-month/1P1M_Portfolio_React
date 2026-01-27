@@ -28,7 +28,7 @@ export const useGetProjectIdea = ({
   });
 };
 
-// UPDATE
+// EDIT
 export const useEditProjectIdea = () => {
   const { addToast } = useToast();
   const queryClient = useQueryClient();

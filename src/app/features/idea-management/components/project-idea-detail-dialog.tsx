@@ -15,6 +15,8 @@ const ProjectIdeaDetailDialog = ({
   trigger?: ReactNode;
   data: ProjectIdeaType;
 }) => {
+  console.log('detail-data', data);
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
@@ -90,7 +92,7 @@ const ProjectIdeaDetailDialog = ({
                   </Badge>
                 )}
               </div>
-              <p className="text-gray-400">{data.projectName}</p>
+              <p className="text-gray-400">{data.projectIdeaName}</p>
             </div>
 
             {/* Project type */}
