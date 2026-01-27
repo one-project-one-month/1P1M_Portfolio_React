@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
-import type { LoginData } from '../services/types';
+
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { useUserInfoStore } from '@/store/user-info-store';
+import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -14,7 +16,9 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const { setUserInfo } = useUserInfoStore();
+
+  const { handleRoute } = useAppNavigation();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
@@ -51,7 +55,6 @@ export default function LoginForm() {
     setEmailErrorMsg(emailErr);
     setPasswordErrorMsg(passwordErr);
 
-    // Show/hide errors based on validation results
     setShowEmailError(!!emailErr);
     setShowPasswordError(!!passwordErr);
 
@@ -68,17 +71,23 @@ export default function LoginForm() {
         setError(response.message || 'Login failed');
       }
 
-      toast.success('Login successfully!');
+      console.log('RES', response);
+
+      const userInfo = {
+        username: response.data?.username ?? '',
+        userId: response.data?.userId ?? 0,
+        role: response.data?.role ?? 'USER',
+      };
+
+      console.log('USER INFO', userInfo);
+      console.log('Login successful:', response.data?.role);
+
+      setUserInfo(userInfo);
       console.log('Login successful:', response.data);
 
-      const data = response.data as LoginData;
-      if (data.isNewUserLogin) {
-        navigate('/auth/setup-profile');
-      } else if (data.role == 'ADMIN') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      const data = response.data as LoginResponse;
+
+      handleRoute(data?.role, data?.isNewUserLogin);
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);

@@ -3,12 +3,8 @@ import PasswordField from '@/components/ui/password-field';
 import TextField from '@/components/ui/text-field';
 import { type FormEvent, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { checkEmailExists, sendOtpCode } from '../services/api';
-
-interface LocationState {
-  email?: string;
-}
 
 export default function RegisterForm() {
   const [emailError, setEmailError] = useState<string>('');
@@ -22,10 +18,6 @@ export default function RegisterForm() {
   const cfmpasswordRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const state = location.state as LocationState | null;
-  const emailFromAuth = state?.email ?? '';
 
   function isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -172,7 +164,6 @@ export default function RegisterForm() {
         name="regemail"
         id="regemail"
         label="Email"
-        value={emailFromAuth ?? emailFromAuth}
         placeholder="nora@gmail.com"
         error={emailError}
       />

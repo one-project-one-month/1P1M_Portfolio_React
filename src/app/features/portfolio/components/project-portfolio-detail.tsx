@@ -14,12 +14,12 @@ const ProjectPortfolioDetail = ({
 
   const fetchProjectDetails = useCallback(async () => {
     if (!projectId) return;
-
+    let id: string = '';
     setLoading(true);
     setError(null);
 
     try {
-      const response = await getProjectPortfolioDetails(projectId);
+      const response = await getProjectPortfolioDetails(id);
 
       if (response && response.success) {
         setProject(response.data);

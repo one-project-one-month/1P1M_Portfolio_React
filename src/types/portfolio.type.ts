@@ -61,16 +61,25 @@ export type ProjectCardType = {
 };
 
 export type ProjectPortfolioDetailType = {
-  projectId: number;
+  projectId: string | number;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export interface ProjectRequestBody {
-  name: string;
+  // name: string;
+  // description: string;
+  // projectLink?: string;
+  // repoLink?: string;
+  // languageAndTools: string[];
+  // developerEmails: string[];
+  projectName: string;
   description: string;
-  projectLink?: string;
-  repoLink?: string;
-  languageAndTools: string[];
-  developerEmails: string[];
+  startDate: string;
+  completedDate: string;
+  status: string;
+  technologies: string;
+  teams: string;
+  projectLink: string;
+  image: string;
 }

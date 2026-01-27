@@ -8,9 +8,11 @@ interface OtpData {
   errorMessage: string;
   isResendDisabled: boolean;
   resendTimer: number;
-  isVerifying: boolean;
-  isResending: boolean;
+  status: 'idle' | 'verifying' | 'resending';
 }
+
+const MAX_ATTEMPTS = 5;
+const RESEND_COOLDOWN = 60;
 
 export function useOtpVerification(email: string) {
   const [otpData, setOtpData] = useState<OtpData>({
@@ -20,39 +22,26 @@ export function useOtpVerification(email: string) {
     errorMessage: '',
     isResendDisabled: false,
     resendTimer: 0,
-    isVerifying: false,
-    isResending: false,
+    status: 'idle',
   });
 
-  const MAX_ATTEMPTS = 5;
-  const RESEND_COOLDOWN = 60;
-
-  const startResendTimer = useCallback(() => {
-    setOtpData((prev) => ({
-      ...prev,
-      isResendDisabled: true,
-      resendTimer: RESEND_COOLDOWN,
-    }));
-  }, []);
-
+  // --- Timer Logic ---
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (otpData.resendTimer > 0) {
-      timer = setTimeout(() => {
-        setOtpData((prev) => ({
-          ...prev,
-          resendTimer: prev.resendTimer - 1,
-        }));
-      }, 1000);
-    } else if (otpData.resendTimer === 0 && otpData.isResendDisabled) {
-      setOtpData((prev) => ({
-        ...prev,
-        isResendDisabled: false,
-      }));
-    }
-    return () => clearTimeout(timer);
-  }, [otpData.resendTimer, otpData.isResendDisabled]);
+    if (otpData.resendTimer <= 0) return;
 
+    const timerId = setInterval(() => {
+      setOtpData((prev) => {
+        if (prev.resendTimer <= 1) {
+          return { ...prev, resendTimer: 0, isResendDisabled: false };
+        }
+        return { ...prev, resendTimer: prev.resendTimer - 1 };
+      });
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [otpData.resendTimer]);
+
+  // --- Actions ---
   const updateOtpValue = useCallback((value: string) => {
     setOtpData((prev) => ({
       ...prev,
@@ -63,91 +52,71 @@ export function useOtpVerification(email: string) {
   }, []);
 
   const setError = useCallback((message: string) => {
-    setOtpData((prev) => ({
-      ...prev,
-      hasError: true,
-      errorMessage: message,
-    }));
+    setOtpData((prev) => ({ ...prev, hasError: true, errorMessage: message }));
   }, []);
 
-  const incrementAttempts = useCallback(() => {
+  const startResendTimer = useCallback(() => {
     setOtpData((prev) => ({
       ...prev,
-      attempts: prev.attempts + 1,
-      value: '',
-    }));
-  }, []);
-
-  const resetAttempts = useCallback(() => {
-    setOtpData((prev) => ({
-      ...prev,
-      attempts: 0,
-      value: '',
-      hasError: false,
-      errorMessage: '',
-    }));
-  }, []);
-
-  const setVerifying = useCallback((isVerifying: boolean) => {
-    setOtpData((prev) => ({
-      ...prev,
-      isVerifying,
-    }));
-  }, []);
-
-  const setResending = useCallback((isResending: boolean) => {
-    setOtpData((prev) => ({
-      ...prev,
-      isResending,
+      isResendDisabled: true,
+      resendTimer: RESEND_COOLDOWN,
     }));
   }, []);
 
   const verifyOtp = useCallback(
     async (otp: string) => {
-      setVerifying(true);
+      setOtpData((prev) => ({ ...prev, status: 'verifying' }));
       try {
         const response = await verifyOtpCode(email, otp);
-        console.log('OTP verification response:', response);
-        return response.success || response.code === 200;
+        const success = response.success || response.code === 200;
+
+        if (!success) {
+          setOtpData((prev) => ({
+            ...prev,
+            attempts: prev.attempts + 1,
+            value: '',
+          }));
+        }
+        return success;
       } catch (error) {
-        console.error('OTP verification error:', error);
+        setError('Verification failed. Please try again.');
         return false;
       } finally {
-        setVerifying(false);
+        setOtpData((prev) => ({ ...prev, status: 'idle' }));
       }
     },
-    [email, setVerifying],
+    [email, setError],
   );
 
   const resendOtp = useCallback(async () => {
-    setResending(true);
+    setOtpData((prev) => ({ ...prev, status: 'resending' }));
     try {
       const response = await sendOtpCode(email);
+      startResendTimer();
       return response.success || response.code === 200;
     } catch (error) {
-      console.error('OTP resend error:', error);
+      setError('Failed to resend code.');
       throw error;
     } finally {
-      setResending(false);
+      setOtpData((prev) => ({ ...prev, status: 'idle' }));
     }
-  }, [email, setResending]);
+  }, [email, startResendTimer, setError]);
 
-  const formatTimer = useCallback((seconds: number) => {
-    return `${Math.floor(seconds / 60)}:${(seconds % 60)
-      .toString()
-      .padStart(2, '0')}`;
-  }, []);
+  const formatTimer = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
 
   return {
     otpData,
+    isVerifying: otpData.status === 'verifying',
+    isResending: otpData.status === 'resending',
     MAX_ATTEMPTS,
     updateOtpValue,
     setError,
-    incrementAttempts,
-    resetAttempts,
-    startResendTimer,
     verifyOtp,
     resendOtp,
-    formatTimer,
+    formatTimer: () => formatTimer(otpData.resendTimer),
   };
 }

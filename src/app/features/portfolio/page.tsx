@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSortDirection } from '../../../lib/get-sort-direction';
 import PortfolioSectionContainer from './components/portfolio-section-container';
-import { reactToProject } from './services/portfolio-service';
 
 const Portfolio = () => {
   const filterOptions = ['Popular', 'Newest', 'Oldest'];
@@ -14,15 +13,15 @@ const Portfolio = () => {
   const [selectedFilter, setSelectedFilter] = useState('Newest');
   const navigate = useNavigate();
 
-  const handleReact = async (projectId: number) => {
-    try {
-      await reactToProject(projectId);
-      console.log('👍 Reacted successfully to project:', projectId);
-      // Optional: refresh list or increment like count locally
-    } catch (error) {
-      console.error('❌ Error reacting:', error);
-    }
-  };
+  // const handleReact = async (projectId: number) => {
+  //   try {
+  //     await reactToProject(projectId);
+  //     console.log('👍 Reacted successfully to project:', projectId);
+  //     // Optional: refresh list or increment like count locally
+  //   } catch (error) {
+  //     console.error('❌ Error reacting:', error);
+  //   }
+  // };
 
   const handleFilter = (filter: string) => {
     setSelectedFilter(filter);
