@@ -47,14 +47,14 @@ export default function IdeaCreateForm({
               Project Idea Name
             </label>
             <InputField
-              {...register('projectName')}
+              {...register('projectIdeaName')}
               type="text"
               placeholder="Enter your project name"
               className="w-full"
             />
-            {errors.projectName?.message && (
+            {errors.projectIdeaName?.message && (
               <p className="mt-2 text-sm font-bold text-red-500">
-                {errors.projectName?.message}
+                {errors.projectIdeaName?.message}
               </p>
             )}
           </div>

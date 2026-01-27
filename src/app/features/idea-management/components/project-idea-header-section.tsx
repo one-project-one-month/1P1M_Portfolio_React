@@ -55,7 +55,7 @@ const ProjectIdeaHeaderSection = ({
   const form = useForm<CreateProjectIdeaType>({
     resolver: zodResolver(createProjectIdeaSchema),
     defaultValues: {
-      projectName: '',
+      projectIdeaName: '',
       description: '',
       projectTypes: [],
     },
