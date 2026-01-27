@@ -1,44 +1,36 @@
-import { useMemo, useState } from 'react';
-import {
-  PORTFOLIO_MANAGEMENT_DATA,
-  type ProjectData,
-  type ProjectStatus,
-} from '../constants/data';
+import { useEffect, useState } from 'react';
+import { type ProjectData, type ProjectStatus } from '../constants/data';
+import { mapApiToProjectData } from '../utils/helpers';
+import { useDeleteProject, useGetAllProjects } from './use-portfolio-query';
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 10; // Matched with default API size
 
 export const usePortfolioManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [portfolioData, setPortfolioData] = useState<ProjectData[]>(
-    PORTFOLIO_MANAGEMENT_DATA,
-  );
+  const [portfolioData, setPortfolioData] = useState<ProjectData[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const {
+    data: response,
+    isLoading,
+    refetch,
+  } = useGetAllProjects(currentPage, ITEMS_PER_PAGE, 'desc', searchQuery);
 
-  const filteredData = useMemo(() => {
-    let result = portfolioData;
+  const deleteProjectMutation = useDeleteProject();
 
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (project) =>
-          project.leader.toLowerCase().includes(query) ||
-          project.title.toLowerCase().includes(query),
+  useEffect(() => {
+    if (response && response.success === 1) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mappedData = response.data.map((item: any) =>
+        mapApiToProjectData(item),
       );
+      setPortfolioData(mappedData);
+      setTotalCount(response.meta.totalItems);
+      setTotalPages(response.meta.totalPages);
     }
-
-    if (statusFilter) {
-      result = result.filter((project) => project.status === statusFilter);
-    }
-
-    return result;
-  }, [portfolioData, searchQuery, statusFilter]);
-
-  const paginatedData = useMemo(() => {
-    const startIndex = currentPage * ITEMS_PER_PAGE;
-    return filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredData, currentPage]);
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  }, [response]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -59,37 +51,15 @@ export const usePortfolioManagement = () => {
     setCurrentPage(0);
   };
 
-  const deleteProject = (id: number) => {
-    setPortfolioData((prevData) =>
-      prevData.filter((project) => project.id !== id),
-    );
-
-    const newFilteredLength = filteredData.filter(
-      (project) => project.id !== id,
-    ).length;
-    const newTotalPages = Math.ceil(newFilteredLength / ITEMS_PER_PAGE);
-    if (currentPage >= newTotalPages && newTotalPages > 0) {
-      setCurrentPage(newTotalPages - 1);
+  const deleteProject = async (id: number) => {
+    try {
+      await deleteProjectMutation.mutateAsync(id);
+    } catch (error) {
+      console.error('Failed to delete project', error);
     }
   };
 
-  const updateProject = (updatedData: Partial<ProjectData>) => {
-    if (!updatedData.id) return;
-
-    setPortfolioData((prevData) =>
-      prevData.map((project) => {
-        if (project.id === updatedData.id) {
-          return {
-            ...project,
-            ...updatedData,
-            title:
-              updatedData.projectName || updatedData.title || project.title,
-          };
-        }
-        return project;
-      }),
-    );
-  };
+  const updateProject = () => {};
 
   const updateProjectStatus = (id: number, newStatus: ProjectStatus) => {
     setPortfolioData((prevData) =>
@@ -100,15 +70,16 @@ export const usePortfolioManagement = () => {
   };
 
   const resetData = () => {
-    setPortfolioData(PORTFOLIO_MANAGEMENT_DATA);
     setSearchQuery('');
     setStatusFilter(null);
     setCurrentPage(0);
+
+    refetch();
   };
 
   return {
-    paginatedData,
-    totalCount: filteredData.length,
+    paginatedData: portfolioData,
+    totalCount,
     totalPages,
     currentPage,
     searchQuery,
@@ -121,5 +92,6 @@ export const usePortfolioManagement = () => {
     updateProject,
     updateProjectStatus,
     resetData,
+    isLoading,
   };
 };

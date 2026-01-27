@@ -76,7 +76,6 @@ const PortfolioForm = ({
             technologyFields={technologyFields}
             onAddTechnology={handleAddTechnology}
             onRemoveTechnology={handleRemoveTechnology}
-            onUpdateTechnology={handleUpdateTechnology}
             isReadOnly={isReadOnly}
           />
 

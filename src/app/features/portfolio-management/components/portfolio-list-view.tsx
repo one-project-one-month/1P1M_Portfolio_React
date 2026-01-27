@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
 import { usePortfolioActions } from '../hooks/use-portfolio-actions';
+import { updateProjectStatus as updateProjectStatusApi } from '../services/portfolio-management-service';
 import ChangeStatusDialog from './change-status-dialog';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
@@ -104,10 +105,19 @@ const PortfolioListView = ({
     }
   };
 
-  const handleStatusConfirm = (newStatus: ProjectStatus) => {
+  const handleStatusClick = (projectId: number) => {
+    setStatusDialogProjectId(projectId);
+  };
+
+  const handleStatusConfirm = async (newStatus: ProjectStatus) => {
     if (statusDialogProjectId !== null) {
-      onStatusChange?.(statusDialogProjectId, newStatus);
-      setStatusDialogProjectId(null);
+      try {
+        await updateProjectStatusApi(statusDialogProjectId, newStatus);
+        onStatusChange?.(statusDialogProjectId, newStatus);
+        setStatusDialogProjectId(null);
+      } catch (error) {
+        console.error('Failed to update status', error);
+      }
     }
   };
 
