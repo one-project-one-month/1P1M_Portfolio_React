@@ -10,6 +10,8 @@ import { SuccessToast } from './success-toast';
 
 const getStatusColor = (status: ProjectStatus) => {
   switch (status) {
+    case 'Planning':
+      return 'text-[#155DFC]';
     case 'Completed':
       return 'text-[#10B981]';
     case 'In Progress':
@@ -102,10 +104,6 @@ const PortfolioListView = ({
     }
   };
 
-  const handleStatusClick = (projectId: number) => {
-    setStatusDialogProjectId(projectId);
-  };
-
   const handleStatusConfirm = (newStatus: ProjectStatus) => {
     if (statusDialogProjectId !== null) {
       onStatusChange?.(statusDialogProjectId, newStatus);
@@ -174,12 +172,16 @@ const PortfolioListView = ({
                   </TableCell>
 
                   <TableCell centered>
-                    <button
-                      onClick={() => handleStatusClick(project.id)}
-                      className={`font-medium text-sm cursor-pointer hover:underline transition-colors ${getStatusColor(project.status)}`}
+                    <CellText
+                      size="base"
+                      color={getStatusColor(project.status)}
                     >
-                      {project.status}
-                    </button>
+                      <span
+                        className={`font-medium text-sm transition-colors ${getStatusColor(project.status)}`}
+                      >
+                        {project.status}
+                      </span>
+                    </CellText>
                   </TableCell>
 
                   <TableCell centered>
@@ -203,6 +205,9 @@ const PortfolioListView = ({
                       onView={(id) => handleView(id as number)}
                       onEdit={(id) => handleEdit(id as number)}
                       onDelete={(id) => handleDeleteClick(id as number)}
+                      onStatusChange={(id) =>
+                        setStatusDialogProjectId(id as number)
+                      }
                     />
                   </TableCell>
                 </tr>

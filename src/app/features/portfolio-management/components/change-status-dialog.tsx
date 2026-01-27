@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../../../components/ui/button';
 
-type ProjectStatus = 'In Progress' | 'Completed' | 'Unqualified';
+type ProjectStatus = 'Planning' | 'In Progress' | 'Completed' | 'Unqualified';
 
 interface ChangeStatusDialogProps {
   isOpen: boolean;
@@ -39,19 +39,24 @@ const ChangeStatusDialog = ({
     description: string;
   }[] = [
     {
+      value: 'Planning',
+      color: '#155DFC',
+      description: 'This project is in the planning phase.',
+    },
+    {
       value: 'In Progress',
       color: '#F59E0B',
-      description: 'This project is currently active.',
+      description: 'This project is currently being worked on.',
     },
     {
       value: 'Completed',
       color: '#10B981',
-      description: 'This project has been completed.',
+      description: 'This project has been successfully finished.',
     },
     {
       value: 'Unqualified',
       color: '#6A7282',
-      description: 'This project was not approved.',
+      description: 'This project did not pass the  review standards.',
     },
   ];
 
