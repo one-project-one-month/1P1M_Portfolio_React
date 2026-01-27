@@ -105,10 +105,6 @@ const PortfolioListView = ({
     }
   };
 
-  const handleStatusClick = (projectId: number) => {
-    setStatusDialogProjectId(projectId);
-  };
-
   const handleStatusConfirm = async (newStatus: ProjectStatus) => {
     if (statusDialogProjectId !== null) {
       try {
