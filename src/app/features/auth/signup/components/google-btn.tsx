@@ -8,12 +8,13 @@ const GoogleBtn = () => {
   const REDIRECT_URI = `${window.location.origin}/auth/sign-up`;
 
   const params = new URLSearchParams({
-    client_id: API_CONFIG.GITHUB_CLIENT_ID,
+    client_id: API_CONFIG.GOOGLE_CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     response_type: 'code',
     scope: 'email profile',
     access_type: 'offline',
     prompt: 'consent',
+    state: 'google',
   });
 
   const googleOAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
