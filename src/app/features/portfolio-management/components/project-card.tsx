@@ -1,12 +1,11 @@
 import DeleteDialog from '@/components/ui/delete-dialog';
-import type {
-  ProjectCardProps,
-  ProjectStatus,
-} from '@/types/portfolio-management';
+import type { ProjectStatus } from '@/types/portfolio-management';
 import { clsx } from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import type { ProjectData } from '../constants/data';
+import ChangeStatusDialog from './change-status-dialog';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
 
@@ -17,21 +16,19 @@ const statusColors: Record<ProjectStatus, string> = {
   Unqualified: 'bg-[#7D7D7D]',
 };
 
-interface ExtendedProjectCardProps extends ProjectCardProps {
+interface ProjectCardProps {
+  data: ProjectData;
   onDelete?: (id: string) => void;
+  onStatusChange?: (id: number, status: ProjectStatus) => void;
 }
 
 export const ProjectCard = ({
-  id,
-  image,
-  title,
-  teamLeader,
-  members,
-  status,
-  className,
+  data,
   onDelete,
-}: ExtendedProjectCardProps) => {
+  onStatusChange,
+}: ProjectCardProps) => {
   const navigate = useNavigate();
+  const { id, image, title, leader, members, status } = data;
   const displayMembers = members.slice(0, 3);
   const remainingCount = Math.max(0, members.length - 3);
 
@@ -39,6 +36,9 @@ export const ProjectCard = ({
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [statusDialogProjectId, setStatusDialogProjectId] = useState<
+    number | null
+  >(null);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -90,12 +90,20 @@ export const ProjectCard = ({
     }
   };
 
+  const handleStatusConfirm = (newStatus: ProjectStatus) => {
+    if (statusDialogProjectId !== null) {
+      onStatusChange?.(statusDialogProjectId, newStatus);
+      setStatusDialogProjectId(null);
+    }
+  };
+
+  const currentProject = { id, status };
+
   return (
     <>
       <div
         className={twMerge(
-          'relative flex w-full flex-col rounded-[10px] bg-[#9C39FC] p-3 text-white hover:shadow-lg transition-shadow',
-          className,
+          'relative flex w-full flex-col rounded-[10px] bg-[#FFFFFF]/10 p-3 text-white border border-[#FFFFFF]/20 hover:shadow-lg transition-shadow',
         )}
       >
         <div className="relative mb-4 w-full overflow-hidden rounded-lg">
@@ -105,7 +113,7 @@ export const ProjectCard = ({
         <div className="mb-4 space-y-2">
           <div className="flex items-center justify-between text-xs leading-5">
             <span className="text-[#D1D5DC]">Team Leader</span>
-            <span className="font-medium">{teamLeader}</span>
+            <span className="font-medium">{leader}</span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-white/70">Team Members</span>
@@ -160,6 +168,7 @@ export const ProjectCard = ({
             onView={handleView}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
+            onStatusChange={(id) => setStatusDialogProjectId(id as number)}
             menuPosition="top-right"
             triggerClassName="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           />
@@ -179,6 +188,13 @@ export const ProjectCard = ({
             action cannot be undone.
           </>
         }
+      />
+
+      <ChangeStatusDialog
+        isOpen={statusDialogProjectId !== null}
+        onClose={() => setStatusDialogProjectId(null)}
+        onConfirm={handleStatusConfirm}
+        currentStatus={currentProject?.status}
       />
 
       {showSuccessToast && (

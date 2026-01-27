@@ -46,13 +46,9 @@ const PortfolioManagementPage = () => {
               paginatedData.map((project) => (
                 <ProjectCard
                   key={project.id}
-                  id={project.id.toString()}
-                  image={project.image}
-                  title={project.title}
-                  teamLeader={project.leader}
-                  members={project.members}
-                  status={project.status}
+                  data={project}
                   onDelete={(id) => deleteProject(parseInt(id))}
+                  onStatusChange={updateProjectStatus}
                 />
               ))
             )}
