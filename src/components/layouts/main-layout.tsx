@@ -19,7 +19,7 @@ export default function MainLayout() {
     <Background>
       <div className="h-dvh w-dvw overflow-auto">
         <div className="w-11/12 mx-auto">
-          <Navbar Auth={auth} />
+          <Navbar auth={auth} />
         </div>
 
         <div className="w-11/12 mx-auto">
