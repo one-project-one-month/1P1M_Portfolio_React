@@ -1,4 +1,4 @@
-import { opomIconUrl } from '@/assets/icons/iconUrls';
+import { opomIconUrl, sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import type { Auth } from '@/hooks/use-auth';
 import { getNavLinks } from '@/lib/use-get-nav-links';
@@ -56,7 +56,7 @@ function Navbar({ auth }: NavbarProps) {
             className={({ isActive }) =>
               `relative transition-colors duration-300 py-1 ${
                 isActive
-                  ? 'text-white after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-white'
+                  ? 'text-white  after:bg-white'
                   : 'text-white/60 hover:text-white'
               }`
             }
@@ -80,7 +80,7 @@ function Navbar({ auth }: NavbarProps) {
         ) : (
           <Button
             variant="secondary"
-            className="rounded-full px-6"
+            className="rounded-md px-6"
             onClick={() => goTo('/auth/sign-up')}
           >
             Create Account
@@ -90,11 +90,11 @@ function Navbar({ auth }: NavbarProps) {
 
       {/* Mobile Navigation Overlay */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[85vw] bg-black/95 backdrop-blur-md flex flex-col p-8 transition-transform duration-500 ease-in-out md:hidden z-[100] border-l border-white/10 ${
+        className={`fixed top-0 right-0 h-screen w-[85vw] bg-gray-800 flex flex-col p-4 transition-transform duration-500 ease-in-out md:hidden z-[100] border-l border-white/10 ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full '
         }`}
       >
-        <div className="flex w-full justify-between items-center mb-12">
+        <div className="flex w-full justify-between items-center mb-8 p-1.5 border-b border-white/15">
           <img src={opomIconUrl} alt="Logo" className="h-8" />
           <button
             onClick={closeMenu}
@@ -105,6 +105,14 @@ function Navbar({ auth }: NavbarProps) {
           </button>
         </div>
 
+        <div>
+          <img src={sampleUserImgUrl} />
+          <div>
+            <h4>User Name</h4>
+            <h3>Email</h3>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-y-8">
           {navLinks.map((link) => (
             <NavLink
@@ -112,7 +120,7 @@ function Navbar({ auth }: NavbarProps) {
               to={link.path}
               onClick={closeMenu}
               className={({ isActive }) =>
-                `text-3xl font-bold transition-colors ${
+                ` transition-colors ${
                   isActive ? 'text-white' : 'text-white/40'
                 }`
               }
@@ -126,7 +134,6 @@ function Navbar({ auth }: NavbarProps) {
           {!auth && (
             <Button
               variant="secondary"
-              size="lg"
               className="w-full text-lg h-14"
               onClick={() => {
                 goTo('/auth/sign-up');
