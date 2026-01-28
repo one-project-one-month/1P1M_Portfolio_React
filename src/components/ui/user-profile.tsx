@@ -7,7 +7,7 @@ type UserProfile = {
 const UserProfile = (Profile: UserProfile) => {
   return (
     <div>
-      <img src={Profile} />
+      <img src={Profile.img} />
     </div>
   );
 };
