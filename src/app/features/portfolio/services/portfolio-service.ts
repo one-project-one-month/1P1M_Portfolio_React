@@ -23,7 +23,7 @@ export const getProjectPortfolio = async ({
 }: GetPortfolioParamsType) => {
   try {
     const response = await apiClient.get<ApiResponseType<PortfolioProjectType>>(
-      API_ENDPOINTS.GET_ALL_PROJECTS,
+      '/portfolio/api/v2/project-portfolio',
       {
         params: { keyword, page, size, sortField, sortDirection },
       },
