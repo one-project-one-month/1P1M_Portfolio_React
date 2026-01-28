@@ -7,6 +7,7 @@ import {
   IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
+  NotFoundPage,
   PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
@@ -96,6 +97,11 @@ const router = createBrowserRouter([
         element: <PersonProfilePage />,
       },
     ],
+  },
+
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 
   ...authRoutes,
