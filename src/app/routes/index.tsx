@@ -15,6 +15,7 @@ import {
   UserManagementViewDetail,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
+import AboutUsPage from '../features/about-us/page';
 import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
 
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
+      { path: '/about us', element: <AboutUsPage /> },
     ],
   },
 
