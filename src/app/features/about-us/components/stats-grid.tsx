@@ -1,5 +1,4 @@
 const StatsGrid = () => {
-  // You can fetch this data from your API later
   const stats = [
     {
       label: 'SHIPPED PROJECTS',

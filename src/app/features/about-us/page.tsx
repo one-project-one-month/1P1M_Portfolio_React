@@ -63,6 +63,7 @@ const AboutUsPage = () => {
         </div>
       </section>
 
+      {/* Lead Section */}
       <section className="max-w-7xl mx-auto pt-24">
         <div className="flex flex-col lg:flex-row justify-between items-start mb-20">
           <div className="max-w-md mt-14">

@@ -1,10 +1,8 @@
 const AboutUsCard = () => {
   return (
     <div className="relative group">
-      {/* Background Layer: Tilts Left (Counter-clockwise) */}
       <div className="absolute inset-0 bg-purple-200/70 rounded-lg transform transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105"></div>
 
-      {/* Main Card: Tilts Right (Clockwise) */}
       <div className="relative flex flex-col p-4 bg-[#6F28B3] rounded-lg w-[400px] border border-white/10 shadow-2xl transition-transform duration-300 group-hover:rotate-2">
         <h1 className="text-xl font-bold text-white">Mission</h1>
 
