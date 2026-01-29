@@ -2,8 +2,8 @@ import FormWrapper from '@/components/ui/form-wrapper';
 import PasswordField from '@/components/ui/password-field';
 
 interface ResetPasswordFormProps {
-  passwordRef: React.RefObject<HTMLInputElement>;
-  cfmpasswordRef: React.RefObject<HTMLInputElement>;
+  passwordRef: React.RefObject<HTMLInputElement | null>;
+  cfmpasswordRef: React.RefObject<HTMLInputElement | null>;
   passwordError: string;
   cmfPasswordError: string;
   loading: boolean;

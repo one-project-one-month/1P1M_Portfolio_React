@@ -3,6 +3,7 @@ import {
   CalendarClock,
   ChartGanttIcon,
   FileText,
+  FileUser,
   HardDrive,
   SquareChartGantt,
   Users,
@@ -37,6 +38,12 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
   { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
+    id: 6,
+    name: 'OPOM Registered People List',
+    path: 'opom-registered-people-list',
+    icon: FileUser,
+  },
+  {
     id: 4,
     name: 'Portfolio Management',
     path: 'portfolio-management',
@@ -46,4 +53,4 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
 ];
 
-export const PROJECT_TYPE_OPTIONS = ['Mobile', 'Website', 'Desktop', 'Game'];
+export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];

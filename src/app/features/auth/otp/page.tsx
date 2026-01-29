@@ -39,17 +39,16 @@ export default function OtpPage() {
   };
 
   return (
-    <Background className="min-h-screen flex items-center justify-center p-4">
-      <FormBackground
-        className="flex items-center justify-center"
-        style={{ width: '600px', height: '400px' }}
-      >
-        <OtpForm
-          email={email || ''}
-          onVerifySuccess={handleVerifySuccess}
-          onMaxAttemptsExceeded={handleMaxAttempts}
-        />
-      </FormBackground>
+    <Background className="h-screen w-screen flex items-center justify-center p-4">
+      <div className="w-full h-screen flex justify-center items-center">
+        <FormBackground className="w-1/3">
+          <OtpForm
+            email={email || ''}
+            onVerifySuccess={handleVerifySuccess}
+            onMaxAttemptsExceeded={handleMaxAttempts}
+          />
+        </FormBackground>
+      </div>
     </Background>
   );
 }

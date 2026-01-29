@@ -4,8 +4,8 @@ import type { ApiResponseType } from '@/types/api-response.type';
 import type {
   GetPortfolioParamsType,
   PortfolioProjectType,
-  ProjectRequestBody,
 } from '@/types/portfolio.type';
+import type { ProjectData } from '../../portfolio-management/constants/data';
 
 export async function reactToProject(projectId: number) {
   const url = `${API_ENDPOINTS.REACT_PROJECT}?projectPortfolioId=${projectId}`;
@@ -23,7 +23,7 @@ export const getProjectPortfolio = async ({
 }: GetPortfolioParamsType) => {
   try {
     const response = await apiClient.get<ApiResponseType<PortfolioProjectType>>(
-      API_ENDPOINTS.GET_ALL_PROJECTS,
+      '/portfolio/api/v2/project-portfolio',
       {
         params: { keyword, page, size, sortField, sortDirection },
       },
@@ -46,7 +46,9 @@ export async function getProjectPortfolioDetails(projectId: string) {
   }
 }
 
-export async function createProjectPortfolio(requestBody: ProjectRequestBody) {
+export async function createProjectPortfolio(
+  requestBody: Partial<ProjectData>,
+) {
   try {
     const url = `${API_ENDPOINTS.GET_PROJECT_PORTFOLIO}`;
     const response = await apiClient.post(url, requestBody);

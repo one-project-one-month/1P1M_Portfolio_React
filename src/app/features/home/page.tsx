@@ -1,6 +1,5 @@
 import Curve from '@/styles/curve';
 import { useNavigate } from 'react-router-dom';
-import { ApprovedIdeasSection } from './components/approved-ideas';
 import type { CountdownItem } from './components/countdown-component';
 import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
@@ -95,7 +94,7 @@ export default function HomePage() {
       </section>
       {/* End About Section */}
       <FeaturedDevelopersSectionContainer />
-      <ApprovedIdeasSection />
+      {/* <ApprovedIdeasSection /> */}
     </div>
   );
 }
