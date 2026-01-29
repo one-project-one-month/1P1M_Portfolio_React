@@ -1,5 +1,4 @@
 import { useUserInfoStore } from '@/store/user-info-store';
-import { Spinner } from '@radix-ui/themes';
 import { Outlet } from 'react-router-dom';
 import Background from '../background';
 import Heading from '../heading';
@@ -8,11 +7,11 @@ import Sidebar from '../sidebar';
 const AdminLayout = () => {
   const user = useUserInfoStore.getState().userInfo;
 
-  if (!user) {
-    <div>
-      <Spinner></Spinner>
-    </div>;
-  }
+  // if (!user) {
+  //   <div>
+  //     <Spinner></Spinner>
+  //   </div>;
+  // }
 
   return (
     <Background className="w-full h-screen">
