@@ -8,6 +8,7 @@ import {
   IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
+  NotFoundPage,
   PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
@@ -16,6 +17,8 @@ import {
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import UserProfile from '../features/developers/components/user-profile';
+import OpomRegisteredPeopleList from '../features/opom-management/pages';
+import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
@@ -81,7 +84,20 @@ const router = createBrowserRouter([
 
       { path: 'timeline-management', element: <TimelineManagementPage /> },
       { path: 'admin-profile', element: <AdminProfilePage /> },
+      {
+        path: 'opom-registered-people-list',
+        element: <OpomRegisteredPeopleList />,
+      },
+      {
+        path: 'opom-registered-people-list/:id',
+        element: <PersonProfilePage />,
+      },
     ],
+  },
+
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 
   ...authRoutes,

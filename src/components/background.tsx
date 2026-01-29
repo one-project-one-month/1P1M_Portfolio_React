@@ -1,5 +1,6 @@
 import bg from '@/assets/image.png';
 import type { ComponentProps } from 'react';
+import InterActiveParticleOverlay from './core/interactive-particle-overlay';
 
 export default function Background({
   className,
@@ -19,7 +20,8 @@ export default function Background({
       }}
       {...props}
     >
-      <div className="relative z-10 h-screen w-full">{children}</div>
+      <InterActiveParticleOverlay className="absolute top-0 left-0" />
+      <div className="relative z-50 h-screen w-full">{children}</div>
     </div>
   );
 }

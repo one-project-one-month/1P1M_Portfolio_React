@@ -27,4 +27,9 @@ export const authRoutes: RouteObject[] = [
       { path: 'reset-password', element: <ResetPasswordPage /> },
     ],
   },
+
+  {
+    path: '/login/oauth2/code/github',
+    element: <SignupPage />,
+  },
 ];

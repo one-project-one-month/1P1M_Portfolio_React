@@ -16,6 +16,13 @@ export default function IdeaCreateForm({
   handleCreate: (formData: CreateProjectIdeaType) => void;
   isPending: boolean;
 }) {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
   return (
     <Dialog.Content className="bg-black! text-white px-14! py-10! rounded-3xl!">
       <div className="flex items-center justify-end mb-4">
@@ -32,71 +39,45 @@ export default function IdeaCreateForm({
       </Dialog.Description>
       <form
         className="mt-12 flex w-full flex-col gap-12"
-        onSubmit={form.handleSubmit(handleCreate)}
+        onSubmit={handleSubmit(handleCreate)}
       >
         <div className="space-y-10">
-          <Controller
-            control={form.control}
-            name="projectName"
-            rules={{
-              required: 'Project idea name is required',
-              minLength: { value: 2, message: 'Minimum 2 characters' },
-            }}
-            render={({ field, fieldState }) => (
-              <div>
-                <label className="mb-1 block text-sm font-semibold">
-                  Project Idea Name
-                </label>
-                <InputField
-                  type="text"
-                  placeholder="Enter your project name"
-                  value={field.value}
-                  onChange={field.onChange}
-                  className="w-full"
-                />
-                {fieldState.error?.message && (
-                  <p className="mt-2 text-sm font-bold text-red-500">
-                    {fieldState.error.message}
-                  </p>
-                )}
-              </div>
+          <div>
+            <label className="mb-1 block text-sm font-semibold">
+              Project Idea Name
+            </label>
+            <InputField
+              {...register('projectIdeaName')}
+              type="text"
+              placeholder="Enter your project name"
+              className="w-full"
+            />
+            {errors.projectIdeaName?.message && (
+              <p className="mt-2 text-sm font-bold text-red-500">
+                {errors.projectIdeaName?.message}
+              </p>
             )}
-          />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-semibold">
+              Description
+            </label>
+            <FormTextArea
+              {...register('description')}
+              placeholder="Provide details about your project"
+              className="h-32 w-full"
+            />
+            {errors.description?.message && (
+              <p className="mt-2 text-sm font-bold text-red-500">
+                {errors.description?.message}
+              </p>
+            )}
+          </div>
 
           <Controller
-            control={form.control}
-            name="description"
-            rules={{
-              required: 'Description is required',
-              minLength: { value: 10, message: 'Minimum 10 characters' },
-            }}
-            render={({ field, fieldState }) => (
-              <div>
-                <label className="mb-1 block text-sm font-semibold">
-                  Description
-                </label>
-                <FormTextArea
-                  placeholder="Provide details about your project"
-                  className="h-32 w-full"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-                {fieldState.error?.message && (
-                  <p className="mt-2 text-sm font-bold text-red-500">
-                    {fieldState.error.message}
-                  </p>
-                )}
-              </div>
-            )}
-          />
-
-          <Controller
-            control={form.control}
+            control={control}
             name="projectTypes"
-            rules={{
-              validate: (v) =>
-                v.length > 0 ? true : 'Select at least one project type',
-            }}
             render={({ field, fieldState }) => (
               <div>
                 <p className="mb-2 text-sm font-semibold">Project Type</p>
@@ -109,7 +90,7 @@ export default function IdeaCreateForm({
                       <button
                         key={type}
                         type="button"
-                        className="flex items-center gap-2 text-sm"
+                        className="flex items-center gap-2 text-sm capitalize"
                         onClick={() => {
                           const next = checked
                             ? field.value.filter((t) => t !== type)
@@ -160,6 +141,7 @@ export default function IdeaCreateForm({
               variant="primary"
               size="primary"
               className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
+              onClick={() => form.reset()}
               disabled={isPending}
             >
               Cancel
