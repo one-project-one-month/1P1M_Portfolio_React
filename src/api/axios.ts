@@ -49,7 +49,13 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await apiClient.post('/portfolio/api/v1/auth/users/refresh');
+        await apiClient.post(
+          '/portfolio/api/v1/auth/users/refresh',
+          {},
+          {
+            withCredentials: true,
+          },
+        );
 
         processQueue(null);
         return apiClient(originalRequest);
