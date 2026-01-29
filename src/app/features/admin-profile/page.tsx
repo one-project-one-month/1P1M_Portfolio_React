@@ -27,10 +27,10 @@ export default function ProfilePage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setValue('avatarFile', file, { shouldValidate: true });
+
       const localUrl = URL.createObjectURL(file);
       setValue('avatarUrl', localUrl);
-
-      setValue('avatarFile', file);
     }
   };
 
