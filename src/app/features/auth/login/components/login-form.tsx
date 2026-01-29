@@ -13,7 +13,7 @@ import TextField from './text-field';
 export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { setUserInfo } = useUserInfoStore();
@@ -63,7 +63,6 @@ export default function LoginForm() {
     if (emailErr || passwordErr) return;
 
     setLoading(true);
-    setError('');
 
     try {
       const response = await loginWithEmailPassword(email, password);
@@ -71,7 +70,6 @@ export default function LoginForm() {
       console.log('RES', response);
 
       if (!response.success || response.code >= 400) {
-        setError(response.message || 'Login failed');
         addToast(response.message, 'error', 3000);
       } else {
         const userInfo: UserInfo = {
@@ -94,7 +92,6 @@ export default function LoginForm() {
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);
-      setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
