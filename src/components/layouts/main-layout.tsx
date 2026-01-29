@@ -1,14 +1,13 @@
 import Background from '@/components/background';
 import Navbar from '@/components/navbar';
+import { useUserInfoStore } from '@/store/user-info-store';
+import { Spinner } from '@radix-ui/themes';
 import { Outlet } from 'react-router-dom';
 import Footer from '../footer';
-
-import { useAuth } from '@/hooks/use-auth';
-import { Spinner } from '@radix-ui/themes';
 export default function MainLayout() {
-  const { auth, isLoading } = useAuth();
+  const user = useUserInfoStore.getState().userInfo;
 
-  if (isLoading)
+  if (!user)
     return (
       <div className="flex w-screen h-screen justify-center items-center">
         <Spinner />
@@ -19,7 +18,7 @@ export default function MainLayout() {
     <Background>
       <div className="h-dvh w-dvw overflow-auto">
         <div className="w-11/12 mx-auto">
-          <Navbar auth={auth} />
+          <Navbar auth={user ?? null} />
         </div>
 
         <div className="w-11/12 mx-auto">
