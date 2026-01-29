@@ -3,6 +3,7 @@ import { FormField } from '@/app/features/admin-profile/components/form-field.ts
 import { InfoCard } from '@/app/features/admin-profile/components/info-card.tsx';
 import { useProfile } from '@/app/features/admin-profile/hooks/user-profile.ts';
 import { MinusCircle, Plus } from 'lucide-react';
+import React from 'react';
 import { FormProvider } from 'react-hook-form';
 
 export default function ProfilePage() {
@@ -17,6 +18,21 @@ export default function ProfilePage() {
     handleCancel,
     handleSubmit,
   } = useProfile();
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { setValue, watch } = form;
+
+  const avatarPreview = watch('avatarUrl') || 'https://i.pravatar.cc/300';
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
+      setValue('avatarUrl', localUrl);
+
+      setValue('avatarFile', file);
+    }
+  };
 
   return (
     <div className="relative min-h-screen font-sans text-white overflow-y-auto">
@@ -35,13 +51,24 @@ export default function ProfilePage() {
               {/* Left Column: Avatar & Basic Info */}
               <div className="col-span-12 md:col-span-4 xl:col-span-3">
                 <div className="bg-[#15192b] border border-gray-800 rounded-lg p-6 text-center sticky top-8">
-                  <div className="w-28 h-28 mx-auto bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl mb-4 overflow-hidden shadow-xl ring-4 ring-[#252841]">
+                  {/* Hidden File Input */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
+
+                  {/* Avatar Container */}
+                  <div className="w-28 h-28 mx-auto bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl mb-4 overflow-hidden shadow-xl ring-4 ring-[#252841] relative group">
                     <img
-                      src="https://i.pravatar.cc/300"
+                      src={avatarPreview}
                       alt="Avatar"
-                      className="w-full h-full object-cover opacity-90"
+                      className="w-full h-full object-cover opacity-90 transition-opacity group-hover:opacity-75"
                     />
                   </div>
+
                   <p className="text-green-400 text-sm font-medium mb-1 uppercase tracking-wide">
                     Admin
                   </p>
@@ -53,7 +80,8 @@ export default function ProfilePage() {
                   {isEditing && (
                     <button
                       type="button"
-                      className="mt-4 text-xs bg-[#252841] hover:bg-[#2b2f4a] text-white px-3 py-1.5 rounded border border-gray-700 transition-colors"
+                      onClick={() => fileInputRef.current?.click()} // Triggers the hidden input
+                      className="mt-4 text-xs bg-[#252841] hover:bg-[#a855f7]/20 hover:border-[#a855f7]/50 text-white px-3 py-1.5 rounded border border-gray-700 transition-all"
                     >
                       Change Avatar
                     </button>
@@ -119,15 +147,35 @@ export default function ProfilePage() {
                       ))}
                     </div>
                     {isEditing && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          append({ platform: 'New Platform', url: '' })
-                        }
-                        className="mt-2 w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#a855f7] bg-opacity-20 text-[#a855f7] hover:bg-opacity-30 transition-all font-medium text-sm"
-                      >
-                        <Plus size={16} /> Add Social Media Account
-                      </button>
+                      <div className="relative mt-4">
+                        <div className="group">
+                          {/* The Main Trigger Button */}
+                          <button
+                            type="button"
+                            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#a855f7] bg-opacity-20 text-white hover:bg-opacity-30 transition-all font-medium text-sm border border-[#a855f7]/30"
+                          >
+                            <Plus size={16} /> Add Social Media Account
+                          </button>
+
+                          {/* The Dynamic Dropdown Menu */}
+                          <div className="invisible group-hover:visible absolute top-full left-0 w-full mb-1 bg-[#252841] border border-gray-700 rounded-lg shadow-xl overflow-hidden z-50">
+                            {['Telegram', 'GitHub', 'Behance', 'LinkedIn'].map(
+                              (platform) => (
+                                <button
+                                  key={platform}
+                                  type="button"
+                                  onClick={() =>
+                                    append({ platform: platform, url: '' })
+                                  }
+                                  className="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-[#a855f7] hover:text-white transition-colors border-b border-gray-700/50 last:border-0"
+                                >
+                                  {platform}
+                                </button>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </InfoCard>
                 </div>
