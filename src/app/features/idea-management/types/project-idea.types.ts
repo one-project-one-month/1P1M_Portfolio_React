@@ -65,6 +65,7 @@ export type GetProjectIdeaParamsType = {
 };
 
 export type FilterType = {
+  order: string;
   status: string;
   search: string;
 };
