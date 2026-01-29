@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { loginWithEmailPassword } from '../services/api';
-
+import { useToast } from '@/components/ui/toast-provider';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useUserInfoStore, type UserInfo } from '@/store/user-info-store';
 import type { LoginResponse } from '@/types/auth';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { loginWithEmailPassword } from '../services/api';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -21,6 +21,7 @@ export default function LoginForm() {
   const { handleRoute } = useAppNavigation();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
+  const { addToast } = useToast();
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
@@ -67,29 +68,28 @@ export default function LoginForm() {
     try {
       const response = await loginWithEmailPassword(email, password);
 
-      if (!response.success || response.code >= 400) {
-        setError(response.message || 'Login failed');
-      }
-
       console.log('RES', response);
 
-      const userInfo: UserInfo = {
-        username: response.data?.username ?? '',
-        userId: response.data?.userId ?? 0,
-        role: response.data?.role ?? 'USER',
-        profile: null,
-        email: response.data?.email ?? '',
-      };
+      if (!response.success || response.code >= 400) {
+        setError(response.message || 'Login failed');
+        addToast(response.message, 'error', 10000);
+      } else {
+        const userInfo: UserInfo = {
+          username: response.data?.username ?? '',
+          userId: response.data?.userId ?? 0,
+          role: response.data?.role ?? 'USER',
+          profile: null,
+          email: response.data?.email ?? '',
+        };
 
-      console.log('USER INFO', userInfo);
-      console.log('Login successful:', response.data?.role);
+        setUserInfo(userInfo);
 
-      setUserInfo(userInfo);
-      console.log('Login successful:', response.data);
+        const data = response.data as LoginResponse;
 
-      const data = response.data as LoginResponse;
+        handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
+      }
 
-      handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
+      console.log(response.success);
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);
@@ -158,11 +158,11 @@ export default function LoginForm() {
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
-          {!showEmailError && !showPasswordError && error && (
+          {/* {!showEmailError && !showPasswordError && error && (
             <p className="text-red-500 text-xs mt-3 absolute bottom-[60px] left-[30%]">
               {error}
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Forgot password */}
