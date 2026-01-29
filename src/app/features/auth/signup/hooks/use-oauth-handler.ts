@@ -1,5 +1,6 @@
 import { useToast } from '@/components/ui/toast-provider';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { useUserInfoStore, type UserInfo } from '@/store/user-info-store';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { exchangeGitHub, exchangeGoogleCode } from '../services/api';
@@ -7,8 +8,9 @@ import { exchangeGitHub, exchangeGoogleCode } from '../services/api';
 export const useOAuthHandler = () => {
   const [searchParams] = useSearchParams();
   const { addToast } = useToast();
-  const { goTo } = useAppNavigation();
+  const { goTo, handleRoute } = useAppNavigation();
   const [isProcessing, setIsProcessing] = useState(false);
+  const { setUserInfo } = useUserInfoStore();
 
   const processedRef = useRef(false);
 
@@ -34,9 +36,18 @@ export const useOAuthHandler = () => {
       }
 
       if (response?.success) {
+        const user: UserInfo = {
+          role: response.data?.user.role.name,
+          email: response.data?.user.email,
+          userId: response.data?.user.email,
+          username: response.data?.user.username,
+          profile: response.data?.profile_picture,
+        };
+
+        setUserInfo(user);
         addToast(`Welcome back! Logged in with ${provider}`, 'success', 2000);
 
-        goTo('/');
+        handleRoute(user?.role ?? 'USER', response.data?.newUser);
       } else {
         throw new Error('Login failed');
       }
