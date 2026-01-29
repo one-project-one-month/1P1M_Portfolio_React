@@ -72,7 +72,7 @@ export default function LoginForm() {
 
       if (!response.success || response.code >= 400) {
         setError(response.message || 'Login failed');
-        addToast(response.message, 'error', 10000);
+        addToast(response.message, 'error', 3000);
       } else {
         const userInfo: UserInfo = {
           username: response.data?.username ?? '',
@@ -87,6 +87,7 @@ export default function LoginForm() {
         const data = response.data as LoginResponse;
 
         handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
+        addToast(response?.message, 'success', 3000);
       }
 
       console.log(response.success);
@@ -103,12 +104,12 @@ export default function LoginForm() {
     <>
       <FormBackground className="flex items-center justify-around flex-col w-fit h-fit">
         {/* Heading */}
-        <div className="text-white">
+        <div className="text-white text-center">
           <h1 className="font-sans font-bold text-2xl leading-8 mb-2">
             Sign In To Your Account
           </h1>
           <p className="font-sans text-sm text-[#99A1AF] w-full text-center mb-4">
-            Subtitle
+            Join thousands of others building the future together
           </p>
         </div>
 
