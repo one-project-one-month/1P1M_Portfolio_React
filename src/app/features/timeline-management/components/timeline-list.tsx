@@ -1,5 +1,5 @@
 import TimelineForm from '@/app/features/timeline-management/components/timeline-form.tsx';
-import type { Timeline } from '@/app/features/timeline-management/types.ts';
+import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
 import ConfirmationModal from '@/components/ui/confirm-modal.tsx';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';

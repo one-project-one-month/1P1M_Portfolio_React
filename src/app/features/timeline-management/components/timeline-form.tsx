@@ -1,4 +1,4 @@
-import type { Timeline } from '@/app/features/timeline-management/types.ts';
+import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
 import ModalWrapper from '@/components/modal-wrapper';
 import DatePicker from '@/components/ui/date-picker';
 import FormTextField from '@/components/ui/form-text-field.tsx';

@@ -1,6 +1,6 @@
 import SearchBox from '@/app/features/timeline-management/components/search-box.tsx';
 import { useTimeline } from '@/app/features/timeline-management/hooks/use-timeline.ts';
-import type { StatusOption } from '@/app/features/timeline-management/types.ts';
+import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
 import FilterAssets from '@/components/ui/filter-assets.tsx';
 import Pagination from '@/components/ui/pagination';
 import Title from '@/components/ui/title';
