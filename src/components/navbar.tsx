@@ -1,6 +1,7 @@
 import { opomIconUrl, sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { getNavLinks } from '@/lib/use-get-nav-links';
+import { logout } from '@/lib/utils';
 import type { UserInfo } from '@/store/user-info-store';
 import { X } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -107,16 +108,18 @@ function Navbar({ auth }: NavbarProps) {
           </button>
         </div>
 
-        <div className="flex gap-4  justify-start mx-2.5 items-center py-1">
-          <img
-            src={auth?.profile ?? sampleUserImgUrl}
-            className="size-13 rounded-full"
-          />
-          <div className="text-white">
-            <h4 className="font-medium text-xl">{auth?.username}</h4>
-            <h3 className="font-light">{auth?.email}</h3>
+        {auth && (
+          <div className="flex gap-4  justify-start mx-2.5 items-center py-1">
+            <img
+              src={auth?.profile ?? sampleUserImgUrl}
+              className="size-13 rounded-full"
+            />
+            <div className="text-white">
+              <h4 className="font-medium text-xl">{auth?.username}</h4>
+              <h3 className="font-light">{auth?.email}</h3>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex flex-col gap-y-3 ">
           {navLinks.map((link) => (
@@ -134,16 +137,27 @@ function Navbar({ auth }: NavbarProps) {
 
           <hr className="border-white/10 my-4" />
 
-          {!auth && (
+          {!auth ? (
+            <div className="flex justify-center mx-2">
+              <Button
+                variant="secondary"
+                className="w-full text-lg h-14"
+                onClick={() => {
+                  goTo('/auth/sign-up');
+                  closeMenu();
+                }}
+              >
+                Create Account
+              </Button>
+            </div>
+          ) : (
             <Button
-              variant="secondary"
-              className="w-full text-lg h-14"
-              onClick={() => {
-                goTo('/auth/sign-up');
-                closeMenu();
-              }}
+              variant="black_small_button"
+              size={'black_small_button'}
+              onClick={logout}
+              className="text-white ms-4"
             >
-              Create Account
+              Logout
             </Button>
           )}
         </div>
