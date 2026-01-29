@@ -19,7 +19,6 @@ export const FormField = ({
     register,
     formState: { errors },
   } = useFormContext();
-  const error = errors[name]?.message as string | undefined;
 
   const getNestedError = (path: string, errorObj: any) => {
     return path.split('.').reduce((obj, key) => obj && obj[key], errorObj);
