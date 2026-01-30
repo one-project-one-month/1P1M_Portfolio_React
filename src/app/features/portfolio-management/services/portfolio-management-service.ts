@@ -158,14 +158,21 @@ export const getAllProjectPortfolios = async (
   size = 10,
   sortDirection = 'desc',
   keyword = '',
+  orderFilter?: string,
 ) => {
+  const params: Record<string, any> = {
+    page,
+    size,
+    sortDirection,
+    keyword,
+  };
+
+  if (orderFilter && orderFilter !== 'All') {
+    params.orderFilter = orderFilter.toLowerCase();
+  }
+
   const response = await apiClient.get(API_ENDPOINTS.GET_PROJECT_V2, {
-    params: {
-      page,
-      size,
-      sortDirection,
-      keyword,
-    },
+    params,
   });
   return response.data;
 };

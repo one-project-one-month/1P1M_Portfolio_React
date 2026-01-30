@@ -23,6 +23,7 @@ interface ProjectActionMenuProps {
     | 'left-start'
     | 'right-start';
   triggerClassName?: string;
+  triggerIcon?: React.ReactNode;
 }
 
 export const ProjectActionMenu = forwardRef<
@@ -40,6 +41,7 @@ export const ProjectActionMenu = forwardRef<
       onStatusChange,
       menuPosition = 'bottom-right',
       triggerClassName = 'p-1 hover:bg-white/10 rounded-full transition-colors text-white/70 hover:text-white',
+      triggerIcon,
     },
     ref,
   ) => {
@@ -89,7 +91,7 @@ export const ProjectActionMenu = forwardRef<
           }}
           className={triggerClassName}
         >
-          <MoreHorizontal className="w-5 h-5" color="white" />
+          {triggerIcon || <MoreHorizontal className="w-5 h-5" color="white" />}
         </button>
 
         {isOpen && (

@@ -1,4 +1,8 @@
 import type { ProjectData } from '../constants/data';
+import {
+  getTeamLeaderFromMembers,
+  mapBackendToFrontendStatus,
+} from './status-mapping';
 
 export const getMemberCount = (members: any[]): number => members.length;
 
@@ -13,19 +17,30 @@ export const getDisplayMembers = (members: any[], limit: number = 3) => {
 };
 
 export const mapApiToProjectData = (item: any): ProjectData => {
+  const allMembers = item.teams
+    ? item.teams.flatMap((t: any) => t.members)
+    : [];
+
   return {
     id: item.id,
-    leader: item.teams?.[0]?.members?.[0]?.name || 'Unknown Leader',
+    leader: getTeamLeaderFromMembers(allMembers),
     title: item.name,
     projectName: item.name,
-    status: item.status || 'In Progress',
-    members: item.teams ? item.teams.flatMap((t: any) => t.members) : [],
+    status: mapBackendToFrontendStatus(item.status),
+    members: allMembers.map((m: any) => ({
+      ...m,
+      role:
+        m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+        m.roleInTeam?.toUpperCase() === 'LEADER'
+          ? 'Team Leader'
+          : 'Member',
+    })),
     image: item.projectPicUrl || '',
-    startDate: '2024-01-01', // Fallback
-    completedDate: null,
+    startDate: item.startDate || '2024-01-01',
+    completedDate: item.completedDate || null,
     technologies:
       item.languageAndTools?.map((t: any) => ({
-        projectType: { id: 0, name: t.type },
+        projectType: { id: t.id || 0, name: t.type },
         languages: t.name,
       })) || [],
     teams:
@@ -33,10 +48,20 @@ export const mapApiToProjectData = (item: any): ProjectData => {
         id: t.id?.toString() || '',
         name: t.teamName || t.name || 'Unnamed Team',
         count: t.members?.length || 0,
-        members: t.members || [],
+        members:
+          t.members?.map((m: any) => ({
+            ...m,
+            role:
+              m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+              m.roleInTeam?.toUpperCase() === 'LEADER'
+                ? 'Team Leader'
+                : 'Member',
+          })) || [],
       })) || [],
     description: item.description || '',
     projectLink: item.projectLink || '',
     repoLink: item.repoLink || '',
+    reactCount: item.reactCount || 0,
+    viewCount: item.viewCount || 0,
   };
 };

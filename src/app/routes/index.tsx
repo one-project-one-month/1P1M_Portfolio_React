@@ -21,6 +21,7 @@ import PersonProfilePage from '../features/opom-management/pages/person-details'
 import OpomRegisterPage from '../features/opom-register/page';
 import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
+import EditActivityPage from '../features/portfolio-management/pages/edit-activity';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
@@ -73,6 +74,11 @@ const router = createBrowserRouter([
       {
         path: 'portfolio-management/edit-portfolio/:projectId',
         element: <EditPortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
+      },
+      {
+        path: 'portfolio-management/edit-activity/:projectId',
+        element: <EditActivityPage />,
         errorElement: <PortfolioErrorBoundary />,
       },
       { path: 'idea-management', element: <IdeaManagementPage /> },

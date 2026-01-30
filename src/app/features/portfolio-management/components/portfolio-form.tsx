@@ -1,7 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import FileUpload from '@/components/ui/file-upload';
+import { ChevronLeft, Loader2 } from 'lucide-react';
+import React, { useRef } from 'react';
 import type { ProjectData } from '../constants/data';
 import { usePortfolioForm } from '../hooks/use-portfolio-form';
+import { useUploadImage } from '../hooks/use-upload-image';
+import { ActivityRecordsSection } from './form/activity-records-section';
 import { PortfolioBasicInfo } from './form/portfolio-basic-info';
 import { PortfolioLinkSection } from './form/portfolio-link-section';
 import { PortfolioTeamSection } from './form/portfolio-team-section';
@@ -24,6 +28,8 @@ const PortfolioForm = ({
   onCancel,
   onClose,
 }: PortfolioFormProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const {
     form,
     isReadOnly,
@@ -40,36 +46,95 @@ const PortfolioForm = ({
     handleSaveTeamMembers,
     handleRemoveTeam,
     handleUpdateTeam,
-    getTitle,
+
     getModalTeamName,
     getModalInitialMembers,
   } = usePortfolioForm({ mode, initialData, onSave });
 
+  const projectImage = form.watch('projectImage');
+
+  const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadImage(file, {
+        onSuccess: (imageUrl) => {
+          form.setValue('projectImage', imageUrl);
+        },
+        onError: (error) => {
+          console.error('Image upload failed', error);
+        },
+      });
+    }
+  };
+
+  const triggerFileUpload = () => {
+    if (!isReadOnly) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleBack = () => {
+    if (onCancel) {
+      onCancel();
+    } else if (onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="mx-auto w-full">
-      <div className=" rounded-lg border border-[#FFFFFF]/15 p-6 flex flex-col max-h-[87vh] bg-[rgba(255,255,255,0.09)]">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-semibold text-[#F9FAFB]">{getTitle()}</h1>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/70 hover:text-white"
-            >
-              <X size={20} />
-            </button>
-          )}
+    <div className="py-6">
+      {/* Back Button */}
+      <button
+        onClick={handleBack}
+        className="flex items-center gap-1 mb-6 w-fit hover:opacity-80 transition-opacity"
+      >
+        <ChevronLeft className="w-8 h-8 text-[#F3F4F6]" strokeWidth={3} />
+        <span className="text-white text-2xl font-semibold">Back</span>
+      </button>
+
+      {/* Main Content */}
+      <div className="flex gap-12 items-start">
+        {/* Project Image */}
+        <div className="flex flex-col items-center gap-5 w-[253px] shrink-0">
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
+          <div
+            className={`w-full h-[253px] bg-[#D9D9D9] rounded-3xl overflow-hidden flex items-center justify-center ${!isReadOnly && !isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+            onClick={triggerFileUpload}
+          >
+            {isUploading ? (
+              <div className="flex flex-col items-center gap-2">
+                <Loader2 className="w-8 h-8 text-[#9C39FC] animate-spin" />
+                <span className="text-sm text-gray-600">Uploading...</span>
+              </div>
+            ) : projectImage || initialData?.image ? (
+              <img
+                src={projectImage || initialData?.image || ''}
+                alt="Project preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <FileUpload className="pointer-events-none" />
+            )}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-6 pl-1 custom-scrollbar space-y-6">
-          <div className="h-px bg-[#FFFFFF]/15" />
-
+        {/* Form Section */}
+        <div className="flex-1 flex flex-col gap-10 max-w-[836px]">
           <PortfolioBasicInfo
             initialData={initialData}
             form={form}
             isReadOnly={isReadOnly}
           />
 
-          <div className="h-px bg-[#FFFFFF]/15" />
+          <PortfolioLinkSection form={form} isReadOnly={isReadOnly} />
 
           <PortfolioTypeLang
             form={form}
@@ -78,8 +143,6 @@ const PortfolioForm = ({
             onRemoveTechnology={handleRemoveTechnology}
             isReadOnly={isReadOnly}
           />
-
-          <div className="h-px bg-[#FFFFFF]/15" />
 
           <PortfolioTeamSection
             form={form}
@@ -95,12 +158,9 @@ const PortfolioForm = ({
             getModalInitialMembers={getModalInitialMembers}
           />
 
-          <div className="h-px bg-[#FFFFFF]/15" />
+          {isReadOnly && <ActivityRecordsSection projectId={initialData?.id} />}
 
-          <PortfolioLinkSection form={form} isReadOnly={isReadOnly} />
-
-          <div className="h-px bg-[#FFFFFF]/15" />
-
+          {/* Action Buttons */}
           <div className="flex justify-end gap-4 pb-4">
             {isReadOnly ? (
               <Button
@@ -112,7 +172,7 @@ const PortfolioForm = ({
             ) : (
               <>
                 <Button
-                  className="text-white border border-[#FFFFFF]/15 hover:bg-white/10 px-8 bg-transparent"
+                  className="text-white border border-white/15 hover:bg-white/10 px-8 bg-transparent"
                   onClick={onCancel || onClose}
                 >
                   Cancel

@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react';
+import type { OrderFilterOption } from '../components/status-filter-dropdown';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
 import { mapApiToProjectData } from '../utils/helpers';
 import { useDeleteProject, useGetAllProjects } from './use-portfolio-query';
 
-const ITEMS_PER_PAGE = 10; // Matched with default API size
+const ITEMS_PER_PAGE = 10;
 
 export const usePortfolioManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | null>(null);
+  const [orderFilter, setOrderFilter] = useState<OrderFilterOption>('All');
   const [currentPage, setCurrentPage] = useState(0);
   const [portfolioData, setPortfolioData] = useState<ProjectData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
   const {
     data: response,
     isLoading,
     refetch,
-  } = useGetAllProjects(currentPage, ITEMS_PER_PAGE, 'desc', searchQuery);
+  } = useGetAllProjects(
+    currentPage,
+    ITEMS_PER_PAGE,
+    'desc',
+    searchQuery,
+    orderFilter,
+  );
 
   const deleteProjectMutation = useDeleteProject();
 
@@ -46,6 +55,11 @@ export const usePortfolioManagement = () => {
     setCurrentPage(0);
   };
 
+  const handleOrderFilter = (order: OrderFilterOption) => {
+    setOrderFilter(order);
+    setCurrentPage(0);
+  };
+
   const clearStatusFilter = () => {
     setStatusFilter(null);
     setCurrentPage(0);
@@ -72,21 +86,28 @@ export const usePortfolioManagement = () => {
   const resetData = () => {
     setSearchQuery('');
     setStatusFilter(null);
+    setOrderFilter('All');
     setCurrentPage(0);
 
     refetch();
   };
 
+  const filteredData = statusFilter
+    ? portfolioData.filter((project) => project.status === statusFilter)
+    : portfolioData;
+
   return {
-    paginatedData: portfolioData,
+    paginatedData: filteredData,
     totalCount,
     totalPages,
     currentPage,
     searchQuery,
     statusFilter,
+    orderFilter,
     setCurrentPage,
     handleSearch,
     handleStatusFilter,
+    handleOrderFilter,
     clearStatusFilter,
     deleteProject,
     updateProject,

@@ -47,6 +47,8 @@ export interface ProjectData {
   teams: TeamData[];
   projectLink?: string;
   repoLink?: string;
+  reactCount?: number;
+  viewCount?: number;
 }
 
 // Project Types available in the form
