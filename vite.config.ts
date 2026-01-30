@@ -7,15 +7,17 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 
-  // server: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'https://test-api.one-project-one-month.com',
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ''),
-  //     },
-  //   },
-  // },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://test-api.one-project-one-month.com',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        cookieDomainRewrite: 'localhost',
+      },
+    },
+  },
   resolve: {
     alias: {
       // Alias '@' to the 'src' directory

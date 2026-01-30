@@ -1,15 +1,16 @@
 import { opomIconUrl, sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
-import type { Auth } from '@/hooks/use-auth';
 import { getNavLinks } from '@/lib/use-get-nav-links';
-import { UserIcon, X } from 'lucide-react';
+import { logout } from '@/lib/utils';
+import type { UserInfo } from '@/store/user-info-store';
+import { X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CustomHamburger from './custom-hamburger';
 import { Button } from './ui/button';
 
 interface NavbarProps {
-  auth: Auth; // Lowercase 'auth' is more conventional for prop names
+  auth: UserInfo | null;
 }
 
 function Navbar({ auth }: NavbarProps) {
@@ -70,11 +71,13 @@ function Navbar({ auth }: NavbarProps) {
       <div className="hidden md:flex items-center gap-3">
         {auth ? (
           <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-              <UserIcon size={20} color="white" />
-            </div>
+            <img
+              src={auth?.profile ?? sampleUserImgUrl}
+              className="size-12 rounded-full"
+            />
+
             <h3 className="text-white text-sm font-semibold">
-              {auth.username}
+              {auth?.username}
             </h3>
           </div>
         ) : (
@@ -90,12 +93,12 @@ function Navbar({ auth }: NavbarProps) {
 
       {/* Mobile Navigation Overlay */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[85vw] bg-gray-800 flex flex-col p-4 transition-transform duration-500 ease-in-out md:hidden z-[100] border-l border-white/10 ${
+        className={`fixed top-0 right-0 h-screen w-[85vw] bg-gray-900 flex flex-col gap-y-4 transition-transform duration-500 ease-in-out md:hidden z-[100] border-l border-white/10 ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full '
         }`}
       >
-        <div className="flex w-full justify-between items-center mb-8 p-1.5 border-b border-white/15">
-          <img src={opomIconUrl} alt="Logo" className="h-8" />
+        <div className="flex w-full justify-between items-center  mb-2 p-1.5  border-b border-white/15">
+          <img src={opomIconUrl} alt="Logo" className="ms-2" />
           <button
             onClick={closeMenu}
             className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
@@ -105,24 +108,27 @@ function Navbar({ auth }: NavbarProps) {
           </button>
         </div>
 
-        <div>
-          <img src={sampleUserImgUrl} />
-          <div>
-            <h4>User Name</h4>
-            <h3>Email</h3>
+        {auth && (
+          <div className="flex gap-4  justify-start mx-2.5 items-center py-1">
+            <img
+              src={auth?.profile ?? sampleUserImgUrl}
+              className="size-13 rounded-full"
+            />
+            <div className="text-white">
+              <h4 className="font-medium text-xl">{auth?.username}</h4>
+              <h3 className="font-light">{auth?.email}</h3>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="flex flex-col gap-y-8">
+        <div className="flex flex-col gap-y-3 ">
           {navLinks.map((link) => (
             <NavLink
               key={link.id}
               to={link.path}
               onClick={closeMenu}
               className={({ isActive }) =>
-                ` transition-colors ${
-                  isActive ? 'text-white' : 'text-white/40'
-                }`
+                `flex text-white py-3 px-4  items-center w-full  transition-colors duration-300 ${isActive ? 'border-l-4 text-gray-800 border-l-[#9C39FC] bg-[#1D293D]/80 ' : 'text-white/60 hover:text-white'}`
               }
             >
               {link.name}
@@ -131,16 +137,27 @@ function Navbar({ auth }: NavbarProps) {
 
           <hr className="border-white/10 my-4" />
 
-          {!auth && (
+          {!auth ? (
+            <div className="flex justify-center mx-2">
+              <Button
+                variant="secondary"
+                className="w-full text-lg h-14"
+                onClick={() => {
+                  goTo('/auth/sign-up');
+                  closeMenu();
+                }}
+              >
+                Create Account
+              </Button>
+            </div>
+          ) : (
             <Button
-              variant="secondary"
-              className="w-full text-lg h-14"
-              onClick={() => {
-                goTo('/auth/sign-up');
-                closeMenu();
-              }}
+              variant="black_small_button"
+              size={'black_small_button'}
+              onClick={logout}
+              className="text-white ms-4"
             >
-              Create Account
+              Logout
             </Button>
           )}
         </div>
