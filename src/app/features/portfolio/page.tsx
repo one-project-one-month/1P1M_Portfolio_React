@@ -2,7 +2,7 @@ import Title from '@/components/ui/title';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSortDirection } from '../../../lib/get-sort-direction';
-import PortfolioSectionContainer from './components/portfolio-section-container';
+import PortfolioSectionContainer from './container/portfolio-section-container';
 
 const Portfolio = () => {
   const filterOptions = ['Popular', 'Newest', 'Oldest'];

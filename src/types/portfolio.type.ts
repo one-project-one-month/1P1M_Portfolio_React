@@ -24,8 +24,8 @@ export type PortfolioProjectType = {
   projectLink: string;
   repoLink: string;
   reaction_count?: number;
-  assignedDevs: {
-    developers: DeveloperType[];
+  teams: {
+    members: DeveloperType[];
   };
   view_count?: number;
   reactedProjectPortfolios: number[];
@@ -67,19 +67,14 @@ export type ProjectPortfolioDetailType = {
 };
 
 export interface ProjectRequestBody {
-  // name: string;
-  // description: string;
-  // projectLink?: string;
-  // repoLink?: string;
-  // languageAndTools: string[];
-  // developerEmails: string[];
-  projectName: string;
+  name: string;
   description: string;
   startDate: string;
   completedDate: string;
   status: string;
-  technologies: string;
-  teams: string;
+  languageAndTools: string[];
+  teamIds: string[];
   projectLink: string;
+  repoLink: string;
   image: string;
 }
