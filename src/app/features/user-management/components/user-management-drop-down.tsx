@@ -6,9 +6,10 @@ import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { Link } from 'react-router-dom';
 export const UserManagementDropDown = ({
   type,
-
+  userId,
   handleEdit,
   handleViewDetail,
+  handleBanned,
 }: UserManagementTableType) => {
   return (
     <DropdownMenu.Root>
@@ -29,11 +30,12 @@ export const UserManagementDropDown = ({
       </DropdownMenu.Trigger>
       <DropdownMenu.Content color="gray" variant="soft">
         <UserManagementEdit
+          userId={userId}
           trigger={
             <DropdownMenu.Item
               onSelect={(e) => {
                 e.preventDefault();
-                handleEdit(1);
+                handleEdit(userId);
               }}
             >
               {' '}
@@ -44,8 +46,8 @@ export const UserManagementDropDown = ({
 
         <DropdownMenu.Item>
           <Link
-            to="/admin/register-user/view-detail"
-            onClick={() => handleViewDetail(1)}
+            to={`view-detail/${userId}`}
+            onClick={() => handleViewDetail(userId)}
           >
             View Details
           </Link>
@@ -56,7 +58,7 @@ export const UserManagementDropDown = ({
             <DropdownMenu.Item
               onSelect={(e) => {
                 e.preventDefault();
-                handleEdit(1);
+                handleBanned(userId);
               }}
             >
               {' '}

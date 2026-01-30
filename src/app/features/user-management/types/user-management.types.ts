@@ -7,13 +7,23 @@ export const UserManagementStatus = {
 } as const;
 
 export const userManagementSchema = z.object({
-  id: z.number(),
+  userId: z.number(),
   name: z.string(),
   email: z.string(),
-  telegram: z.string(),
-  github: z.string(),
-  linkedIn: z.string(),
+  telegramUsername: z.string(),
+  githubUrl: z.string(),
+  linkedUrl: z.string(),
   status: z.enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED]),
+});
+
+export const editUserManagementShema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  email: z.string().email('Invalid email address'),
+  role: z.string().min(1, 'Role is required'),
+});
+
+export const deleteUserManagementSchema = userManagementSchema.pick({
+  userId: true,
 });
 
 export type GetUserManagementParamsType = {
@@ -40,6 +50,7 @@ export type UserManagementTableType = {
   status?: any;
   type?: 'list' | 'grid';
   data?: any;
+
   handleEdit: (id: number) => void;
   handleViewDetail: (id: number) => void;
   handleBanned: (id: number) => void;
@@ -53,8 +64,14 @@ export type UserManagementHeaderType = {
   setSelectedFilter: (filter: string) => void;
 };
 
+export type DeleteUserManagementType = z.infer<
+  typeof deleteUserManagementSchema
+>;
 export type UserManagementType = z.infer<typeof userManagementSchema>;
 
 export type UserManagementResponseType = ApiResponseType<UserManagementType[]>;
 export type UserManagementByIdResponseType =
   ApiResponseType<UserManagementType>;
+export type EditUserManagementType = z.infer<typeof editUserManagementShema>;
+export type DeleteUserManagementResponseType =
+  ApiResponseType<DeleteUserManagementType>;

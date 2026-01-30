@@ -1,24 +1,66 @@
 import Button from '@/app/features/auth/login/components/button';
+import {
+  useEditUserManagement,
+  useGetUserManagementDetail,
+} from '@/app/features/user-management/hook/use-user-management';
+import { type EditUserManagementType } from '@/app/features/user-management/types/user-management.types';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
-import { TechStacks } from '@/constants';
 import { Dialog } from '@radix-ui/themes';
-import { type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import PhoneInput from 'react-phone-input-2';
 type UserManagementEditDialogProps = {
   trigger?: ReactNode;
+  userId: number;
 };
 
-const UserManagementEdit = ({ trigger }: UserManagementEditDialogProps) => {
-  const { control, handleSubmit } = useForm({});
+const UserManagementEdit = ({
+  trigger,
+  userId,
+}: UserManagementEditDialogProps) => {
+  const { mutate: editUser, isPending } = useEditUserManagement();
+  const { data: userDetail } = useGetUserManagementDetail(userId);
+  const { control, handleSubmit, reset } = useForm<EditUserManagementType>({
+    defaultValues: {
+      username: '',
+      email: '',
+      role: '',
+    },
+  });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  useEffect(() => {
+    if (userDetail?.data) {
+      reset({
+        username: userDetail.data.username,
+        email: userDetail.data.email,
+        role: userDetail.data.role,
+      });
+    }
+  }, [userDetail, reset]);
+
+  const onSubmit = (data: EditUserManagementType) => {
+    editUser({
+      id: userId,
+      data: {
+        username: data.username,
+        email: data.email,
+        role: data.role,
+      },
+    });
   };
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      onOpenChange={(open) => {
+        if (open && userDetail?.data) {
+          reset({
+            username: userDetail.data.username,
+            email: userDetail.data.email,
+            role: userDetail.data.role,
+          });
+        }
+      }}
+    >
       <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
 
       <Dialog.Content
@@ -42,7 +84,7 @@ const UserManagementEdit = ({ trigger }: UserManagementEditDialogProps) => {
                 />
                 <div className="w-full flex flex-col gap-[24px]">
                   <Controller
-                    name="name"
+                    name="username"
                     control={control}
                     render={({ field }) => (
                       <FormField placeholder="Bora" {...field} />
@@ -55,14 +97,22 @@ const UserManagementEdit = ({ trigger }: UserManagementEditDialogProps) => {
                     render={({ field }) => (
                       <FormDropdown
                         placeholder="Role"
-                        menuList={TechStacks}
-                        selectedValue={field.value}
+                        // menuList={TechStacks}
+                        // selectedValue={field.value}
                         onChange={field.onChange}
                       />
                     )}
                   />
 
                   <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <FormField placeholder="Email" {...field} />
+                    )}
+                  />
+
+                  {/* <Controller
                     name="phone"
                     control={control}
                     rules={{ required: 'Phone number is required' }}
@@ -100,18 +150,20 @@ const UserManagementEdit = ({ trigger }: UserManagementEditDialogProps) => {
                         {...field}
                       />
                     )}
-                  />
+                  /> */}
 
-                  <Controller
+                  {/* <Controller
                     name="linkedin"
                     control={control}
                     render={({ field }) => (
                       <FormField placeholder="something" {...field} />
                     )}
-                  />
+                  /> */}
                   <div className="flex justify-between">
                     <Button className="w-[40%]">Cancel</Button>
-                    <Button className="w-[40%]">Update</Button>
+                    <Button className="w-[40%]">
+                      {isPending ? 'Updating....' : 'Update'}
+                    </Button>
                   </div>
                 </div>
               </div>

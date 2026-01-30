@@ -1,19 +1,25 @@
+import { getUserManagementDetailById } from '@/app/features/user-management/services/user-management.service';
 import ArrowLeft from '@/assets/icons/arrowLeft.svg';
-import Eye from '@/assets/icons/eye.png';
-import Heart from '@/assets/icons/Heart.png';
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
-import Image from '@/assets/project-image.png';
-
 import Behance from '@/assets/icons/behance.png';
 import Copy from '@/assets/icons/copy.png';
 import Email from '@/assets/icons/Email.png';
+import Eye from '@/assets/icons/eye.png';
 import Github from '@/assets/icons/GitHub.png';
+import Heart from '@/assets/icons/Heart.png';
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import LinkedIn from '@/assets/icons/Linkedin.png';
 import Phone from '@/assets/icons/Phone.png';
 import Telegram from '@/assets/icons/Telegram.png';
-import { Link } from 'react-router-dom';
+import Image from '@/assets/project-image.png';
+import { useQuery } from '@tanstack/react-query';
+import { Link, useParams } from 'react-router-dom';
 
 const UserManagementViewDetail = () => {
+  const { id } = useParams<{ id: string }>();
+  const { data, isLoading } = useQuery({
+    queryKey: ['user-management-detail', id],
+    queryFn: () => getUserManagementDetailById(Number(id)),
+  });
   const projectList = [
     {
       name: 'ERP Management System',
@@ -41,6 +47,10 @@ const UserManagementViewDetail = () => {
     },
   ];
 
+  if (isLoading) return <div>loading details...</div>;
+
+  const user = data?.data;
+
   return (
     <div className="w-full">
       <div className="flex flex-col gap-[38px]">
@@ -58,7 +68,7 @@ const UserManagementViewDetail = () => {
             />
             <div className="flex flex-col gap-1">
               <p className="text-[#FFFFFF] font-semibold text-base leading-7">
-                Cameron Williamson
+                {user?.username || 'Cameron Williamson'}
               </p>
               <p className="text-[#99A1AF] leading-5 text-sm ">Front end</p>
               <div className="flex  items-center  gap-3">

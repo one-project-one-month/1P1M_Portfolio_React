@@ -3,8 +3,13 @@ import type { UserManagementTableType } from '@/app/features/user-management/typ
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 
 const truncate = (text: string, max = 25) =>
-  text.length > max ? text.slice(0, max) + '...' : text;
+  (text ?? '').length > max ? text.slice(0, max) + '...' : text;
 
+const emailText = (text: string, max = 10) =>
+  (text ?? '').length > max ? text.slice(0, max) + '...' : text;
+
+const nameText = (text: string, max = 6) =>
+  (text ?? '').length > max ? text.slice(0, max) + '...' : text;
 const statusColor: Record<UserManagementTableType['status'], string> = {
   APPROVED: '#7CCF00',
   BANNED: '#A6A09B',
@@ -46,33 +51,33 @@ const UserManagement = ({
                 // key={idea.id}
                 className="hover:bg-slate-800/40"
               >
-                <td className="py-4 text-center text-slate-400">{user.id}</td>
-                <td className="py-4 ">
-                  <div className="flex  items-center gap-3">
+                <td className="py-4 text-center text-sm  text-slate-400">
+                  {user.userId}
+                </td>
+                <td className="py-4 w-full  flex justify-center items-center">
+                  <div className="flex items-center justify-center   gap-3">
                     <img
                       src={sampleUserImgUrl}
-                      className="size-10 rounded-full object-cover"
+                      className="size-10 rounded-full  object-cover"
                     />
                     <span className=" text-slate-400 text-sm font-semibold">
-                      {user.name}
+                      {nameText(user.name)}
                     </span>
                   </div>{' '}
                 </td>
-                <td className="py-4 text-center text-slate-400">
-                  {user.email}
+                <td className="py-4 text-center text-sm  text-slate-400">
+                  {emailText(user.email)}
                 </td>
-                <td className="py-4 text-center text-slate-400">
-                  {user.telegram} <span>@mohmoh</span>
+                <td className="py-4 text-center text-sm  text-slate-400">
+                  {user.telegramUsername === null
+                    ? '@jonDoe'
+                    : user.telegramUsername}
                 </td>
-                <td className="py-4 text-center text-slate-400">
-                  {user.github
-                    ? truncate(user.github, 15)
-                    : truncate(`https://github.com/MohMohAung-devo`, 15)}
+                <td className="py-4 text-center text-sm  text-slate-400">
+                  {truncate(user.githubUrl)}
                 </td>
-                <td className="py-4 text-center text-slate-400">
-                  {user.github
-                    ? truncate(user.linkedIn, 15)
-                    : truncate(`https://github.com/MohMohAung-devo`, 15)}
+                <td className="py-4 text-center text-sm  text-slate-400">
+                  {truncate(user.linkedUrl)}
                 </td>
                 <td className="py-4 text-center text-sm">
                   <span
@@ -82,12 +87,13 @@ const UserManagement = ({
                     Approved
                   </span>
                 </td>
-                <td className="py-4 text-center relative">
+
+                <td className="py-4 text-center relative" key={user.userId}>
                   <UserManagementDropDown
                     // type="list"
-
-                    handleEdit={handleEdit}
-                    handleViewDetail={handleViewDetail}
+                    userId={user.userId}
+                    handleEdit={() => handleEdit(user.userId)}
+                    handleViewDetail={() => handleViewDetail(user.userId)}
                     handleBanned={handleBanned}
                     handleRestore={handleRestore}
                   />
