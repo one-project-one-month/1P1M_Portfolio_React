@@ -49,7 +49,7 @@ export const UserPortfolioTypeLang = ({
             <div className="space-y-1 w-[200px]">
               {isReadOnly ? (
                 <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
-                  {form.watch(`technologies.${index}.projectType`)?.name || '-'}
+                  {form.watch(`technologies.${index}.projectType`) || '-'}
                 </p>
               ) : (
                 <Controller
@@ -69,10 +69,18 @@ export const UserPortfolioTypeLang = ({
                         { id: 8, name: 'Game Developer' },
                         { id: 9, name: 'Others' },
                       ]}
-                      selectedValue={controllerField.value}
+                      selectedValue={
+                        controllerField.value
+                          ? { id: 0, name: controllerField.value }
+                          : null
+                      }
                       onChange={(value: DropdownItem | null) => {
-                        controllerField.onChange(value);
-                        onUpdateTechnology(index, 'projectType', value);
+                        controllerField.onChange(value?.name || '');
+                        onUpdateTechnology(
+                          index,
+                          'projectType',
+                          value?.name || '',
+                        );
                       }}
                     />
                   )}

@@ -117,7 +117,7 @@ export const usePortfolioForm = ({
 
       return { previousTeams };
     },
-    onError: (err, newTeam, context: any) => {
+    onError: (err, _newTeam, context: any) => {
       if (context?.previousTeams) {
         form.setValue('teams', context.previousTeams);
       }

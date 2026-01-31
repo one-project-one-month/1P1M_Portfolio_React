@@ -39,7 +39,6 @@ const ORDER_OPTIONS: OrderFilterOption[] = [
 ];
 
 function FilterDropdown<T extends FilterOption>({
-  type,
   value,
   onChange,
   options,

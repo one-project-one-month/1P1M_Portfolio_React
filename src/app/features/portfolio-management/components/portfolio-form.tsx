@@ -37,7 +37,7 @@ const PortfolioForm = ({
     technologyFields,
     handleAddTechnology,
     handleRemoveTechnology,
-    handleUpdateTechnology,
+    // handleUpdateTechnology - not currently used in this component
     isModalOpen,
     setIsModalOpen,
     setActiveTeamId,
