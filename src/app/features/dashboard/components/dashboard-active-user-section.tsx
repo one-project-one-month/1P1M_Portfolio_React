@@ -1,9 +1,8 @@
 import { ChevronRight } from 'lucide-react';
-import { useState } from 'react';
 import ActiveUserChart from './charts/active-user-chart';
 
 function DashboardActiveUserSection() {
-  const [month, setMonth] = useState<string>();
+  // const [month, setMonth] = useState<string>();
   return (
     <div className="custom-card flex flex-col h-full">
       <div className="mb-4">

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import CustomMiniTable from './common/custom-mini-table';
+import CustomMiniTable, { type Column } from './common/custom-mini-table';
 import SwitchBar from './common/switch-bar';
 
 type ProjectOverviewRow = {
@@ -17,20 +17,19 @@ type ProjectSubmissionRow = {
   projectType: string;
 };
 
-const columns = [
-  [
-    { key: 'projectName', header: 'Project Name' },
-    { key: 'projectLeader', header: 'Project Leader' },
-    { key: 'member', header: 'Member' },
-    { key: 'status', header: 'Status' },
-    { key: 'progress', header: 'Progress' },
-  ],
-  [
-    { key: 'projectName', header: 'Project Name' },
-    { key: 'submitter', header: 'Submitter' },
-    { key: 'react', header: 'React' },
-    { key: 'projectType', header: 'Project Type' },
-  ],
+const overviewColumns: Column<ProjectOverviewRow>[] = [
+  { key: 'projectName', header: 'Project Name' },
+  { key: 'projectLeader', header: 'Project Leader' },
+  { key: 'member', header: 'Member' },
+  { key: 'status', header: 'Status' },
+  { key: 'progress', header: 'Progress' },
+];
+
+const submissionColumns: Column<ProjectSubmissionRow>[] = [
+  { key: 'projectName', header: 'Project Name' },
+  { key: 'submitter', header: 'Submitter' },
+  { key: 'react', header: 'React' },
+  { key: 'projectType', header: 'Project Type' },
 ];
 
 const data: [ProjectOverviewRow[], ProjectSubmissionRow[]] = [
@@ -119,11 +118,21 @@ function DashboardPopularSection() {
         onChange={handleContentChange}
       />
 
-      <CustomMiniTable
-        className="mt-4 flex-1"
-        columns={columns[selectedIndex]}
-        data={data[selectedIndex]}
-      />
+      {selectedIndex === 0 && (
+        <CustomMiniTable<ProjectOverviewRow>
+          className="mt-4 flex-1"
+          columns={overviewColumns}
+          data={data[0]}
+        />
+      )}
+
+      {selectedIndex === 1 && (
+        <CustomMiniTable<ProjectSubmissionRow>
+          className="mt-4 flex-1"
+          columns={submissionColumns}
+          data={data[1]}
+        />
+      )}
     </div>
   );
 }
