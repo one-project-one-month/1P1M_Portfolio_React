@@ -47,6 +47,9 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-primary-custom: #9c39fc;
+  --color-secondary-custom: #00c951;
 }
 
 :root {
@@ -134,6 +137,10 @@
     @media (prefers-color-scheme: dark) {
       color-scheme: dark;
     }
+  }
+
+  .custom-card {
+    @apply rounded-lg border border-slate-700 bg-slate-900 p-3;
   }
 
   /* Custom scrollbar */
