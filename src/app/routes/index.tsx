@@ -2,6 +2,7 @@ import HomePage from '@/app/features/home/page';
 import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
+  AdminProfilePage,
   DashboardPage,
   DeveloperPage,
   IdeaManagementEditPage,
@@ -15,6 +16,7 @@ import {
   UserManagementViewDetail,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
+import AboutUsPage from '../features/about-us/page';
 import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
@@ -45,6 +47,7 @@ const router = createBrowserRouter([
 
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
+      { path: '/about us', element: <AboutUsPage /> },
     ],
   },
 
@@ -82,6 +85,7 @@ const router = createBrowserRouter([
       },
 
       { path: 'timeline-management', element: <TimelineManagementPage /> },
+      { path: 'admin-profile', element: <AdminProfilePage /> },
       {
         path: 'opom-registered-people-list',
         element: <OpomRegisteredPeopleList />,
