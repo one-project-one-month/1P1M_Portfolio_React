@@ -1,4 +1,6 @@
 import SearchBox from '@/app/features/timeline-management/components/search-box.tsx';
+import TimelineGrid from '@/app/features/timeline-management/components/timeline-grid.tsx';
+import TimelineList from '@/app/features/timeline-management/components/timeline-list.tsx';
 import { useTimeline } from '@/app/features/timeline-management/hooks/use-timeline.ts';
 import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
 import FilterAssets from '@/components/ui/filter-assets.tsx';
@@ -15,7 +17,7 @@ const TimelineManagement = () => {
     setSelectedStatus,
     currentLayout,
     setCurrentLayout,
-
+    filteredData,
     curPage,
     setCurPage,
   } = useTimeline();
@@ -76,7 +78,7 @@ const TimelineManagement = () => {
 
       {/*-------- Start Listing Timeline --------*/}
 
-      {/* <div className="grow overflow-y-auto">
+      <div className="grow overflow-y-auto">
         {filteredData.length > 0 ? (
           currentLayout === 'grid' ? (
             <TimelineGrid data={filteredData} />
@@ -88,7 +90,7 @@ const TimelineManagement = () => {
             <p>No timelines found matching your criteria.</p>
           </div>
         )}
-      </div> */}
+      </div>
 
       {/*-------- End Listing Timeline --------*/}
 
