@@ -4,11 +4,11 @@ export const userRoleSchema = z.enum(['USER', 'ADMIN']);
 export type UserRole = z.infer<typeof userRoleSchema>;
 
 export interface LoginResponse {
-  userId: number;
-  username: string;
-  email: string;
+  userId: number | undefined;
+  username: string | undefined;
+  email: string | undefined;
   roleId: number;
-  role: 'ADMIN' | 'USER';
+  role: 'ADMIN' | 'USER' | undefined;
   isNewUserLogin: boolean;
 }
 

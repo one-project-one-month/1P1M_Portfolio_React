@@ -9,6 +9,7 @@ import githubSvg from './github.svg';
 import googleSvg from './google.svg';
 import imagePlaceholder from './image-placeholder.svg';
 import linkedinProfileIcon from './linkedin-icon.svg';
+import notFoundIcon from './not-found.png';
 import opomSvg from './opom.svg';
 import plusIcon from './plus.svg';
 import searchIcon from './search.svg';
@@ -31,6 +32,7 @@ export const emailIconUrl = emailIcon;
 export const githubProfileIconUrl = githubProfileIcon;
 export const linkedinProfileIconUrl = linkedinProfileIcon;
 export const editIconUrl = editIcon;
+export const notFoundUrl = notFoundIcon;
 
 export const iconUrls = {
   github: githubSvg,
