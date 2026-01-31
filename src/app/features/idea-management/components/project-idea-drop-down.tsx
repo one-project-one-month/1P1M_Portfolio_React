@@ -56,9 +56,9 @@ export const ProjectIdeaDropDown = ({
             }}
           >
             {type === 'list' ? (
-              <Ellipsis className="w-5 h-5 md:w-6 md:h-6" />
+              <Ellipsis size={25} />
             ) : (
-              <EllipsisVertical className="w-5 h-5 md:w-6 md:h-6" />
+              <EllipsisVertical size={25} />
             )}
           </Button>
         </DropdownMenu.Trigger>

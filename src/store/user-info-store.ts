@@ -2,10 +2,12 @@ import { createSecureStorage } from '@/lib/storage-config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface UserInfo {
+export interface UserInfo {
   username: string;
   userId: number;
-  role: string;
+  role: 'ADMIN' | 'USER' | null;
+  profile?: string | null;
+  email: string;
 }
 
 interface UserInfoStore {

@@ -95,3 +95,11 @@ export const UserManagementViewDetail = PageLoader(
       import('@/app/features/user-management/components/user-management-view-detail'),
   ),
 );
+
+export const AdminProfilePage = PageLoader(
+  lazy(() => import('@/app/features/admin-profile/page.tsx')),
+);
+
+export const NotFoundPage = PageLoader(
+  lazy(() => import('@/app/features/not-found')),
+);

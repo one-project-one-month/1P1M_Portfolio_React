@@ -1,3 +1,4 @@
+import { Menu } from 'lucide-react';
 import React from 'react';
 
 interface HamburgerProps {
@@ -14,9 +15,9 @@ const CustomHamburger: React.FC<HamburgerProps> = ({
       onClick={onToggle}
       aria-expanded={isOpen}
       aria-label="Toggle Menu"
-      className="flex flex-col gap-1.5 transition-all ease-in-out md:hidden z-101"
+      className="flex flex-col text-white gap-1.5 transition-all ease-in-out md:hidden "
     >
-      <div
+      {/* <div
         className={`w-6 bg-white h-0.5 rounded-md transition-all duration-300 ${
           isOpen ? 'rotate-45 translate-y-2' : ''
         }`}
@@ -33,7 +34,8 @@ const CustomHamburger: React.FC<HamburgerProps> = ({
           isOpen ? '-rotate-45 -translate-y-2' : ''
         }`}
         style={{ viewTransitionName: 'bar-3' }}
-      />
+      /> */}
+      <Menu />
     </button>
   );
 };
