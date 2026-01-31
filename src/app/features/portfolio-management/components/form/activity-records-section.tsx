@@ -93,11 +93,11 @@ export const ActivityRecordsSection = ({
     <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
-          <h2 className="text-[#F9FAFB] font-medium text-lg leading-7">
-            Activity Records
+          <h2 className="text-[#F9FAFB] font-medium text-2xl leading-7">
+            Update the Activity information!
           </h2>
-          <p className="text-[#F9FAFB] text-sm leading-7 opacity-60">
-            Activities of each teams in the project.
+          <p className="text-[#F9FAFB] text-lg font-normal leading-7 opacity-60">
+            Modify existing activities information and save the latest updates.
           </p>
         </div>
         <Button
