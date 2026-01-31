@@ -157,6 +157,7 @@ const PortfolioForm = ({
             getModalTeamName={getModalTeamName}
             getModalInitialMembers={getModalInitialMembers}
           />
+          {/* <ActivityRecordsEmptyState projectId={""} /> */}
 
           {isReadOnly && <ActivityRecordsSection projectId={initialData?.id} />}
 
