@@ -2,6 +2,7 @@ import type { Member as ModalMember } from '@/types/portfolio-management';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { normalize } from 'zod';
 import type { PortfolioFormMode } from '../components/portfolio-form';
 import {
   statusOptions,
@@ -179,20 +180,29 @@ export const usePortfolioForm = ({
         // Calculate diff for update
         const updatePayload: Partial<CreateProjectPortfolioRequest> = {};
 
-        if (data.projectName !== initialData.projectName) {
+        if (
+          normalize(data.projectName) !== normalize(initialData.projectName)
+        ) {
           updatePayload.name = data.projectName;
         }
-        if (data.description !== initialData.description) {
+        if (
+          normalize(data.description) !== normalize(initialData.description)
+        ) {
           updatePayload.description = data.description;
         }
-        if (data.projectImage !== initialData.image) {
+        if (normalize(data.projectImage) !== normalize(initialData.image)) {
           updatePayload.projectPicUrl = data.projectImage;
         }
-        if (data.projectLink !== initialData.projectLink) {
+        if (
+          normalize(data.projectLink) !== normalize(initialData.projectLink)
+        ) {
           updatePayload.projectLink = data.projectLink;
         }
-        if (data.repoLink !== initialData.repoLink) {
+        if (normalize(data.repoLink) !== normalize(initialData.repoLink)) {
           updatePayload.repoLink = data.repoLink;
+        }
+        if (teamIds.length > 0) {
+          updatePayload.teamIds = teamIds;
         }
 
         // Only call update if there are changes

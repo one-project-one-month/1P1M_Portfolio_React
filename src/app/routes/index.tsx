@@ -24,12 +24,12 @@ import PersonProfilePage from '../features/opom-management/pages/person-details'
 import OpomRegisterPage from '../features/opom-register/page';
 import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
-import EditActivityPage from '../features/portfolio-management/pages/edit-activity';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
 import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
+import ProtectedGuard from './guards/protected-guard';
 
 const router = createBrowserRouter([
   {
@@ -42,76 +42,77 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
 
-      { path: '/portfolios', element: <PortfolioPage /> },
-      { path: '/portfolio/create-portfolio', element: <PortfolioFormview /> },
       {
-        path: '/portfolio/update-portfolio/:projectId',
-        element: <PortfolioEditview />,
+        element: <ProtectedGuard allow={['USER']} />,
+        children: [
+          { path: '/portfolios', element: <PortfolioPage /> },
+          { path: '/developers', element: <DeveloperPage /> },
+          { path: 'profile/:username', element: <UserProfile /> },
+          { path: '/about us', element: <AboutUsPage /> },
+          { path: '/me', element: <MyProfilePage /> },
+          { path: '/ideas', element: <IdeaPage /> },
+          { path: 'opom-register', element: <OpomRegisterPage /> },
+          {
+            path: '/portfolio/create-portfolio',
+            element: <PortfolioFormview />,
+          },
+          {
+            path: '/portfolio/edit-portfolio/:projectId',
+            element: <PortfolioEditview />,
+          },
+        ],
       },
-      { path: 'opom-register', element: <OpomRegisterPage /> },
-      {
-        path: '/developers',
-        element: <DeveloperPage />,
-      },
-
-      { path: '/me', element: <MyProfilePage /> },
-      { path: '/ideas', element: <IdeaPage /> },
-      { path: 'profile/:username', element: <UserProfile /> },
-      { path: '/about us', element: <AboutUsPage /> },
     ],
   },
 
   {
     path: '/admin',
-    element: <AdminLayout />,
+
+    element: <ProtectedGuard allow={['ADMIN']} />,
     children: [
-      { path: 'dashboard', element: <DashboardPage /> },
       {
-        path: 'portfolio-management',
-        element: <PortfolioManagementPage />,
-        errorElement: <PortfolioErrorBoundary />,
-      },
-      {
-        path: 'portfolio-management/create-portfolio',
-        element: <CreatePortfolioPage />,
-        errorElement: <PortfolioErrorBoundary />,
-      },
-      {
-        path: 'portfolio-management/view-project-portfolio/:projectId',
-        element: <ViewPortfolioPage />,
-        errorElement: <PortfolioErrorBoundary />,
-      },
-      {
-        path: 'portfolio-management/edit-portfolio/:projectId',
-        element: <EditPortfolioPage />,
-        errorElement: <PortfolioErrorBoundary />,
-      },
-      {
-        path: 'portfolio-management/edit-activity/:projectId',
-        element: <EditActivityPage />,
-        errorElement: <PortfolioErrorBoundary />,
-      },
-      { path: 'idea-management', element: <IdeaManagementPage /> },
-      {
-        path: 'idea-management/portfolio/import',
-        element: <IdeaManagementEditPage />,
-      },
+        element: <AdminLayout />,
+        children: [
+          { element: <DashboardPage />, index: true },
+          {
+            path: 'portfolio-management',
+            element: <PortfolioManagementPage />,
+          },
+          {
+            path: 'portfolio-management/create-portfolio',
+            element: <CreatePortfolioPage />,
+          },
+          {
+            path: 'portfolio-management/view-project-portfolio/:projectId',
+            element: <ViewPortfolioPage />,
+          },
+          {
+            path: 'portfolio-management/edit-portfolio/:projectId',
+            element: <EditPortfolioPage />,
+          },
+          { path: 'idea-management', element: <IdeaManagementPage /> },
+          {
+            path: 'idea-management/portfolio/import',
+            element: <IdeaManagementEditPage />,
+          },
 
-      { path: 'user-management', element: <UserManagement /> },
-      {
-        path: 'register-user/view-detail',
-        element: <UserManagementViewDetail />,
-      },
+          { path: 'user-management', element: <UserManagement /> },
+          {
+            path: 'register-user/view-detail',
+            element: <UserManagementViewDetail />,
+          },
 
-      { path: 'timeline-management', element: <TimelineManagementPage /> },
-      { path: 'admin-profile', element: <AdminProfilePage /> },
-      {
-        path: 'opom-registered-people-list',
-        element: <OpomRegisteredPeopleList />,
-      },
-      {
-        path: 'opom-registered-people-list/:id',
-        element: <PersonProfilePage />,
+          { path: 'timeline-management', element: <TimelineManagementPage /> },
+          { path: 'admin-profile', element: <AdminProfilePage /> },
+          {
+            path: 'opom-registered-people-list',
+            element: <OpomRegisteredPeopleList />,
+          },
+          {
+            path: 'opom-registered-people-list/:id',
+            element: <PersonProfilePage />,
+          },
+        ],
       },
     ],
   },

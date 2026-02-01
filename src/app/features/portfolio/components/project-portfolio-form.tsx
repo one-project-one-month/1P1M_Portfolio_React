@@ -3,12 +3,14 @@ import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-background';
 import { Flex } from '@radix-ui/themes';
+import { ChevronLeft, Loader2 } from 'lucide-react';
 import { useRef } from 'react';
+import { PortfolioBasicInfo } from '../../portfolio-management/components/form/portfolio-basic-info';
+import { PortfolioLinkSection } from '../../portfolio-management/components/form/portfolio-link-section';
+import { PortfolioTeamSection } from '../../portfolio-management/components/form/portfolio-team-section';
 import type { ProjectData } from '../../portfolio-management/constants/data';
 import { usePortfolioForm } from '../../portfolio-management/hooks/use-portfolio-form';
-import { uploadProjectImage } from '../services/portfolio-service';
-import UserPortfolioInfo from './form/user-portfolio-info';
-import { UserPortfolioTeamSection } from './form/user-portfolio-team-section';
+import { useUploadImage } from '../../portfolio-management/hooks/use-upload-image';
 import { UserPortfolioTypeLang } from './form/user-portfolio-type-lang';
 
 export type PortfolioFormMode = 'create' | 'edit' | 'view';
@@ -19,8 +21,6 @@ interface PortfolioFormProps {
   onSave?: (data: Partial<ProjectData>) => void;
   onCancel?: () => void;
   onClose?: () => void;
-  repoLink: string;
-  setRepoLink: (v: string) => void;
 }
 
 const ProjectPortfolioForm = ({
@@ -29,8 +29,6 @@ const ProjectPortfolioForm = ({
   onSave,
   onCancel,
   onClose,
-  repoLink,
-  setRepoLink,
 }: PortfolioFormProps) => {
   const {
     form,
@@ -39,7 +37,6 @@ const ProjectPortfolioForm = ({
     technologyFields,
     handleAddTechnology,
     handleRemoveTechnology,
-    handleUpdateTechnology,
     isModalOpen,
     setIsModalOpen,
     setActiveTeamId,
@@ -54,15 +51,21 @@ const ProjectPortfolioForm = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const projectImage = form.watch('projectImage');
+
+  const { mutate: uploadImage, isPending: isUploading = true } =
+    useUploadImage();
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      try {
-        const imageUrl = await uploadProjectImage(file);
-        form.setValue('projectImage', imageUrl);
-      } catch (error) {
-        console.error('Image upload failed', error);
-      }
+      uploadImage(file, {
+        onSuccess: (imageUrl) => {
+          form.setValue('projectImage', imageUrl);
+        },
+        onError: (error) => {
+          console.error('Image upload failed', error);
+        },
+      });
     }
   };
 
@@ -72,8 +75,25 @@ const ProjectPortfolioForm = ({
     }
   };
 
+  const handleBack = () => {
+    if (onCancel) {
+      onCancel();
+    } else if (onClose) {
+      onClose();
+    }
+  };
+
   return (
     <FormBackground className="w-4xl flex">
+      {/* Back Button */}
+      <Button
+        variant="black_button"
+        onClick={handleBack}
+        className="flex items-center gap-1 mb-6 w-fit hover:opacity-80 transition-opacity h-10"
+      >
+        <ChevronLeft className="w-4 h-4 text-[#F3F4F6]" strokeWidth={3} />
+        <span className="text-white">Back</span>
+      </Button>
       <div className="grid lg:grid-cols-4 md:grid-cols-1">
         <div className="shrink-0">
           <input
@@ -83,7 +103,14 @@ const ProjectPortfolioForm = ({
             accept="image/*"
             onChange={handleImageUpload}
           />
-          {projectImage || initialData?.image || mode === 'create' ? (
+          {isUploading ? (
+            <div
+              className={`w-[153px] h-[153px] bg-[#D9D9D9] rounded-lg overflow-hidden flex items-center justify-center ${!isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+            >
+              <Loader2 className="w-8 h-8 text-[#9C39FC] animate-spin" />
+              <span className="text-sm text-gray-600">Uploading...</span>
+            </div>
+          ) : projectImage || initialData?.image ? (
             <div
               className={`w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
               onClick={triggerFileUpload}
@@ -116,21 +143,21 @@ const ProjectPortfolioForm = ({
             </div>
           )}
         </div>
-        <span className="col-span-3">
-          <UserPortfolioInfo
+        <span className="col-span-3 flex-1 flex flex-col gap-5 mt-4">
+          <PortfolioBasicInfo
             initialData={initialData}
+            accessFrom="user-portfolio"
             form={form}
-            repoLink={repoLink}
-            setRepoLink={setRepoLink}
+            isReadOnly={isReadOnly}
           />
+          <PortfolioLinkSection form={form} isReadOnly={false} />
           <UserPortfolioTypeLang
             form={form}
             technologyFields={technologyFields}
             onAddTechnology={handleAddTechnology}
             onRemoveTechnology={handleRemoveTechnology}
-            onUpdateTechnology={handleUpdateTechnology}
           />
-          <UserPortfolioTeamSection
+          <PortfolioTeamSection
             form={form}
             handleAddTeam={handleAddTeam}
             handleRemoveTeam={handleRemoveTeam}
@@ -139,6 +166,7 @@ const ProjectPortfolioForm = ({
             setActiveTeamId={setActiveTeamId}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            isReadOnly={isReadOnly}
             getModalTeamName={getModalTeamName}
             getModalInitialMembers={getModalInitialMembers}
           />

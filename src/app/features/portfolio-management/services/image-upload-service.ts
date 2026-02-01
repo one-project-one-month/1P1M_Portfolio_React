@@ -1,7 +1,7 @@
 import apiClient from '@/api/axios';
 
 interface MediaUploadResponse {
-  url: string;
+  data: string;
 }
 
 export const uploadProjectImage = async (file: File): Promise<string> => {
@@ -18,5 +18,5 @@ export const uploadProjectImage = async (file: File): Promise<string> => {
     },
   );
 
-  return response.data.url;
+  return response.data.data;
 };

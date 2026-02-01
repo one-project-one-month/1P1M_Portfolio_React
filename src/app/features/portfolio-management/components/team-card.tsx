@@ -43,8 +43,6 @@ const TeamCard = ({
     updateTeamName,
   } = useTeamCard(team, onUpdate);
 
-  console.log(team);
-
   return (
     <>
       <div className="bg-[#1e293b] rounded-lg group border border-[#FFFFFF]/5">

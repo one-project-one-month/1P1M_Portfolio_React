@@ -34,7 +34,7 @@ const ProjectList = ({
                   initialLikes={project.reaction_count || 0}
                   initialViews={project.view_count || 0}
                   onClickReact={() => handleReact(project.id)}
-                  project={projects}
+                  project={project}
                 />
               </React.Fragment>
             ))

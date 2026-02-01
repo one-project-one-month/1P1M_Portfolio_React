@@ -1,33 +1,53 @@
 import Title from '@/components/ui/title';
+import type { FilterConfig } from '@/types/title-props';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSortDirection } from '../../../lib/get-sort-direction';
 import PortfolioSectionContainer from './container/portfolio-section-container';
 
+const filterConfig: FilterConfig[] = [
+  {
+    key: 'order',
+    label: 'Order',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Popular', value: 'popular' },
+      { label: 'Newest', value: 'Newest' },
+      { label: 'Oldest', value: 'Oldest' },
+    ],
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Planning', value: 'planning' },
+      { label: 'In Progress', value: 'in_progress' },
+      { label: 'Completed', value: 'completed' },
+      { label: 'Unqualified', value: 'unqualified' },
+    ],
+  },
+];
+
 const Portfolio = () => {
-  const filterOptions = ['Popular', 'Newest', 'Oldest'];
   const [query, setQuery] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(
     null,
   );
-  const [selectedFilter, setSelectedFilter] = useState('Newest');
+  const [pjStatus, setPjStatus] = useState<string>('all');
+  const [selectedFilter, setSelectedFilter] = useState('all');
   const navigate = useNavigate();
 
-  // const handleReact = async (projectId: number) => {
-  //   try {
-  //     await reactToProject(projectId);
-  //     console.log('👍 Reacted successfully to project:', projectId);
-  //     // Optional: refresh list or increment like count locally
-  //   } catch (error) {
-  //     console.error('❌ Error reacting:', error);
-  //   }
-  // };
+  const handleFilter = (key: string, value: string) => {
+    setSelectedFilter(value);
+    if (key === 'order') {
+      const sortDir = getSortDirection(value);
+      if (sortDir) setSortDirection(sortDir);
+    }
 
-  const handleFilter = (filter: string) => {
-    setSelectedFilter(filter);
-    const sortDir = getSortDirection(filter);
-
-    if (sortDir) setSortDirection(sortDir);
+    if (key === 'status') {
+      setPjStatus(value);
+    }
   };
 
   const handleSearch = (value: string) => {
@@ -43,10 +63,14 @@ const Portfolio = () => {
         title="Project Portfolio"
         searchPlaceholder="Search By Projects"
         onSearchChange={(e) => handleSearch(e.target.value)}
-        filterOptions={filterOptions}
+        filterConfig={filterConfig}
         onFilterChange={handleFilter}
       />
-      <PortfolioSectionContainer query={query} sortDirection={sortDirection} />
+      <PortfolioSectionContainer
+        query={query}
+        sortDirection={sortDirection}
+        status={pjStatus}
+      />
     </div>
   );
 };

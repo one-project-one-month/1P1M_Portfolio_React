@@ -1,3 +1,4 @@
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { Member } from '@/types/portfolio-management';
@@ -84,9 +85,6 @@ const AddMemberModal = ({
           </div>
 
           <div className=" space-y-2">
-            <label className="text-sm font-medium text-[#F9FAFB]">
-              Search by name or email
-            </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B] w-5 h-5" />
               <input
@@ -101,9 +99,6 @@ const AddMemberModal = ({
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 space-y-2">
-          <label className="text-sm font-medium text-[#F9FAFB] mb-1 block">
-            Search by name or email
-          </label>
           {filteredUsers.map((user) => {
             const isAdded = selectedUsers.some((u) => u.id === user.id);
             return (
@@ -114,7 +109,7 @@ const AddMemberModal = ({
               >
                 <div className="flex items-center gap-3">
                   <img
-                    src={user.avatarUrl}
+                    src={user.avatarUrl || sampleUserImgUrl}
                     alt={user.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
