@@ -21,7 +21,9 @@ import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
+import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
+import EditActivityPage from '../features/portfolio-management/pages/edit-activity';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
 import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
@@ -32,6 +34,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PortfolioErrorBoundary />,
     children: [
       {
         index: true,
@@ -64,18 +67,27 @@ const router = createBrowserRouter([
       {
         path: 'portfolio-management',
         element: <PortfolioManagementPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/create-portfolio',
         element: <CreatePortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/view-project-portfolio/:projectId',
         element: <ViewPortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       {
         path: 'portfolio-management/edit-portfolio/:projectId',
         element: <EditPortfolioPage />,
+        errorElement: <PortfolioErrorBoundary />,
+      },
+      {
+        path: 'portfolio-management/edit-activity/:projectId',
+        element: <EditActivityPage />,
+        errorElement: <PortfolioErrorBoundary />,
       },
       { path: 'idea-management', element: <IdeaManagementPage /> },
       {

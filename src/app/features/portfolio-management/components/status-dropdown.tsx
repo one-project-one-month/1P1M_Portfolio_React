@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const statusColors: Record<string, string> = {
+  Planning: 'bg-[#155DFC]',
   Completed: 'bg-[#00B634]',
   'In Progress': 'bg-[#FF9900]',
   Unqualified: 'bg-[#7D7D7D]',

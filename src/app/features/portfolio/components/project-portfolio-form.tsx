@@ -85,7 +85,7 @@ const ProjectPortfolioForm = ({
           />
           {projectImage || initialData?.image || mode === 'create' ? (
             <div
-              className={`w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${!isReadOnly ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className={`w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
               onClick={triggerFileUpload}
             >
               <img

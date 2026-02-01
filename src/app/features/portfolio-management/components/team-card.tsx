@@ -43,6 +43,8 @@ const TeamCard = ({
     updateTeamName,
   } = useTeamCard(team, onUpdate);
 
+  console.log(team);
+
   return (
     <>
       <div className="bg-[#1e293b] rounded-lg group border border-[#FFFFFF]/5">
@@ -197,7 +199,7 @@ const TeamCard = ({
               ))}
 
               <button
-                onClick={() => onAddMemberClick(team.id)}
+                onClick={() => onAddMemberClick(team.id.toString())}
                 className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#334155] ring-2 ring-[#1e293b] text-[#94A3B8] hover:bg-[#475569] hover:text-white transition-colors z-10"
                 title="Add member"
               >

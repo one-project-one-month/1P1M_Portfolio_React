@@ -1,3 +1,4 @@
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { ProjectData } from '../../portfolio-management/constants/data';
@@ -28,9 +29,21 @@ const PortfolioEditview = () => {
       image: data.projectPicUrl,
       technologies: data.languageAndTools.map((tech: any) => ({
         projectType: { id: tech.id, name: tech.type },
-        lauguages: tech.name,
+        languages: tech.name,
       })),
-      ...data,
+      teams: data.teams.map((team) => ({
+        id: team.id,
+        name: team.teamName,
+        count: Number(team.members.length),
+        members: team.members.map((member) => ({
+          id: member.id,
+          name: member.name,
+          // email: 'kozaw2@gmail.com',
+          profilePictureUrl: member.profilePictureUrl || sampleUserImgUrl,
+          role: 'Team Leader',
+        })),
+      })),
+      // ...data,
     };
   };
 

@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL,
+  API_URL: import.meta.env.VITE_API_URL || 'http://3.26.96.212:8080',
 
   // OAuth Configuration
   GITHUB_CLIENT_ID: import.meta.env.VITE_GITHUB_CLIENT_ID,
@@ -35,7 +35,17 @@ export const API_ENDPOINTS = {
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
-  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
+  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjects',
+  // V2 Endpoints
+  CREATE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
+  CREATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  TEAM_MEMBERS_V2: '/portfolio/api/v2/project-portfolio/teams/members',
+  UPDATE_PROJECT_STATUS_V2: '/portfolio/api/v2/project-portfolio/update-status',
+  UPDATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  LANGUAGE_AND_TOOL_V2: '/portfolio/api/v2/project-portfolio/language-and-tool',
+  REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
+  GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {
