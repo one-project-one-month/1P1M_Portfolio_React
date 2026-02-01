@@ -22,12 +22,11 @@ export const getProjectPortfolio = async ({
   sortDirection,
 }: GetPortfolioParamsType) => {
   try {
-    const response = await apiClient.get<ApiResponseType<PortfolioProjectType>>(
-      '/portfolio/api/v2/project-portfolio',
-      {
-        params: { keyword, page, size, sortField, sortDirection },
-      },
-    );
+    const response = await apiClient.get<
+      ApiResponseType<PortfolioProjectType[]>
+    >('/portfolio/api/v2/project-portfolio', {
+      params: { keyword, page, size, sortField, sortDirection },
+    });
 
     return response.data;
   } catch (error: any) {

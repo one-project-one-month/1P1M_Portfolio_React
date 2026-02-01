@@ -2,7 +2,6 @@ import activeHeartIcon from '@/assets/icons/ActiveHeart.png';
 import externalLinkImg from '@/assets/icons/external-link.svg';
 import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import PjImage from '@/assets/project-image.png';
 import type { ProjectCardType } from '@/types/portfolio.type';
 import { Flex } from '@radix-ui/themes';
@@ -57,8 +56,8 @@ export default function ProjectCard({
             className="text-[#D1D5DC] font-light leading-5 text-sm font-sans"
           >
             <span>Team Members</span>
-            <div className="flex -space-x-2">
-              {project.teams[0]?.members?.slice(0, 3).map((member, index) => (
+            {/* <div className="flex -space-x-2">
+              {project?.members?.slice(0, 3).map((member, index) => (
                 <img
                   key={`${member.id}-${index}`}
                   src={member.profilePictureUrl || sampleUserImgUrl}
@@ -66,12 +65,12 @@ export default function ProjectCard({
                   className="h-7 w-7 rounded-full border-2 border-[#111827] object-cover"
                 />
               ))}
-              {project.teams.members && project.teams.members.length > 3 && (
+              {project.team.members && project.teams.members.length > 3 && (
                 <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#111827] bg-gray-800 text-xs font-bold text-white">
                   +{project.teams.members.length - 3}
                 </div>
               )}
-            </div>
+            </div> */}
           </Flex>
         </div>
 
@@ -107,7 +106,7 @@ export default function ProjectCard({
               height={20}
               className="cursor-pointer"
               onClick={() =>
-                navigate(`/portfolio/update-portfolio/${project?.id}`, {
+                navigate(`/portfolio/update-portfolio/${project}`, {
                   state: { projectDetailData: project },
                 })
               }

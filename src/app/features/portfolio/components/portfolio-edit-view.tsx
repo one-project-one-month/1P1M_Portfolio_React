@@ -22,11 +22,11 @@ const PortfolioEditview = () => {
     navigate('/portfolio');
   };
 
-  const formattedData = (data) => {
+  const formattedData = (data: any) => {
     return {
       projectName: data.name,
       image: data.projectPicUrl,
-      technologies: data.languageAndTools.map((tech) => ({
+      technologies: data.languageAndTools.map((tech: any) => ({
         projectType: { id: tech.id, name: tech.type },
         lauguages: tech.name,
       })),
