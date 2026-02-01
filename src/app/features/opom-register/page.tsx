@@ -1,17 +1,16 @@
+import TrashIcon from '@/assets/icons/trash-icon';
+import { Button } from '@/components/ui/button';
+import FormBackground from '@/components/ui/form-bg';
+import FormDropdown from '@/components/ui/form-dropdown';
+import FormField from '@/components/ui/form-field';
+import Title from '@/components/ui/title';
+import { Platforms, TechStacks } from '@/constants';
 import { useState } from 'react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
-
-import { Button } from '@/components/ui/button';
-import FormBackground from '@/components/ui/form-bg';
-import FormDropdown from '@/components/ui/form-dropdown';
-import FormField from '@/components/ui/form-field';
-
-import TrashIcon from '@/assets/icons/trash-icon';
-import { Platforms, TechStacks } from '@/constants';
 import { opomRegister } from './services/api';
 
 interface PlatformLinkState {
@@ -147,11 +146,11 @@ export default function OpomRegisterPage() {
     <div className="h-screen flex items-center ">
       <div className="w-full h-full flex justify-center p-5 md:p-0 items-center">
         <FormBackground className="w-full md:w-[532px]  flex mx-auto items-center h-auto  flex-col  p-8">
-          <div className="text-white text-center mb-8">
-            <h1 className="font-sans font-bold text-2xl leading-8">
-              OPOM Register Form
-            </h1>
-          </div>
+          <Title
+            showSearch={false}
+            showFilter={false}
+            title="OPOM Registered User List"
+          />
 
           {true && (
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
