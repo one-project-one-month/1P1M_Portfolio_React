@@ -19,8 +19,10 @@ const SignUpForm = ({
   return (
     <FormBackground className="w-113 h-fit flex flex-col gap-4">
       <div className="text-white text-center">
-        <h1 className="text-2xl font-bold">Welcome To OPOM</h1>
-        <h5 className="text-gray-400">Subtitle</h5>
+        <h3 className="text-2xl font-bold">Welcome To OPOM</h3>
+        <h5 className="text-gray-400">
+          Join thousands of others building the future together
+        </h5>
       </div>
 
       <TextField

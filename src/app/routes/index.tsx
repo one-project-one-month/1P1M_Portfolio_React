@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
 
-      { path: '/portfolio', element: <PortfolioPage /> },
+      { path: '/portfolios', element: <PortfolioPage /> },
       { path: '/portfolio/create-portfolio', element: <PortfolioFormview /> },
       {
         path: '/portfolio/update-portfolio/:projectId',

@@ -24,7 +24,7 @@ export type PortfolioProjectType = {
   projectLink: string;
   repoLink: string;
   reaction_count?: number;
-  teams: {
+  team: {
     members: DeveloperType[];
   };
   view_count?: number;
@@ -36,9 +36,9 @@ export type PortfolioProjectType = {
 
 export type projectSectionViewType = {
   isLoading: boolean;
-  projects: PortfolioProjectType[];
-  currentPage: number;
-  totalPages: number;
+  projects: PortfolioProjectType[] | null;
+  currentPage: number | 1;
+  totalPages: number | 0;
   onPageChange: (page: number) => void;
 };
 
@@ -57,7 +57,7 @@ export type ProjectCardType = {
   initialLikes?: number;
   initialViews?: number;
   onClickReact: () => void;
-  project: PortfolioProjectType;
+  project: PortfolioProjectType[];
 };
 
 export type ProjectPortfolioDetailType = {

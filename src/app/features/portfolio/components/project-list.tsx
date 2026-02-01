@@ -21,7 +21,7 @@ const ProjectList = ({
           <SkeletonCard />
         </div>
       ) : (
-        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ">
           {reactedProjects.length > 0 ? (
             reactedProjects.map((project) => (
               <React.Fragment
@@ -34,7 +34,7 @@ const ProjectList = ({
                   initialLikes={project.reaction_count || 0}
                   initialViews={project.view_count || 0}
                   onClickReact={() => handleReact(project.id)}
-                  project={project}
+                  project={projects}
                 />
               </React.Fragment>
             ))
