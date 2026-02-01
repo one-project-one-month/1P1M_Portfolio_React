@@ -1,26 +1,22 @@
-import type { UseFormReturn } from 'react-hook-form';
-import { Controller } from 'react-hook-form';
-
 import { Button } from '@/components/ui/button';
 import FormTextArea from '@/components/ui/form-textarea';
 import InputField from '@/components/ui/input-field';
 import { PROJECT_TYPE_OPTIONS } from '@/constants';
-
-import type { IdeaEditFormValues } from '../../types/project-idea.types';
+import { Dialog } from '@radix-ui/themes';
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import type { EditProjectIdeaType } from '../../types/project-idea.types';
 
 export default function EditStep1({
   form,
-  onClose,
   onNext,
 }: {
-  form: UseFormReturn<IdeaEditFormValues>;
-  onClose: () => void;
+  form: UseFormReturn<Partial<EditProjectIdeaType>>;
   onNext: () => void;
 }) {
   return (
     <div className="space-y-10">
       <div>
-        <h2 className="text-3xl">Update the idea information!</h2>
+        <Dialog.Title size="7">Update the idea information!</Dialog.Title>
         <p className="mt-2 text-sm text-[#9CA3AF]">
           Choose a status to reflect the current progress and next step of this
           idea.
@@ -30,7 +26,7 @@ export default function EditStep1({
       <div className="space-y-8">
         <Controller
           control={form.control}
-          name="projectName"
+          name="projectIdeaName"
           rules={{
             required: 'Project idea name is required',
             minLength: { value: 2, message: 'Minimum 2 characters' },
@@ -84,72 +80,76 @@ export default function EditStep1({
           name="projectTypes"
           rules={{
             validate: (v) =>
-              v.length > 0 ? true : 'Select at least one project type',
+              v && v.length > 0 ? true : 'Select at least one project type',
           }}
-          render={({ field, fieldState }) => (
-            <div>
-              <p className="mb-3 text-sm">Project Type</p>
+          render={({ field, fieldState }) => {
+            const projectTypes = (field.value as string[]) ?? [];
 
-              <div className="flex flex-wrap gap-6 text-sm">
-                {PROJECT_TYPE_OPTIONS.map((type) => {
-                  const checked = field.value.includes(type);
+            return (
+              <div>
+                <p className="mb-3 text-sm">Project Type</p>
 
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      className="flex items-center gap-2"
-                      onClick={() => {
-                        const next = checked
-                          ? field.value.filter((t) => t !== type)
-                          : [...field.value, type];
-                        field.onChange(next);
-                      }}
-                    >
-                      <span
-                        className={`flex h-4 w-4 items-center justify-center rounded-sm border ${
-                          checked
-                            ? 'border-[#A855F7] bg-[#A855F7]'
-                            : 'border-[#4B5563] bg-transparent'
-                        }`}
+                <div className="flex flex-wrap gap-6 text-sm">
+                  {PROJECT_TYPE_OPTIONS.map((type) => {
+                    const checked = projectTypes.some(
+                      (pt) => pt.toLowerCase() === type.toLowerCase(),
+                    );
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        className="flex items-center gap-2"
+                        onClick={() => {
+                          const next = checked
+                            ? projectTypes.filter((t) => t !== type)
+                            : [...projectTypes, type];
+                          field.onChange(next);
+                        }}
                       >
-                        {checked && (
-                          <span className="h-2 w-2 rounded-sm bg-white" />
-                        )}
-                      </span>
+                        <span
+                          className={`flex h-4 w-4 items-center justify-center rounded-sm border ${
+                            checked
+                              ? 'border-[#A855F7] bg-[#A855F7]'
+                              : 'border-[#4B5563] bg-transparent'
+                          }`}
+                        >
+                          {checked && (
+                            <span className="h-2 w-2 rounded-sm bg-white" />
+                          )}
+                        </span>
 
-                      <span
-                        className={
-                          checked ? 'text-white' : 'text-[#D1D5DB] font-normal'
-                        }
-                      >
-                        {type}
-                      </span>
-                    </button>
-                  );
-                })}
+                        <span
+                          className={`capitalize font-normal ${checked ? 'text-white' : 'text-[#D1D5DB] '}`}
+                        >
+                          {type}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {fieldState.error?.message && (
+                  <p className="mt-3 text-sm font-bold text-red-500">
+                    {fieldState.error.message}
+                  </p>
+                )}
               </div>
-
-              {fieldState.error?.message && (
-                <p className="mt-3 text-sm font-bold text-red-500">
-                  {fieldState.error.message}
-                </p>
-              )}
-            </div>
-          )}
+            );
+          }}
         />
       </div>
 
       <div className="mt-8 flex items-center justify-between gap-6">
-        <Button
-          type="button"
-          variant="primary"
-          size="primary"
-          className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
+        <Dialog.Close>
+          <Button
+            type="button"
+            variant="primary"
+            size="primary"
+            className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
+          >
+            Cancel
+          </Button>
+        </Dialog.Close>
 
         <Button
           type="button"

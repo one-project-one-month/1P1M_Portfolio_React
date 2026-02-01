@@ -18,7 +18,7 @@ export const useCreatePortfolio = () => {
     },
     onError: (error: Error) => {
       console.error('Error Creating Portfolio:', error);
-      addToast(error.message, 'error');
+      addToast(error.message || 'Failed to create project', 'error');
     },
   });
 };

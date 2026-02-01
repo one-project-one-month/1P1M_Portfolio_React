@@ -36,11 +36,13 @@ const Title = ({
   };
 
   return (
-    <div className="relative w-full flex justify-between items-center gap-8 py-10">
+    <div className="relative w-full flex justify-between items-center gap-8 py-6 px-2">
       {/* Title & Desktop Search Section */}
       <div className="flex w-2/3 h-11 justify-between items-center gap-8">
         <div className="relative text-nowrap">
-          <h1 className="text-lg md:text-3xl text-white">{title}</h1>
+          <h1 className="text-3xl lg:text-5xl font-extrabold text-white">
+            {title}
+          </h1>
           <div className="w-1/2 h-1.5 absolute -bottom-2 left-0 bg-[#FFBA00] rounded"></div>
         </div>
 
@@ -85,7 +87,7 @@ const Title = ({
       </div>
 
       {/* Actions Section (Create & Filter) */}
-      <div className="flex justify-center items-center gap-4">
+      <div className="flex justify-center items-center gap-4 border">
         {onCreate && (
           <Button
             variant="primary"

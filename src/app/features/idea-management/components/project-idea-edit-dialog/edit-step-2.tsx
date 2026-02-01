@@ -1,30 +1,52 @@
+import { Button } from '@/components/ui/button';
 import { ArrowRightLeft, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-
-import { Button } from '@/components/ui/button';
 import type {
-  IdeaEditFormValues,
+  EditProjectIdeaType,
   Leader,
 } from '../../types/project-idea.types';
 
+const MOCK_LEADERS: Leader[] = [
+  {
+    id: 1,
+    name: 'Bora',
+    email: 'Bora54@gmail.com',
+    role: 'Backend',
+    avatarUrl: 'https://i.pravatar.cc/150?img=12',
+  },
+  {
+    id: 2,
+    name: 'Tina',
+    email: 'Tina@gmail.com',
+    role: 'UI | UX Designer',
+    avatarUrl: 'https://i.pravatar.cc/150?img=32',
+  },
+  {
+    id: 3,
+    name: 'Tina',
+    email: 'Tina@gmail.com',
+    role: 'Frontend',
+    avatarUrl: 'https://i.pravatar.cc/150?img=45',
+  },
+];
+
 export default function EditStep2({
   form,
-  leaders,
   onBack,
   onNext,
 }: {
-  form: UseFormReturn<IdeaEditFormValues>;
-  leaders: Leader[];
+  form: UseFormReturn<Partial<EditProjectIdeaType>>;
   onBack: () => void;
   onNext: () => void;
 }) {
   const [leaderQuery, setLeaderQuery] = useState('');
+  const leaders = MOCK_LEADERS;
 
   const leaderId = form.watch('dev_id');
   const currentLeader = useMemo(
-    () => leaders.find((l) => l.id === leaderId) ?? null,
+    () => leaders.find((l: Leader) => l.id === leaderId) ?? null,
     [leaders, leaderId],
   );
 
@@ -32,7 +54,7 @@ export default function EditStep2({
     const q = leaderQuery.trim().toLowerCase();
     if (!q) return leaders;
     return leaders.filter(
-      (l) =>
+      (l: Leader) =>
         l.name.toLowerCase().includes(q) || l.email.toLowerCase().includes(q),
     );
   }, [leaderQuery, leaders]);
@@ -86,8 +108,8 @@ export default function EditStep2({
         rules={{ validate: (v) => (v ? true : 'Select a leader') }}
         render={({ field, fieldState }) => (
           <div>
-            <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
-              {filteredLeaders.map((leader) => {
+            <div className="h-80 overflow-y-auto space-y-2 pr-1">
+              {filteredLeaders.map((leader: Leader) => {
                 const selected = field.value === leader.id;
 
                 return (

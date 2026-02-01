@@ -3,8 +3,10 @@ import {
   CalendarClock,
   ChartGanttIcon,
   FileText,
+  FileUser,
   HardDrive,
   SquareChartGantt,
+  User,
   Users,
 } from 'lucide-react';
 
@@ -37,6 +39,12 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
   { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
+    id: 6,
+    name: 'OPOM Registered Users',
+    path: 'opom-registered-people-list',
+    icon: FileUser,
+  },
+  {
     id: 4,
     name: 'Portfolio Management',
     path: 'portfolio-management',
@@ -44,6 +52,7 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   },
   { id: 3, name: 'Schedule', path: 'timeline-management', icon: CalendarClock },
   { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
+  { id: 5, name: 'Profile', path: 'admin-profile', icon: User },
 ];
 
-export const PROJECT_TYPE_OPTIONS = ['Mobile', 'Website', 'Desktop', 'Game'];
+export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];

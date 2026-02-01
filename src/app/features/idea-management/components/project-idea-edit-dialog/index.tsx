@@ -1,140 +1,145 @@
-import FormBackground from '@/components/ui/form-bg';
-import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useToast } from '@/components/ui/toast-provider';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog } from '@radix-ui/themes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import { useCallback, useState } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
+import { editProjectIdea } from '../../services/project-idea.service';
+import {
+  editProjectIdeaSchema,
+  type EditProjectIdeaType,
+  type ProjectIdeaEditFormPropsType,
+  type ProjectIdeaEditResponseType,
+  type Step,
+} from '../../types/project-idea.types';
 import EditStep1 from './edit-step-1';
 import EditStep2 from './edit-step-2';
 import EditStep3 from './edit-step-3';
 import Stepper from './stepper';
 
-import type {
-  IdeaEditFormProps,
-  Leader,
-  Step,
-} from '../../types/project-idea.types';
-
-const MOCK_LEADERS: Leader[] = [
-  {
-    id: 1,
-    name: 'Bora',
-    email: 'Bora54@gmail.com',
-    role: 'Backend',
-    avatarUrl: 'https://i.pravatar.cc/150?img=12',
-  },
-  {
-    id: 2,
-    name: 'Tina',
-    email: 'Tina@gmail.com',
-    role: 'UI | UX Designer',
-    avatarUrl: 'https://i.pravatar.cc/150?img=32',
-  },
-  {
-    id: 3,
-    name: 'Tina',
-    email: 'Tina@gmail.com',
-    role: 'Frontend',
-    avatarUrl: 'https://i.pravatar.cc/150?img=45',
-  },
-];
-
 export default function ProjectIdeaEditDialog({
-  isOpen,
-  onClose,
-  onSubmit,
-  initialValues,
-  availableLeaders = MOCK_LEADERS,
-}: IdeaEditFormProps) {
+  trigger,
+  data,
+  open: controlledOpen,
+  onOpenChange,
+}: ProjectIdeaEditFormPropsType & {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const { addToast } = useToast();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<Step>(0);
+  const [internalOpen, setInternalOpen] = useState(false);
 
-  const form = useForm({
-    defaultValues: initialValues,
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
+
+  const form = useForm<Partial<EditProjectIdeaType>>({
+    resolver: zodResolver(editProjectIdeaSchema.partial()) as Resolver<
+      Partial<EditProjectIdeaType>
+    >,
+    defaultValues: {
+      dev_id: data.dev_id ?? null,
+      projectIdeaName: data.projectIdeaName ?? '',
+      description: data.description ?? '',
+      profilePictureUrl: data.profilePictureUrl ?? '',
+      devName: data.devName ?? '',
+      projectTypes: data?.projectTypes ?? [],
+      status: data?.status ?? 'PENDING',
+    },
     mode: 'onSubmit',
   });
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setStep(0);
-    form.reset(initialValues);
-  }, [isOpen, initialValues, form]);
-
-  const goNext = async () => {
+  const goNext = useCallback(async () => {
     if (step === 0) {
-      // const ok = await form.trigger([
-      //   'projectName',
-      //   'description',
-      //   'projectTypes',
-      // ]);
-      // if (!ok) return;
+      const ok = await form.trigger([
+        'projectIdeaName',
+        'description',
+        'projectTypes',
+      ]);
+      if (!ok) return;
       setStep(1);
       return;
     }
 
     if (step === 1) {
-      // const ok = await form.trigger(['dev_id']);
-      // if (!ok) return;
+      const ok = await form.trigger(['dev_id']);
+      if (!ok) return;
       setStep(2);
     }
-  };
+  }, [step, form]);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     setStep((s) => (s === 0 ? 0 : ((s - 1) as Step)));
-  };
+  }, []);
 
-  const handleFinalSubmit = (values: any) => {
-    onSubmit?.(values);
-    setStep(0);
-    form.reset(initialValues);
-    onClose();
+  const { mutate, isPending } = useMutation<
+    ProjectIdeaEditResponseType,
+    AxiosError<{ message: string }>,
+    { id: number; formData: EditProjectIdeaType }
+  >({
+    mutationFn: ({
+      id,
+      formData,
+    }: {
+      id: number;
+      formData: EditProjectIdeaType;
+    }) => editProjectIdea(id, formData),
+    onSuccess: (success) => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
+      addToast(success.message, 'success');
+      setStep(0);
+      form.reset();
+    },
+    onError: (error) => {
+      addToast(error.message, 'error');
+    },
+  });
+
+  const handleFinalSubmit = (formData: Partial<EditProjectIdeaType>) => {
+    if (!data.id) {
+      addToast('Project idea ID is missing', 'error');
+      return;
+    }
+    mutate({ id: data.id, formData: formData as EditProjectIdeaType });
   };
 
   return (
     <Dialog.Root
-      open={isOpen}
-      onOpenChange={(open) => {
-        if (!open) {
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) {
           setStep(0);
-          form.reset(initialValues);
-          onClose();
+          form.reset();
         }
       }}
     >
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/10" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 outline-none">
-          <FormBackground className="relative w-full rounded-3xl px-10 py-10 text-white shadow-2xl">
-            <Dialog.Close asChild>
-              <button
-                type="button"
-                className="absolute right-6 top-6 rounded-md p-2 text-[#9CA3AF] hover:text-white"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </Dialog.Close>
+      {controlledOpen === undefined && (
+        <Dialog.Trigger>
+          {trigger || <button type="button">Edit Idea</button>}
+        </Dialog.Trigger>
+      )}
 
-            <Stepper step={step} />
+      <Dialog.Content
+        size="4"
+        maxWidth="758px"
+        className="bg-black! text-white px-16! py-12! rounded-3xl! max-h-[90vh] overflow-y-auto"
+      >
+        <Stepper step={step} />
 
-            <form
-              className="mt-10 flex flex-col gap-10"
-              onSubmit={form.handleSubmit(handleFinalSubmit)}
-            >
-              {step === 0 && (
-                <EditStep1 form={form} onClose={onClose} onNext={goNext} />
-              )}
-              {step === 1 && (
-                <EditStep2
-                  form={form}
-                  leaders={availableLeaders}
-                  onBack={goBack}
-                  onNext={goNext}
-                />
-              )}
-              {step === 2 && <EditStep3 form={form} onClose={onClose} />}
-            </form>
-          </FormBackground>
-        </Dialog.Content>
-      </Dialog.Portal>
+        <form
+          className="mt-10 flex flex-col gap-10"
+          onSubmit={form.handleSubmit(handleFinalSubmit)}
+        >
+          {step === 0 && <EditStep1 form={form} onNext={goNext} />}
+          {step === 1 && (
+            <EditStep2 form={form} onBack={goBack} onNext={goNext} />
+          )}
+          {step === 2 && <EditStep3 form={form} isPending={isPending} />}
+        </form>
+      </Dialog.Content>
     </Dialog.Root>
   );
 }

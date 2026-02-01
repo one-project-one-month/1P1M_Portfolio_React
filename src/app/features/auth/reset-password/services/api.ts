@@ -20,7 +20,7 @@ export async function resetPassword(
       success: false,
       code: 500,
       message: err.message,
-      data: null,
+      data: undefined,
     };
   }
 }

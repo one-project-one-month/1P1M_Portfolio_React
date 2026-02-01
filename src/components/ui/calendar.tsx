@@ -1,13 +1,18 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { cn } from './delete-dialog';
 
 interface CalendarProps {
+  onChange?: (date: Date | null) => void;
+  value?: Date | null;
   onSelect?: (date: Date | null) => void;
   onRangeSelect?: (start: Date | null, end: Date | null) => void;
   mode?: 'single' | 'range';
   initialDate?: Date;
   rangeStart?: Date | null;
   rangeEnd?: Date | null;
+  className?: string;
+  headerClassName?: string;
 }
 
 export function Calendar({
@@ -17,6 +22,8 @@ export function Calendar({
   initialDate = new Date(),
   rangeStart: propsRangeStart = null,
   rangeEnd: propsRangeEnd = null,
+  className,
+  headerClassName,
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [selectedDate, setSelectedDate] = useState<Date | null>(
@@ -212,9 +219,19 @@ export function Calendar({
   };
 
   return (
-    <div className="flex w-[326px] flex-col gap-4 rounded-[30px] bg-white p-6 shadow-[0_0_15px_0_#9C39FC]">
+    <div
+      className={cn(
+        'flex w-[326px] flex-col gap-4 rounded-[30px] bg-white p-6 shadow-[0_0_15px_0_#9C39FC]',
+        className,
+      )}
+    >
       <div className="flex items-center justify-between">
-        <h2 className="text-[25px] font-bold text-[#380675]">
+        <h2
+          className={cn(
+            'text-[25px] font-bold text-[#380675]',
+            headerClassName,
+          )}
+        >
           {monthNames[currentDate.getMonth()]}, {currentDate.getFullYear()}
         </h2>
         <div className="flex gap-2">

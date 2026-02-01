@@ -1,9 +1,9 @@
-import FormField from '@/components/ui/form-field';
+import SignUpFormContainer from './components/sign-up-form-container';
 
 const SignupPage = () => {
   return (
-    <div>
-      <FormField placeholder="username" />
+    <div className="w-screen h-screen flex justify-center items-center">
+      <SignUpFormContainer />
     </div>
   );
 };

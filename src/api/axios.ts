@@ -1,3 +1,4 @@
+import { API_CONFIG } from '@/config/api';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 interface FailedRequest {
@@ -6,7 +7,7 @@ interface FailedRequest {
 }
 
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: API_CONFIG.API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -35,6 +36,13 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
+    const isAuthPath = originalRequest.url?.includes('/auth/');
+
+    if (isAuthPath) {
+      return Promise.reject(error);
+    }
+
+    // 3. Standard Refresh Logic for all other 401s
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -48,15 +56,16 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await apiClient.post('/portfolio/api/v1/auth/users/refresh');
-
+        await apiClient.post(
+          '/portfolio/api/v1/auth/users/refresh',
+          {},
+          { withCredentials: true },
+        );
         processQueue(null);
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-
         localStorage.removeItem('user');
-
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

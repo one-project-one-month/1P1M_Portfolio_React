@@ -24,8 +24,8 @@ export type PortfolioProjectType = {
   projectLink: string;
   repoLink: string;
   reaction_count?: number;
-  assignedDevs: {
-    developers: DeveloperType[];
+  team: {
+    members: DeveloperType[];
   };
   view_count?: number;
   reactedProjectPortfolios: number[];
@@ -36,9 +36,9 @@ export type PortfolioProjectType = {
 
 export type projectSectionViewType = {
   isLoading: boolean;
-  projects: PortfolioProjectType[];
-  currentPage: number;
-  totalPages: number;
+  projects: PortfolioProjectType[] | null;
+  currentPage: number | 1;
+  totalPages: number | 0;
   onPageChange: (page: number) => void;
 };
 
@@ -57,11 +57,11 @@ export type ProjectCardType = {
   initialLikes?: number;
   initialViews?: number;
   onClickReact: () => void;
-  project: PortfolioProjectType;
+  project: PortfolioProjectType[];
 };
 
 export type ProjectPortfolioDetailType = {
-  projectId: number;
+  projectId: string | number;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -69,8 +69,12 @@ export type ProjectPortfolioDetailType = {
 export interface ProjectRequestBody {
   name: string;
   description: string;
-  projectLink?: string;
-  repoLink?: string;
-  languageAndTools: string[];
-  developerEmails: string[];
+  startDate: string;
+  completedDate: string;
+  status: string;
+  languageAndTools: { name: string; type: string }[];
+  teamIds: string[];
+  projectLink: string;
+  repoLink: string;
+  image: string;
 }
