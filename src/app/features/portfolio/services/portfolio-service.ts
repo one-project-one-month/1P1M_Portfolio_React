@@ -34,7 +34,7 @@ export const getProjectPortfolio = async ({
   }
 };
 
-export async function getProjectPortfolioDetails(projectId: number) {
+export async function getProjectPortfolioDetails(projectId: number | string) {
   try {
     const url = `${API_ENDPOINTS.GET_PROJECT_PORTFOLIO}/${projectId}`;
     const response = await apiClient.get(url);
