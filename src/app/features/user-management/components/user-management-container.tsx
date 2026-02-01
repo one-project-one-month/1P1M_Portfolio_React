@@ -1,5 +1,8 @@
 import UserManagement from '@/app/features/user-management/components/user-management-table';
-import type { UserManagementContainePropsType } from '@/app/features/user-management/types/user-management.types';
+import type {
+  UserManagementContainePropsType,
+  UserManagementType,
+} from '@/app/features/user-management/types/user-management.types';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { useEffect } from 'react';
@@ -41,7 +44,14 @@ const UserManagementContainer = ({
     console.log(id);
   };
 
-  const items = data?.data ?? [];
+  const items = (data?.data ?? []).filter((user: UserManagementType) => {
+    if (selectedFilter === 'All') return true;
+    if (selectedFilter === 'Banned')
+      return user.status?.toLowerCase() === 'banned';
+    if (selectedFilter === 'Approved')
+      return user.status?.toLowerCase() === 'active';
+    return true;
+  });
   const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
 
   return (

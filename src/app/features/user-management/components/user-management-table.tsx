@@ -1,6 +1,7 @@
 import { UserManagementDropDown } from '@/app/features/user-management/components/user-management-drop-down';
 import type { UserManagementTableType } from '@/app/features/user-management/types/user-management.types';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { Link } from 'react-router-dom';
 
 const truncate = (text: string, max = 25) =>
   (text ?? '').length > max ? text.slice(0, max) + '...' : text;
@@ -12,7 +13,7 @@ const nameText = (text: string, max = 6) =>
   (text ?? '').length > max ? text.slice(0, max) + '...' : text;
 const statusColor: Record<UserManagementTableType['status'], string> = {
   APPROVED: '#7CCF00',
-  BANNED: '#A6A09B',
+  BANNED: '#FB2C36',
 };
 
 const UserManagement = ({
@@ -60,9 +61,12 @@ const UserManagement = ({
                       src={sampleUserImgUrl}
                       className="size-10 rounded-full  object-cover"
                     />
-                    <span className=" text-slate-400 text-sm font-semibold">
-                      {nameText(user.name)}
-                    </span>
+                    <Link to={`view-detail/${user.userId}`}>
+                      {' '}
+                      <span className=" text-slate-400 text-sm font-semibold hover:text-[#9C39FC] cursor-pointer">
+                        {nameText(user.name)}
+                      </span>
+                    </Link>
                   </div>{' '}
                 </td>
                 <td className="py-4 text-center text-sm  text-slate-400">
@@ -80,21 +84,27 @@ const UserManagement = ({
                   {truncate(user.linkedUrl)}
                 </td>
                 <td className="py-4 text-center text-sm">
-                  <span
-                    className="capitalize"
-                    style={{ color: statusColor['APPROVED'] }}
-                  >
-                    Approved
-                  </span>
+                  {user.aboutDev?.includes('Administrator') ? (
+                    <span className="text-[#9C39FC]">Disabled</span>
+                  ) : user.status === 'ACTIVE' ? (
+                    <span style={{ color: statusColor.APPROVED }}>
+                      Approved
+                    </span>
+                  ) : user.status === 'Banned' ? (
+                    <span style={{ color: statusColor.BANNED }}>Banned</span>
+                  ) : (
+                    ''
+                  )}
                 </td>
 
                 <td className="py-4 text-center relative" key={user.userId}>
                   <UserManagementDropDown
                     // type="list"
                     userId={user.userId}
+                    status={user.status}
                     handleEdit={() => handleEdit(user.userId)}
                     handleViewDetail={() => handleViewDetail(user.userId)}
-                    handleBanned={handleBanned}
+                    handleBanned={() => handleBanned(user.userId)}
                     handleRestore={handleRestore}
                   />
                 </td>

@@ -47,7 +47,8 @@ const UserManagementViewDetail = () => {
     },
   ];
 
-  if (isLoading) return <div>loading details...</div>;
+  if (isLoading)
+    return <div className="text-[#F9FAFB]">loading details...</div>;
 
   const user = data?.data;
 
@@ -64,57 +65,76 @@ const UserManagementViewDetail = () => {
             <img
               src={sampleUserImgUrl}
               alt=""
-              className="w-[120px] h-[129px] rounded-md "
+              className="w-[163px] h-[185px] rounded-md "
             />
-            <div className="flex flex-col gap-1">
-              <p className="text-[#FFFFFF] font-semibold text-base leading-7">
-                {user?.username || 'Cameron Williamson'}
-              </p>
-              <p className="text-[#99A1AF] leading-5 text-sm ">Front end</p>
-              <div className="flex  items-center  gap-3">
-                <div className="flex justify-center items-center gap-1">
-                  <img src={Email} alt="" className="w-5 h-5  text-[#99A1AF]" />
-                  <p className="text-[#99A1AF] text-sm leading-5">
-                    alma.lawson@example.com
-                  </p>
-                </div>
-                <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+            <div className="flex flex-col gap-[18px]">
+              <div className=" gap-2">
+                <p className="text-[#FFFFFF] font-semibold text-base leading-7">
+                  {user?.username || 'Cameron Williamson'}
+                </p>
+                <p className="text-[#99A1AF] leading-5 text-sm ">Front end</p>
               </div>
 
-              <div className="flex  items-center  gap-3">
-                <div className="flex justify-center gap-1">
-                  <img src={Phone} alt="" className="w-5 h-5  text-[#99A1AF]" />
-                  <p className="text-[#99A1AF] text-sm leading-5">
-                    +33333334534534
-                  </p>
+              <div className="flex flex-col gap-2">
+                <div className="flex  items-center  gap-3">
+                  <div className="flex justify-center items-center gap-1">
+                    <img
+                      src={Email}
+                      alt=""
+                      className="w-5 h-5  text-[#99A1AF]"
+                    />
+                    <p className="text-[#99A1AF] text-sm leading-5">
+                      {user?.email}
+                    </p>
+                  </div>
+                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
                 </div>
-                <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+
+                <div className="flex  items-center  gap-3">
+                  <div className="flex justify-center gap-1">
+                    <img
+                      src={Phone}
+                      alt=""
+                      className="w-5 h-5  text-[#99A1AF]"
+                    />
+                    <p className="text-[#99A1AF] text-sm leading-5">
+                      +33333334534534
+                    </p>
+                  </div>
+                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+                </div>
+
+                <div className="flex  items-center  gap-3">
+                  <div className="flex justify-center gap-1">
+                    <img
+                      src={Telegram}
+                      alt=""
+                      className="w-5 h-5  text-[#99A1AF]"
+                    />
+                    <p className="text-[#99A1AF] text-sm leading-5">@nayGa4u</p>
+                  </div>
+                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+                </div>
               </div>
 
-              <div className="flex  items-center  gap-3">
-                <div className="flex justify-center gap-1">
-                  <img
-                    src={Telegram}
-                    alt=""
-                    className="w-5 h-5  text-[#99A1AF]"
-                  />
-                  <p className="text-[#99A1AF] text-sm leading-5">@nayGa4u</p>
+              <div className="flex  gap-3">
+                <div className="w-[30px] h-[30px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
+                  <img src={Github} className="w-4 h-4" />
                 </div>
-                <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+
+                <div className="w-[30px] h-[30px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
+                  <img src={LinkedIn} className="w-4 h-4" />
+                </div>
+                <div className="w-[30px] h-[30px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
+                  <img src={Behance} className="w-4 h-4" />
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-              <img src={Github} className="w-4 h-4" />
-            </div>
-
-            <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-              <img src={LinkedIn} className="w-4 h-4" />
-            </div>
-            <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-              <img src={Behance} className="w-4 h-4" />
-            </div>
+          <div>
+            <button className="bg-[#9C39FC] w-[108px] opacity-100 p-3 rounded-md text-sm text-[#F9FAFB]">
+              Share Profile
+            </button>
           </div>
         </div>
         <div className="w-full">

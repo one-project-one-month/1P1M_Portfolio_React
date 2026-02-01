@@ -36,10 +36,10 @@ export const API_ENDPOINTS = {
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
   GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
-  GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/userManagement',
-  GET_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/userManagement/{id}',
-  UPDATE_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/userManagement/{id}',
-  DELETE_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/userManagement/{id}',
+  GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/admin/userManagement/{id}',
+  UPDATE_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/admin/userManagement/{id}',
+  BAN_USER_MANAGEMENT_BY_ID: '/portfolio/api/v1/admin/userManagement/{id}',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

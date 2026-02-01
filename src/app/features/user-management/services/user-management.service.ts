@@ -84,18 +84,22 @@ export const editUserManagement = async (
   }
 };
 
-export const deleteUserManagement = async (id: number) => {
+export const banUserManagement = async (id: number, desc: string) => {
   try {
     const response = await apiClient.delete<UserManagementResponseType>(
-      `${API_ENDPOINTS.DELETE_USER_MANAGEMENT_BY_ID}/${id}`,
+      `${API_ENDPOINTS.BAN_USER_MANAGEMENT_BY_ID}/${id}`,
+      null,
+      {
+        params: { desc },
+      },
     );
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
-    console.error('Error deleting user:', e);
+    console.error('Error ban user:', e);
     throw {
       success: false,
-      message: 'Failed to delete user ',
+      message: 'Failed to ban user ',
     };
   }
 };

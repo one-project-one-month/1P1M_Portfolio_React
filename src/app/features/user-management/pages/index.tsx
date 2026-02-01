@@ -3,7 +3,7 @@ import { UserManagementHeaderSection } from '@/app/features/user-management/comp
 import { useState } from 'react';
 
 const UserManagement = () => {
-  const [selectedFilter, setSelectedFilter] = useState('name');
+  const [selectedFilter, setSelectedFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [totalUser, setTotalUser] = useState(0);

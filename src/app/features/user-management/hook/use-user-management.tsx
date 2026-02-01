@@ -1,5 +1,5 @@
 import {
-  deleteUserManagement,
+  banUserManagement,
   editUserManagement,
   getUserManagement,
   getUserManagementDetailById,
@@ -57,16 +57,17 @@ export const useEditUserManagement = () => {
   });
 };
 
-export const useDeleteUserManagement = () => {
+export const useBanUserManagement = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id }: { id: number }) => deleteUserManagement(id),
+    mutationFn: ({ id, desc }: { id: number; desc: string }) =>
+      banUserManagement(id, desc),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-management'] });
-      console.log('User delete successfully');
+      console.log('User ban successfully');
     },
     onError: (error) => {
-      console.error('Delete failed:', error);
+      console.error('Ban failed:', error);
     },
   });
 };

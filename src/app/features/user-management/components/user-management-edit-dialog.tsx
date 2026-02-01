@@ -7,9 +7,11 @@ import { type EditUserManagementType } from '@/app/features/user-management/type
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
+import { TechStacks } from '@/constants';
 import { Dialog } from '@radix-ui/themes';
 import { useEffect, type ReactNode } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import PhoneInput from 'react-phone-input-2';
 type UserManagementEditDialogProps = {
   trigger?: ReactNode;
   userId: number;
@@ -26,6 +28,10 @@ const UserManagementEdit = ({
       username: '',
       email: '',
       role: '',
+      phone: '',
+      telegramUsername: '',
+      gitHub_url: '',
+      linkedIn_url: '',
     },
   });
 
@@ -35,6 +41,10 @@ const UserManagementEdit = ({
         username: userDetail.data.username,
         email: userDetail.data.email,
         role: userDetail.data.role,
+        phone: userDetail.data.phone ?? '',
+        telegramUsername: userDetail.data.telegramUsername ?? '',
+        gitHub_url: userDetail.data.gitHub_url ?? '',
+        linkedIn_url: userDetail.data.linkedIn_url ?? '',
       });
     }
   }, [userDetail, reset]);
@@ -42,11 +52,7 @@ const UserManagementEdit = ({
   const onSubmit = (data: EditUserManagementType) => {
     editUser({
       id: userId,
-      data: {
-        username: data.username,
-        email: data.email,
-        role: data.role,
-      },
+      data,
     });
   };
   return (
@@ -57,6 +63,10 @@ const UserManagementEdit = ({
             username: userDetail.data.username,
             email: userDetail.data.email,
             role: userDetail.data.role,
+            phone: userDetail.data.phone,
+            telegramUsername: userDetail.data.telegramUsername,
+            gitHub_url: userDetail.data.gitHub_url,
+            linkedIn_url: userDetail.data.linkedIn_url,
           });
         }
       }}
@@ -97,8 +107,8 @@ const UserManagementEdit = ({
                     render={({ field }) => (
                       <FormDropdown
                         placeholder="Role"
-                        // menuList={TechStacks}
-                        // selectedValue={field.value}
+                        menuList={TechStacks}
+                        selectedValue={field.value}
                         onChange={field.onChange}
                       />
                     )}
@@ -112,10 +122,9 @@ const UserManagementEdit = ({
                     )}
                   />
 
-                  {/* <Controller
+                  <Controller
                     name="phone"
                     control={control}
-                    rules={{ required: 'Phone number is required' }}
                     render={({ field }) => (
                       <PhoneInput
                         {...field}
@@ -126,7 +135,7 @@ const UserManagementEdit = ({
                   />
 
                   <Controller
-                    name="telegram"
+                    name="telegramUsername"
                     control={control}
                     render={({ field }) => (
                       <FormField placeholder="@bora" {...field} />
@@ -134,7 +143,7 @@ const UserManagementEdit = ({
                   />
 
                   <Controller
-                    name="github"
+                    name="gitHub_url"
                     control={control}
                     render={({ field }) => (
                       <FormField placeholder="www.github.com/bora" {...field} />
@@ -142,23 +151,16 @@ const UserManagementEdit = ({
                   />
 
                   <Controller
-                    name="linkedin"
+                    name="linkedIn_url"
                     control={control}
                     render={({ field }) => (
                       <FormField
-                        placeholder="www.linkedin/in/bora"
+                        placeholder="www.linkedin.com/in/bora"
                         {...field}
                       />
                     )}
-                  /> */}
+                  />
 
-                  {/* <Controller
-                    name="linkedin"
-                    control={control}
-                    render={({ field }) => (
-                      <FormField placeholder="something" {...field} />
-                    )}
-                  /> */}
                   <div className="flex justify-between">
                     <Button className="w-[40%]">Cancel</Button>
                     <Button className="w-[40%]">

@@ -1,11 +1,17 @@
+import { useBanUserManagement } from '@/app/features/user-management/hook/use-user-management';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
 import { useState, type ReactNode } from 'react';
 type UserManagementBanDialogProps = {
   trigger?: ReactNode;
+  userId: number;
 };
 
-const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
+const UserManagementBanDialog = ({
+  trigger,
+  userId,
+}: UserManagementBanDialogProps) => {
+  const { mutate: banUser } = useBanUserManagement();
   const banData = [
     {
       name: 'Spamming or Self-Promotion',
@@ -26,12 +32,19 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
       description: 'Reason not covered by the options above.',
     },
   ];
+
   const [selectReason, setSelectedReason] = useState<string[]>([]);
 
   const toggleReason = (reason: string) => {
     setSelectedReason((pre) =>
       pre.includes(reason) ? pre.filter((r) => r !== reason) : [...pre, reason],
     );
+  };
+
+  const hanleConfirm = () => {
+    const reason = selectReason.join(',');
+    if (!reason) return;
+    banUser({ id: userId, desc: reason });
   };
   return (
     <Dialog.Root>
@@ -45,6 +58,7 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
           color: 'white',
           padding: '60px',
           height: '588px',
+          border: '1px solid #9F0712',
         }}
       >
         <div className="w-full h-full flex flex-col gap-8 ">
@@ -86,7 +100,10 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
             <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
               Cancel
             </Button>
-            <Button className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]">
+            <Button
+              onClick={hanleConfirm}
+              className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
+            >
               Confirm
             </Button>
           </div>
