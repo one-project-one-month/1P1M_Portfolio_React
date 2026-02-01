@@ -4,7 +4,7 @@ import { getSortDirection } from '@/lib/get-sort-direction';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@radix-ui/themes';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -25,7 +25,7 @@ const page = () => {
     create: false,
   });
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const { addToast } = useToast();
 
@@ -48,8 +48,10 @@ const page = () => {
     mutationFn: ({ formData }: { formData: CreateProjectIdeaType }) =>
       createProjectIdea(formData),
     onSuccess: (success) => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(success.message, 'success');
       setOpen({ ...open, create: false });
+
       form.reset();
     },
     onError: (error) => {
