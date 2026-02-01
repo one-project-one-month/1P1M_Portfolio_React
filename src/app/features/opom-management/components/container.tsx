@@ -8,7 +8,7 @@ import { OpomRegisteredListTable } from './table';
 
 const OpomRegisteredListContainer = ({
   searchQuery,
-  selectedFilter,
+
   page,
   size,
   onPageChange,
