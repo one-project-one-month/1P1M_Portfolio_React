@@ -40,7 +40,7 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
     id: 6,
-    name: 'OPOM Registered People List',
+    name: 'OPOM Registered Users',
     path: 'opom-registered-people-list',
     icon: FileUser,
   },

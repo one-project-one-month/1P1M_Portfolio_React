@@ -103,3 +103,7 @@ export const AdminProfilePage = PageLoader(
 export const NotFoundPage = PageLoader(
   lazy(() => import('@/app/features/not-found')),
 );
+
+export const MyProfilePage = PageLoader(
+  lazy(() => import('@/app/features/user-profile/page')),
+);

@@ -14,7 +14,7 @@ const IdeaManagement = () => {
     search: '',
   });
   const [pagination, setPagination] = useState({
-    currentPage: 1,
+    currentPage: 0,
     totalItems: 0,
   });
 
