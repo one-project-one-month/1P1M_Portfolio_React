@@ -20,7 +20,8 @@ const OpomRegisteredListContainer = ({
     page,
     size,
     keyword: searchQuery,
-    sortField: selectedFilter,
+    sortField: 'devProfile.name',
+    sortDirection: 'desc',
   });
   useEffect(() => {
     if (data?.meta?.totalItems && onTotalChange) {
