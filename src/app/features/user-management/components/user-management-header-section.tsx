@@ -1,6 +1,6 @@
 import type { UserManagementHeaderType } from '@/app/features/user-management/types/user-management.types';
 import InputField from '@/components/ui/input-field';
-import { COLORS } from '@/constants/colors';
+import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Check, ChevronDown, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -28,15 +28,12 @@ export const UserManagementHeaderSection = ({
     setFilterOpen(false);
   };
   return (
-    <div className="flex flex-col gap-y-10 py-6">
-      <div>
-        <h1 className="text-3xl md:text-5xl font-extrabold text-white ps-2 mb-2">
-          Registered User List
-        </h1>
-        <div
-          className={`h-1.5 w-16 md:w-50 rounded-lg bg-[${COLORS.secondary}] `}
-        ></div>
-      </div>
+    <div className="flex flex-col gap-y-10">
+      <Title
+        showSearch={false}
+        showFilter={false}
+        title="Registered User List"
+      />
 
       {/* Total Count and Filters Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

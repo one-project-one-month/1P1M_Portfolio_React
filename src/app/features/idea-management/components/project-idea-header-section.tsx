@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/ui/input-field';
+import Title from '@/components/ui/title';
 import { useToast } from '@/components/ui/toast-provider';
-import { COLORS } from '@/constants/colors';
 import { useDebounce } from '@/hooks/use-debounce';
 import { buttonVariants } from '@/styles/button-variants';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -100,15 +100,8 @@ const ProjectIdeaHeaderSection = ({
   return (
     <>
       {/* Header Section */}
-      <div className="flex flex-col gap-y-10 py-6">
-        <div className="mb-2">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white ps-2 mb-2">
-            Ideas List
-          </h1>
-          <div
-            className={`h-1.5 w-16 md:w-24 rounded-lg bg-[${COLORS.secondary}] `}
-          ></div>
-        </div>
+      <div className="flex flex-col gap-y-10">
+        <Title showSearch={false} showFilter={false} title="Ideas List" />
 
         {/* Total Count and Filters Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
