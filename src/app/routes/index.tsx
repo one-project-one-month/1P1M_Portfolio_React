@@ -8,6 +8,7 @@ import {
   IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
+  MyProfilePage,
   NotFoundPage,
   PortfolioManagementPage,
   PortfolioPage,
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
         element: <DeveloperPage />,
       },
 
+      { path: '/me', element: <MyProfilePage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'profile/:username', element: <UserProfile /> },
       { path: '/about us', element: <AboutUsPage /> },

@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CustomHamburger from './custom-hamburger';
 import { Button } from './ui/button';
+import UserProfile from './ui/user-profile';
 
 interface NavbarProps {
   auth: UserInfo | null;
@@ -68,18 +69,13 @@ function Navbar({ auth }: NavbarProps) {
       </div>
 
       {/* Desktop Auth Section */}
-      <div className="hidden md:flex items-center gap-3">
+      <div className="hidden md:flex items-center gap-3 ">
         {auth ? (
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <img
-              src={auth?.profile ?? sampleUserImgUrl}
-              className="size-12 rounded-full"
-            />
-
-            <h3 className="text-white text-sm font-semibold">
-              {auth?.username}
-            </h3>
-          </div>
+          <UserProfile
+            email={auth?.email}
+            img={auth?.profile ?? sampleUserImgUrl}
+            username={auth.username}
+          />
         ) : (
           <Button
             variant="secondary"
