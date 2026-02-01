@@ -87,7 +87,7 @@ const Title = ({
       </div>
 
       {/* Actions Section (Create & Filter) */}
-      <div className="flex justify-center items-center gap-4 border">
+      <div className="flex justify-center items-center gap-4">
         {onCreate && (
           <Button
             variant="primary"
