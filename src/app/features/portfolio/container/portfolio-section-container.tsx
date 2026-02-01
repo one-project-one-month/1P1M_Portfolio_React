@@ -6,8 +6,6 @@ import type {
 import { useState } from 'react';
 import ProjectSectionView from '../components/portfolio-section-view';
 import { useGetProjectPortfolio } from '../hooks/use-get-portfolio';
-
-const SIZE = 20;
 const SORT_FIELD = 'name';
 
 const PortfolioSectionContainer = ({

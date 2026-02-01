@@ -11,7 +11,7 @@ const ProjectSectionView = ({
 }: projectSectionViewType) => {
   return (
     <>
-      <ProjectList projects={projects} isLoading={isLoading} />
+      <ProjectList projects={projects ?? []} isLoading={isLoading} />
 
       {totalPages > 1 && (
         <Pagination

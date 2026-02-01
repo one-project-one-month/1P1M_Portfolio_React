@@ -72,7 +72,7 @@ export interface ProjectRequestBody {
   startDate: string;
   completedDate: string;
   status: string;
-  languageAndTools: string[];
+  languageAndTools: { name: string; type: string }[];
   teamIds: string[];
   projectLink: string;
   repoLink: string;

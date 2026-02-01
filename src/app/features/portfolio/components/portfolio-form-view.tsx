@@ -20,12 +20,16 @@ const PortfolioFormview = () => {
       startDate: values.startDate || '',
       completedDate: values.completedDate || '',
       status: values.status || 'Pending',
+
+      // FIX 1: Map to Objects, not Strings
+      // The API wants { name: string, type: string }
       languageAndTools:
         values.technologies?.map((tech) => ({
-          name: tech.languages || '',
-          type: tech.projectType?.name || 'Other',
+          name: tech.languages || '', // e.g., "React, Node"
+          type: tech.projectType?.name || 'Other', // e.g., "Fullstack Developers"
         })) || [],
-      teamIds: values.members?.map((team) => team.id) || [],
+
+      teamIds: values.members?.map((team) => String(team.id)) || [],
     };
 
     mutate(payload);
