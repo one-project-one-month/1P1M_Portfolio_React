@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const userRoleSchema = z.enum(['USER', 'ADMIN']);
+export const userRoleSchema = z.enum(['USER', 'ADMIN', '']);
 export type UserRole = z.infer<typeof userRoleSchema>;
 
 export interface LoginResponse {
@@ -8,7 +8,7 @@ export interface LoginResponse {
   username: string | undefined;
   email: string | undefined;
   roleId: number;
-  role: 'ADMIN' | 'USER' | undefined;
+  role: 'ADMIN' | 'USER' | null;
   isNewUserLogin: boolean;
 }
 

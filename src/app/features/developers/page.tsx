@@ -1,4 +1,3 @@
-import DevProfileCard from '@/components/ui/dev-profile-card';
 import Pagination from '@/components/ui/pagination';
 import SkeletonCard from '@/components/ui/skeleton-card';
 import Title from '@/components/ui/title';
@@ -6,6 +5,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DevCard from './components/dev-card';
 import { useDevProfileQuery } from './hooks/use-dev-profile';
 
 const Developer = () => {
@@ -73,7 +73,7 @@ const Developer = () => {
             <SkeletonCard />
           ) : (
             DevProfileDatas.map((devProfile, idx) => (
-              <DevProfileCard
+              <DevCard
                 key={idx}
                 devProfile={devProfile}
                 viewProfile={() => handleProfileView(devProfile.dev_id)}
