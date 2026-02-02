@@ -45,7 +45,10 @@ apiClient.interceptors.response.use(
     }
 
     // 3. Standard Refresh Logic for all other 401s
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 401) &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
