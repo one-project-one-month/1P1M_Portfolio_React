@@ -47,8 +47,6 @@ export async function setupDevProfile(
   id: number | undefined | null,
 ) {
   try {
-    if (!id) throw new Error(' You are not logged in.');
-
     const payload = {
       ...data,
     };
@@ -56,9 +54,6 @@ export async function setupDevProfile(
     const response = await apiClient.post(
       `/portfolio/api/v1/profiles/create/` + `${id}`,
       payload,
-      {
-        withCredentials: true,
-      },
     );
 
     return response.data;

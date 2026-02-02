@@ -1,7 +1,7 @@
-import DevProfileCard from '@/components/ui/dev-profile-card';
 import SkeletonCard from '@/components/ui/skeleton-card';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import type { DevProfile, FeaturedDevProps } from '@/types/dev';
+import DevCard from '../../developers/components/dev-card';
 
 const FeaturedDevelopersSection = ({
   profiles,
@@ -45,7 +45,7 @@ const FeaturedDevelopersSection = ({
     return devProfiles
       .slice(0, 6)
       .map((devProfile) => (
-        <DevProfileCard
+        <DevCard
           devProfile={devProfile}
           key={devProfile.dev_id}
           viewProfile={() => handleProfileView(devProfile)}

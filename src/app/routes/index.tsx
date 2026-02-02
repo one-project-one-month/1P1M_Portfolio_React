@@ -28,6 +28,7 @@ import ViewPortfolioPage from '../features/portfolio-management/pages/view-portf
 import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
+import ProtectedGuard from './guards/protected-guard';
 
 const router = createBrowserRouter([
   {
@@ -40,66 +41,71 @@ const router = createBrowserRouter([
       },
 
       { path: '/portfolios', element: <PortfolioPage /> },
-      { path: '/portfolio/create-portfolio', element: <PortfolioFormview /> },
+      { path: '/developers', element: <DeveloperPage /> },
+      { path: 'profile/:username', element: <UserProfile /> },
+      { path: '/about us', element: <AboutUsPage /> },
+      { path: '/me', element: <MyProfilePage /> },
+      { path: '/ideas', element: <IdeaPage /> },
+      { path: 'opom-register', element: <OpomRegisterPage /> },
+      {
+        path: '/portfolio/create-portfolio',
+        element: <PortfolioFormview />,
+      },
       {
         path: '/portfolio/update-portfolio/:projectId',
         element: <PortfolioEditview />,
       },
-      { path: 'opom-register', element: <OpomRegisterPage /> },
-      {
-        path: '/developers',
-        element: <DeveloperPage />,
-      },
-
-      { path: '/me', element: <MyProfilePage /> },
-      { path: '/ideas', element: <IdeaPage /> },
-      { path: 'profile/:username', element: <UserProfile /> },
-      { path: '/about us', element: <AboutUsPage /> },
     ],
   },
 
   {
     path: '/admin',
-    element: <AdminLayout />,
+
+    element: <ProtectedGuard allow={['ADMIN']} />,
     children: [
-      { path: 'dashboard', element: <DashboardPage /> },
       {
-        path: 'portfolio-management',
-        element: <PortfolioManagementPage />,
-      },
-      {
-        path: 'portfolio-management/create-portfolio',
-        element: <CreatePortfolioPage />,
-      },
-      {
-        path: 'portfolio-management/view-project-portfolio/:projectId',
-        element: <ViewPortfolioPage />,
-      },
-      {
-        path: 'portfolio-management/edit-portfolio/:projectId',
-        element: <EditPortfolioPage />,
-      },
-      { path: 'idea-management', element: <IdeaManagementPage /> },
-      {
-        path: 'idea-management/portfolio/import',
-        element: <IdeaManagementEditPage />,
-      },
+        element: <AdminLayout />,
+        children: [
+          { element: <DashboardPage />, index: true },
+          {
+            path: 'portfolio-management',
+            element: <PortfolioManagementPage />,
+          },
+          {
+            path: 'portfolio-management/create-portfolio',
+            element: <CreatePortfolioPage />,
+          },
+          {
+            path: 'portfolio-management/view-project-portfolio/:projectId',
+            element: <ViewPortfolioPage />,
+          },
+          {
+            path: 'portfolio-management/edit-portfolio/:projectId',
+            element: <EditPortfolioPage />,
+          },
+          { path: 'idea-management', element: <IdeaManagementPage /> },
+          {
+            path: 'idea-management/portfolio/import',
+            element: <IdeaManagementEditPage />,
+          },
 
-      { path: 'user-management', element: <UserManagement /> },
-      {
-        path: 'register-user/view-detail',
-        element: <UserManagementViewDetail />,
-      },
+          { path: 'user-management', element: <UserManagement /> },
+          {
+            path: 'register-user/view-detail',
+            element: <UserManagementViewDetail />,
+          },
 
-      { path: 'timeline-management', element: <TimelineManagementPage /> },
-      { path: 'admin-profile', element: <AdminProfilePage /> },
-      {
-        path: 'opom-registered-people-list',
-        element: <OpomRegisteredPeopleList />,
-      },
-      {
-        path: 'opom-registered-people-list/:id',
-        element: <PersonProfilePage />,
+          { path: 'timeline-management', element: <TimelineManagementPage /> },
+          { path: 'admin-profile', element: <AdminProfilePage /> },
+          {
+            path: 'opom-registered-people-list',
+            element: <OpomRegisteredPeopleList />,
+          },
+          {
+            path: 'opom-registered-people-list/:id',
+            element: <PersonProfilePage />,
+          },
+        ],
       },
     ],
   },
