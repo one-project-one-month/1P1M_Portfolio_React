@@ -86,7 +86,9 @@ export const IdeaManagementEditPage = PageLoader(
 );
 
 export const UserManagement = PageLoader(
-  lazy(() => import('@/app/features/user-management/pages/index')),
+  lazy(
+    () => import('@/app/features/user-management/pages/user-management-page'),
+  ),
 );
 
 export const UserManagementViewDetail = PageLoader(
