@@ -41,6 +41,8 @@ interface FormValues {
 export default function ProfileSetupFrom(props: DevProfileFormProps) {
   const user = useUserInfoStore.getState().userInfo;
 
+  console.log(user);
+
   var isEditMode = props.isEditMode ?? false;
   var existingProfileData = props.existingProfileData ?? null;
 
