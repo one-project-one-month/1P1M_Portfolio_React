@@ -36,7 +36,9 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    const isAuthPath = originalRequest.url?.includes('/auth/');
+    const isAuthPath =
+      originalRequest.url?.includes('/auth/') &&
+      !originalRequest.url?.includes('/auth/setup-profile');
 
     if (isAuthPath) {
       return Promise.reject(error);
