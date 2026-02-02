@@ -96,6 +96,14 @@ export const UserManagementViewDetail = PageLoader(
   ),
 );
 
+export const AdminProfilePage = PageLoader(
+  lazy(() => import('@/app/features/admin-profile/page.tsx')),
+);
+
 export const NotFoundPage = PageLoader(
   lazy(() => import('@/app/features/not-found')),
+);
+
+export const MyProfilePage = PageLoader(
+  lazy(() => import('@/app/features/user-profile/page')),
 );

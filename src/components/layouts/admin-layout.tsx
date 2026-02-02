@@ -1,19 +1,17 @@
-import { useAuth } from '@/hooks/use-auth';
-import { Spinner } from '@radix-ui/themes';
+import { useUserInfoStore } from '@/store/user-info-store';
 import { Outlet } from 'react-router-dom';
 import Background from '../background';
 import Heading from '../heading';
 import Sidebar from '../sidebar';
 
 const AdminLayout = () => {
-  const { auth, isLoading } = useAuth();
+  const user = useUserInfoStore.getState().userInfo;
 
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center">
-        <Spinner />
-      </div>
-    );
+  // if (!user) {
+  //   <div>
+  //     <Spinner></Spinner>
+  //   </div>;
+  // }
 
   return (
     <Background className="w-full h-screen">
@@ -24,7 +22,7 @@ const AdminLayout = () => {
 
         <div className="flex-1 flex flex-col h-full">
           <div className="shrink-0">
-            <Heading auth={auth} />
+            <Heading user={user ?? null} />
           </div>
 
           <main className="flex-1 overflow-y-auto p-6">

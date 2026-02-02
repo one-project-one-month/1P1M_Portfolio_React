@@ -1,6 +1,12 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
+import { cn } from '@/lib/utils';
+import { Tooltip } from '@radix-ui/themes';
 import { Eye, Heart } from 'lucide-react';
+import {
+  changeProjectIdeaStatus,
+  changeProjectIdeaStatusColor,
+} from '../lib/utils';
 import type { ProjectIdeaType } from '../types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
@@ -12,20 +18,27 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
           {data.map((idea) => (
             <div
               key={idea.id}
-              className="px-4 py-6 md:px-6 md:py-8 space-y-4 md:space-y-6 rounded-xl bg-black"
+              className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md"
             >
               {/* Title and status */}
-              <div className="flex items-start md:items-center justify-between gap-2 md:gap-4">
-                <h3 className="capitalize text-lg sm:text-xl md:text-2xl font-bold text-white line-clamp-2 flex-1">
-                  {idea.projectIdeaName}
-                </h3>
-                <span className="px-3 md:px-6 py-1 text-xs md:text-sm text-white rounded-md capitalize bg-[#00A63E] whitespace-nowrap">
-                  {idea.status}
+              <div className="flex items-start justify-between gap-2 md:gap-4">
+                <Tooltip content={idea.projectIdeaName}>
+                  <h3 className="capitalize text-lg md:text-xl font-bold text-white flex-1 line-clamp-2">
+                    {idea.projectIdeaName}
+                  </h3>
+                </Tooltip>
+                <span
+                  className={cn(
+                    'px-4 py-1 text-xs md:text-sm text-white rounded-md font-semibold whitespace-nowrap',
+                    changeProjectIdeaStatusColor(idea.status),
+                  )}
+                >
+                  {changeProjectIdeaStatus(idea.status)}
                 </span>
               </div>
 
               {/* Desc */}
-              <p className="line-clamp-3 text-sm md:text-base text-muted">
+              <p className="line-clamp-2 text-sm md:text-base text-muted">
                 {idea.description}
               </p>
 
@@ -33,7 +46,7 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
               <div className="flex items-center justify-start gap-2 md:gap-x-4 flex-wrap">
                 {idea.projectTypes.map((item) => (
                   <span
-                    className={`border border-[${COLORS.primary}]! px-3 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize`}
+                    className={`border border-[${COLORS.primary}]! px-3 py-1 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize`}
                   >
                     {item}
                   </span>
@@ -41,8 +54,8 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
               </div>
 
               {/* Submitter and leader */}
-              <div className="flex items-center justify-between gap-x-4 md:gap-x-8 lg:gap-x-16">
-                <div className="w-1/2 flex items-center justify-between gap-2">
+              <div className="flex items-center justify-between gap-x-4 md:gap-x-8 lg:gap-x-16 mt-10">
+                <div className="w-1/2 flex items-center justify-start gap-4">
                   <span className="text-sm md:text-lg text-muted whitespace-nowrap">
                     Submitter:
                   </span>
@@ -52,7 +65,7 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
                     className="size-8 md:size-10 rounded-full shrink-0"
                   />
                 </div>
-                <div className="w-1/2 flex items-center justify-between gap-2">
+                <div className="w-1/2 flex items-center justify-end gap-4">
                   <span className="text-sm md:text-lg text-muted whitespace-nowrap">
                     Leader:
                   </span>
@@ -70,11 +83,11 @@ const IdeaManagementGrid = ({ data }: { data: ProjectIdeaType[] }) => {
               <div className="flex items-center justify-between p-1 md:p-2">
                 <div className="w-1/2 flex items-center justify-start gap-2 md:gap-6">
                   <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
-                    <Heart className="w-4 h-4 md:w-5 md:h-5" />
+                    <Heart size={25} />
                     {idea.reaction_count}
                   </span>
                   <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
-                    <Eye className="w-4 h-4 md:w-5 md:h-5" />
+                    <Eye size={25} />
                     {/* TODO: change to dynamic count later */}
                     <span>
                       1.1<span>K</span>
