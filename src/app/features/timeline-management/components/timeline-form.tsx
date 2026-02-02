@@ -1,3 +1,4 @@
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
 import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
 import ModalWrapper from '@/components/modal-wrapper';
 import DatePicker from '@/components/ui/date-picker';
@@ -9,6 +10,7 @@ type TimelineProps = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   data?: Timeline | null;
+  onSuccess: () => void;
 };
 
 const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
@@ -21,6 +23,7 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
   const [nameError, setNameError] = useState<string>('');
   const [descriptionError, setDescriptionError] = useState<string>('');
   const { addToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -30,8 +33,8 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
         setFormData({
           name: data.name || '',
           description: data.description || '',
-          startDate: data.startDate || '',
-          endDate: data.endDate || '',
+          startDate: data.startDate?.split('T')[0] || '',
+          endDate: data.endDate?.split('T')[0] || '',
         });
       } else {
         setFormData({ name: '', description: '', startDate: '', endDate: '' });
@@ -41,7 +44,7 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
 
   const handleClose = () => setIsOpen(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setNameError('');
@@ -75,17 +78,28 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
       return;
     }
 
-    if (data?.id) {
-      console.log('Updating existing item:', data.id);
-      console.log('Submitting Data:', formData);
-      // TODO: await updateTimeline(data.id, formData)
-    } else {
-      console.log('Creating new item');
-      console.log('Submitting Data:', formData);
-      // TODO: await createTimeline(formData)
+    setIsSubmitting(true);
+    try {
+      if (data?.id) {
+        // Mode: Update
+        await timelineService.updateTimeline(data.id, formData);
+        addToast('Timeline updated successfully!', 'success');
+      } else {
+        // Mode: Create
+        await timelineService.createTimeline(formData);
+        addToast('Timeline created successfully!', 'success');
+      }
+      onSuccess();
+      handleClose();
+    } catch (error: any) {
+      console.error('Submission Error:', error);
+      addToast(
+        error?.response?.data?.message || 'Something went wrong',
+        'error',
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    handleClose();
   };
 
   return (
@@ -144,6 +158,7 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
             type="button"
             onClick={handleClose}
             className="flex-1 py-3 px-6 rounded-xl border border-[#9C39FC] text-white font-semibold hover:bg-white/5 transition-colors"
+            disabled={isSubmitting}
           >
             Cancel
           </button>
@@ -151,8 +166,9 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
             type="button"
             onClick={handleSubmit}
             className="flex-1 py-3 px-6 rounded-xl bg-[#9C39FC] text-white font-semibold hover:bg-[#8A2BE2] transition-colors shadow-lg shadow-[#9C39FC]/20"
+            disabled={isSubmitting}
           >
-            {data ? 'Update' : 'Save'}
+            {isSubmitting ? 'Processing...' : data ? 'Update' : 'Save'}
           </button>
         </div>
       </div>

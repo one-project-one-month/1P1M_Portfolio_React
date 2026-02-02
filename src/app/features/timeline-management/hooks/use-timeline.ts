@@ -1,4 +1,4 @@
-import { getTimelineData } from '@/app/features/timeline-management/services/timeline-service';
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
 import type {
   StatusOption,
   Timeline,
@@ -19,7 +19,7 @@ export const useTimeline = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getTimelineData();
+        const data = await timelineService.getAllTimeline();
         setAllData(Array.isArray(data) ? data : []);
       } catch (err: any) {
         setError(err.message);

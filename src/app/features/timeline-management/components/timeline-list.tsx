@@ -1,6 +1,8 @@
 import TimelineForm from '@/app/features/timeline-management/components/timeline-form.tsx';
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
 import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
 import ConfirmationModal from '@/components/ui/confirm-modal.tsx';
+import { useToast } from '@/components/ui/toast-provider';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -11,6 +13,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const { addToast } = useToast();
 
   if (data.length === 0) {
     return (
@@ -47,11 +50,21 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
     setOpenMenuId(null);
   };
 
-  const confirmDelete = () => {
-    console.log('Deleting ID:', selectedId);
-    // TODO: await deleteTimeline(data.id, formData)
-    setIsDeleteModalOpen(false);
-    setSelectedId(null);
+  const confirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await timelineService.deleteTimeline(selectedId);
+
+      addToast('Project Created successfully', 'success');
+      console.log('Successfully deleted!');
+    } catch (error) {
+      addToast('Failed to delete timeline', 'error');
+      console.error('Failed to delete timeline:', error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+    }
   };
 
   return (
@@ -132,13 +145,13 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
         </tbody>
       </table>
 
-      {/*-------- Start Delete Confirm Modal --------*/}
+      {/*-------- Start Edit Modal --------*/}
       <TimelineForm
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
         data={editData}
       />
-      {/*-------- End Delete Confirm Modal --------*/}
+      {/*-------- End Edit Modal --------*/}
 
       {/*-------- Start Delete Confirm Modal --------*/}
       <ConfirmationModal

@@ -2,17 +2,38 @@ import apiClient from '@/api/axios.ts';
 import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
 import { API_ENDPOINTS } from '@/config/api.ts';
 
-export const getTimelineData = async (): Promise<Timeline[]> => {
-  try {
-    const response = await apiClient.get<Timeline[]>(
-      API_ENDPOINTS.GET_ALL_TIMELINES,
-    );
+const BASE_URL = API_ENDPOINTS.TIMELINES;
 
-    console.log('API Response Data:', response.data);
-
+export const timelineService = {
+  // GET : All Timelines
+  getAllTimeline: async (): Promise<Timeline[]> => {
+    const response = await apiClient.get<Timeline[]>(BASE_URL);
     return response.data;
-  } catch (error) {
-    console.error('Timeline API Error:', error);
-    throw error;
-  }
+  },
+
+  // GET : Timelines By ID
+  getTimelineById: async (id: string): Promise<Timeline[]> => {
+    const response = await apiClient.get<Timeline[]>(`${BASE_URL}/${id}`);
+    return response.data;
+  },
+
+  // POST : Create Timeline
+  createTimeline: async (data: Omit<Timeline, 'id'>): Promise<Timeline> => {
+    const response = await apiClient.post<Timeline>(BASE_URL, data);
+    return response.data;
+  },
+
+  // PUT : Update Timeline
+  updateTimeline: async (
+    id: string,
+    data: Partial<Timeline>,
+  ): Promise<Timeline> => {
+    const response = await apiClient.put<Timeline>(`${BASE_URL}/${id}`, data);
+    return response.data;
+  },
+
+  // DELETE : Delete Timeline
+  deleteTimeline: async (id: string): Promise<void> => {
+    await apiClient.delete(`${BASE_URL}/${id}`);
+  },
 };
