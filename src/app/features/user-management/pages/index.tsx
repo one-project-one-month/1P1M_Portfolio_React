@@ -8,7 +8,7 @@ const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalUser, setTotalUser] = useState(0);
 
-  const pageSize = 10;
+  const pageSize = 6;
 
   return (
     <div>

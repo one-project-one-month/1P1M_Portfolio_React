@@ -23,6 +23,9 @@ const UserManagementEdit = ({
 }: UserManagementEditDialogProps) => {
   const { mutate: editUser, isPending } = useEditUserManagement();
   const { data: userDetail } = useGetUserManagementDetail(userId);
+  const user = Array.isArray(userDetail?.data)
+    ? userDetail?.data[0]
+    : userDetail?.data;
   const { control, handleSubmit, reset } = useForm<EditUserManagementType>({
     defaultValues: {
       username: '',
@@ -32,22 +35,24 @@ const UserManagementEdit = ({
       telegramUsername: '',
       gitHub_url: '',
       linkedIn_url: '',
+      description: '',
+      techStack: [],
     },
   });
 
   useEffect(() => {
-    if (userDetail?.data) {
-      reset({
-        username: userDetail.data.username,
-        email: userDetail.data.email,
-        role: userDetail.data.role,
-        phone: userDetail.data.phone ?? '',
-        telegramUsername: userDetail.data.telegramUsername ?? '',
-        gitHub_url: userDetail.data.gitHub_url ?? '',
-        linkedIn_url: userDetail.data.linkedIn_url ?? '',
-      });
-    }
-  }, [userDetail, reset]);
+    if (!user) return;
+    reset({
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      telegramUsername: user.telegramUsername,
+      gitHub_url: user.githubUrl,
+      linkedIn_url: user.linkedUrl,
+      description: user.aboutDev,
+      techStack: user.techStack,
+    });
+  }, [user, reset]);
 
   const onSubmit = (data: EditUserManagementType) => {
     editUser({
@@ -58,15 +63,16 @@ const UserManagementEdit = ({
   return (
     <Dialog.Root
       onOpenChange={(open) => {
-        if (open && userDetail?.data) {
+        if (open && user) {
           reset({
-            username: userDetail.data.username,
-            email: userDetail.data.email,
-            role: userDetail.data.role,
-            phone: userDetail.data.phone,
-            telegramUsername: userDetail.data.telegramUsername,
-            gitHub_url: userDetail.data.gitHub_url,
-            linkedIn_url: userDetail.data.linkedIn_url,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            telegramUsername: user.telegramUsername,
+            gitHub_url: user.githubUrl,
+            linkedIn_url: user.linkedUrl,
+            description: user.aboutDev,
+            techStack: user.techStack,
           });
         }
       }}
@@ -102,14 +108,14 @@ const UserManagementEdit = ({
                   />
 
                   <Controller
-                    name="role"
+                    name="techStack"
                     control={control}
                     render={({ field }) => (
                       <FormDropdown
-                        placeholder="Role"
+                        placeholder="Tech Stack"
                         menuList={TechStacks}
-                        selectedValue={field.value}
-                        onChange={field.onChange}
+                        selectedValue={TechStacks.find((t) => t.name) || null}
+                        onChange={(item) => field.onChange(item.name)}
                       />
                     )}
                   />

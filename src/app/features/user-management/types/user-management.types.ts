@@ -2,24 +2,26 @@ import type { ApiResponseType } from '@/types/api-response.type';
 import z from 'zod';
 
 export const UserManagementStatus = {
-  BANNED: 'BANNED',
+  BANNED: 'Banned',
   ACTIVE: 'ACTIVE',
 } as const;
 
 export const userManagementSchema = z.object({
   userId: z.number(),
-  name: z.string(),
+  username: z.string(),
   email: z.string(),
   role: z.string(),
+  aboutDev: z.string(),
   telegramUsername: z.string(),
   githubUrl: z.string(),
   linkedUrl: z.string(),
   status: z
     .enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED])
     .nullable(),
+  techStack: z.array(z.string()).optional(),
 });
 
-export const editUserManagementShema = z.object({
+export const editUserManagementSchema = z.object({
   username: z.string(),
   email: z.string(),
   role: z.string(),
@@ -27,6 +29,14 @@ export const editUserManagementShema = z.object({
   telegramUsername: z.string().optional(),
   gitHub_url: z.string().optional(),
   linkedIn_url: z.string().optional(),
+  description: z.string().optional(),
+  techStack: z.array(z.string()).optional(),
+});
+
+export const userManagementDetailSchema = z.object({
+  username: z.string(),
+  email: z.string(),
+  role: z.string(),
 });
 
 export const deleteUserManagementSchema = userManagementSchema.pick({
@@ -41,6 +51,10 @@ export type GetUserManagementParamsType = {
   sortDirection?: 'asc' | 'desc';
 };
 export type UserManagementType = z.infer<typeof userManagementSchema>;
+export type UserManagementEditType = z.infer<typeof editUserManagementSchema>;
+export type UserManagementDetailType = z.infer<
+  typeof userManagementDetailSchema
+>;
 
 export type UserManagementContainePropsType = {
   // view: 'list' | 'grid';
@@ -58,7 +72,7 @@ export type UserManagementTableType = {
   userId: number;
   status?: any;
   type?: 'list' | 'grid';
-  data?: UserManagementType[];
+  data: UserManagementType[];
 
   handleEdit: (id: number) => void;
   handleViewDetail: (id: number) => void;
@@ -78,8 +92,12 @@ export type DeleteUserManagementType = z.infer<
 >;
 
 export type UserManagementResponseType = ApiResponseType<UserManagementType[]>;
-export type UserManagementByIdResponseType =
-  ApiResponseType<UserManagementType>;
-export type EditUserManagementType = z.infer<typeof editUserManagementShema>;
+export type UserManagementByIdResponseType = ApiResponseType<
+  UserManagementType[]
+>;
+export type EditUserManagementType = z.infer<typeof editUserManagementSchema>;
 export type DeleteUserManagementResponseType =
   ApiResponseType<DeleteUserManagementType>;
+
+export type UserManagementDetailResponseType =
+  ApiResponseType<UserManagementDetailType>;

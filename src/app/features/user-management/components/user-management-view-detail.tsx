@@ -1,4 +1,5 @@
 import { getUserManagementDetailById } from '@/app/features/user-management/services/user-management.service';
+import type { UserManagementDetailResponseType } from '@/app/features/user-management/types/user-management.types';
 import ArrowLeft from '@/assets/icons/arrowLeft.svg';
 import Behance from '@/assets/icons/behance.png';
 import Copy from '@/assets/icons/copy.png';
@@ -16,7 +17,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const UserManagementViewDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<UserManagementDetailResponseType>({
     queryKey: ['user-management-detail', id],
     queryFn: () => getUserManagementDetailById(Number(id)),
   });

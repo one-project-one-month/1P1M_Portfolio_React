@@ -47,7 +47,7 @@ const UserManagement = ({
           </thead>
 
           <tbody className="divide-y divide-slate-800">
-            {data.map((user: any) => (
+            {data.map((user) => (
               <tr
                 // key={idea.id}
                 className="hover:bg-slate-800/40"
@@ -64,7 +64,7 @@ const UserManagement = ({
                     <Link to={`view-detail/${user.userId}`}>
                       {' '}
                       <span className=" text-slate-400 text-sm font-semibold hover:text-[#9C39FC] cursor-pointer">
-                        {nameText(user.name)}
+                        {nameText(user.username)}
                       </span>
                     </Link>
                   </div>{' '}
@@ -106,6 +106,7 @@ const UserManagement = ({
                     handleViewDetail={() => handleViewDetail(user.userId)}
                     handleBanned={() => handleBanned(user.userId)}
                     handleRestore={handleRestore}
+                    data={data}
                   />
                 </td>
               </tr>

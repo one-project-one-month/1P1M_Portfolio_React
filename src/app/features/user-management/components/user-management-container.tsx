@@ -62,6 +62,7 @@ const UserManagementContainer = ({
         handleViewDetail={handleViewDetail}
         handleBanned={handleBanned}
         handleRestore={handleRestored}
+        userId={0}
       />
 
       <div className="flex items-center justify-between mt-14">

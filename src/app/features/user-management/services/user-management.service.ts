@@ -2,6 +2,7 @@ import apiClient from '@/api/axios';
 import {
   type EditUserManagementType,
   type GetUserManagementParamsType,
+  type UserManagementDetailResponseType,
   type UserManagementResponseType,
 } from '@/app/features/user-management/types/user-management.types';
 import { API_ENDPOINTS } from '@/config/api';
@@ -41,7 +42,7 @@ export const getUserManagementDetailById = async (id: number) => {
     // const response = await apiClient.get<UserManagementResponseType>(
     //   `${API_ENDPOINTS.GET_USER_MANAGEMENT_BY_ID}/${id}`,
     // );
-    const response = await apiClient.get<UserManagementResponseType>(url);
+    const response = await apiClient.get<UserManagementDetailResponseType>(url);
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
@@ -86,8 +87,13 @@ export const editUserManagement = async (
 
 export const banUserManagement = async (id: number, desc: string) => {
   try {
-    const response = await apiClient.delete<UserManagementResponseType>(
-      `${API_ENDPOINTS.BAN_USER_MANAGEMENT_BY_ID}/${id}`,
+    const url = API_ENDPOINTS.BAN_USER_MANAGEMENT_BY_ID.replace(
+      '{id}',
+      id.toString(),
+    );
+
+    const response = await apiClient.patch<UserManagementResponseType>(
+      url,
       null,
       {
         params: { desc },
