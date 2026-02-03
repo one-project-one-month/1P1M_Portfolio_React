@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/toast-provider';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+import { useUserInfoStore, type UserInfo } from '@/store/user-info-store';
+import type { LoginResponse } from '@/types/auth';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { loginWithEmailPassword } from '../services/api';
-
-import { useAppNavigation } from '@/hooks/use-app-navigate';
-import { useUserInfoStore } from '@/store/user-info-store';
-import type { LoginResponse } from '@/types/auth';
 import FormBackground from './form-bg';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -13,7 +13,7 @@ import TextField from './text-field';
 export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { setUserInfo } = useUserInfoStore();
@@ -21,6 +21,7 @@ export default function LoginForm() {
   const { handleRoute } = useAppNavigation();
 
   const [emailErrorMsg, setEmailErrorMsg] = useState('');
+  const { addToast } = useToast();
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
@@ -62,36 +63,37 @@ export default function LoginForm() {
     if (emailErr || passwordErr) return;
 
     setLoading(true);
-    setError('');
 
     try {
       const response = await loginWithEmailPassword(email, password);
 
-      if (!response.success || response.code >= 400) {
-        setError(response.message || 'Login failed');
-      }
-
       console.log('RES', response);
 
-      const userInfo = {
-        username: response.data?.username ?? '',
-        userId: response.data?.userId ?? 0,
-        role: response.data?.role ?? 'USER',
-      };
+      if (!response.success || response.code >= 400) {
+        addToast(response.message, 'error', 3000);
+      } else {
+        const userInfo: UserInfo = {
+          username: response.data?.username ?? '',
+          userId: response.data?.userId ?? 0,
+          role: response.data?.role ?? 'USER',
+          profile: null,
+          email: response.data?.email ?? '',
+        };
 
-      console.log('USER INFO', userInfo);
-      console.log('Login successful:', response.data?.role);
+        setUserInfo(userInfo);
 
-      setUserInfo(userInfo);
-      console.log('Login successful:', response.data);
+        const data = response.data as LoginResponse;
 
-      const data = response.data as LoginResponse;
+        console.log(data?.role);
 
-      handleRoute(data?.role, data?.isNewUserLogin);
+        handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
+        addToast(response?.message, 'success', 3000);
+      }
+
+      console.log(response.success);
     } catch (e: unknown) {
       const err = e as Error;
       console.error('Login failed:', err);
-      setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -101,12 +103,12 @@ export default function LoginForm() {
     <>
       <FormBackground className="flex items-center justify-around flex-col w-fit h-fit">
         {/* Heading */}
-        <div className="text-white">
+        <div className="text-white text-center">
           <h1 className="font-sans font-bold text-2xl leading-8 mb-2">
             Sign In To Your Account
           </h1>
           <p className="font-sans text-sm text-[#99A1AF] w-full text-center mb-4">
-            Subtitle
+            Join thousands of others building the future together
           </p>
         </div>
 
@@ -156,11 +158,11 @@ export default function LoginForm() {
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
-          {!showEmailError && !showPasswordError && error && (
+          {/* {!showEmailError && !showPasswordError && error && (
             <p className="text-red-500 text-xs mt-3 absolute bottom-[60px] left-[30%]">
               {error}
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Forgot password */}

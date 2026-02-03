@@ -6,7 +6,7 @@ export const useAppNavigation = () => {
     navigate(to, options);
   };
 
-  const handleHomeNav = (role?: UserRole) => {
+  const handleHomeNav = (role?: UserRole | null) => {
     if (role === 'ADMIN') {
       goTo('/admin');
     } else {

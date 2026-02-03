@@ -1,6 +1,6 @@
 import { useToast } from '@/components/ui/toast-provider';
+import type { ProjectRequestBody } from '@/types/portfolio.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { ProjectData } from '../../portfolio-management/constants/data';
 import { createProjectPortfolio } from '../services/portfolio-service';
 
 export const useCreatePortfolio = () => {
@@ -8,7 +8,7 @@ export const useCreatePortfolio = () => {
   const { addToast } = useToast();
 
   return useMutation({
-    mutationFn: (payload: Partial<ProjectData>) =>
+    mutationFn: (payload: ProjectRequestBody) =>
       createProjectPortfolio(payload),
     onSuccess: (res) => {
       if (res.code === 200 && res.success) {
@@ -18,7 +18,7 @@ export const useCreatePortfolio = () => {
     },
     onError: (error: Error) => {
       console.error('Error Creating Portfolio:', error);
-      addToast(error.message, 'error');
+      addToast(error.message || 'Failed to create project', 'error');
     },
   });
 };

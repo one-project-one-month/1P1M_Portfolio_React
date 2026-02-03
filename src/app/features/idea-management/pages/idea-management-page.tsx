@@ -9,11 +9,12 @@ const DEFAULT_FILTER = 'All';
 const IdeaManagement = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [filter, setFilter] = useState({
+    order: '',
     status: DEFAULT_FILTER,
     search: '',
   });
   const [pagination, setPagination] = useState({
-    currentPage: 1,
+    currentPage: 0,
     totalItems: 0,
   });
 
