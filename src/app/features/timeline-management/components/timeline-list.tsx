@@ -6,7 +6,7 @@ import { useToast } from '@/components/ui/toast-provider';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const TimelineList: React.FC<Timeline> = ({ data }: any) => {
+const TimelineList: React.FC<Timeline> = ({ data, refreshData }: any) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
@@ -58,6 +58,8 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
 
       addToast('Project Deleted successfully', 'success');
       console.log('Successfully deleted!');
+
+      refreshData();
     } catch (error) {
       addToast('Failed to delete timeline', 'error');
       console.error('Failed to delete timeline:', error);
@@ -150,6 +152,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
         data={editData}
+        onSuccess={refreshData}
       />
       {/*-------- End Edit Modal --------*/}
 

@@ -10,7 +10,7 @@ type TimelineProps = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   data?: Timeline | null;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 };
 
 const TimelineForm = ({
@@ -21,29 +21,25 @@ const TimelineForm = ({
 }: TimelineProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     startDate: '',
     endDate: '',
   });
 
   const [nameError, setNameError] = useState<string>('');
-  const [descriptionError, setDescriptionError] = useState<string>('');
   const { addToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setNameError('');
-      setDescriptionError('');
       if (data) {
         setFormData({
           name: data.name || '',
-          description: data.description || '',
           startDate: data.startDate?.split('T')[0] || '',
           endDate: data.endDate?.split('T')[0] || '',
         });
       } else {
-        setFormData({ name: '', description: '', startDate: '', endDate: '' });
+        setFormData({ name: '', startDate: '', endDate: '' });
       }
     }
   }, [data, isOpen]);
@@ -55,19 +51,15 @@ const TimelineForm = ({
     if (isSubmitting) return;
 
     setNameError('');
-    setDescriptionError('');
 
-    const { name, description, startDate, endDate } = formData;
+    const { name, startDate, endDate } = formData;
     let hasError = false;
 
     if (!name.trim()) {
       setNameError('Name is required');
       hasError = true;
     }
-    if (!description.trim()) {
-      setDescriptionError('Description is required');
-      hasError = true;
-    }
+
     if (hasError) return;
 
     if (!startDate || !endDate) {
@@ -85,10 +77,9 @@ const TimelineForm = ({
       // payload matches Omit<Timeline, 'id'> by including 'status'
       const payload = {
         name: formData.name,
-        description: formData.description,
         startDate: new Date(formData.startDate).toISOString(),
         endDate: new Date(formData.endDate).toISOString(),
-        status: data?.status || 'Active',
+        status: data?.timelineStatus || 'Active',
       };
 
       if (data?.id) {
@@ -99,8 +90,11 @@ const TimelineForm = ({
         addToast('Timeline created!', 'success');
       }
 
-      onSuccess();
       handleClose();
+
+      if (typeof onSuccess === 'function') {
+        onSuccess();
+      }
     } catch (error: any) {
       addToast(
         error?.response?.data?.message || 'Something went wrong',
@@ -120,16 +114,6 @@ const TimelineForm = ({
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           error={nameError}
-        />
-
-        <FormTextField
-          label="Description"
-          placeholder="Enter description"
-          value={formData.description}
-          onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
-          }
-          error={descriptionError}
         />
 
         <div className="flex flex-col gap-y-3">

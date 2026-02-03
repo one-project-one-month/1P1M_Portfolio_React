@@ -1,7 +1,7 @@
 import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
 import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export const useTimeline = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,33 +16,34 @@ export const useTimeline = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['timelines', curPage, searchTerm, selectedStatus?.name],
-    queryFn: () => timelineService.getAllTimeline(curPage),
+    queryKey: ['timelines', curPage, searchTerm, selectedStatus],
+    queryFn: () =>
+      timelineService.getAllTimelines({ searchTerm, selectedStatus, curPage }),
     placeholderData: (previousData) => previousData,
   });
 
-  const filteredData = useMemo(() => {
-    const list = apiResponse?.data || [];
-    return list.filter((item: any) => {
-      const matchesSearch = item.name
-        ?.toLowerCase()
-        .includes(searchTerm.trim().toLowerCase());
-      const matchesStatus =
-        !selectedStatus || item.status === selectedStatus.name;
-      return matchesSearch && matchesStatus;
-    });
-  }, [apiResponse, searchTerm, selectedStatus]);
+  const displayData = apiResponse?.data ?? [];
+
+  const handleSearchChange = (val: string) => {
+    setSearchTerm(val);
+    setCurPage(1);
+  };
+
+  const handleStatusChange = (status: StatusOption | undefined) => {
+    setSelectedStatus(status);
+    setCurPage(1);
+  };
 
   return {
     searchTerm,
-    setSearchTerm,
+    setSearchTerm: handleSearchChange,
     selectedStatus,
-    setSelectedStatus,
+    setSelectedStatus: handleStatusChange,
     currentLayout,
     setCurrentLayout,
     curPage,
     setCurPage,
-    filteredData,
+    displayData,
     paginationMeta: apiResponse?.meta,
     isLoading,
     error,

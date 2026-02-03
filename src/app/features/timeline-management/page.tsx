@@ -2,7 +2,10 @@ import SearchBox from '@/app/features/timeline-management/components/search-box.
 import TimelineGrid from '@/app/features/timeline-management/components/timeline-grid.tsx';
 import TimelineList from '@/app/features/timeline-management/components/timeline-list.tsx';
 import { useTimeline } from '@/app/features/timeline-management/hooks/use-timeline.ts';
-import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
+import type {
+  StatusOption,
+  Timeline,
+} from '@/app/features/timeline-management/services/types.ts';
 import FilterAssets from '@/components/ui/filter-assets.tsx';
 import Pagination from '@/components/ui/pagination';
 import Title from '@/components/ui/title';
@@ -18,7 +21,7 @@ const TimelineManagement = () => {
     setSelectedStatus,
     currentLayout,
     setCurrentLayout,
-    filteredData,
+    displayData,
     isLoading,
     error,
     curPage,
@@ -124,11 +127,11 @@ const TimelineManagement = () => {
       {/*-------- Start Listing Timeline --------*/}
 
       <div className="grow overflow-y-auto">
-        {filteredData.length > 0 ? (
+        {displayData.length > 0 ? (
           currentLayout === 'grid' ? (
-            <TimelineGrid data={filteredData} />
+            <TimelineGrid data={displayData} />
           ) : (
-            <TimelineList data={filteredData} />
+            <TimelineList data={displayData} refreshData={handleSuccess} />
           )
         ) : (
           <div className="flex flex-col items-center justify-center h-64 text-gray-400 space-y-4">

@@ -1,12 +1,19 @@
 import apiClient from '@/api/axios.ts';
-import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
+import type {
+  StatusOption,
+  Timeline,
+} from '@/app/features/timeline-management/services/types.ts';
 import { API_ENDPOINTS } from '@/config/api.ts';
 
 const BASE_URL = API_ENDPOINTS.TIMELINES;
 
 export const timelineService = {
   // GET : All Timelines
-  getAllTimeline: async (): Promise<Timeline[]> => {
+  getAllTimelines: async (p: {
+    searchTerm: string;
+    selectedStatus: StatusOption | undefined;
+    curPage: number;
+  }): Promise<Timeline[]> => {
     const response = await apiClient.get<Timeline[]>(BASE_URL);
     return response.data;
   },
