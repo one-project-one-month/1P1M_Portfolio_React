@@ -1,4 +1,4 @@
-import { getUserManagement } from '@/app/features/user-management/services/user-management.service';
+import { getUserManagementService } from '@/app/features/user-management/services/user-management.service';
 import type {
   GetUserManagementParamsType,
   UserManagementResponseType,
@@ -9,19 +9,12 @@ export const useGetUserManagement = ({
   keyword,
   page,
   size,
-  sortField,
+  status,
   sortDirection,
 }: GetUserManagementParamsType) => {
   return useQuery<UserManagementResponseType>({
-    queryKey: [
-      'user-management',
-      keyword,
-      page,
-      sortDirection,
-      sortField,
-      size,
-    ],
+    queryKey: ['user-management', keyword, page, size, status, sortDirection],
     queryFn: () =>
-      getUserManagement({ keyword, page, size, sortDirection, sortField }),
+      getUserManagementService({ keyword, page, size, status, sortDirection }),
   });
 };

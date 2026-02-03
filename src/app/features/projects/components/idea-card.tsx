@@ -13,9 +13,9 @@ interface IdeaCardProps {
 
 const IdeaCard = ({ idea }: IdeaCardProps) => {
   return (
-    <div className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md">
+    <div className="px-8 py-4 space-y-4 md:space-y-5 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md">
       {/* Title and status */}
-      <div className="flex items-start justify-between gap-2 md:gap-4">
+      <div className="flex items-start justify-between gap-2 md:gap-3">
         <Tooltip content={idea.projectIdeaName}>
           <h3 className="capitalize text-lg md:text-xl font-bold text-white flex-1 line-clamp-2">
             {idea.projectIdeaName}
