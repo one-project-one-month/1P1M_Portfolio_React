@@ -1,5 +1,6 @@
 import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
 import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
+import { useDebounce } from '@/hooks/use-debounce.ts';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -11,14 +12,20 @@ export const useTimeline = () => {
   const [currentLayout, setCurrentLayout] = useState<'list' | 'grid'>('list');
   const [curPage, setCurPage] = useState(1);
 
+  const debouncedSearchTerm = useDebounce(searchTerm);
+
   const {
     data: apiResponse,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['timelines', curPage, searchTerm, selectedStatus],
+    queryKey: ['timelines', curPage, debouncedSearchTerm, selectedStatus],
     queryFn: () =>
-      timelineService.getAllTimelines({ searchTerm, selectedStatus, curPage }),
+      timelineService.getAllTimelines({
+        searchTerm: debouncedSearchTerm,
+        selectedStatus,
+        curPage,
+      }),
     placeholderData: (previousData) => previousData,
   });
 
