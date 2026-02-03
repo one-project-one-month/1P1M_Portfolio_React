@@ -42,7 +42,9 @@ const UserManagementContainer = ({
   };
 
   const items = data?.data ?? [];
-  const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
+  const totalPages = data?.meta?.totalItems
+    ? Math.ceil(data.meta.totalItems / size)
+    : 0;
 
   return (
     <div>

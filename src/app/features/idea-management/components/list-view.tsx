@@ -59,7 +59,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                         className="size-10 rounded-full object-cover"
                       />
                       <Link
-                        to={`/profile/${idea.devName.toLowerCase().replace(/\s+/g, '-')}`}
+                        to={`/profile/${idea.devName?.toLowerCase().replace(/\s+/g, '-')}`}
                         state={{ userId: idea.dev_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]!"
                       >
@@ -69,7 +69,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                   </td>
                   {/* React Count */}
                   <td className="py-4 text-center text-slate-400">
-                    {idea.reaction_count}
+                    {idea.reactionCount}
                   </td>
 
                   {/* Leader */}
@@ -81,7 +81,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                         className="size-10 rounded-full object-cover"
                       />
                       <Link
-                        to={`/profile/${idea.devName.toLowerCase().replace(/\s+/g, '-')}`}
+                        to={`/profile/${idea.devName?.toLowerCase().replace(/\s+/g, '-')}`}
                         state={{ userId: idea.dev_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]!"
                       >

@@ -11,22 +11,23 @@ type UserProfile = {
 };
 
 const UserProfile = (Profile: UserProfile) => {
-  const profileRef = useClickOutside<HTMLButtonElement>(() => setIsOpen(false));
+  const profileRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const [isOpen, setIsOpen] = useState(false);
   const { goTo } = useAppNavigation();
 
   return (
-    <button
-      ref={profileRef}
-      onClick={() => setIsOpen(true)}
-      className="relative flex items-center  gap-x-3.5 w-full text-white"
-    >
-      <img className="size-12 rounded-full" src={Profile.img} />
-      <h4>{Profile.username}</h4>
+    <div ref={profileRef} className="relative">
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="flex items-center gap-x-3.5 text-white"
+      >
+        <img className="size-12 rounded-full" src={Profile.img} />
+        <h4>{Profile.username}</h4>
+      </button>
 
       {isOpen && (
-        <div className="bg-gray-800 w-[220px] transition-all ease-in-out z-1000 top-0 absolute right-0 text-start flex flex-col px-2.5 py-4 gap-2 rounded-md">
+        <div className="absolute right-0 top-full mt-2 z-[1000] w-[220px] rounded-md bg-gray-800 text-start shadow-lg flex flex-col px-2.5 py-4 gap-2">
           <Button
             onClick={() => goTo('/me')}
             variant={'black_button'}
@@ -43,7 +44,7 @@ const UserProfile = (Profile: UserProfile) => {
           </Button>
         </div>
       )}
-    </button>
+    </div>
   );
 };
 

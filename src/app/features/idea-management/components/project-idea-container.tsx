@@ -96,7 +96,7 @@ const ProjectIdeaContainer = ({
   // Ensure children always receive an array (empty when no data).
   const items = data?.data ?? [];
   const totalItems = data?.meta?.totalItems;
-  const totalPages = data?.meta
+  const totalPages = data?.meta?.totalItems
     ? Math.ceil(data.meta.totalItems / pageSize)
     : 0;
 

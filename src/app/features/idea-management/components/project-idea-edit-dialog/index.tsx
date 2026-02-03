@@ -43,7 +43,7 @@ export default function ProjectIdeaEditDialog({
       dev_id: data.dev_id ?? null,
       projectIdeaName: data.projectIdeaName ?? '',
       description: data.description ?? '',
-      profilePictureUrl: data.profilePictureUrl ?? '',
+      ownerProfilePicUrl: data.ownerProfilePicUrl ?? '',
       devName: data.devName ?? '',
       projectTypes: data?.projectTypes ?? [],
       status: data?.status ?? 'PENDING',
