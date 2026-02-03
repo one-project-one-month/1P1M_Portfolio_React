@@ -1,11 +1,30 @@
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { useState, type ReactNode } from 'react';
+import type { UserBanResponseType } from '../types/user-management.types';
+
 type UserManagementBanDialogProps = {
   trigger?: ReactNode;
+  banOpen: boolean;
+  setBanOpen: (open: boolean) => void;
+  banMutate: UseMutateFunction<
+    UserBanResponseType,
+    AxiosError<{ message: string }>,
+    { id: number },
+    unknown
+  >;
+  userId: number;
 };
 
-const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
+const UserManagementBanDialog = ({
+  trigger,
+  banOpen,
+  setBanOpen,
+  banMutate,
+  userId,
+}: UserManagementBanDialogProps) => {
   const banData = [
     {
       name: 'Spamming or Self-Promotion',
@@ -34,7 +53,7 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
     );
   };
   return (
-    <Dialog.Root>
+    <Dialog.Root open={banOpen} onOpenChange={setBanOpen}>
       <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
 
       <Dialog.Content
@@ -64,7 +83,6 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
                 className="flex items-center   gap-5 "
                 onClick={() => toggleReason(item.name)}
               >
-                {' '}
                 <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
                   {selectReason.includes(item.name) && (
                     <div className="bg-[#9F0712] w-full h-full rounded-full cursor-pointer"></div>
@@ -86,7 +104,12 @@ const UserManagementBanDialog = ({ trigger }: UserManagementBanDialogProps) => {
             <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
               Cancel
             </Button>
-            <Button className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]">
+            <Button
+              onClick={() => {
+                banMutate({ id: userId });
+              }}
+              className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
+            >
               Confirm
             </Button>
           </div>

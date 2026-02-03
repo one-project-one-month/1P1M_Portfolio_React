@@ -37,22 +37,27 @@ export const socials: NavLink[] = [
 export const ADMIN_NAVS: AdminNavLink[] = [
   { id: 1, name: 'Dashboard', path: 'dashboard', icon: ChartGanttIcon },
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
-  { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
-    id: 6,
+    id: 3,
     name: 'OPOM Registered Users',
     path: 'opom-registered-people-list',
     icon: FileUser,
   },
+  { id: 4, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
-    id: 4,
+    id: 5,
     name: 'Portfolio Management',
     path: 'portfolio-management',
     icon: HardDrive,
   },
-  { id: 3, name: 'Schedule', path: 'timeline-management', icon: CalendarClock },
-  { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
-  { id: 5, name: 'Profile', path: 'admin-profile', icon: User },
+  {
+    id: 6,
+    name: 'Timeline Management',
+    path: 'timeline-management',
+    icon: CalendarClock,
+  },
+  { id: 7, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
+  { id: 8, name: 'Profile', path: 'admin-profile', icon: User },
 ];
 
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];

@@ -35,7 +35,6 @@ export const API_ENDPOINTS = {
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
-  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjects',
   // V2 Endpoints
   CREATE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   CREATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
@@ -46,6 +45,11 @@ export const API_ENDPOINTS = {
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
+  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
+
+  // Admin
+  USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {
