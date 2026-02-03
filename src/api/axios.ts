@@ -44,43 +44,7 @@ apiClient.interceptors.response.use(
     }
 
     // 3. Standard Refresh Logic for all other 401s
-    // if (error.response?.status === 401 && !originalRequest._retry) {
-    //   if (isRefreshing) {
-    //     return new Promise((resolve, reject) => {
-    //       failedQueue.push({ resolve, reject });
-    //     })
-    //       .then(() => apiClient(originalRequest))
-    //       .catch((err) => Promise.reject(err));
-    //   }
-    //
-    //   originalRequest._retry = true;
-    //   isRefreshing = true;
-    //
-    //   try {
-    //     await apiClient.post(
-    //       '/portfolio/api/v1/auth/users/refresh',
-    //       {},
-    //       { withCredentials: true },
-    //     );
-    //     processQueue(null);
-    //     return apiClient(originalRequest);
-    //   } catch (refreshError) {
-    //     processQueue(refreshError);
-    //     localStorage.removeItem('user');
-    //     return Promise.reject(refreshError);
-    //   } finally {
-    //     isRefreshing = false;
-    //   }
-    // }
-
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // CRITICAL: If the request that failed WAS the refresh request, stop here
-      if (originalRequest.url?.includes('/auth/users/refresh')) {
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
-
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -93,19 +57,16 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Use a clean axios instance or absolute path to avoid baseURL doubling
-        await axios.post(
+        await apiClient.post(
           '/portfolio/api/v1/auth/users/refresh',
           {},
           { withCredentials: true },
         );
-
         processQueue(null);
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
         localStorage.removeItem('user');
-        window.location.href = '/auth/log-in'; // Optional: force logout
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
