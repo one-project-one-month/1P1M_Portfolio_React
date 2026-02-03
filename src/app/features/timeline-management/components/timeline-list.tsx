@@ -56,7 +56,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
     try {
       await timelineService.deleteTimeline(selectedId);
 
-      addToast('Project Created successfully', 'success');
+      addToast('Project Deleted successfully', 'success');
       console.log('Successfully deleted!');
     } catch (error) {
       addToast('Failed to delete timeline', 'error');

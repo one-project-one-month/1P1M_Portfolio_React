@@ -1,9 +1,7 @@
 import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
-import type {
-  StatusOption,
-  Timeline,
-} from '@/app/features/timeline-management/services/types.ts';
-import { useEffect, useMemo, useState } from 'react';
+import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 
 export const useTimeline = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,26 +9,21 @@ export const useTimeline = () => {
     StatusOption | undefined
   >();
   const [currentLayout, setCurrentLayout] = useState<'list' | 'grid'>('list');
-  const [curPage, setCurPage] = useState(0);
+  const [curPage, setCurPage] = useState(1);
 
-  const [allData, setAllData] = useState<Timeline[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await timelineService.getAllTimeline();
-        setAllData(Array.isArray(data) ? data : []);
-      } catch (err: any) {
-        setError(err.message);
-        setAllData([]);
-      }
-    };
-    fetchData();
-  }, []);
+  const {
+    data: apiResponse,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['timelines', curPage, searchTerm, selectedStatus?.name],
+    queryFn: () => timelineService.getAllTimeline(curPage),
+    placeholderData: (previousData) => previousData,
+  });
 
   const filteredData = useMemo(() => {
-    return allData.filter((item) => {
+    const list = apiResponse?.data || [];
+    return list.filter((item: any) => {
       const matchesSearch = item.name
         ?.toLowerCase()
         .includes(searchTerm.trim().toLowerCase());
@@ -38,7 +31,7 @@ export const useTimeline = () => {
         !selectedStatus || item.status === selectedStatus.name;
       return matchesSearch && matchesStatus;
     });
-  }, [allData, searchTerm, selectedStatus]);
+  }, [apiResponse, searchTerm, selectedStatus]);
 
   return {
     searchTerm,
@@ -50,6 +43,8 @@ export const useTimeline = () => {
     curPage,
     setCurPage,
     filteredData,
+    paginationMeta: apiResponse?.meta,
+    isLoading,
     error,
   };
 };

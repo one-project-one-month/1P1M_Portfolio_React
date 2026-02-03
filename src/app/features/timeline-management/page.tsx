@@ -6,6 +6,7 @@ import type { StatusOption } from '@/app/features/timeline-management/services/t
 import FilterAssets from '@/components/ui/filter-assets.tsx';
 import Pagination from '@/components/ui/pagination';
 import Title from '@/components/ui/title';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import TimelineForm from './components/timeline-form';
 
@@ -18,11 +19,17 @@ const TimelineManagement = () => {
     currentLayout,
     setCurrentLayout,
     filteredData,
+    isLoading,
+    error,
     curPage,
     setCurPage,
   } = useTimeline();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const [selectedTimeline, setSelectedTimeline] = useState<Timeline | null>(
+    null,
+  );
 
   const totalPages = 99;
 
@@ -33,10 +40,43 @@ const TimelineManagement = () => {
   ];
 
   const handleCreate = () => {
+    setSelectedTimeline(null);
     setIsOpen((val) => !val);
     console.log('Create Project Clicked...');
     console.log(isOpen);
   };
+
+  const handleSuccess = () => {
+    queryClient.invalidateQueries({
+      queryKey: ['timelines'],
+      exact: false,
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-[80vh] gap-6 animate-pulse">
+        <div className="h-10 w-48 bg-gray-700 rounded mb-4" />{' '}
+        {/* Title Skeleton */}
+        <div className="flex justify-between gap-4">
+          <div className="h-12 w-1/2 bg-gray-800 rounded" />{' '}
+          {/* Search Skeleton */}
+          <div className="h-12 w-1/3 bg-gray-800 rounded" />{' '}
+          {/* Filter Skeleton */}
+        </div>
+        <div className="grid grid-cols-3 gap-4 mt-8">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-48 bg-gray-800 rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error)
+    return (
+      <div className="text-red-500">Error loading data: {error.message}</div>
+    );
 
   return (
     <div className="flex flex-col min-h-[80vh]">
@@ -73,7 +113,12 @@ const TimelineManagement = () => {
         </div>
       </div>
 
-      <TimelineForm isOpen={isOpen} setIsOpen={setIsOpen} />
+      <TimelineForm
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        data={selectedTimeline}
+        onSuccess={handleSuccess}
+      />
       {/*-------- End Filter Bar --------*/}
 
       {/*-------- Start Listing Timeline --------*/}
@@ -86,8 +131,22 @@ const TimelineManagement = () => {
             <TimelineList data={filteredData} />
           )
         ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-            <p>No timelines found matching your criteria.</p>
+          <div className="flex flex-col items-center justify-center h-64 text-gray-400 space-y-4">
+            <div className="p-4 bg-gray-800 rounded-full text-4xl">🔍</div>
+            <p className="text-lg font-semibold">No results found</p>
+            <p className="text-sm">
+              Try adjusting your search or filters to find what you're looking
+              for.
+            </p>
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedStatus(undefined);
+              }}
+              className="text-[#FFBA00] hover:underline"
+            >
+              Clear all filters
+            </button>
           </div>
         )}
       </div>
