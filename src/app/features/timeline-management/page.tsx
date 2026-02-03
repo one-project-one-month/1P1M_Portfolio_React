@@ -61,23 +61,35 @@ const TimelineManagement = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col min-h-[80vh] gap-6 animate-pulse">
-        <div className="h-10 w-48 bg-gray-700 rounded mb-4" />{' '}
-        {/* Title Skeleton */}
-        <div className="flex justify-between gap-4">
-          <div className="h-12 w-1/2 bg-gray-800 rounded" />{' '}
-          {/* Search Skeleton */}
-          <div className="h-12 w-1/3 bg-gray-800 rounded" />{' '}
-          {/* Filter Skeleton */}
+        {/* Title Bar Skeleton */}
+        <div className="h-10 w-48 bg-white/10 rounded-lg mb-2" />
+
+        {/* Filter Bar Skeleton */}
+        <div className="flex justify-between items-center gap-18">
+          <div className="w-1/2 h-12 bg-white/5 border border-white/10 rounded-xl" />
+          <div className="min-w-96 h-12 bg-white/5 border border-white/10 rounded-xl" />
         </div>
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-48 bg-gray-800 rounded-xl" />
-          ))}
+
+        {/* Table Skeleton */}
+        <div className="w-full border border-white/10 rounded-xl overflow-hidden bg-transparent">
+          <div className="h-14 bg-white/5 border-b border-white/10" />{' '}
+          {/* Table Header */}
+          <div className="divide-y divide-white/5">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex px-6 py-5 gap-4">
+                <div className="h-5 w-8 bg-white/10 rounded" />
+                <div className="h-5 w-1/3 bg-white/10 rounded" />
+                <div className="h-5 w-1/4 bg-white/10 rounded" />
+                <div className="h-5 w-1/4 bg-white/10 rounded" />
+                <div className="h-5 w-20 bg-white/10 rounded" />
+                <div className="h-5 w-8 bg-white/10 rounded ml-auto" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
-
   if (error)
     return (
       <div className="text-red-500">Error loading data: {error.message}</div>
@@ -178,3 +190,5 @@ const TimelineManagement = () => {
 };
 
 export default TimelineManagement;
+
+// need -- search term , status change,
