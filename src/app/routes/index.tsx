@@ -42,6 +42,13 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
 
+      { path: '/portfolios', element: <PortfolioPage /> },
+      { path: '/developers', element: <DeveloperPage /> },
+      { path: 'profile/:username', element: <UserProfile /> },
+      { path: '/about us', element: <AboutUsPage /> },
+      { path: '/me', element: <MyProfilePage /> },
+      { path: '/ideas', element: <IdeaPage /> },
+      { path: 'opom-register', element: <OpomRegisterPage /> },
       {
         element: <ProtectedGuard allow={['USER']} />,
         children: [
