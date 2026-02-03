@@ -10,7 +10,7 @@ export const useTimeline = () => {
     StatusOption | undefined
   >();
   const [currentLayout, setCurrentLayout] = useState<'list' | 'grid'>('list');
-  const [curPage, setCurPage] = useState(1);
+  const [curPage, setCurPage] = useState(0);
 
   const debouncedSearchTerm = useDebounce(searchTerm);
 

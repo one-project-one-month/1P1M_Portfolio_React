@@ -7,14 +7,38 @@ import { API_ENDPOINTS } from '@/config/api.ts';
 
 const BASE_URL = API_ENDPOINTS.TIMELINES;
 
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  meta: {
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+  };
+  data: T;
+}
+
 export const timelineService = {
   // GET : All Timelines
-  getAllTimelines: async (p: {
+  getAllTimelines: async ({
+    searchTerm,
+    selectedStatus,
+    curPage,
+    size = 5,
+  }: {
     searchTerm: string;
     selectedStatus: StatusOption | undefined;
     curPage: number;
-  }): Promise<Timeline[]> => {
-    const response = await apiClient.get<Timeline[]>(BASE_URL);
+    size?: number;
+  }): Promise<ApiResponse<Timeline[]>> => {
+    const response = await apiClient.get<ApiResponse<Timeline[]>>(BASE_URL, {
+      params: {
+        search: searchTerm || undefined,
+        status: selectedStatus?.id || undefined,
+        page: curPage,
+        size: size,
+      },
+    });
     return response.data;
   },
 

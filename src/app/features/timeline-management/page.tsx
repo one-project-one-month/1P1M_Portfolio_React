@@ -26,6 +26,7 @@ const TimelineManagement = () => {
     error,
     curPage,
     setCurPage,
+    paginationMeta,
   } = useTimeline();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -34,7 +35,8 @@ const TimelineManagement = () => {
     null,
   );
 
-  const totalPages = 99;
+  const totalPages = paginationMeta?.totalPages ?? 1;
+  const totalItems = paginationMeta?.totalItems ?? 0;
 
   const statusOptions: StatusOption[] = [
     { id: '1', name: 'Active' },
@@ -160,7 +162,7 @@ const TimelineManagement = () => {
       <div className="w-full flex justify-between items-baseline border-t border-white/10 pt-4">
         {/* Left Side: Total Count */}
         <p className="text-[#FFBA00] text-sm font-medium">
-          Total - {totalPages}
+          Total - {totalItems}
         </p>
 
         {/* Right Side: Pagination */}
