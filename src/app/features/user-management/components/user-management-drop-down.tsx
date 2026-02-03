@@ -56,10 +56,7 @@ export const UserManagementDropDown = ({
         />
 
         <DropdownMenu.Item>
-          <Link
-            to={`view-detail/${userId}`}
-            onClick={() => handleViewDetail(userId)}
-          >
+          <Link to={`/${userId}`} onClick={() => handleViewDetail(userId)}>
             View Details
           </Link>
         </DropdownMenu.Item>

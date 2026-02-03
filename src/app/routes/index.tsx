@@ -91,7 +91,7 @@ const router = createBrowserRouter([
 
           { path: 'user-management', element: <UserManagement /> },
           {
-            path: 'register-user/view-detail',
+            path: 'user-management/view-detail/:id',
             element: <UserManagementViewDetail />,
           },
 
