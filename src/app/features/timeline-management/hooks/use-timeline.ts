@@ -33,12 +33,12 @@ export const useTimeline = () => {
 
   const handleSearchChange = (val: string) => {
     setSearchTerm(val);
-    setCurPage(1);
+    setCurPage(0);
   };
 
   const handleStatusChange = (status: StatusOption | undefined) => {
     setSelectedStatus(status);
-    setCurPage(1);
+    setCurPage(0);
   };
 
   return {
