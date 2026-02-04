@@ -3,11 +3,9 @@ import type {
   PortfolioProjectType,
   PortfolioSectionContainerProps,
 } from '@/types/portfolio.type';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import ProjectSectionView from '../components/portfolio-section-view';
 import { useGetProjectPortfolio } from '../hooks/use-get-portfolio';
-import ProjectSectionView from './portfolio-section-view';
-
-const SIZE = 2;
 const SORT_FIELD = 'name';
 
 const PortfolioSectionContainer = ({
@@ -22,15 +20,12 @@ const PortfolioSectionContainer = ({
     page,
     sortDirection,
     sortField: SORT_FIELD,
-    size: SIZE,
+    size: 6,
   });
 
-  const projects = (data?.data ?? []) as PortfolioProjectType[];
   const totalPages = data?.meta?.totalPages ?? 0;
 
-  useEffect(() => {
-    setPage(0);
-  }, [debounceValue, sortDirection]);
+  const projects: PortfolioProjectType[] = data?.data || [];
 
   return (
     <ProjectSectionView

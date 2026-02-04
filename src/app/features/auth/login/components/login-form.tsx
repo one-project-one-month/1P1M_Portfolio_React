@@ -84,6 +84,8 @@ export default function LoginForm() {
 
         const data = response.data as LoginResponse;
 
+        console.log(data?.role);
+
         handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
         addToast(response?.message, 'success', 3000);
       }
@@ -168,7 +170,7 @@ export default function LoginForm() {
           to={'/auth/forgot-password'}
           className="font-sans text-sm text-[#99A1AF] w-full text-center font-semibold mt-4"
         >
-          Forget password?
+          Forgot password?
         </NavLink>
       </FormBackground>
     </>

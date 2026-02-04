@@ -1,3 +1,4 @@
+import Title from '@/components/ui/title';
 import { useNavigate } from 'react-router-dom';
 import ManagementControlBar from './management-control-bar';
 
@@ -24,12 +25,11 @@ const PortfolioHeader = ({
 
   return (
     <>
-      <div className="mb-12">
-        <h1 className="text-5xl font-bold text-white leading-[48px] mb-1.5">
-          Project Portfolio Management
-        </h1>
-        <div className="w-[157px] h-1.5 bg-[#FFBA00] rounded" />
-      </div>
+      <Title
+        showSearch={false}
+        showFilter={false}
+        title="Project Portfolio Management"
+      />
 
       <ManagementControlBar
         title="Project Portfolio Management"

@@ -21,7 +21,7 @@ const PortfolioManagementPage = () => {
   } = usePortfolioManagement();
 
   return (
-    <div className="flex flex-col w-full h-full px-6 py-8">
+    <div className="flex flex-col w-full h-full">
       <PortfolioHeader
         onSearch={handleSearch}
         viewMode={viewMode}

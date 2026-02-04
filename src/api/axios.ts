@@ -36,14 +36,19 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    const isAuthPath = originalRequest.url?.includes('/auth/');
+    const isAuthPath =
+      originalRequest.url?.includes('/auth/') &&
+      !originalRequest.url?.includes('/auth/setup-profile');
 
     if (isAuthPath) {
       return Promise.reject(error);
     }
 
     // 3. Standard Refresh Logic for all other 401s
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 401) &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
