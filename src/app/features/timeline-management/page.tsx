@@ -60,31 +60,33 @@ const TimelineManagement = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-[80vh] gap-6 animate-pulse">
+      <div className="flex flex-col min-h-[80vh] gap-6">
         {/* Title Bar Skeleton */}
-        <div className="h-10 w-48 bg-white/10 rounded-lg mb-2" />
+        <Title showSearch={false} showFilter={false} title="Timeline List" />
 
-        {/* Filter Bar Skeleton */}
-        <div className="flex justify-between items-center gap-18">
-          <div className="w-1/2 h-12 bg-white/5 border border-white/10 rounded-xl" />
-          <div className="min-w-96 h-12 bg-white/5 border border-white/10 rounded-xl" />
-        </div>
+        <div className="flex flex-col gap-6 animate-pulse">
+          {/* Filter Bar Skeleton */}
+          <div className="flex justify-between items-center gap-18">
+            <div className="w-1/2 h-12 bg-white/5 border border-white/10 rounded-xl" />
+            <div className="min-w-96 h-12 bg-white/5 border border-white/10 rounded-xl" />
+          </div>
 
-        {/* Table Skeleton */}
-        <div className="w-full border border-white/10 rounded-xl overflow-hidden bg-transparent">
-          <div className="h-14 bg-white/5 border-b border-white/10" />{' '}
-          {/* Table Header */}
-          <div className="divide-y divide-white/5">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex px-6 py-5 gap-4">
-                <div className="h-5 w-8 bg-white/10 rounded" />
-                <div className="h-5 w-1/3 bg-white/10 rounded" />
-                <div className="h-5 w-1/4 bg-white/10 rounded" />
-                <div className="h-5 w-1/4 bg-white/10 rounded" />
-                <div className="h-5 w-20 bg-white/10 rounded" />
-                <div className="h-5 w-8 bg-white/10 rounded ml-auto" />
-              </div>
-            ))}
+          {/* Table Skeleton */}
+          <div className="w-full border border-white/10 rounded-xl overflow-hidden bg-transparent">
+            <div className="h-14 bg-white/5 border-b border-white/10" />{' '}
+            {/* Table Header */}
+            <div className="divide-y divide-white/5">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex px-6 py-5 gap-4">
+                  <div className="h-5 w-8 bg-white/10 rounded" />
+                  <div className="h-5 w-1/3 bg-white/10 rounded" />
+                  <div className="h-5 w-1/4 bg-white/10 rounded" />
+                  <div className="h-5 w-1/4 bg-white/10 rounded" />
+                  <div className="h-5 w-20 bg-white/10 rounded" />
+                  <div className="h-5 w-8 bg-white/10 rounded ml-auto" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

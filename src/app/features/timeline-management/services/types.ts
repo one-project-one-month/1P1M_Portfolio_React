@@ -8,4 +8,10 @@ export interface Timeline {
   name: string;
   startDate: string;
   endDate: string;
+  timelineStatus: string;
+}
+
+export interface TimelineProps {
+  data: Timeline[];
+  refreshData: () => void;
 }
