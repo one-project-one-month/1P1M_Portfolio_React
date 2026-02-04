@@ -37,6 +37,10 @@ export const API_ENDPOINTS = {
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
   GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
   TIMELINES: 'portfolio/api/v1/timelines',
+
+  // Admin
+  USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

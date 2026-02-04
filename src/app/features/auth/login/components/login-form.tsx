@@ -84,6 +84,8 @@ export default function LoginForm() {
 
         const data = response.data as LoginResponse;
 
+        console.log(data?.role);
+
         handleRoute(data?.role ?? 'USER', data?.isNewUserLogin);
         addToast(response?.message, 'success', 3000);
       }
