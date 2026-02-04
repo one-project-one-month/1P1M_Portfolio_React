@@ -26,7 +26,7 @@ export const ProfileSetupPage = PageLoader(
 );
 
 export const OpomRegisterPage = PageLoader(
-  lazy(() => import('@/app/features/auth/opom-register/page')),
+  lazy(() => import('@/app/features/opom-register/page')),
 );
 
 export const ForgotPasswordPage = PageLoader(
@@ -49,12 +49,8 @@ export const DeveloperPage = PageLoader(
   lazy(() => import('@/app/features/developers/page')),
 );
 
-export const ApprovedIdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/approved/page')),
-);
-
 export const IdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/ideas/page')),
+  lazy(() => import('@/app/features/projects/page')),
 );
 
 export const UserProfilePage = PageLoader(
@@ -67,4 +63,49 @@ export const AdminLayout = PageLoader(
 
 export const DashboardPage = PageLoader(
   lazy(() => import('@/app/features/dashboard/page')),
+);
+
+export const PortfolioManagementPage = PageLoader(
+  lazy(() => import('@/app/features/portfolio-management/page')),
+);
+export const IdeaManagementPage = PageLoader(
+  lazy(
+    () => import('@/app/features/idea-management/pages/idea-management-page'),
+  ),
+);
+
+export const TimelineManagementPage = PageLoader(
+  lazy(() => import('@/app/features/timeline-management/page.tsx')),
+);
+
+export const IdeaManagementEditPage = PageLoader(
+  lazy(
+    () =>
+      import('@/app/features/idea-management/pages/idea-management-edit-page'),
+  ),
+);
+
+export const UserManagement = PageLoader(
+  lazy(
+    () => import('@/app/features/user-management/pages/user-management-page'),
+  ),
+);
+
+export const UserManagementViewDetail = PageLoader(
+  lazy(
+    () =>
+      import('@/app/features/user-management/components/user-management-view-detail'),
+  ),
+);
+
+export const AdminProfilePage = PageLoader(
+  lazy(() => import('@/app/features/admin-profile/page.tsx')),
+);
+
+export const NotFoundPage = PageLoader(
+  lazy(() => import('@/app/features/not-found')),
+);
+
+export const MyProfilePage = PageLoader(
+  lazy(() => import('@/app/features/user-profile/page')),
 );

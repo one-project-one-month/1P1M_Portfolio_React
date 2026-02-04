@@ -4,9 +4,9 @@ import ProfileSetupForm from './components/profile-setup-form';
 
 export default function ProfileSetupPage() {
   return (
-    <Background className="h-screen flex items-center justify-center ">
+    <Background className="h-screen flex items-center justify-center  ">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-hidden">
-        <div className="hidden md:block font-sans text-sm font-semibold leading-8 p-8">
+        <div className="hidden lg:block font-sans text-sm font-semibold leading-8 p-8">
           <div className="h-full flex flex-col justify-center items-center lg:border-r-2 border-[#FFFFFF17] px-60">
             <div className="w-72 text-center mb-12">
               <h1 className="text-5xl font-bold text-white leading-[1.5]">
@@ -40,9 +40,9 @@ export default function ProfileSetupPage() {
             </div>
           </div>
         </div>
-      <div className='flex h-screen gap-1.5 justify-center items-center '>
+        <div className="flex  mx-auto h-screen gap-6 md:gap-1.5  justify-center items-center ">
           <ProfileSetupForm />
-      </div>
+        </div>
       </div>
     </Background>
   );

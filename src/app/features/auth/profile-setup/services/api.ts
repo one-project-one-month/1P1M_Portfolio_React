@@ -21,7 +21,7 @@ export async function getProfile(id: string): Promise<ApiResponse<Profile>> {
 }
 
 export async function updateProfile(
-  id: string,
+  id: number,
   data: object,
 ): Promise<ApiResponse<null>> {
   try {
@@ -37,32 +37,23 @@ export async function updateProfile(
       success: false,
       code: 500,
       message: err.message,
+      data: null,
     };
   }
 }
 
-export async function setupDevProfile(data: ProfileForm) {
+export async function setupDevProfile(
+  data: ProfileForm,
+  id: number | undefined | null,
+) {
   try {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') as string);
-
-    console.log(API_ENDPOINTS.SETUP_PROFILE + `${user.id}`);
-
-    if (!user || !token)
-      throw new Error('Missing token. You are not logged in.');
-
     const payload = {
       ...data,
     };
 
     const response = await apiClient.post(
-      API_ENDPOINTS.SETUP_PROFILE + `${user.id}`,
+      `/portfolio/api/v1/profiles/create/` + `${id}`,
       payload,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
     );
 
     return response.data;
@@ -78,23 +69,16 @@ export async function setupDevProfile(data: ProfileForm) {
 }
 
 export default async function uploadDevImage(
-  id: string,
+  id: number,
   file: File,
 ): Promise<ApiResponse<null>> {
   try {
-    const user = JSON.parse(localStorage.getItem('user') as string);
     const formData = new FormData();
     formData.append('file', file);
 
     const response = await apiClient.patch(
       `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${id}`,
       file,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          ...(user?.token && { Authorization: `Bearer ${user.token}` }),
-        },
-      },
     );
 
     return response.data;
@@ -105,6 +89,7 @@ export default async function uploadDevImage(
       success: false,
       code: 500,
       message: err.message,
+      data: null,
     };
   }
 }

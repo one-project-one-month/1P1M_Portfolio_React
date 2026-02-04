@@ -6,10 +6,10 @@ export type MetaType = {
   endpoint: string;
 };
 
-export type ApiResponseType<T> = {
+export type ApiResponseType<T = string> = {
   success: boolean;
   code: number;
-  message: string;
   meta?: MetaType;
   data: T;
+  message: string;
 };

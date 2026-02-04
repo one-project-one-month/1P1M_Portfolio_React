@@ -10,6 +10,8 @@ import FormField from '@/components/ui/form-field';
 import FormTextArea from '@/components/ui/form-textarea';
 
 import { TechStacks } from '@/constants';
+
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { Profile } from '@/types/common';
 import { useEffect, useState } from 'react';
 import uploadDevImage, {
@@ -37,6 +39,10 @@ interface FormValues {
 }
 
 export default function ProfileSetupFrom(props: DevProfileFormProps) {
+  const user = useUserInfoStore.getState().userInfo;
+
+  console.log(user);
+
   var isEditMode = props.isEditMode ?? false;
   var existingProfileData = props.existingProfileData ?? null;
 
@@ -135,10 +141,9 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
   }
 
   var onSubmit: SubmitHandler<FormValues> = async function (data) {
-    var user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user?.userId) {
+      console.log('NO user id');
 
-    if (!user) {
-      toast.error('You must log in first');
       return;
     }
 
@@ -174,7 +179,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           toast.error('Failed to update profile');
         }
       } else {
-        var createRes = await setupDevProfile(payload);
+        var createRes = await setupDevProfile(payload, user?.userId);
 
         if (!createRes.success) {
           throw new Error('Failed to create profile');
@@ -185,7 +190,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
         }
 
         toast.success('Profile created successfully!');
-        navigate(user.role === 'ADMIN' ? '/admin' : '/');
+        navigate(user?.role === 'ADMIN' ? '/admin' : '/');
       }
     } catch (error: any) {
       toast.error(error?.message || 'Something went wrong');

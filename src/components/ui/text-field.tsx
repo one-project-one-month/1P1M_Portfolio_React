@@ -1,18 +1,6 @@
-import FormField from '@/components/ui/form-field';
-import React, { forwardRef, useState } from 'react';
-
-interface TextFieldProps {
-  label: string;
-  value?: string | number;
-  onChange?: (value: string) => void;
-  error?: string;
-  id?: string;
-  name?: string;
-  type?: React.HTMLInputTypeAttribute; // stricter type than 'string'
-  placeholder?: string;
-  className?: string;
-  disabled?: boolean;
-}
+import { forwardRef } from 'react';
+import FormField from './form-field';
+import type { TextFieldProps } from './forward-text-field';
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
@@ -30,12 +18,18 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     },
     ref,
   ) => {
-    const [email, setEmail] = useState(value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      // This ensures that even if you use Refs,
+      // an onChange prop will still work if provided.
+      if (onChange) {
+        onChange(e.target.value);
+      }
+    };
 
     return (
       <div className="relative w-full text-white font-sans text-sm font-semibold leading-8 mb-8">
         {label && (
-          <label className="inline-block mb-1" htmlFor={id}>
+          <label className="inline-block mb-1 text-xl" htmlFor={id}>
             {label}
           </label>
         )}
@@ -45,10 +39,13 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           type={type}
           name={name}
           id={id}
-          value={email}
+          /* FIX: If value is provided, it's controlled. 
+             If not, it allows the Ref to handle the internal state.
+          */
+          value={value}
           placeholder={placeholder}
-          onChange={(e) => setEmail(e.target.value)}
-          className={`w-full rounded bg-[#222] text-white outline-none px-3 py-2  ${className}`}
+          onChange={handleChange}
+          className={`w-full rounded bg-[#222] text-white outline-none px-3 py-2 ${className}`}
           {...rest}
         />
 
@@ -64,8 +61,5 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     );
   },
 );
-
-// Helpful for debugging in React DevTools
-TextField.displayName = 'TextField';
 
 export default TextField;

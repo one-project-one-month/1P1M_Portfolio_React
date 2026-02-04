@@ -7,7 +7,7 @@ const Sidebar = () => {
   return (
     <div className="bg-slate-900 h-full relative text-white w-full">
       {/* logo */}
-      <div className="text-center flex justify-center items-center  py-4 px-2 border-b border-gray-200/10 ">
+      <div className="text-center flex justify-center items-center py-4 px-2 border-b border-gray-200/10 ">
         <img src={opomIconUrl} className="" />
       </div>
 
@@ -17,7 +17,7 @@ const Sidebar = () => {
             key={link.id}
             to={link.path}
             className={({ isActive }) =>
-              `flex my-2.5 gap-x-5 p-3 items-center w-full  transition-colors duration-300 ${isActive ? 'border-l-4 border-l-[#9C39FC] bg-slate-800 ' : 'text-white/60 hover:text-white'}`
+              `flex my-2.5 gap-x-4 p-3 items-center w-full truncate transition-colors duration-300 ${isActive ? 'border-l-4 border-l-[#9C39FC] bg-slate-800' : 'text-white/60 hover:text-white'}`
             }
           >
             <link.icon />

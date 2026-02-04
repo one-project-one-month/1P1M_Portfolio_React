@@ -1,4 +1,4 @@
-import { useSession } from '@/hooks/use-session';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { UserRole } from '@/types/auth';
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -9,14 +9,14 @@ type AllowedRoles =
   | ['USER', 'ADMIN'];
 
 const ProtectedGuard = ({ allow }: { allow: AllowedRoles }) => {
-  const { session } = useSession();
+  const user = useUserInfoStore().userInfo;
 
-  if (!session) return <Navigate to="/auth/login" replace />;
+  if (!user) return <Navigate to="/auth/log-in" replace />;
 
-  const userRole = session.user.role;
+  const userRole = user.role;
   const allowRoles: UserRole[] = allow;
 
-  if (allow && !allowRoles.includes(userRole)) {
+  if (allow && !allowRoles.includes(userRole ?? '')) {
     return userRole === 'ADMIN' ? (
       <Navigate to="/admin" replace />
     ) : (

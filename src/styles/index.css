@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import '@radix-ui/themes/styles.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
@@ -46,6 +47,9 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-primary-custom: #9c39fc;
+  --color-secondary-custom: #00c951;
 }
 
 :root {
@@ -135,6 +139,10 @@
     }
   }
 
+  .custom-card {
+    @apply rounded-lg border border-slate-700 bg-slate-900 p-3;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 0.25rem;
@@ -161,4 +169,24 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Marquee animation for About Us Team Section*/
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

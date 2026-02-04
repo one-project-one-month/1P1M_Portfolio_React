@@ -3,7 +3,6 @@ import {
   CheckPasswordOtpPage,
   ForgotPasswordPage,
   LoginPage,
-  OpomRegisterPage,
   OtpPage,
   ProfileSetupPage,
   RegisterPage,
@@ -19,7 +18,7 @@ export const authRoutes: RouteObject[] = [
     children: [
       { path: 'sign-up', element: <SignupPage /> },
       { path: 'log-in', element: <LoginPage /> },
-      { path: 'opom-register', element: <OpomRegisterPage /> },
+
       { path: 'register', element: <RegisterPage /> },
       { path: 'setup-profile', element: <ProfileSetupPage /> },
       { path: 'forgot-password', element: <ForgotPasswordPage /> },
@@ -27,5 +26,10 @@ export const authRoutes: RouteObject[] = [
       { path: 'check-password-otp', element: <CheckPasswordOtpPage /> },
       { path: 'reset-password', element: <ResetPasswordPage /> },
     ],
+  },
+
+  {
+    path: '/login/oauth2/code/github',
+    element: <SignupPage />,
   },
 ];
