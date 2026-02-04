@@ -145,7 +145,7 @@ const TimelineManagement = () => {
       <div className="grow overflow-y-auto">
         {displayData.length > 0 ? (
           currentLayout === 'grid' ? (
-            <TimelineGrid data={displayData} />
+            <TimelineGrid data={displayData} refreshData={handleSuccess} />
           ) : (
             <TimelineList data={displayData} refreshData={handleSuccess} />
           )

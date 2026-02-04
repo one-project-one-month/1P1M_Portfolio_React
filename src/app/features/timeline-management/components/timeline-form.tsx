@@ -1,24 +1,17 @@
 import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
-import type { Timeline } from '@/app/features/timeline-management/services/types.ts';
+import type { TimelineFormProps } from '@/app/features/timeline-management/services/types.ts';
 import ModalWrapper from '@/components/modal-wrapper';
 import DatePicker from '@/components/ui/date-picker';
 import FormTextField from '@/components/ui/form-text-field.tsx';
 import { useToast } from '@/components/ui/toast-provider.tsx';
 import { useEffect, useState } from 'react';
 
-type TimelineProps = {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  data?: Timeline | null;
-  onSuccess?: () => void;
-};
-
 const TimelineForm = ({
   isOpen,
   setIsOpen,
   data,
   onSuccess,
-}: TimelineProps) => {
+}: TimelineFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     startDate: '',
@@ -79,7 +72,7 @@ const TimelineForm = ({
         name: formData.name,
         startDate: new Date(formData.startDate).toISOString(),
         endDate: new Date(formData.endDate).toISOString(),
-        status: data?.timelineStatus || 'Active',
+        timelineStatus: data?.timelineStatus || 'Active',
       };
 
       if (data?.id) {
