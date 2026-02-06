@@ -59,7 +59,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                         className="size-10 rounded-full object-cover"
                       />
                       <Link
-                        to={`/profile/${idea.devName.toLowerCase().replace(/\s+/g, '-')}`}
+                        to={`/profile/${idea.devName}`}
                         state={{ userId: idea.dev_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]!"
                       >
@@ -81,11 +81,12 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                         className="size-10 rounded-full object-cover"
                       />
                       <Link
-                        to={`/profile/${idea.devName.toLowerCase().replace(/\s+/g, '-')}`}
+                        to={`/profile/${idea.devName}`}
                         state={{ userId: idea.dev_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]!"
                       >
-                        {truncate(`${idea.devName}`)}
+                        {idea.devName}
+                        {/* {truncate(`${idea.devName}`)} */}
                       </Link>
                     </div>
                   </td>
