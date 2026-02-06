@@ -78,6 +78,7 @@ export function Calendar({
       currentDate.getFullYear(),
       currentDate.getMonth(),
       day,
+      12, // Fix date shift issue by creating date at noon to avoid timezone conversion
     );
 
     if (mode === 'single') {
