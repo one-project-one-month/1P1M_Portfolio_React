@@ -170,7 +170,7 @@ export default function LoginForm() {
           to={'/auth/forgot-password'}
           className="font-sans text-sm text-[#99A1AF] w-full text-center font-semibold mt-4"
         >
-          Forget password?
+          Forgot password?
         </NavLink>
       </FormBackground>
     </>
