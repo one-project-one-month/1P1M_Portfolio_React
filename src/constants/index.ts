@@ -2,6 +2,7 @@ import type { AdminNavLink, NavLink } from '@/types/nav-props';
 import {
   CalendarClock,
   ChartGanttIcon,
+  Cog,
   FileText,
   FileUser,
   HardDrive,
@@ -58,6 +59,7 @@ export const ADMIN_NAVS: AdminNavLink[] = [
   },
   { id: 7, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
   { id: 8, name: 'Profile', path: 'admin-profile', icon: User },
+  { id: 9, name: 'Configuration', path: 'configuration', icon: Cog },
 ];
 
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];

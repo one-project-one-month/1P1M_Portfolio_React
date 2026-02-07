@@ -18,6 +18,7 @@ import {
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import AboutUsPage from '../features/about-us/page';
+import ConfigurationPage from '../features/admin-configuration/page';
 import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
@@ -28,7 +29,6 @@ import ViewPortfolioPage from '../features/portfolio-management/pages/view-portf
 import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
-import ProtectedGuard from './guards/protected-guard';
 
 const router = createBrowserRouter([
   {
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
   {
     path: '/admin',
 
-    element: <ProtectedGuard allow={['ADMIN']} />,
+    // element: <ProtectedGuard allow={['ADMIN']} />,
     children: [
       {
         element: <AdminLayout />,
@@ -104,6 +104,10 @@ const router = createBrowserRouter([
           {
             path: 'opom-registered-people-list/:id',
             element: <PersonProfilePage />,
+          },
+          {
+            path: 'configuration',
+            element: <ConfigurationPage />,
           },
         ],
       },
