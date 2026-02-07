@@ -2,42 +2,52 @@ import type { ApiResponseType } from '@/types/api-response.type';
 import type { ReactNode } from 'react';
 import z from 'zod';
 
-// TYPE VALIDATION WITH ZOD
 export const ProjectIdeaStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   ARCHIVED: 'ARCHIVED',
 } as const;
 
-const projectIdeaSchema = z.object({
+// TYPE VALIDATION WITH ZOD
+export const projectIdeaSchema = z.object({
   id: z.number(),
-  dev_id: z.number(),
-  projectIdeaName: z.string().min(1, 'Project idea name is required'),
-  description: z.string().min(1, 'Description is required'),
-  profilePictureUrl: z.string(),
-  devName: z.string(),
-  reaction_count: z.number(),
-  projectTypes: z.array(z.string()).min(1, 'Select at least one project type'),
-  reactedProjects: z.array(z.number()),
+  projectIdeaName: z.string(),
   status: z.enum([
     ProjectIdeaStatus.PENDING,
     ProjectIdeaStatus.APPROVED,
     ProjectIdeaStatus.ARCHIVED,
   ]),
+  description: z.string(),
+  reactionCount: z.number(),
+  viewCount: z.number(),
+  dev_id: z.number(),
+  devName: z.string().optional(),
+  ownerProfilePicUrl: z.string().optional(),
+  leader_id: z.number(),
+  leaderProfilePicUrl: z.string().optional(),
+  projectTypes: z.array(z.string()),
 });
 
-export const createProjectIdeaSchema = projectIdeaSchema.pick({
-  projectIdeaName: true,
-  description: true,
-  projectTypes: true,
+export const createProjectIdeaSchema = z.object({
+  projectIdeaName: z.string().min(1, 'Project idea name is required'),
+  description: z.string().min(1, 'Description is required'),
+  projectTypes: z.array(z.string()).min(1, 'Select at least one project type'),
 });
 
-export const editProjectIdeaSchema = projectIdeaSchema.omit({
-  id: true,
-  reaction_count: true,
+export const editProjectIdeaSchema = createProjectIdeaSchema.extend({
+  status: z.enum([
+    ProjectIdeaStatus.PENDING,
+    ProjectIdeaStatus.APPROVED,
+    ProjectIdeaStatus.ARCHIVED,
+  ]),
+  dev_id: z.number(),
+  devName: z.string().optional(),
+  ownerProfilePicUrl: z.string().optional(),
+  leader_id: z.number(),
+  leaderProfilePicUrl: z.string().optional(),
 });
 
-export const updateProjectIdeaStatusSchema = projectIdeaSchema.pick({
+export const updateProjectIdeaStatusSchema = editProjectIdeaSchema.pick({
   status: true,
 });
 

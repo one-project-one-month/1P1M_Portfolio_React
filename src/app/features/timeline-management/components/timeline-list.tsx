@@ -1,16 +1,22 @@
 import TimelineForm from '@/app/features/timeline-management/components/timeline-form.tsx';
-import type { Timeline } from '@/app/features/timeline-management/types.ts';
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
+import type {
+  Timeline,
+  TimelineProps,
+} from '@/app/features/timeline-management/services/types.ts';
 import ConfirmationModal from '@/components/ui/confirm-modal.tsx';
+import { useToast } from '@/components/ui/toast-provider';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const TimelineList: React.FC<Timeline> = ({ data }: any) => {
+const TimelineList: React.FC<TimelineProps> = ({ data, refreshData }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<any | null>(null);
+  const [editData, setEditData] = useState<Timeline | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const { addToast } = useToast();
 
   if (data.length === 0) {
     return (
@@ -47,11 +53,23 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
     setOpenMenuId(null);
   };
 
-  const confirmDelete = () => {
-    console.log('Deleting ID:', selectedId);
-    // TODO: await deleteTimeline(data.id, formData)
-    setIsDeleteModalOpen(false);
-    setSelectedId(null);
+  const confirmDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await timelineService.deleteTimeline(selectedId);
+
+      addToast('Project Deleted successfully', 'success');
+      console.log('Successfully deleted!');
+
+      refreshData();
+    } catch (error) {
+      addToast('Failed to delete timeline', 'error');
+      console.error('Failed to delete timeline:', error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+    }
   };
 
   return (
@@ -68,7 +86,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
-          {data.map((item: any, index: any) => (
+          {data.map((item, index) => (
             <tr
               key={item.id}
               className="hover:bg-white/2 transition-colors group"
@@ -85,7 +103,7 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
                 <span
                   className={`px-2.5 py-1 rounded-m text-md text-white font-semibold`}
                 >
-                  {item.status}
+                  {item.timelineStatus || 'Active'}
                 </span>
               </td>
               <td className="px-6 py-4 text-right">
@@ -132,13 +150,14 @@ const TimelineList: React.FC<Timeline> = ({ data }: any) => {
         </tbody>
       </table>
 
-      {/*-------- Start Delete Confirm Modal --------*/}
+      {/*-------- Start Edit Modal --------*/}
       <TimelineForm
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
         data={editData}
+        onSuccess={refreshData}
       />
-      {/*-------- End Delete Confirm Modal --------*/}
+      {/*-------- End Edit Modal --------*/}
 
       {/*-------- Start Delete Confirm Modal --------*/}
       <ConfirmationModal
