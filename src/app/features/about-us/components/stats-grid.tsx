@@ -26,13 +26,13 @@ const StatsGrid = () => {
     <div className="grid grid-cols-2 gap-x-12 gap-y-10">
       {stats.map((stat, index) => (
         <div key={index} className="flex flex-col items-center">
-          <span className="text-[#6F28B3] text-4xl font-bold mb-2">
+          <span className="text-[#BD7AFD] text-4xl font-bold mb-2">
             {stat.value}
           </span>
-          <span className="bg-[#1D293D] text-[10px] text-white/70 px-2 py-1 rounded border border-white/10 tracking-widest font-bold mb-2">
+          <span className="bg-[#1D293D] text-[10px] text-white px-2 py-1 rounded-md border border-white/20 tracking-widest mb-2">
             {stat.label}
           </span>
-          <p className="text-[#B4BCD0] text-xs leading-relaxed">{stat.desc}</p>
+          <p className="text-[#B4BCD0] text-sm leading-relaxed">{stat.desc}</p>
         </div>
       ))}
     </div>
