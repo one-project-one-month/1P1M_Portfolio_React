@@ -29,6 +29,7 @@ import ViewPortfolioPage from '../features/portfolio-management/pages/view-portf
 import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
 import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
+import ProtectedGuard from './guards/protected-guard';
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
   {
     path: '/admin',
 
-    // element: <ProtectedGuard allow={['ADMIN']} />,
+    element: <ProtectedGuard allow={['ADMIN']} />,
     children: [
       {
         element: <AdminLayout />,

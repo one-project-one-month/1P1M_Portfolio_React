@@ -6,7 +6,6 @@ import {
   FileText,
   FileUser,
   HardDrive,
-  SquareChartGantt,
   User,
   Users,
 } from 'lucide-react';
@@ -57,7 +56,7 @@ export const ADMIN_NAVS: AdminNavLink[] = [
     path: 'timeline-management',
     icon: CalendarClock,
   },
-  { id: 7, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
+  // { id: 7, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
   { id: 8, name: 'Profile', path: 'admin-profile', icon: User },
   { id: 9, name: 'Configuration', path: 'configuration', icon: Cog },
 ];

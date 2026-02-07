@@ -92,7 +92,7 @@ const ConfigurationTable = () => {
         <ConfigAccordion
           key={field.id}
           trigger={
-            <div className="grid grid-cols-[1.94fr_2.9fr_1.85fr_1.9fr_1fr] gap-5 items-center text-sm text-white p-3">
+            <div className="grid grid-cols-[1.86fr_2.79fr_1.84fr_1.9fr_1fr] gap-5 items-center text-sm text-white p-3">
               <span>Dropdown Title</span>
               <EditableCell
                 value={field.label}
