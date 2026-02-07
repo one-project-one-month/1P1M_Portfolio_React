@@ -6,15 +6,15 @@ import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { type ProfileFormValues, ProfileSchema } from '../services/types.ts';
 
-export const useProfile = (userId: number) => {
+export const useProfile = (userId: number | null) => {
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
   const addToast = useToast();
 
   const { data, isLoading: isFetching } = useQuery({
     queryKey: ['profile', userId],
-    queryFn: () => profileService.getProfile(userId),
-    enabled: !!userId && !!localStorage.getItem('user'),
+    queryFn: () => profileService.getProfile(userId as number),
+    enabled: typeof userId === 'number' && !isNaN(userId) && userId > 0,
   });
 
   const form = useForm<ProfileFormValues>({
