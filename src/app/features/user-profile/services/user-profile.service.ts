@@ -1,7 +1,11 @@
 import apiClient from '@/api/axios';
 import { API_ENDPOINTS } from '@/config/api';
 import type { AxiosError } from 'axios';
-import type { UserProfileResponseType } from '../types/user-profile.type';
+import type {
+  EditUserProfileType,
+  UserProfileEditResponseType,
+  UserProfileResponseType,
+} from '../types/user-profile.type';
 
 export const getUserProfileService = async ({ userId }: { userId: number }) => {
   try {
@@ -16,6 +20,26 @@ export const getUserProfileService = async ({ userId }: { userId: number }) => {
     throw {
       success: false,
       message: 'Failed to fetch user profile',
+    };
+  }
+};
+
+export const editUserProfileService = async (
+  id: number,
+  formData: EditUserProfileType,
+) => {
+  try {
+    const response = await apiClient.patch<UserProfileEditResponseType>(
+      `${API_ENDPOINTS.UPDATE_PROFILE}/${id}`,
+      formData,
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error editing user:', e);
+    throw {
+      success: false,
+      message: 'Failed to edit user',
     };
   }
 };

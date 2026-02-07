@@ -2,10 +2,10 @@ import type { ApiResponseType } from '@/types/api-response.type';
 import z from 'zod';
 import { projectIdeaSchema } from '../../idea-management/types/project-idea.types';
 
-export const Role = {
-  ADMIN: 'ADMIN',
-  USER: 'USER',
-} as const;
+// export const Role = {
+//   ADMIN: 'ADMIN',
+//   USER: 'USER',
+// } as const;
 
 export const devProfileSchema = z.object({
   userId: z.number(),
@@ -17,7 +17,8 @@ export const devProfileSchema = z.object({
   aboutDev: z.string(),
   techStacks: z.array(z.string()),
   dev_id: z.number(),
-  role: z.enum([Role.ADMIN, Role.USER]),
+  phone: z.string().optional(),
+  telegramUsername: z.string().optional(),
 });
 
 const memberSchema = z.object({
@@ -63,7 +64,15 @@ export const userProfileSchema = z.object({
   projectPortfolios: z.array(projectPortfolioSchema),
 });
 
+export const editUserProfileSchema = devProfileSchema.omit({
+  userId: true,
+  email: true,
+});
+
 export type DevProfileType = z.infer<typeof devProfileSchema>;
 export type ProjectIdeaType = z.infer<typeof projectIdeaInProfileSchema>;
 export type UserProfileType = z.infer<typeof userProfileSchema>;
 export type UserProfileResponseType = ApiResponseType<UserProfileType>;
+
+export type EditUserProfileType = z.infer<typeof editUserProfileSchema>;
+export type UserProfileEditResponseType = ApiResponseType<EditUserProfileType>;

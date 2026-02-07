@@ -29,7 +29,10 @@ const UserProfile = (Profile: UserProfile) => {
       {isOpen && (
         <div className="absolute right-0 top-full mt-2 z-[1000] w-[220px] rounded-md bg-gray-800 text-start shadow-lg flex flex-col px-2.5 py-4 gap-2">
           <Button
-            onClick={() => goTo('/me')}
+            onClick={() => {
+              setIsOpen(false);
+              goTo('/me');
+            }}
             variant={'black_button'}
             className="px-2.5 py-4"
           >
