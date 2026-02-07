@@ -1,4 +1,5 @@
 import type { ApiResponseType } from '@/types/api-response.type';
+import type { ReactNode } from 'react';
 import z from 'zod';
 
 export const UserManagementStatus = {
@@ -10,51 +11,63 @@ export const userManagementSchema = z.object({
   id: z.number(),
   name: z.string(),
   email: z.string(),
-  telegram: z.string(),
-  github: z.string(),
-  linkedIn: z.string(),
+  phone: z.string(),
+  role: z.string(),
+  profilePictureUrl: z.string(),
+  telegramUsername: z.string(),
+  githubUrl: z.string(),
+  linkedInUrl: z.string(),
+  description: z.string(),
   status: z.enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED]),
 });
 
+export const editUserSchema = userManagementSchema.omit({
+  id: true,
+  email: true,
+});
+
+export const banUserSchema = userManagementSchema.pick({
+  id: true,
+});
+
 export type GetUserManagementParamsType = {
-  keyword: string | undefined;
+  keyword?: string;
   page?: number;
   size?: number;
-  sortField?: string;
-  sortDirection?: 'asc' | 'desc';
+  status?: string;
+  sortDirection?: 'oldest' | 'newest' | 'popular';
 };
 
-export type UserManagementContainePropsType = {
-  // view: 'list' | 'grid';
-  searchQuery?: string;
-  selectedFilter?: string;
-  sortedField?: string;
-  page: number;
-  size: number;
-  onPageChange?: (page: number) => void;
-  onTotalChange?: (total: number) => void;
-  totalUser: number;
-};
-
-export type UserManagementTableType = {
-  status?: any;
-  type?: 'list' | 'grid';
-  data?: any;
-  handleEdit: (id: number) => void;
-  handleViewDetail: (id: number) => void;
-  handleBanned: (id: number) => void;
-  handleRestore: (id: number) => void;
+export type FilterType = {
+  order: 'asc' | 'desc' | 'popular';
+  status: 'ALL' | 'BANNED' | 'ACTIVE';
+  search?: string;
 };
 
 export type UserManagementHeaderType = {
-  searchQuery: string;
-  setSearchQuery: (val: string) => void;
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
+  filter: FilterType;
+  setFilter: (val: FilterType) => void;
+};
+
+export type UserManagementContainerPropsType = {
+  filter?: FilterType;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+};
+
+export type UserManagementEditFormPropsType = {
+  trigger?: ReactNode;
+  data: UserManagementType;
 };
 
 export type UserManagementType = z.infer<typeof userManagementSchema>;
+export type EditUserManagementType = z.infer<typeof editUserSchema>;
+export type BanUserType = z.infer<typeof banUserSchema>;
 
 export type UserManagementResponseType = ApiResponseType<UserManagementType[]>;
 export type UserManagementByIdResponseType =
   ApiResponseType<UserManagementType>;
+export type UserManagementEditResponseType =
+  ApiResponseType<EditUserManagementType>;
+export type UserBanResponseType = ApiResponseType;

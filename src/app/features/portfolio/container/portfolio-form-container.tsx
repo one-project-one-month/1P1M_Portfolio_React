@@ -1,4 +1,4 @@
-import PortfolioFormview from './portfolio-form-view';
+import PortfolioFormview from '../components/portfolio-form-view';
 
 const PortfolioformContainer = () => {
   return <PortfolioFormview />;

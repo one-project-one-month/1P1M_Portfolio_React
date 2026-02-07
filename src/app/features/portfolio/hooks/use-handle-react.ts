@@ -1,5 +1,5 @@
 import type { PortfolioProjectType } from '@/types/portfolio.type';
-import { useOptimistic, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { reactToProject } from '../services/portfolio-service';
 
 export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
@@ -8,30 +8,25 @@ export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
   const [isPending, startTransition] = useTransition();
   const [reactedIds, setReactedIds] = useState(new Set<number>());
 
-  // useEffect(() => {
-  //   setProjects(initialProjects);
-  // }, [initialProjects]);
+  useEffect(() => {
+    setProjects(initialProjects);
+  }, [initialProjects]);
 
-  const [reactedProjects, addOptimisticReaction] = useOptimistic<
-    PortfolioProjectType[],
-    number
-  >(projects, (state, projectId) =>
-    state.map((p) =>
-      p.id === projectId
-        ? { ...p, reaction_count: (p.reaction_count || 0) + 1 }
-        : p,
-    ),
-  );
+  const reactedProjects = projects.map((p) => {
+    if (reactedIds.has(p.id)) {
+      return { ...p, reaction_count: (p.reaction_count || 0) + 1 };
+    }
+    return p;
+  });
 
   const handleReact = async (projectId: number) => {
     if (reactedIds.has(projectId)) return;
 
     startTransition(async () => {
-      addOptimisticReaction(projectId);
+      setReactedIds((prev) => new Set(prev).add(projectId));
 
       try {
         await reactToProject(projectId);
-
         setProjects((prev) =>
           prev.map((p) =>
             p.id === projectId
@@ -39,7 +34,6 @@ export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
               : p,
           ),
         );
-        setReactedIds((prev) => new Set(prev).add(projectId));
       } catch (error) {
         console.error('Reaction failed:', error);
       }

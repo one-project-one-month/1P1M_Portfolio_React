@@ -12,7 +12,9 @@ export default defineConfig({
       '/api': {
         target: 'https://test-api.one-project-one-month.com',
         changeOrigin: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
+        cookieDomainRewrite: 'localhost',
       },
     },
   },
