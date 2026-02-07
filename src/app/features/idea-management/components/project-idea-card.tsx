@@ -1,21 +1,22 @@
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { COLORS } from '@/constants/colors';
 import { cn } from '@/lib/utils';
 import { Tooltip } from '@radix-ui/themes';
 import { Eye, Heart } from 'lucide-react';
-import { ProjectIdeaDropDown } from '../../idea-management/components/project-idea-drop-down';
-import { changeProjectIdeaStatusColor } from '../../idea-management/lib/utils';
-import type { ProjectIdeaType } from '../../idea-management/types/project-idea.types';
+import {
+  changeProjectIdeaStatus,
+  changeProjectIdeaStatusColor,
+} from '../lib/utils';
+import type { ProjectIdeaType } from '../types/project-idea.types';
+import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
-interface IdeaCardProps {
-  idea: ProjectIdeaType;
-}
-
-const IdeaCard = ({ idea }: IdeaCardProps) => {
+export default function ProjectIdeaCard({ idea }: { idea: ProjectIdeaType }) {
   return (
-    <div className="px-8 py-4 space-y-4 md:space-y-5 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md">
+    <div
+      key={idea.id}
+      className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md"
+    >
       {/* Title and status */}
-      <div className="flex items-start justify-between gap-2 md:gap-3">
+      <div className="flex items-start justify-between gap-2 md:gap-4">
         <Tooltip content={idea.projectIdeaName}>
           <h3 className="capitalize text-lg md:text-xl font-bold text-white flex-1 line-clamp-2">
             {idea.projectIdeaName}
@@ -27,7 +28,7 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
             changeProjectIdeaStatusColor(idea.status),
           )}
         >
-          {idea.status}
+          {changeProjectIdeaStatus(idea.status)}
         </span>
       </div>
 
@@ -40,7 +41,7 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
       <div className="flex items-center justify-start gap-2 md:gap-x-4 flex-wrap">
         {idea.projectTypes.map((item) => (
           <span
-            className={`border border-[${COLORS.primary}]! px-3 py-1 md:px-5 py-0.5 text-xs md:text-sm text-muted rounded-md capitalize`}
+            className={`border border-[${COLORS.primary}]! px-3 py-1 md:px-5 text-xs md:text-sm text-muted rounded-md capitalize`}
           >
             {item}
           </span>
@@ -54,8 +55,8 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
             Submitter:
           </span>
           <img
-            src={sampleUserImgUrl}
-            alt="username"
+            src={idea.ownerProfilePicUrl}
+            alt={idea.devName}
             className="size-8 md:size-10 rounded-full shrink-0"
           />
         </div>
@@ -64,7 +65,7 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
             Leader:
           </span>
           <img
-            src={sampleUserImgUrl}
+            src={idea.leaderProfilePicUrl}
             alt="username"
             className="size-8 md:size-10 rounded-full shrink-0"
           />
@@ -94,6 +95,4 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
       </div>
     </div>
   );
-};
-
-export default IdeaCard;
+}

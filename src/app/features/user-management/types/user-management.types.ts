@@ -70,4 +70,4 @@ export type UserManagementByIdResponseType =
   ApiResponseType<UserManagementType>;
 export type UserManagementEditResponseType =
   ApiResponseType<EditUserManagementType>;
-export type UserBanResponseType = ApiResponseType;
+export type UserBanResponseType = ApiResponseType<BanUserType>;

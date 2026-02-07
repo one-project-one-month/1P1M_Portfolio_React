@@ -1,3 +1,4 @@
+import { API_CONFIG } from '@/config/api';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 interface FailedRequest {
@@ -6,7 +7,7 @@ interface FailedRequest {
 }
 
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: API_CONFIG.API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ apiClient.interceptors.response.use(
 
     // 3. Standard Refresh Logic for all other 401s
     if (
-      (error.response?.status === 401 || error.response?.status === 401) &&
+      (error.response?.status === 401 || error.response?.status === 400) &&
       !originalRequest._retry
     ) {
       if (isRefreshing) {
