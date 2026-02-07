@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL || 'http://3.26.96.212:8080',
+  API_URL: import.meta.env.VITE_API_URL,
 
   // OAuth Configuration
   GITHUB_CLIENT_ID: import.meta.env.VITE_GITHUB_CLIENT_ID,
