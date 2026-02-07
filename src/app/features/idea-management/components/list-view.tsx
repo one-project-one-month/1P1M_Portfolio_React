@@ -69,7 +69,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
                   </td>
                   {/* React Count */}
                   <td className="py-4 text-center text-slate-400">
-                    {idea.reaction_count}
+                    {idea.reactionCount}
                   </td>
 
                   {/* Leader */}

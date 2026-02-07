@@ -11,6 +11,8 @@ const PortfolioFormview = () => {
   const { mutate } = useCreatePortfolio();
 
   const handleSave = (values: Partial<ProjectData>) => {
+    console.log('values', values);
+
     const payload = {
       name: values.projectName || '',
       image: values.image || '',
