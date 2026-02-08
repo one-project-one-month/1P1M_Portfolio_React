@@ -2,7 +2,6 @@ import projectPlaceHolderImage from '@/assets/place_holder_image.png';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-background';
-import { MAX_FILE_SIZE } from '@/constants';
 import { Flex } from '@radix-ui/themes';
 import { ChevronLeft, Loader2 } from 'lucide-react';
 import { useRef } from 'react';
