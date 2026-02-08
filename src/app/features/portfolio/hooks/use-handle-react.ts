@@ -14,7 +14,7 @@ export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
 
   const reactedProjects = projects.map((p) => {
     if (reactedIds.has(p.id)) {
-      return { ...p, reaction_count: (p.reaction_count || 0) + 1 };
+      return { ...p, reaction_count: (p.reactedCount || 0) + 1 };
     }
     return p;
   });
@@ -30,7 +30,7 @@ export function useHandleReact(initialProjects: PortfolioProjectType[] = []) {
         setProjects((prev) =>
           prev.map((p) =>
             p.id === projectId
-              ? { ...p, reaction_count: (p.reaction_count || 0) + 1 }
+              ? { ...p, reaction_count: (p.reactedCount || 0) + 1 }
               : p,
           ),
         );

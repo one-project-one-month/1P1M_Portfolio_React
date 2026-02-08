@@ -20,12 +20,20 @@ export const getProjectPortfolio = async ({
   size,
   sortField,
   sortDirection,
+  projectPortfolioStatus,
 }: GetPortfolioParamsType) => {
   try {
     const response = await apiClient.get<
       ApiResponseType<PortfolioProjectType[]>
     >('/portfolio/api/v2/project-portfolio', {
-      params: { keyword, page, size, sortField, sortDirection },
+      params: {
+        keyword,
+        page,
+        size,
+        sortField,
+        sortDirection,
+        projectPortfolioStatus,
+      },
     });
 
     return response.data;

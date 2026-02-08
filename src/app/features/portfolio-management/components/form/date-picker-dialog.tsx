@@ -28,15 +28,14 @@ const DatePickerDialog = ({
   }, [selectedDate, isOpen]);
 
   const handleDone = () => {
-    if (internalDate) {
-      // Format date as "Nov 15, 2025"
-      const formattedDate = internalDate.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
-      onSelect(formattedDate);
-    }
+    const dateToSave = internalDate || new Date();
+    // Format date as "Nov 15, 2025"
+    const formattedDate = dateToSave.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    onSelect(formattedDate);
     onClose();
   };
 
