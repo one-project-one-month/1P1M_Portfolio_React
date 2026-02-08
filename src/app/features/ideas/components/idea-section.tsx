@@ -1,10 +1,10 @@
 import Pagination from '@/components/ui/pagination';
-import type { ProjectIdeaType } from '../../idea-management/types/project-idea.types';
+import type { IdeaType } from '@/types/idea.type';
 import IdeaList from './idea-list';
 
-export type IdeaSectionProps = {
+type Props = {
   isLoading: boolean;
-  ideas: ProjectIdeaType[];
+  ideas: IdeaType[];
   totalPages: number | 1;
   currentPage: 0 | number;
   onPageChange: (page: number) => void;
@@ -16,7 +16,7 @@ const IdeaSection = ({
   currentPage,
   onPageChange,
   totalPages,
-}: IdeaSectionProps) => {
+}: Props) => {
   return (
     <>
       <IdeaList data={ideas ?? []} isLoading={isLoading} />

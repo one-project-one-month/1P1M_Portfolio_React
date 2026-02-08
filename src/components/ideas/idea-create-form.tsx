@@ -5,15 +5,15 @@ import { PROJECT_TYPE_OPTIONS } from '@/constants';
 import { Dialog } from '@radix-ui/themes';
 import { X } from 'lucide-react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { CreateProjectIdeaType } from '../types/project-idea.types';
+import type { CreateIdeaType } from '../../types/idea.type';
 
 export default function IdeaCreateForm({
   form,
   handleCreate,
   isPending,
 }: {
-  form: UseFormReturn<CreateProjectIdeaType>;
-  handleCreate: (formData: CreateProjectIdeaType) => void;
+  form: UseFormReturn<CreateIdeaType>;
+  handleCreate: (formData: CreateIdeaType) => void;
   isPending: boolean;
 }) {
   const {
@@ -24,18 +24,19 @@ export default function IdeaCreateForm({
   } = form;
 
   return (
-    <Dialog.Content className="bg-black! text-white px-14! py-10! rounded-3xl!">
+    <Dialog.Content
+      size="4"
+      maxWidth="800px"
+      className="bg-black! text-white px-14! py-10! rounded-3xl!"
+    >
       <div className="flex items-center justify-end mb-4">
         <Dialog.Close>
           <X className="cursor-pointer" size={30} />
         </Dialog.Close>
       </div>
-      <Dialog.Title className="mb-2 text-2xl font-semibold">
-        Create the idea information!
-      </Dialog.Title>
+      <Dialog.Title className="text-3xl!">Create the idea!</Dialog.Title>
       <Dialog.Description className="text-sm text-[#9CA3AF]">
-        Choose a status to reflect the current progress and next step of this
-        idea.
+        Fill the information to create new idea
       </Dialog.Description>
       <form
         className="mt-12 flex w-full flex-col gap-12"
@@ -43,7 +44,7 @@ export default function IdeaCreateForm({
       >
         <div className="space-y-10">
           <div>
-            <label className="mb-1 block text-sm font-semibold">
+            <label className="mb-1 block text-lg font-semibold">
               Project Idea Name
             </label>
             <InputField
@@ -60,7 +61,7 @@ export default function IdeaCreateForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-semibold">
+            <label className="mb-1 block text-lg font-semibold">
               Description
             </label>
             <FormTextArea
@@ -80,12 +81,10 @@ export default function IdeaCreateForm({
             name="projectTypes"
             render={({ field, fieldState }) => (
               <div>
-                <p className="mb-2 text-sm font-semibold">Project Type</p>
-
+                <p className="mb-2 text-lg font-semibold">Project Type</p>
                 <div className="flex flex-wrap gap-6 text-sm">
                   {PROJECT_TYPE_OPTIONS.map((type) => {
                     const checked = field.value.includes(type);
-
                     return (
                       <button
                         key={type}

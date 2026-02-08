@@ -50,7 +50,7 @@ export const DeveloperPage = PageLoader(
 );
 
 export const IdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/page')),
+  lazy(() => import('@/app/features/ideas/idea-page')),
 );
 
 export const UserProfilePage = PageLoader(

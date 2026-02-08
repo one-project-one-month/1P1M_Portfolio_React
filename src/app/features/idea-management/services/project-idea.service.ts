@@ -2,15 +2,14 @@ import apiClient from '@/api/axios';
 import type {
   CreateProjectIdeaType,
   EditProjectIdeaType,
-  GetProjectIdeaParamsType,
   ProjectIdeaCreateResponseType,
   ProjectIdeaDeleteResponseType,
   ProjectIdeaEditResponseType,
   ProjectIdeaStatusUpdateResponseType,
-  ProjectIdeasResponseType,
   UpdateProjectIdeaStatusType,
 } from '@/app/features/idea-management/types/project-idea.types';
 import { API_ENDPOINTS } from '@/config/api';
+import type { GetIdeaParamsType, IdeasResponseType } from '@/types/idea.type';
 import { AxiosError } from 'axios';
 
 // GET
@@ -18,23 +17,23 @@ export const getProjectIdea = async ({
   keyword,
   page,
   size,
-  sortField,
-  sortDirection,
-}: GetProjectIdeaParamsType) => {
+  status,
+  sortOrder,
+}: GetIdeaParamsType) => {
   try {
-    const response = await apiClient.get<ProjectIdeasResponseType>(
+    const response = await apiClient.get<IdeasResponseType>(
       API_ENDPOINTS.GET_PROJECT_IDEAS,
       {
-        params: { keyword, page, size, sortField, sortDirection },
+        params: { keyword, page, size, status, sortOrder },
       },
     );
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
-    console.error('Error fetching project ideas:', e);
+    console.error('Error fetching ideas:', e);
     throw {
       success: false,
-      message: 'Failed to fetch project ideas',
+      message: 'Failed to fetch ideas',
     };
   }
 };
@@ -103,7 +102,8 @@ export const updateProjectIdeaStatus = async (
 export const deleteProjectIdea = async (id: number) => {
   try {
     const response = await apiClient.delete<ProjectIdeaDeleteResponseType>(
-      `${API_ENDPOINTS.PROJECT_IDEA}/${id}`,
+      API_ENDPOINTS.PROJECT_IDEA,
+      { params: { projectIdeaId: id } },
     );
     return response.data;
   } catch (error) {

@@ -11,6 +11,7 @@ import type { AxiosError } from 'axios';
 import { Check, LayoutGrid, List, ListFilter, Search } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import IdeaCreateForm from '../../../../components/ideas/idea-create-form';
 import { createProjectIdea } from '../services/project-idea.service';
 import {
   createProjectIdeaSchema,
@@ -18,7 +19,6 @@ import {
   type ProjectIdeaCreateResponseType,
   type ProjectIdeaHeaderPropsType,
 } from '../types/project-idea.types';
-import IdeaCreateForm from './idea-create-form';
 
 const ORDER_LIST = [
   { value: 'asc', name: 'Oldest' },
@@ -100,8 +100,8 @@ const ProjectIdeaHeaderSection = ({
   return (
     <>
       {/* Header Section */}
-      <div className="flex flex-col gap-y-10">
-        <Title showSearch={false} showFilter={false} title="Ideas List" />
+      <div className="flex flex-col gap-y-6 mb-6">
+        <Title showSearch={false} showFilter={false} title="Idea List" />
 
         {/* Total Count and Filters Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">

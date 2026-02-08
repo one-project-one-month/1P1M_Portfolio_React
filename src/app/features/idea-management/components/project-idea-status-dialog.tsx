@@ -17,7 +17,7 @@ function ProjectIdeaStatusDialog({
   data,
   trigger,
 }: {
-  data: { id: number; status: 'PENDING' | 'APPROVED' | 'ARCHIVED' };
+  data: { projectIdeaId: number; status: 'PENDING' | 'APPROVED' | 'ARCHIVED' };
   trigger?: ReactNode;
 }) {
   const queryClient = useQueryClient();
@@ -56,12 +56,12 @@ function ProjectIdeaStatusDialog({
     });
 
   const handleStatusUpdate = (formData: UpdateProjectIdeaStatusType) => {
-    if (!data.id) {
+    if (!data.projectIdeaId) {
       addToast('Project idea ID is missing', 'error');
       return;
     }
     updateStatusMutate({
-      id: data.id,
+      id: data.projectIdeaId,
       formData: formData as UpdateProjectIdeaStatusType,
     });
   };

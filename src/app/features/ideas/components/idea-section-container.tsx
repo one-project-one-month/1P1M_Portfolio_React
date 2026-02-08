@@ -1,31 +1,39 @@
 import { useDebounce } from '@/hooks/use-debounce';
+import type { IdeaType } from '@/types/idea.type';
 import { useState } from 'react';
 import { useGetProjectIdea } from '../../idea-management/hooks/use-project-ideas';
-import type { ProjectIdeaType } from '../../idea-management/types/project-idea.types';
 import IdeaSection from './idea-section';
 
-interface IdeaSectionProps {
-  query: string;
-  direction: undefined | 'desc' | 'asc';
-}
+type Props = {
+  query?: string;
+  status?:
+    | ''
+    | 'REJECTED'
+    | 'APPROVED'
+    | 'IN_PROGRESS'
+    | 'COMPLETED'
+    | 'DELETED'
+    | 'PENDING';
+  order?: 'popular' | 'newest' | 'oldest';
+};
 
-const IdeaSectionContainer = ({ query, direction }: IdeaSectionProps) => {
+const IdeaSectionContainer = ({ query, status, order }: Props) => {
   const debounceValue = useDebounce(query ?? '', 700);
   const [page, setPage] = useState<number>(0);
-  const { data, isLoading } = useGetProjectIdea({
+  const { data, isPending } = useGetProjectIdea({
     keyword: debounceValue,
     page: page,
     size: 6,
-    sortDirection: direction,
-    sortField: 'devProfile.name',
+    status,
+    sortOrder: order,
   });
 
-  const totalPages = data?.meta?.totalPages;
-  const ideas: ProjectIdeaType[] = data?.data || [];
+  const totalPages = data?.meta.totalPages;
+  const ideas: IdeaType[] = data?.data || [];
 
   return (
     <IdeaSection
-      isLoading={isLoading}
+      isLoading={isPending}
       totalPages={totalPages ?? 1}
       ideas={ideas}
       currentPage={page}

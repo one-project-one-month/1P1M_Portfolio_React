@@ -10,7 +10,7 @@ export const ProjectIdeaStatus = {
 
 // TYPE VALIDATION WITH ZOD
 export const projectIdeaSchema = z.object({
-  id: z.number(),
+  projectIdeaId: z.number(),
   projectIdeaName: z.string(),
   status: z.enum([
     ProjectIdeaStatus.PENDING,
@@ -52,7 +52,7 @@ export const updateProjectIdeaStatusSchema = editProjectIdeaSchema.pick({
 });
 
 export const deleteProjectIdeaSchema = projectIdeaSchema.pick({
-  id: true,
+  projectIdeaId: true,
 });
 
 export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;

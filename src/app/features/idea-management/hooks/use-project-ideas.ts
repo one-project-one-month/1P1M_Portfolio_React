@@ -1,12 +1,14 @@
 import type {
   EditProjectIdeaType,
-  GetProjectIdeaParamsType,
   ProjectIdeaEditResponseType,
-  ProjectIdeasResponseType,
 } from '@/app/features/idea-management/types/project-idea.types';
 import { useToast } from '@/components/ui/toast-provider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import type {
+  GetIdeaParamsType,
+  IdeasResponseType,
+} from '../../../../types/idea.type';
 import {
   editProjectIdea,
   getProjectIdea,
@@ -17,13 +19,12 @@ export const useGetProjectIdea = ({
   keyword,
   page,
   size,
-  sortField,
-  sortDirection,
-}: GetProjectIdeaParamsType) => {
-  return useQuery<ProjectIdeasResponseType>({
-    queryKey: ['project-idea', keyword, page, sortDirection, sortField, size],
-    queryFn: () =>
-      getProjectIdea({ keyword, page, size, sortDirection, sortField }),
+  status,
+  sortOrder,
+}: GetIdeaParamsType) => {
+  return useQuery<IdeasResponseType>({
+    queryKey: ['ideas', keyword, page, size, status, sortOrder],
+    queryFn: () => getProjectIdea({ keyword, page, size, status, sortOrder }),
     placeholderData: (previousData) => previousData,
   });
 };

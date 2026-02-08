@@ -1,23 +1,23 @@
+import { ProjectIdeaDropDown } from '@/app/features/idea-management/components/project-idea-drop-down';
+import {
+  changeProjectIdeaStatus,
+  changeProjectIdeaStatusColor,
+} from '@/app/features/idea-management/lib/utils';
 import { COLORS } from '@/constants/colors';
 import { cn } from '@/lib/utils';
 import type { IdeaType } from '@/types/idea.type';
 import { Tooltip } from '@radix-ui/themes';
 import { ExternalLink, Eye, Heart } from 'lucide-react';
-import {
-  changeProjectIdeaStatus,
-  changeProjectIdeaStatusColor,
-} from '../lib/utils';
-import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
 type Props = {
   site: 'admin' | 'client';
   idea: IdeaType;
 };
 
-export default function ProjectIdeaCard({ site, idea }: Props) {
+export default function IdeaCard({ site, idea }: Props) {
   return (
     <div
-      key={idea.projectIdeaId}
+      // key={idea.projectIdeaId}
       className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md"
     >
       {/* Title and status */}
@@ -46,6 +46,7 @@ export default function ProjectIdeaCard({ site, idea }: Props) {
       <div className="flex items-center justify-start gap-2 md:gap-x-4 flex-wrap">
         {idea.projectTypes.map((item) => (
           <span
+            key={item}
             className={`border border-[${COLORS.primary}]! px-3 py-1 md:px-5 text-xs md:text-sm text-muted rounded-md capitalize`}
           >
             {item}
@@ -65,16 +66,18 @@ export default function ProjectIdeaCard({ site, idea }: Props) {
             className="size-8 md:size-10 rounded-full shrink-0"
           />
         </div>
-        <div className="w-1/2 flex items-center justify-end gap-4">
-          <span className="text-sm md:text-lg text-muted whitespace-nowrap">
-            Leader:
-          </span>
-          <img
-            src={idea.leaderProfilePicUrl}
-            alt="username"
-            className="size-8 md:size-10 rounded-full shrink-0"
-          />
-        </div>
+        {idea.leader_id && (
+          <div className="w-1/2 flex items-center justify-end gap-4">
+            <span className="text-sm md:text-lg text-muted whitespace-nowrap">
+              Leader:
+            </span>
+            <img
+              src={idea.leaderProfilePicUrl}
+              alt="username"
+              className="size-8 md:size-10 rounded-full shrink-0"
+            />
+          </div>
+        )}
       </div>
 
       <hr />
@@ -88,10 +91,7 @@ export default function ProjectIdeaCard({ site, idea }: Props) {
           </span>
           <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
             <Eye size={25} />
-            {/* TODO: change to dynamic count later */}
-            <span>
-              1.1<span>K</span>
-            </span>
+            {idea.viewCount}
           </span>
         </div>
         <div className="w-1/2 flex items-center justify-end">

@@ -91,6 +91,7 @@ export default function ProjectIdeaEditDialog({
       addToast(success.message, 'success');
       setStep(0);
       form.reset();
+      setOpen(false);
     },
     onError: (error) => {
       addToast(error.message, 'error');
@@ -98,11 +99,18 @@ export default function ProjectIdeaEditDialog({
   });
 
   const handleFinalSubmit = (formData: Partial<EditProjectIdeaType>) => {
-    if (!data.id) {
+    if (!data.projectIdeaId) {
       addToast('Project idea ID is missing', 'error');
       return;
     }
-    mutate({ id: data.id, formData: formData as EditProjectIdeaType });
+
+    // Merge form data with original data to ensure all required fields are present
+    const mergedData: EditProjectIdeaType = {
+      ...data,
+      ...formData,
+    } as EditProjectIdeaType;
+
+    mutate({ id: data.projectIdeaId, formData: mergedData });
   };
 
   return (

@@ -118,7 +118,7 @@ export const ProjectIdeaDropDown = ({
         rejectText="Cancel"
         confirmText="Delete"
         onCancel={() => setDeleteOpen(false)}
-        onConfirm={() => handleDelete(data.id)}
+        onConfirm={() => handleDelete(data.projectIdeaId)}
       />
 
       <ProjectIdeaEditDialog

@@ -15,8 +15,6 @@ const ProjectIdeaDetailDialog = ({
   trigger?: ReactNode;
   data: ProjectIdeaType;
 }) => {
-  console.log('detail-data', data);
-
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 

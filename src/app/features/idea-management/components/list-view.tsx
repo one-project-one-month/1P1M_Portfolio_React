@@ -38,7 +38,7 @@ const IdeaManagementTable = ({ data }: { data: ProjectIdeaType[] }) => {
 
             <tbody className="divide-y divide-slate-800">
               {data.map((idea) => (
-                <tr key={idea.id} className="hover:bg-slate-800/40">
+                <tr key={idea.projectIdeaId} className="hover:bg-slate-800/40">
                   {/* Idea Name */}
                   <td className="py-4">
                     <div className="relative group text-center text-white font-medium capitalize">
