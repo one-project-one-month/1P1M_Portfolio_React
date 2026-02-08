@@ -46,6 +46,7 @@ export const API_ENDPOINTS = {
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
   GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
+  TIMELINES: 'portfolio/api/v1/timelines',
 
   // Admin
   USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',

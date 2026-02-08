@@ -119,9 +119,9 @@ const ProjectIdeaDetailDialog = ({
               <div>
                 <h3 className="text-xl font-semibold mb-2">React count</h3>
                 <p className="text-gray-400">
-                  {data.reaction_count > 999
-                    ? `${(data.reaction_count / 1000).toFixed(1)}K`
-                    : data.reaction_count}
+                  {data.reactionCount > 999
+                    ? `${(data.reactionCount / 1000).toFixed(1)}K`
+                    : data.reactionCount}
                 </p>
               </div>
               <div>
