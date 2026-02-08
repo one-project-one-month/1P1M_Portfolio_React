@@ -6,12 +6,9 @@ import { buttonVariants } from '@/styles/button-variants';
 import { Dialog } from '@radix-ui/themes';
 import { Check, LayoutGrid, List, ListFilter, Search } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
-import IdeaCreateForm from '../../shared/components/idea-create-form';
-import {
-  FILTER_OPTIONS,
-  ORDER_LIST,
-} from '../../shared/constants/idea-filters.constants';
-import { useCreateIdea } from '../../shared/hooks/use-create-idea';
+import { IdeaCreateForm } from '../../shared/components';
+import { FILTER_OPTIONS, ORDER_LIST } from '../../shared/constants';
+import { useCreateIdea } from '../../shared/hooks';
 import type { IdeaHeaderPropsType } from '../../shared/types/project-idea.types';
 
 const ProjectIdeaHeaderSection = ({

@@ -29,9 +29,11 @@ export const IdeaSchema = z.object({
   viewCount: z.number(),
   dev_id: z.number(),
   devName: z.string().optional(),
+  devEmail: z.email().optional(),
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number().optional(),
   leaderName: z.string().optional(),
+  leaderEmail: z.email().optional(),
   leaderProfilePicUrl: z.string().optional(),
   projectTypes: z.array(z.string()),
 });

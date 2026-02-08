@@ -1,8 +1,8 @@
 import { Text, Tooltip } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
-import EmptyIdeasState from '../../shared/components/empty-ideas-state';
-import { STATUS_COLORS } from '../../shared/constants/idea-filters.constants';
-import { formatStatus, truncateText } from '../../shared/lib/idea-utils';
+import { EmptyIdeasState } from '../../shared/components';
+import { STATUS_COLORS } from '../../shared/constants';
+import { formatStatus, truncateText } from '../../shared/lib';
 import type { IdeaType } from '../../shared/types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 

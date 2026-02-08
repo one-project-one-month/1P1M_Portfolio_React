@@ -125,7 +125,9 @@ const ProjectIdeaDetailDialog = ({
               <div>
                 <h3 className="text-xl font-semibold mb-2">View count</h3>
                 <p className="text-gray-400">
-                  1.2<span>K</span>
+                  {data.viewCount > 999
+                    ? `${(data.viewCount / 1000).toFixed(1)}K`
+                    : data.viewCount}
                 </p>
               </div>
             </div>
@@ -137,7 +139,7 @@ const ProjectIdeaDetailDialog = ({
             </div>
 
             {/* Submitter */}
-            <div className="flex items-center gap-20">
+            <div className="flex items-start justify-between">
               <div className="flex flex-col gap-2">
                 <h3 className="text-xl font-semibold mb-2">Submitter</h3>
                 <div className="flex items-center gap-4">
@@ -151,17 +153,17 @@ const ProjectIdeaDetailDialog = ({
                       {data.devName || 'Unknown'}
                     </h4>
                     <Dialog.Description className="font-thin">
-                      Developer
+                      {data.devEmail ?? '-----'}
                     </Dialog.Description>
                   </div>
                 </div>
               </div>
-              {data.leader_id && (
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-xl font-semibold mb-2">Project Leader</h3>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-xl font-semibold mb-2">Project Leader</h3>
+                {data.leader_id ? (
                   <div className="flex items-center gap-4">
                     <img
-                      src={data.leaderProfilePicUrl || sampleUserImgUrl}
+                      src={data.leaderProfilePicUrl}
                       className="size-10 rounded-full object-cover"
                       alt={data.leaderName || 'Leader'}
                     />
@@ -170,12 +172,14 @@ const ProjectIdeaDetailDialog = ({
                         {data.leaderName || 'Unknown'}
                       </h4>
                       <Dialog.Description className="font-thin">
-                        Team Leader
+                        {data.leaderEmail ?? '-----'}
                       </Dialog.Description>
                     </div>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="flex items-center">-----</div>
+                )}
+              </div>
             </div>
 
             {/* Buttons */}

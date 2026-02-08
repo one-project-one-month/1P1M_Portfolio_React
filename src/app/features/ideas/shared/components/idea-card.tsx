@@ -1,12 +1,9 @@
 import { COLORS } from '@/constants/colors';
 import { cn } from '@/lib/utils';
 import { Tooltip } from '@radix-ui/themes';
-import { Eye, Heart, Send } from 'lucide-react';
+import { ExternalLink, Eye, Heart } from 'lucide-react';
 import { ProjectIdeaDropDown } from '../../admin/components/project-idea-drop-down';
-import {
-  changeProjectIdeaStatus,
-  changeProjectIdeaStatusColor,
-} from '../../admin/lib/utils';
+import { changeProjectIdeaStatus, changeProjectIdeaStatusColor } from '../lib';
 import type { IdeaType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
@@ -17,10 +14,7 @@ type Props = {
 
 export default function IdeaCard({ site, idea }: Props) {
   return (
-    <div
-      // key={idea.projectIdeaId}
-      className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md"
-    >
+    <div className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md">
       {/* Title and status */}
       <div className="flex items-start justify-between gap-2 md:gap-4">
         <Tooltip content={idea.projectIdeaName}>
@@ -106,7 +100,7 @@ export default function IdeaCard({ site, idea }: Props) {
                   type="button"
                   className="text-white hover:text-[#A855F7] transition-colors"
                 >
-                  <Send size={25} />
+                  <ExternalLink size={25} />
                 </button>
               }
             />
