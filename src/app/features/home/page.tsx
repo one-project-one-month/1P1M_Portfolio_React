@@ -14,10 +14,10 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="">
+    <div className=" max-w-7xl mx-auto w-full">
       {/* Start Welcome Page Content */}
-      <section className="flex flex-col items-center justify-center  text-center text-white h-[80vh] mt-14">
-        <Curve className="absolute top-[90px] w-screen h-[356px] z-0 pointer-events-none" />
+      <section className="flex  flex-col items-center justify-center  text-center text-white  my-14">
+        <Curve className="absolute top-80 w-screen h-99 left-0 z-0 pointer-events-none" />
         <div className="text-4xl lg:text-8xl">
           <h1>An Open Space For</h1>
           <h1>
@@ -27,7 +27,11 @@ export default function HomePage() {
         </div>
 
         <div className="p-4 mt-2.5">
-          <CountdownTimer items={countdownItems} />
+          <CountdownTimer
+            deadline={'2026-2-9'}
+            items={countdownItems}
+            onTimeEnd={() => {}}
+          />
         </div>
 
         <div className="mt-8 flex-col items-center">
@@ -44,12 +48,10 @@ export default function HomePage() {
           </button>
         </div>
       </section>
-      {/* End Welcome Page Content */}
-      {/* Start About Section */}
       <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-auto bg-[#050612] rounded-4xl border border-white/20 p-6">
-            <h1 className="text-3xl lg:text-4xl mb-8">
+        <div className="grid grid-cols-1 px-3 lg:grid-cols-3 gap-8">
+          <div className="h-auto col-span-2 bg-[#050612] rounded-4xl border border-white/20 p-6">
+            <h1 className="text-3xl text-start font-semibold lg:text-4xl mb-8">
               What is <span className="text-[#BD7AFD]">OPOM</span>?
             </h1>
             <div className="text-sm lg:text-2xl text-left space-y-4">
@@ -68,7 +70,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col justify-between items-center gap-8">
-            <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
+            <div className=" bg-[#050612] rounded-4xl border border-white/20 p-4">
               <h3 className="text-lg md:text-2xl mb-8">
                 Who <span className="text-[#BD7AFD]">We </span>are?
               </h3>
@@ -79,7 +81,7 @@ export default function HomePage() {
                 days.
               </p>
             </div>
-            <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
+            <div className=" bg-[#050612] rounded-4xl border border-white/20 p-4">
               <h3 className="text-lg md:text-2xl mb-8">
                 What you have to <span className="text-[#BD7AFD]">Do </span>?
               </h3>

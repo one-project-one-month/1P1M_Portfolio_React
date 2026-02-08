@@ -1,7 +1,8 @@
-import projectPlaceHolderImage from '@/assets/ProjectImage.png';
+import projectPlaceHolderImage from '@/assets/place_holder_image.png';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-background';
+import { MAX_FILE_SIZE } from '@/constants';
 import { Flex } from '@radix-ui/themes';
 import { useRef } from 'react';
 import type { ProjectData } from '../../portfolio-management/constants/data';
@@ -54,15 +55,23 @@ const ProjectPortfolioForm = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const projectImage = form.watch('projectImage');
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      try {
-        const imageUrl = await uploadProjectImage(file);
-        form.setValue('projectImage', imageUrl);
-      } catch (error) {
-        console.error('Image upload failed', error);
-      }
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      console.error('File is too large');
+      // optional: show toast / form error
+      form.setError('projectImage', { message: 'Image must be under 2MB' });
+      return;
+    }
+
+    try {
+      const imageUrl = await uploadProjectImage(file);
+      form.setValue('projectImage', imageUrl);
+    } catch (error) {
+      console.error('Image upload failed', error);
     }
   };
 
@@ -73,7 +82,7 @@ const ProjectPortfolioForm = ({
   };
 
   return (
-    <FormBackground className="w-4xl flex">
+    <FormBackground className="w-4xl flex bg-transparent!">
       <div className="grid lg:grid-cols-4 md:grid-cols-1">
         <div className="shrink-0">
           <input
