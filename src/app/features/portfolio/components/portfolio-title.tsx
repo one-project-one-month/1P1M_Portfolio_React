@@ -1,7 +1,27 @@
 import { Button } from '@/components/ui/button';
-import type { TitleProps } from '@/types/title-props';
 import { Flex } from '@radix-ui/themes';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+
+export type FilterConfig = {
+  key: string;
+  label: string;
+  options: {
+    label: string;
+    value: string;
+  }[];
+};
+
+export interface PortfolioTitleProps {
+  title?: string;
+  onCreate?: (() => void) | false;
+  showSearch?: boolean;
+  showFilter?: boolean;
+  searchPlaceholder?: string;
+  onSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  filterConfig?: FilterConfig[];
+  initSelectedFilter?: string;
+  onFilterChange?: (key: string, value: string) => void;
+}
 
 const PortfolioTitle = ({
   title = 'Page Title',
@@ -12,7 +32,7 @@ const PortfolioTitle = ({
   onSearchChange,
   filterConfig = [],
   onFilterChange,
-}: TitleProps) => {
+}: PortfolioTitleProps) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);

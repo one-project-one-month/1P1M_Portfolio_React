@@ -12,7 +12,7 @@ interface PortfolioBasicInfoProps {
   initialData?: ProjectData | null;
   form: UseFormReturn<PortfolioFormValues>;
   isReadOnly: boolean;
-  accessFrom: string;
+  accessFrom?: string;
 }
 
 export const PortfolioBasicInfo = ({

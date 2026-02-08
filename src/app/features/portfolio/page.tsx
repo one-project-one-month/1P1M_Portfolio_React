@@ -1,8 +1,9 @@
-import type { FilterConfig } from '@/types/title-props';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSortDirection } from '../../../lib/get-sort-direction';
-import PortfolioTitle from './components/portfolio-title';
+import PortfolioTitle, {
+  type FilterConfig,
+} from './components/portfolio-title';
 import PortfolioSectionContainer from './container/portfolio-section-container';
 
 const filterConfig: FilterConfig[] = [
