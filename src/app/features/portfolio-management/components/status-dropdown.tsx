@@ -37,37 +37,57 @@ const StatusDropdown = ({
     onChange?.(item);
   };
 
-  const getBackgroundColor = (statusName?: string) => {
-    if (!statusName) return 'bg-[#FFFFFF17]';
-    return statusColors[statusName] || 'bg-[#FFFFFF17]';
-  };
-
   return (
     <div className="relative w-full" ref={dropdownRef}>
+      {/* Trigger */}
       <button
         type="button"
-        className={`h-12 w-full appearance-none rounded-lg px-4 py-3
-          ${getBackgroundColor(selected?.name)}
-          border border-[#FFFFFF26]
-          text-white flex items-center justify-between focus:outline-none 
-          focus:ring-2 focus:ring-purple-500 ${className}`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
+        className={`
+          h-12 w-full rounded-lg px-4
+          flex items-center justify-between
+          border border-white/15
+          bg-white/5 backdrop-blur-md
+          text-sm text-white
+          transition-all duration-200
+          hover:bg-white/10
+          focus:outline-none focus:ring-2 focus:ring-purple-500/50
+          ${className}
+        `}
       >
         <span className={selected ? 'text-white' : 'text-gray-400'}>
-          {selected ? selected.name : placeholder}
+          {selected?.name || placeholder}
         </span>
-        <ChevronDown size={18} className="text-[#F3F4F6]" />
+
+        <ChevronDown
+          size={18}
+          className={`text-gray-300 transition-transform duration-200 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
       </button>
 
+      {/* Dropdown */}
       {isOpen && (
-        <ul className="absolute z-10 mt-1 w-full bg-[#1F2937] border border-[#FFFFFF26] rounded-lg shadow-lg max-h-60 overflow-auto">
-          {menuList.map((item: DropdownItem) => (
+        <ul
+          className="
+            absolute z-20 mt-2 w-full
+            rounded-lg border border-white/10
+            bg-[#0F172A]/90 backdrop-blur-xl
+            shadow-xl
+            overflow-hidden
+          "
+        >
+          {menuList.map((item) => (
             <li
               key={item.id}
-              className={`px-4 py-3 cursor-pointer text-white hover:opacity-90 ${
-                statusColors[item.name] || 'hover:bg-gray-700'
-              }`}
               onClick={() => handleSelect(item)}
+              className="
+                px-4 py-3 text-sm text-white
+                cursor-pointer
+                transition-colors
+                hover:bg-white/10
+              "
             >
               {item.name}
             </li>
