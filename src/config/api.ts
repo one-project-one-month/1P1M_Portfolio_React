@@ -49,7 +49,9 @@ export const API_ENDPOINTS = {
   TIMELINES: 'portfolio/api/v1/timelines',
 
   // Admin
-  USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  UPDATE_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
 };
 
