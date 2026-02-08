@@ -56,7 +56,10 @@ const FeaturedDevelopersSection = ({
   return (
     <section className="flex flex-col justify-center text-center text-gray-200 mb-12">
       <div className="w-full flex justify-between items-end my-8 px-2">
-        <h2 className="text-3xl md:text-5xl font-bold">Featured Developers</h2>
+        <div>
+          <h2 className="text-3xl md:text-5xl mb-2 font-bold">Dev Profiles</h2>
+          <div className="w-1/2 h-2 rounded-full bg-primary-custom"></div>
+        </div>
 
         <a
           href="/developers"
