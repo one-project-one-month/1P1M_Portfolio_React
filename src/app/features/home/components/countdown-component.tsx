@@ -8,10 +8,16 @@ export type CountdownItem = {
 
 type CountdownTimerProps = {
   items: CountdownItem[];
+  deadline: Date | string;
+  onTimeEnd?: () => void;
 };
 
-const CountdownTimer: React.FC<CountdownTimerProps> = ({ items }) => {
-  const endtime = new Date('December 31, 2026 23:59:59');
+const CountdownTimer: React.FC<CountdownTimerProps> = ({
+  items,
+  deadline,
+  onTimeEnd,
+}) => {
+  const endtime = typeof deadline === 'string' ? new Date(deadline) : deadline;
 
   const dayRef = useRef<HTMLDivElement>(null);
   const hourRef = useRef<HTMLDivElement>(null);
@@ -19,11 +25,20 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ items }) => {
   const secRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let interval: number;
+
     const updateClock = () => {
       const total = endtime.getTime() - Date.now();
 
-      if (total < 0) {
+      if (total <= 0) {
         clearInterval(interval);
+
+        if (dayRef.current) dayRef.current.textContent = '00';
+        if (hourRef.current) hourRef.current.textContent = '00';
+        if (minRef.current) minRef.current.textContent = '00';
+        if (secRef.current) secRef.current.textContent = '00';
+
+        onTimeEnd?.();
         return;
       }
 
@@ -47,13 +62,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ items }) => {
     };
 
     updateClock();
-    const interval = setInterval(updateClock, 1000);
+    interval = setInterval(updateClock, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [deadline, onTimeEnd]);
 
-  const getRef = (value: string) => {
-    switch (value) {
+  const getRef = (label: string) => {
+    switch (label) {
       case 'Days':
         return dayRef;
       case 'Hours':

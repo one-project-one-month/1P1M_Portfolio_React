@@ -56,3 +56,5 @@ export const ADMIN_NAVS: AdminNavLink[] = [
 ];
 
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];
+
+export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
