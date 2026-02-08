@@ -24,7 +24,7 @@ const TeamBar = ({
       className={`flex flex-col ${isRight ? 'items-end' : 'items-start'} justify-center mt-8 w-full px-[16.6%]`}
     >
       <div className="flex items-center gap-2 mb-4">
-        <div className="h-[2px] w-8 bg-[#6F28B3]"></div>
+        <div className="h-[2px] w-8 bg-[#BD7AFD]"></div>
         <span className="text-white font-medium text-sm tracking-widest">
           {team}
         </span>

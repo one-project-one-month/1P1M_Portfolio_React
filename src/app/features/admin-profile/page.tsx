@@ -2,11 +2,15 @@
 import { FormField } from '@/app/features/admin-profile/components/form-field.tsx';
 import { InfoCard } from '@/app/features/admin-profile/components/info-card.tsx';
 import { useProfile } from '@/app/features/admin-profile/hooks/user-profile.ts';
+import { useUserInfoStore } from '@/store/user-info-store.ts';
 import { MinusCircle, Plus } from 'lucide-react';
 import React from 'react';
 import { FormProvider } from 'react-hook-form';
 
 export default function ProfilePage() {
+  const user = useUserInfoStore((state) => state.userInfo);
+  const userID = user?.userId ? parseInt(String(user.userId)) : null;
+
   const {
     form,
     fields,
@@ -17,20 +21,24 @@ export default function ProfilePage() {
     handleEdit,
     handleCancel,
     handleSubmit,
-  } = useProfile();
+  } = useProfile(userID);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { setValue, watch } = form;
 
   const avatarPreview = watch('avatarUrl') || 'https://i.pravatar.cc/300';
+  const firstName = watch('firstName');
+  const lastName = watch('lastName');
+  const fullName = firstName ? `${firstName} ${lastName}` : null;
+  const email = watch('email');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setValue('avatarFile', file, { shouldValidate: true });
-
       const localUrl = URL.createObjectURL(file);
       setValue('avatarUrl', localUrl);
+
+      setValue('avatarFile', file);
     }
   };
 
@@ -72,10 +80,8 @@ export default function ProfilePage() {
                   <p className="text-green-400 text-sm font-medium mb-1 uppercase tracking-wide">
                     Admin
                   </p>
-                  <h3 className="text-white text-xl font-bold">Thura Aung</h3>
-                  <p className="text-gray-400 text-sm mt-1">
-                    aungthurapm@email.com
-                  </p>
+                  <h3 className="text-white text-xl font-bold">{fullName}</h3>
+                  <p className="text-gray-400 text-sm mt-1">{email}</p>
 
                   {isEditing && (
                     <button

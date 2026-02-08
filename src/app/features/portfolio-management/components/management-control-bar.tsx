@@ -1,8 +1,12 @@
-import StatusFilterDropdown from '@/app/features/portfolio-management/components/status-filter-dropdown';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, List, Search } from 'lucide-react';
-
-type FilterStatus = 'All' | 'Completed' | 'In Progress' | 'Unqualified';
+import { useState } from 'react';
+import {
+  OrderFilterDropdown,
+  type OrderFilterOption,
+  StatusFilterDropdown,
+  type StatusFilterOption,
+} from './status-filter-dropdown';
 
 interface ManagementControlBarProps {
   title?: string;
@@ -10,7 +14,8 @@ interface ManagementControlBarProps {
   viewMode?: 'list' | 'gallery';
   onChangeViewMode?: (mode: 'list' | 'gallery') => void;
   onCreateProject?: () => void;
-  onFilterByStatus?: (status: FilterStatus) => void;
+  onFilterByStatus?: (status: StatusFilterOption) => void;
+  onFilterByOrder?: (order: OrderFilterOption) => void;
 }
 
 const ManagementControlBar = ({
@@ -19,9 +24,19 @@ const ManagementControlBar = ({
   onChangeViewMode,
   onCreateProject,
   onFilterByStatus,
+  onFilterByOrder,
 }: ManagementControlBarProps) => {
-  const handleStatusFilter = (status: FilterStatus) => {
+  const [statusFilter, setStatusFilter] = useState<StatusFilterOption>('All');
+  const [orderFilter, setOrderFilter] = useState<OrderFilterOption>('All');
+
+  const handleStatusFilter = (status: StatusFilterOption) => {
+    setStatusFilter(status);
     onFilterByStatus?.(status);
+  };
+
+  const handleOrderFilter = (order: OrderFilterOption) => {
+    setOrderFilter(order);
+    onFilterByOrder?.(order);
   };
 
   return (
@@ -53,8 +68,15 @@ const ManagementControlBar = ({
               />
             </button>
           </div>
+          <OrderFilterDropdown
+            value={orderFilter}
+            onChange={handleOrderFilter}
+          />
 
-          <StatusFilterDropdown onChange={handleStatusFilter} />
+          <StatusFilterDropdown
+            value={statusFilter}
+            onChange={handleStatusFilter}
+          />
 
           <Button variant="primary" size="primary" onClick={onCreateProject}>
             Create Idea

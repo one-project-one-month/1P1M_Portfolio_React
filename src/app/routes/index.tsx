@@ -22,6 +22,7 @@ import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
+import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PortfolioErrorBoundary />,
     children: [
       {
         index: true,
@@ -48,12 +50,24 @@ const router = createBrowserRouter([
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
       {
-        path: '/portfolio/create-portfolio',
-        element: <PortfolioFormview />,
-      },
-      {
-        path: '/portfolio/update-portfolio/:projectId',
-        element: <PortfolioEditview />,
+        element: <ProtectedGuard allow={['USER']} />,
+        children: [
+          { path: '/portfolios', element: <PortfolioPage /> },
+          { path: '/developers', element: <DeveloperPage /> },
+          { path: 'profile/:username', element: <UserProfile /> },
+          { path: '/about us', element: <AboutUsPage /> },
+          { path: '/me', element: <MyProfilePage /> },
+          { path: '/ideas', element: <IdeaPage /> },
+          { path: 'opom-register', element: <OpomRegisterPage /> },
+          {
+            path: '/portfolios/create-portfolio',
+            element: <PortfolioFormview />,
+          },
+          {
+            path: '/portfolios/edit-portfolio/:projectId',
+            element: <PortfolioEditview />,
+          },
+        ],
       },
     ],
   },

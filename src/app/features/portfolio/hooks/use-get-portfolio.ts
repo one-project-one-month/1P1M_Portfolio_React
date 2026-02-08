@@ -8,6 +8,7 @@ export const useGetProjectPortfolio = ({
   sortDirection,
   sortField,
   size,
+  projectPortfolioStatus,
 }: GetPortfolioParamsType) => {
   return useQuery({
     queryKey: [
@@ -17,8 +18,16 @@ export const useGetProjectPortfolio = ({
       sortDirection,
       sortField,
       size,
+      projectPortfolioStatus,
     ],
     queryFn: () =>
-      getProjectPortfolio({ keyword, page, size, sortDirection, sortField }),
+      getProjectPortfolio({
+        keyword,
+        page,
+        size,
+        sortDirection,
+        sortField,
+        projectPortfolioStatus,
+      }),
   });
 };
