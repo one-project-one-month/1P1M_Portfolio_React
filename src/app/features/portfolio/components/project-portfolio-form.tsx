@@ -172,18 +172,29 @@ const ProjectPortfolioForm = ({
           />
 
           <div className="flex justify-end gap-4 pb-4 mt-5">
-            <Button
-              className="text-white border border-[#FFFFFF]/15 hover:bg-white/10 px-8 bg-transparent"
-              onClick={onCancel || onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSaveForm}
-              className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-8 text-[#F9FAFB]"
-            >
-              {isEdit ? 'Update' : 'Save'}
-            </Button>
+            {isReadOnly ? (
+              <Button
+                className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-8 text-[#F9FAFB]"
+                onClick={onClose || onCancel}
+              >
+                Close
+              </Button>
+            ) : (
+              <>
+                <Button
+                  className="text-white border border-white/15 hover:bg-white/10 px-8 bg-transparent"
+                  onClick={onCancel || onClose}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSaveForm}
+                  className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-8 text-[#F9FAFB]"
+                >
+                  {isEdit ? 'Update' : 'Save'}
+                </Button>
+              </>
+            )}
           </div>
         </span>
       </div>

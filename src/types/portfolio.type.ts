@@ -24,7 +24,8 @@ export type PortfolioProjectType = {
   description: string;
   projectLink: string;
   repoLink: string;
-  reaction_count?: number;
+  reactedCount?: number;
+  projectPortfolioStatus: string;
   teams: {
     members: DeveloperType[];
   }[];
@@ -47,6 +48,7 @@ export type GetPortfolioParamsType = {
   sortDirection?: string | null;
   sortField?: string;
   size?: number;
+  projectPortfolioStatus?: string;
 };
 
 export type ProjectCardType = {

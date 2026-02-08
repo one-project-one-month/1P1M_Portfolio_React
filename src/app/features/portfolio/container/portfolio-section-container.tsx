@@ -21,7 +21,7 @@ const PortfolioSectionContainer = ({
     page,
     sortDirection,
     sortField: SORT_FIELD,
-    // status,
+    projectPortfolioStatus: status,
     size: 6,
   });
 

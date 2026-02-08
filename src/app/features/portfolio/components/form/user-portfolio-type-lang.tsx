@@ -31,6 +31,10 @@ export const UserPortfolioTypeLang = ({
   onAddTechnology,
   onRemoveTechnology,
 }: PortfolioTypeLangProps) => {
+  const existTechnology = technologyFields.find(
+    (tech) => tech.projectType?.trim() && tech.languages?.trim(),
+  );
+
   return (
     <div className="space-y-6 text-white mt-4 flex-1">
       <span className="font-medium text-white">Type and Languages</span>
@@ -79,14 +83,16 @@ export const UserPortfolioTypeLang = ({
           </div>
         ))}
       </div>
-      <Button
-        variant="white_button"
-        onClick={onAddTechnology}
-        className="gap-2 w-full md:w-55"
-      >
-        <Plus size={18} />
-        Add
-      </Button>
+      {!existTechnology && (
+        <Button
+          variant="white_button"
+          onClick={onAddTechnology}
+          className="gap-2 w-full md:w-55"
+        >
+          <Plus size={18} />
+          Add
+        </Button>
+      )}
     </div>
   );
 };

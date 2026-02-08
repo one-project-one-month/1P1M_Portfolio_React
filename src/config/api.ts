@@ -29,7 +29,7 @@ export const API_ENDPOINTS = {
   FORGOT_PASSWORD: '/portfolio/api/v1/auth/users/password/forgot',
   RESET_PASSWORD: '/portfolio/api/v1/auth/users/password/reset',
   GET_ALL_PROJECTS: '/portfolio/api/v2/project-portfolio',
-  REACT_PROJECT: '/portfolio/api/v2/project-portfolio/react',
+  REACT_PROJECT: '/portfolio/api/v1/project-portfolio/react',
   GET_PROJECT_PORTFOLIO: '/portfolio/api/v2/project-portfolio',
   OPOM_REGISTER: '/portfolio/api/v1/auth/register',
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',

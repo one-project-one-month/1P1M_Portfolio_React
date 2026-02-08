@@ -30,7 +30,7 @@ const PortfolioEditView = () => {
   }, [projectId]);
 
   const handleSave = (data: Partial<ProjectData>) => {
-    console.log('Saving project:', data);
+    console.log('Updating project:', data);
     navigate('/portfolios');
   };
 
@@ -66,7 +66,8 @@ const PortfolioEditView = () => {
   return (
     <div className="flex justify-center items-center">
       <ProjectPortfolioForm
-        mode="edit"
+        mode="view"
+        // mode="edit"
         initialData={projectData}
         onSave={handleSave}
         onCancel={handleCancel}

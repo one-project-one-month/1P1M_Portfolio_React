@@ -60,11 +60,11 @@ const router = createBrowserRouter([
           { path: '/ideas', element: <IdeaPage /> },
           { path: 'opom-register', element: <OpomRegisterPage /> },
           {
-            path: '/portfolio/create-portfolio',
+            path: '/portfolios/create-portfolio',
             element: <PortfolioFormview />,
           },
           {
-            path: '/portfolio/edit-portfolio/:projectId',
+            path: '/portfolios/edit-portfolio/:projectId',
             element: <PortfolioEditview />,
           },
         ],

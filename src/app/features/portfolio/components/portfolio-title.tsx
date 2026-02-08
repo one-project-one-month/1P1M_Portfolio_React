@@ -1,46 +1,54 @@
+import { Button } from '@/components/ui/button';
 import type { TitleProps } from '@/types/title-props';
+import { Flex } from '@radix-ui/themes';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from './button';
 
-const Title = ({
+const PortfolioTitle = ({
   title = 'Page Title',
   onCreate = false,
   showSearch = true,
   showFilter = true,
   searchPlaceholder = 'Search...',
   onSearchChange,
-  filterOptions = ['Popular', 'Newest', 'Oldest'],
-  // initSelectedFilter = 'Popular',
+  filterConfig = [],
   onFilterChange,
 }: TitleProps) => {
-  const [selectedFilter, setSelectedFilter] = useState<string>('Popular');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handleFilterToggle = (index: number) => {
+    setOpenFilterIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const handleSelect = (filterKey: string, option: string) => {
+    setSelectedFilter(option);
+    if (onFilterChange) onFilterChange(filterKey, option);
+    setOpenFilterIndex(null);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      menuRef.current &&
+      !menuRef.current.some((el) => el?.contains(event.target as Node))
+    ) {
+      setOpenFilterIndex(null);
+    }
+  };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option: string) => {
-    setSelectedFilter(option);
-    if (onFilterChange) onFilterChange(option);
-    setIsOpen(false);
-  };
-
   return (
-    <div className="relative w-full flex justify-between items-center gap-8 py-6 px-2">
+    <div className="relative w-full flex md:flex-row flex-col justify-between items-center gap-8 pt-3 pb-10">
       {/* Title & Desktop Search Section */}
-      <div className="flex w-2/3 h-11 justify-between items-center gap-8">
+      <div className="flex w-2/3 h-11 justify-between items-center gap-5">
         <div className="relative text-nowrap">
-          <h1 className="text-3xl lg:text-5xl font-extrabold text-white">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-white">
             {title}
           </h1>
           <div className="w-1/2 h-1.5 absolute -bottom-2 left-0 bg-[#FFBA00] rounded"></div>
@@ -88,44 +96,50 @@ const Title = ({
 
       {/* Actions Section (Create & Filter) */}
       <div className="flex justify-center items-center gap-4">
+        {showFilter && (
+          <Flex gap="4" className="flex">
+            {filterConfig.map((filter, index) => (
+              <div
+                ref={(el) => {
+                  menuRef.current[index] = el;
+                }}
+                className="relative text-[#F9FAFB] select-none"
+              >
+                <div
+                  className="flex justify-center items-center border border-[#99A1AF] rounded-full px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors"
+                  onClick={() => handleFilterToggle(index)}
+                >
+                  <FilterIcon />
+                  <p className="ms-2">{filter.label}</p>
+                </div>
+                {openFilterIndex === index && (
+                  <div className="absolute right-0 w-46.75 bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
+                    {filter.options.map((option) => (
+                      <div
+                        key={option.value}
+                        className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${option.value === selectedFilter ? 'text-[#FFBA00]' : ''}`}
+                        onClick={() => handleSelect(filter.key, option.value)}
+                      >
+                        {option.value === selectedFilter && <CheckIcon />}
+                        {option.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </Flex>
+        )}
+
         {onCreate && (
           <Button
             variant="primary"
             size="primary"
-            className="h-11"
+            className="h-11 w-full md:w-auto"
             onClick={onCreate}
           >
             Create
           </Button>
-        )}
-
-        {showFilter && (
-          <div ref={menuRef} className="relative text-[#F9FAFB] select-none">
-            <div
-              className="flex justify-center items-center border border-[#99A1AF] rounded-full px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <FilterIcon />
-              <p className="ms-2">Filters</p>
-            </div>
-
-            {isOpen && (
-              <div className="absolute right-0 w-46.75 bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
-                {filterOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${
-                      option === selectedFilter ? 'text-[#FFBA00]' : ''
-                    }`}
-                    onClick={() => handleSelect(option)}
-                  >
-                    {option === selectedFilter && <CheckIcon />}
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         )}
       </div>
     </div>
@@ -196,4 +210,4 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default Title;
+export default PortfolioTitle;

@@ -1,8 +1,8 @@
-import Title from '@/components/ui/title';
 import type { FilterConfig } from '@/types/title-props';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSortDirection } from '../../../lib/get-sort-direction';
+import PortfolioTitle from './components/portfolio-title';
 import PortfolioSectionContainer from './container/portfolio-section-container';
 
 const filterConfig: FilterConfig[] = [
@@ -20,11 +20,11 @@ const filterConfig: FilterConfig[] = [
     key: 'status',
     label: 'Status',
     options: [
-      { label: 'All', value: 'all' },
-      { label: 'Planning', value: 'planning' },
-      { label: 'In Progress', value: 'in_progress' },
-      { label: 'Completed', value: 'completed' },
-      { label: 'Unqualified', value: 'unqualified' },
+      { label: 'All', value: '' },
+      { label: 'Planning', value: 'PENDING' },
+      { label: 'In Progress', value: 'IN_PROGRESS' },
+      { label: 'Completed', value: 'COMPLETED' },
+      { label: 'Unqualified', value: 'UNQUALIFIED' },
     ],
   },
 ];
@@ -34,7 +34,7 @@ const Portfolio = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(
     null,
   );
-  const [pjStatus, setPjStatus] = useState<string>('all');
+  const [pjStatus, setPjStatus] = useState<string>('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const navigate = useNavigate();
 
@@ -56,8 +56,8 @@ const Portfolio = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <Title
-        onCreate={() => navigate('/portfolio/create-portfolio')}
+      <PortfolioTitle
+        onCreate={() => navigate('/portfolios/create-portfolio')}
         showSearch
         initSelectedFilter={selectedFilter}
         title="Project Portfolio"
