@@ -29,6 +29,7 @@ const Sidebar = () => {
             <NavLink
               key={link.id}
               to={link.path}
+              end={link.path === ''}
               className={({ isActive }) =>
                 `flex my-2.5 gap-x-4 p-4 items-center font-medium text-base w-full truncate transition-colors duration-100 ${isActive ? 'border-l-4 border-l-[#9C39FC] bg-slate-800' : 'text-white hover:bg-white/4'}`
               }

@@ -14,6 +14,7 @@ export type DeveloperType = {
 export type PortfolioSectionContainerProps = {
   query: string | null;
   sortDirection: 'asc' | 'desc' | null;
+  status?: string;
 };
 
 export type PortfolioProjectType = {
@@ -23,15 +24,14 @@ export type PortfolioProjectType = {
   description: string;
   projectLink: string;
   repoLink: string;
-  reaction_count?: number;
-  team: {
+  reactedCount?: number;
+  projectPortfolioStatus: string;
+  teams: {
     members: DeveloperType[];
-  };
+  }[];
   view_count?: number;
   reactedProjectPortfolios: number[];
-  projectPortfolioDetails: {
-    languageAndTools: string[];
-  };
+  languageAndTools: string[];
 };
 
 export type projectSectionViewType = {
@@ -48,6 +48,7 @@ export type GetPortfolioParamsType = {
   sortDirection?: string | null;
   sortField?: string;
   size?: number;
+  projectPortfolioStatus?: string;
 };
 
 export type ProjectCardType = {
@@ -57,7 +58,7 @@ export type ProjectCardType = {
   initialLikes?: number;
   initialViews?: number;
   onClickReact: () => void;
-  project: PortfolioProjectType[];
+  project: PortfolioProjectType;
 };
 
 export type ProjectPortfolioDetailType = {

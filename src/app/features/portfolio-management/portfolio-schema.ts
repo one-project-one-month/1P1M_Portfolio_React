@@ -6,7 +6,7 @@ const dropdownItemSchema = z.object({
 });
 
 const technologySchema = z.object({
-  projectType: dropdownItemSchema.nullable(),
+  projectType: z.string(),
   languages: z.string(),
 });
 
@@ -34,6 +34,7 @@ export const portfolioFormSchema = z.object({
   technologies: z.array(technologySchema),
   teams: z.array(teamSchema),
   projectLink: z.string(),
+  repoLink: z.string(),
   projectImage: z.string(),
 });
 

@@ -11,6 +11,7 @@ const SORT_FIELD = 'name';
 const PortfolioSectionContainer = ({
   query,
   sortDirection = 'asc',
+  status = 'all',
 }: PortfolioSectionContainerProps) => {
   const debounceValue = useDebounce(query ?? '', 700);
   const [page, setPage] = useState<number>(0);
@@ -20,6 +21,7 @@ const PortfolioSectionContainer = ({
     page,
     sortDirection,
     sortField: SORT_FIELD,
+    projectPortfolioStatus: status,
     size: 6,
   });
 
