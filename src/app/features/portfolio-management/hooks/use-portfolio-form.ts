@@ -160,12 +160,13 @@ export const usePortfolioForm = ({
       const storedTeamIds = localStorage.getItem('temp_portfolio_team_ids');
       const teamIds: number[] = storedTeamIds ? JSON.parse(storedTeamIds) : [];
 
-      const payload = {
+      const payload: CreateProjectPortfolioRequest = {
         name: data.projectName,
         projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
         description: data.description,
         projectLink: data.projectLink,
         repoLink: data.repoLink,
+        startDate: data.startDate,
         teamIds: teamIds,
         languageAndTools: data.technologies.flatMap((tech) =>
           tech.languages.split(',').map((lang) => ({
@@ -174,6 +175,10 @@ export const usePortfolioForm = ({
           })),
         ),
       };
+
+      if (data.completedDate) {
+        payload.endDate = data.completedDate;
+      }
 
       if (initialData?.id) {
         // Calculate diff for update
