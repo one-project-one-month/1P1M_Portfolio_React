@@ -1,8 +1,8 @@
 import UserManagementBanDialog from '@/app/features/user-management/components/user-management-ban-dialog';
 import { default as UserManagementEditDialog } from '@/app/features/user-management/components/user-management-edit-dialog';
-import { useToast } from '@/components/ui/toast-provider';
+import UserManagementRestoreDialog from '@/app/features/user-management/components/user-management-restore-dialog';
 import { Button, DropdownMenu } from '@radix-ui/themes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { Ellipsis } from 'lucide-react';
 import { useState } from 'react';
@@ -18,27 +18,26 @@ export const UserManagementDropDown = ({
 }: {
   data: UserManagementType;
 }) => {
-  const queryClient = useQueryClient();
-  const { addToast } = useToast();
   const [banOpen, setBanOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [restoreOpen, setRestoreOpen] = useState(false);
 
   // Ban
   const { mutate: banMutate } = useMutation<
     UserBanResponseType,
     AxiosError<{ message: string }>,
-    { id: number }
+    { userId: number; desc: string }
   >({
-    mutationFn: ({ id }: { id: number }) => banUserService(id),
-    onSuccess: (success) => {
-      queryClient.invalidateQueries({ queryKey: ['user-management'] });
-      addToast(success.message, 'success');
-      setBanOpen(false);
-    },
-    onError: (error) => {
-      setBanOpen(true);
-      addToast(error.message, 'error');
-    },
+    mutationFn: ({ userId, desc }) => banUserService(userId, desc),
+    // onSuccess: (success) => {
+    //   queryClient.invalidateQueries({ queryKey: ['user-management'] });
+    //   addToast(success.message, 'success');
+    //   setBanOpen(false);
+    // },
+    // onError: (error) => {
+    //   setBanOpen(true);
+    //   addToast(error.message, 'error');
+    // },
   });
 
   return (
@@ -55,6 +54,7 @@ export const UserManagementDropDown = ({
             <Ellipsis className="w-5 h-5 md:w-6 md:h-6" />
           </Button>
         </DropdownMenu.Trigger>
+
         <DropdownMenu.Content color="gray" variant="soft">
           <DropdownMenu.Item
             onSelect={(e) => {
@@ -66,24 +66,41 @@ export const UserManagementDropDown = ({
           </DropdownMenu.Item>
 
           <DropdownMenu.Item asChild>
-            <Link to="/admin/register-user/view-detail">View Details</Link>
+            <Link to={`view-details/${data.userId}`}>View Details</Link>
           </DropdownMenu.Item>
 
-          <UserManagementBanDialog
-            trigger={
-              <DropdownMenu.Item
-                onSelect={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                Ban User
-              </DropdownMenu.Item>
-            }
-            banOpen={banOpen}
-            setBanOpen={(value) => setBanOpen(value)}
-            banMutate={banMutate}
-            userId={data.id}
-          />
+          {data.status === 'Banned' ? (
+            <UserManagementRestoreDialog
+              trigger={
+                <DropdownMenu.Item
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  Restore User
+                </DropdownMenu.Item>
+              }
+              restoreOpen={restoreOpen}
+              setRestoreOpen={setRestoreOpen}
+              userId={data.userId}
+            />
+          ) : (
+            <UserManagementBanDialog
+              trigger={
+                <DropdownMenu.Item
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  Ban User
+                </DropdownMenu.Item>
+              }
+              banOpen={banOpen}
+              setBanOpen={(value) => setBanOpen(value)}
+              banMutate={banMutate}
+              userId={data.userId}
+            />
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
 

@@ -35,7 +35,7 @@ export const socials: NavLink[] = [
 ];
 
 export const ADMIN_NAVS: AdminNavLink[] = [
-  { id: 1, name: 'Dashboard', path: 'dashboard', icon: ChartGanttIcon },
+  { id: 1, name: 'Dashboard', path: '', icon: ChartGanttIcon },
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
   {
     id: 3,
