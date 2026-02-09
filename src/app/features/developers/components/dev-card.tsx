@@ -5,7 +5,7 @@ import { GitBranch, LinkedinIcon, TwitterIcon } from 'lucide-react'; // Added Tw
 const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
   return (
     <div className="w-full max-w-[420px] h-[243px]  mt-12">
-      <div className="bg-white/10 rounded-lg p-6 relative flex flex-col  backdrop-blur-md overflow-visible border border-white/5">
+      <div className="bg-white/10 rounded-lg p-6 relative flex flex-col  backdrop-blur-xs overflow-visible border border-white/5">
         <div className="flex gap-6">
           <div className="flex flex-col items-center shrink-0 w-[120px]">
             <div className="size-[120px] -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">

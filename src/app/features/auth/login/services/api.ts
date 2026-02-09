@@ -9,10 +9,16 @@ export async function loginWithEmailPassword(
   password: string,
 ): Promise<ApiResponse<LoginResponse>> {
   try {
-    const response = await apiClient.post(API_ENDPOINTS.LOGIN, {
-      email,
-      password,
-    });
+    const response = await apiClient.post(
+      API_ENDPOINTS.LOGIN,
+      {
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      },
+    );
 
     return response.data;
   } catch (e: unknown) {

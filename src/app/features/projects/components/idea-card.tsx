@@ -78,7 +78,7 @@ const IdeaCard = ({ idea }: IdeaCardProps) => {
         <div className="w-1/2 flex items-center justify-start gap-2 md:gap-6">
           <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
             <Heart size={25} />
-            {idea.reaction_count}
+            {idea.reactionCount}
           </span>
           <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
             <Eye size={25} />
