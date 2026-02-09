@@ -5,9 +5,7 @@ import type { TeamType } from '@/types/portfolio-management';
 export interface CreateTeamRequest {
   team: {
     teamName: string;
-    description: string;
-    imageUrl: string;
-    contactLink: string;
+    contact_link: string;
     members: {
       memberId: number | string;
       roleInTeam: string;
@@ -38,9 +36,7 @@ export const createTeam = async (
   const requestBody: CreateTeamRequest = {
     team: {
       teamName: team.name,
-      description: 'Default description',
-      imageUrl: 'https://example.com/team-image.jpg',
-      contactLink: '',
+      contact_link: 'https://www.facebook.com/myanmartech',
       members: team.members.map((member) => ({
         memberId: member.id ?? '',
         roleInTeam: member.role || 'Member',
