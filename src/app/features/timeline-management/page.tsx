@@ -39,9 +39,9 @@ const TimelineManagement = () => {
   const totalItems = paginationMeta?.totalItems ?? 0;
 
   const statusOptions: StatusOption[] = [
-    { id: '1', name: 'Active' },
-    { id: '2', name: 'Upcoming' },
-    { id: '3', name: 'Finished' },
+    { id: '1', name: 'Active', slug: 'active' },
+    { id: '2', name: 'Upcoming', slug: 'upcoming' },
+    { id: '3', name: 'Finished', slug: 'finished' },
   ];
 
   const handleCreate = () => {

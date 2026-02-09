@@ -34,7 +34,7 @@ export const timelineService = {
     const response = await apiClient.get<ApiResponse<Timeline[]>>(BASE_URL, {
       params: {
         search: searchTerm || undefined,
-        status: selectedStatus?.id || undefined,
+        status: selectedStatus?.slug || undefined,
         page: curPage,
         size: size,
       },
