@@ -5,7 +5,7 @@ import { useUserInfoStore } from '@/store/user-info-store';
 import { Avatar, Dialog, IconButton, Tooltip } from '@radix-ui/themes';
 import { Copy, GithubIcon, Linkedin, Mail, Phone, Send, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import ProjectIdeaCard from '../idea-management/components/project-idea-card';
+import { IdeaCard } from '../ideas/shared/components';
 import UserEditDialog from './components/user-edit-dialog';
 import { useGetUserProfile } from './hooks/useUserProfile';
 
@@ -201,11 +201,17 @@ const UserProfile = () => {
         {projectIdeas && projectIdeas.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
             {projectIdeas.map((idea) => (
-              <ProjectIdeaCard
+              <IdeaCard
                 idea={{
-                  id: idea.projectIdeaId,
+                  projectIdeaId: idea.projectIdeaId,
                   projectIdeaName: idea.projectIdeaName,
-                  status: idea.status as 'PENDING' | 'APPROVED' | 'ARCHIVED',
+                  status: idea.status as
+                    | 'REJECTED'
+                    | 'APPROVED'
+                    | 'IN_PROGRESS'
+                    | 'COMPLETED'
+                    | 'PENDING'
+                    | 'DELETED',
                   description: idea.description,
                   reactionCount: idea.reactionCount,
                   viewCount: idea.viewCount,

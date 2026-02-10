@@ -50,7 +50,7 @@ export const DeveloperPage = PageLoader(
 );
 
 export const IdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/page')),
+  lazy(() => import('@/app/features/ideas/client/pages/idea-page')),
 );
 
 export const UserProfilePage = PageLoader(
@@ -69,9 +69,7 @@ export const PortfolioManagementPage = PageLoader(
   lazy(() => import('@/app/features/portfolio-management/page')),
 );
 export const IdeaManagementPage = PageLoader(
-  lazy(
-    () => import('@/app/features/idea-management/pages/idea-management-page'),
-  ),
+  lazy(() => import('@/app/features/ideas/admin/pages/idea-management-page')),
 );
 
 export const TimelineManagementPage = PageLoader(
@@ -80,8 +78,7 @@ export const TimelineManagementPage = PageLoader(
 
 export const IdeaManagementEditPage = PageLoader(
   lazy(
-    () =>
-      import('@/app/features/idea-management/pages/idea-management-edit-page'),
+    () => import('@/app/features/ideas/admin/pages/idea-management-edit-page'),
   ),
 );
 
