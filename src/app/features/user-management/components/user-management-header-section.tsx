@@ -46,7 +46,7 @@ export const UserManagementHeaderSection = ({
   };
 
   // Status
-  const handleStatus = (status: 'ALL' | 'BANNED' | 'ACTIVE') => {
+  const handleStatus = (status: 'ALL' | 'Banned' | 'ACTIVE') => {
     setFilter({ ...filter, status });
     setOpen({ ...open, order: false });
   };
@@ -128,7 +128,7 @@ export const UserManagementHeaderSection = ({
                   <button
                     key={status.value}
                     onClick={() =>
-                      handleStatus(status.value as 'ALL' | 'BANNED' | 'ACTIVE')
+                      handleStatus(status.value as 'ALL' | 'Banned' | 'ACTIVE')
                     }
                     className="w-full text-left px-4 py-2 text-white bg-[#0f172a] transition-colors flex items-center gap-3 border border-white/60 rounded-lg"
                   >

@@ -12,7 +12,7 @@ type UserManagementBanDialogProps = {
   banMutate: UseMutateFunction<
     UserBanResponseType,
     AxiosError<{ message: string }>,
-    { id: number },
+    { userId: number; desc: string },
     unknown
   >;
   userId: number;
@@ -64,6 +64,7 @@ const UserManagementBanDialog = ({
           color: 'white',
           padding: '60px',
           height: '588px',
+          border: '1px solid #9F0712',
         }}
       >
         <div className="w-full h-full flex flex-col gap-8 ">
@@ -106,7 +107,8 @@ const UserManagementBanDialog = ({
             </Button>
             <Button
               onClick={() => {
-                banMutate({ id: userId });
+                const reasonDescription = selectReason.join(', ');
+                banMutate({ userId, desc: reasonDescription });
               }}
               className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
             >

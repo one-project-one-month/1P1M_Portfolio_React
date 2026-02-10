@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CountdownItem } from './components/countdown-component';
 import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
-import IdeaListSection from './components/idea-list-section';
+import IdeaListSection from './components/idea-list/idea-list-section';
 
 export default function HomePage() {
   const navigate = useNavigate();

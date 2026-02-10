@@ -1,13 +1,14 @@
 import { UserManagementDropDown } from '@/app/features/user-management/components/user-management-drop-down';
 import type { UserManagementType } from '@/app/features/user-management/types/user-management.types';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { Link } from 'react-router-dom';
 
-const truncate = (text: string, max = 25) =>
-  text.length > max ? text.slice(0, max) + '...' : text;
+const truncate = (text: string, max = 15) =>
+  (text ?? '').length > max ? text.slice(0, max) + '...' : text;
 
 const statusColor: Record<UserManagementType['status'], string> = {
   ACTIVE: '#7CCF00',
-  BANNED: '#A6A09B',
+  Banned: '#9F0712',
 };
 
 const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
@@ -36,30 +37,35 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
 
           <tbody className="divide-y divide-slate-800">
             {data.map((user) => (
-              <tr key={user.id} className="hover:bg-slate-800/40">
-                <td className="py-4 text-center text-slate-400">{user.id}</td>
+              <tr key={user.userId} className="hover:bg-slate-800/40">
+                <td className="py-4 text-center text-slate-400">
+                  {user.devId}
+                </td>
                 <td className="py-4 ">
                   <div className="flex  items-center gap-3">
                     <img
                       src={sampleUserImgUrl}
                       className="size-10 rounded-full object-cover"
                     />
-                    <span className=" text-slate-400 text-sm font-semibold">
-                      {user.name}
-                    </span>
+                    <Link
+                      to={`view-details/${user.userId}`}
+                      className=" text-slate-400 text-sm hover:text-[#9C39FC] font-semibold"
+                    >
+                      {truncate(user.name, 5)}
+                    </Link>
                   </div>
                 </td>
                 <td className="py-4 text-center text-slate-400">
-                  {user.email}
+                  {truncate(user.email, 14)}
                 </td>
                 <td className="py-4 text-center text-slate-400">
                   {user.telegramUsername}
                 </td>
                 <td className="py-4 text-center text-slate-400">
-                  {truncate(user.githubUrl, 15)}
+                  {truncate(user.githubUrl, 14)}
                 </td>
                 <td className="py-4 text-center text-slate-400">
-                  {truncate(user.linkedInUrl, 15)}
+                  {truncate(user.linkedUrl, 15)}
                 </td>
                 <td className="py-4 text-center text-sm">
                   <span
@@ -69,7 +75,7 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
                     {user.status}
                   </span>
                 </td>
-                <td className="py-4 text-center relative">
+                <td className="py-4 text-center items-center relative">
                   <UserManagementDropDown data={user} />
                 </td>
               </tr>
