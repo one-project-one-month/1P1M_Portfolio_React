@@ -19,11 +19,11 @@ export const profileService = {
         ...(dev.github ? [{ platform: 'GitHub', url: dev.github }] : []),
         ...(dev.linkedIn ? [{ platform: 'LinkedIn', url: dev.linkedIn }] : []),
       ],
-      phoneNumber: '+95-95000000',
+      phoneNumber: dev.phone || '+95-9XXX-XXX-XXX',
       role: 'Admin',
-      joinedDate: 'N/A',
+      joinedDate: dev.joinedDate || 'N/A',
       languagePreference: 'English',
-      passwordLastUpdated: 'N/A',
+      passwordLastUpdated: dev.passwordLastUpdated || 'N/A',
     };
   },
 
