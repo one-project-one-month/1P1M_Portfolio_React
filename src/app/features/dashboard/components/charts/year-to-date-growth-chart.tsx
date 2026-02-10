@@ -40,7 +40,7 @@ export const data = {
   datasets: [
     {
       label: 'Dataset 1',
-      data: labels.map(() => Math.floor(Math.random() * 100)),
+      data: [100, 10, 30, null, 40, 30, null, 30, 12, 80, 50],
       borderColor: '#9C39FC',
       backgroundColor: 'white',
     },

@@ -5,6 +5,8 @@ import { forwardRef } from 'react';
 const actionButtonClass =
   'text-xs text-[#F9FAFB] hover:text-[#9C39FC] transition-colors w-full rounded-none py-1 px-2 !bg-transparent !h-auto justify-center font-normal shadow-none border-none';
 
+const hrClass = 'border-t border-zinc-700 my-1';
+
 interface ProjectActionMenuProps {
   projectId: number | string;
   isOpen: boolean;
@@ -12,8 +14,16 @@ interface ProjectActionMenuProps {
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
-  menuPosition?: 'right' | 'left';
+  onStatusChange?: (id: number | string, status: string) => void;
+  menuPosition?:
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-right'
+    | 'top-left'
+    | 'left-start'
+    | 'right-start';
   triggerClassName?: string;
+  triggerIcon?: React.ReactNode;
 }
 
 export const ProjectActionMenu = forwardRef<
@@ -28,8 +38,10 @@ export const ProjectActionMenu = forwardRef<
       onView,
       onEdit,
       onDelete,
-      menuPosition = 'right',
+      onStatusChange,
+      menuPosition = 'bottom-right',
       triggerClassName = 'p-1 hover:bg-white/10 rounded-full transition-colors text-white/70 hover:text-white',
+      triggerIcon,
     },
     ref,
   ) => {
@@ -45,8 +57,30 @@ export const ProjectActionMenu = forwardRef<
       onDelete?.(projectId);
     };
 
-    const menuPositionClass =
-      menuPosition === 'right' ? 'right-8 top-8' : 'right-0 top-full mt-2';
+    const handleStatusClick = (id: number | string) => {
+      onStatusChange?.(id, 'In Progress');
+    };
+
+    const getMenuPositionClass = (position: string) => {
+      switch (position) {
+        case 'bottom-right':
+          return 'right-0 top-full mt-2';
+        case 'bottom-left':
+          return 'left-0 top-full mt-2';
+        case 'top-right':
+          return 'right-0 bottom-full mb-2 origin-bottom-right';
+        case 'top-left':
+          return 'left-0 bottom-full mb-2 origin-bottom-left';
+        case 'left-start':
+          return 'right-full top-0 mr-2 origin-top-right';
+        case 'right-start':
+          return 'left-full top-0 ml-2 origin-top-left';
+        default:
+          return 'right-0 top-full mt-2';
+      }
+    };
+
+    const menuPositionClass = getMenuPositionClass(menuPosition);
 
     return (
       <div className="flex items-center justify-center relative">
@@ -57,22 +91,31 @@ export const ProjectActionMenu = forwardRef<
           }}
           className={triggerClassName}
         >
-          <MoreHorizontal className="w-5 h-5" color="white" />
+          {triggerIcon || <MoreHorizontal className="w-5 h-5" color="white" />}
         </button>
 
         {isOpen && (
           <div
             ref={ref}
-            className={`absolute ${menuPositionClass} w-16 bg-[#101828] border-[0.5px] shadow-sm border-[#6A7282] rounded-sm z-50 overflow-hidden flex flex-col p-1 text-center`}
+            className={`absolute ${menuPositionClass} w-40 bg-[#101828] border-[0.5px] shadow-sm border-[#6A7282] rounded-sm z-50 overflow-hidden flex flex-col p-1 text-center`}
           >
-            <Button className={actionButtonClass} onClick={handleView}>
-              View
-            </Button>
             <Button className={actionButtonClass} onClick={handleEdit}>
-              Edit
+              Edit Portfolio
             </Button>
+            <hr className={hrClass} />
+            <Button className={actionButtonClass} onClick={handleView}>
+              View Detail
+            </Button>
+            <hr className={hrClass} />
             <Button className={actionButtonClass} onClick={handleDelete}>
-              Delete
+              Delete Portfolio
+            </Button>
+            <hr className={hrClass} />
+            <Button
+              className={actionButtonClass}
+              onClick={() => handleStatusClick(projectId)}
+            >
+              Change Status
             </Button>
           </div>
         )}

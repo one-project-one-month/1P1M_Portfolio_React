@@ -7,7 +7,6 @@ import {
   type FieldArrayWithId,
   type UseFormReturn,
 } from 'react-hook-form';
-import TypeDropdown from '../../../portfolio-management/components/type-dropdown';
 import type { PortfolioFormValues } from '../../../portfolio-management/portfolio-schema';
 
 export interface TechnologyEntry {
@@ -24,11 +23,6 @@ interface PortfolioTypeLangProps {
   >[];
   onAddTechnology: () => void;
   onRemoveTechnology: (index: number) => void;
-  onUpdateTechnology: (
-    index: number,
-    field: keyof TechnologyEntry,
-    value: unknown,
-  ) => void;
 }
 
 export const UserPortfolioTypeLang = ({
@@ -37,6 +31,10 @@ export const UserPortfolioTypeLang = ({
   onAddTechnology,
   onRemoveTechnology,
 }: PortfolioTypeLangProps) => {
+  const existTechnology = technologyFields.find(
+    (tech) => tech.projectType?.trim() && tech.languages?.trim(),
+  );
+
   return (
     <div className="space-y-6 text-white mt-4 flex-1">
       <span className="font-medium text-white">Type and Languages</span>
@@ -44,28 +42,16 @@ export const UserPortfolioTypeLang = ({
       <div className="space-y-2 mt-2">
         {technologyFields.map((field, index) => (
           <div key={field.id} className="flex gap-6 flex-wrap items-start">
-            <div className="space-y-1 w-55">
+            <div className="space-y-1 w-full md:w-55">
               <Controller
                 control={form.control}
                 name={`technologies.${index}.projectType`}
                 render={({ field: controllerField }) => (
-                  <TypeDropdown
-                    placeholder="Choose Dev Type"
-                    menuList={[
-                      { id: 1, name: 'Frontend Developers' },
-                      { id: 2, name: 'Backend Developers' },
-                      { id: 3, name: 'Fullstack Developers' },
-                      { id: 4, name: 'UI/UX Designers' },
-                      { id: 5, name: 'Mobile Developers' },
-                      { id: 6, name: 'Machine Learning' },
-                      { id: 7, name: 'DevOps' },
-                      { id: 8, name: 'Game Developer' },
-                      { id: 9, name: 'Others' },
-                    ]}
-                    selectedValue={controllerField.value}
-                    onChange={(value: DropdownItem | null) => {
-                      controllerField.onChange(value ?? '');
-                    }}
+                  <InputField
+                    value={controllerField.value ?? ''}
+                    onChange={(e) => controllerField.onChange(e.target.value)}
+                    placeholder="Type (e.g., Fullstack)"
+                    className="px-4 py-2 bg-[#9C39FC] rounded-md text-white font-medium w-full focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
                   />
                 )}
               />
@@ -78,11 +64,8 @@ export const UserPortfolioTypeLang = ({
                   render={({ field: controllerField }) => (
                     <InputField
                       value={controllerField.value ?? ''}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        controllerField.onChange(value);
-                      }}
-                      className="w-full sm:placeholder:text-base"
+                      onChange={(e) => controllerField.onChange(e.target.value)}
+                      className="w-full sm:placeholder:text-sm"
                       placeholder="Enter your languages or tools"
                     />
                   )}
@@ -100,10 +83,16 @@ export const UserPortfolioTypeLang = ({
           </div>
         ))}
       </div>
-      <Button variant={'primary'} onClick={onAddTechnology} className="gap-2">
-        <Plus size={18} />
-        Add
-      </Button>
+      {!existTechnology && (
+        <Button
+          variant="white_button"
+          onClick={onAddTechnology}
+          className="gap-2 w-full md:w-55"
+        >
+          <Plus size={18} />
+          Add
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,14 +1,17 @@
 import Title from '@/components/ui/title';
 import { useNavigate } from 'react-router-dom';
 import ManagementControlBar from './management-control-bar';
-
-type FilterStatus = 'All' | 'In Progress' | 'Completed' | 'Unqualified';
+import type {
+  OrderFilterOption,
+  StatusFilterOption,
+} from './status-filter-dropdown';
 
 interface PortfolioHeaderProps {
   onSearch?: (query: string) => void;
   viewMode?: 'list' | 'gallery';
   onChangeViewMode?: (mode: 'list' | 'gallery') => void;
-  onFilterByStatus?: (status: FilterStatus) => void;
+  onFilterByStatus?: (status: StatusFilterOption) => void;
+  onFilterByOrder?: (order: OrderFilterOption) => void;
 }
 
 const PortfolioHeader = ({
@@ -16,6 +19,7 @@ const PortfolioHeader = ({
   viewMode = 'list',
   onChangeViewMode,
   onFilterByStatus,
+  onFilterByOrder,
 }: PortfolioHeaderProps) => {
   const navigate = useNavigate();
 
@@ -38,6 +42,7 @@ const PortfolioHeader = ({
         onChangeViewMode={onChangeViewMode}
         onCreateProject={handleCreateProject}
         onFilterByStatus={onFilterByStatus}
+        onFilterByOrder={onFilterByOrder}
       />
     </>
   );

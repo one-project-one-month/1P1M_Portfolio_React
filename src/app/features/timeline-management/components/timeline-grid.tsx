@@ -1,6 +1,7 @@
+import type { TimelineProps } from '@/app/features/timeline-management/services/types.ts';
 import React from 'react';
 
-const TimelineGrid: React.FC = () => {
+const TimelineGrid: React.FC<TimelineProps> = () => {
   const data = [];
 
   if (data.length === 0) {

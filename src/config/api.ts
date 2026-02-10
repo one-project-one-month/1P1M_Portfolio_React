@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL,
+  API_URL: import.meta.env.VITE_API_URL || 'http://3.26.96.212:8080',
 
   // OAuth Configuration
   GITHUB_CLIENT_ID: import.meta.env.VITE_GITHUB_CLIENT_ID,
@@ -29,16 +29,29 @@ export const API_ENDPOINTS = {
   FORGOT_PASSWORD: '/portfolio/api/v1/auth/users/password/forgot',
   RESET_PASSWORD: '/portfolio/api/v1/auth/users/password/reset',
   GET_ALL_PROJECTS: '/portfolio/api/v2/project-portfolio',
-  REACT_PROJECT: '/portfolio/api/v2/project-portfolio/react',
+  REACT_PROJECT: '/portfolio/api/v1/project-portfolio/react',
   GET_PROJECT_PORTFOLIO: '/portfolio/api/v2/project-portfolio',
   OPOM_REGISTER: '/portfolio/api/v1/auth/register',
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
+  // V2 Endpoints
+  CREATE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
+  CREATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  TEAM_MEMBERS_V2: '/portfolio/api/v2/project-portfolio/teams/members',
+  UPDATE_PROJECT_STATUS_V2: '/portfolio/api/v2/project-portfolio/update-status',
+  UPDATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  LANGUAGE_AND_TOOL_V2: '/portfolio/api/v2/project-portfolio/language-and-tool',
+  REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
+  GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
+  UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
   GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
+  TIMELINES: 'portfolio/api/v1/timelines',
 
   // Admin
-  USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  UPDATE_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
 };
 

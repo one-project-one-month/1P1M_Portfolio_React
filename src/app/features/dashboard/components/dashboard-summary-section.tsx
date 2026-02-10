@@ -28,11 +28,11 @@ function DashboardSummarySection({ className }: DashboardSummarySectionProps) {
         <div className="grid grid-cols-3">
           <div>
             <p className="text-lg font-semibold">1, 000</p>
-            <p className="text-xs text-slate-400">Projects</p>
+            <p className="text-xs text-slate-400">Active Users</p>
           </div>
           <div>
             <p className="text-lg font-semibold">1, 000</p>
-            <p className="text-xs text-slate-400">Projects</p>
+            <p className="text-xs text-slate-400">Team</p>
           </div>
           <div>
             <p className="text-lg font-semibold">1, 000</p>

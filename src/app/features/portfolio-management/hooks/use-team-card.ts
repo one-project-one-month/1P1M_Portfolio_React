@@ -1,5 +1,10 @@
 import type { TeamType } from '@/types/portfolio-management';
 import { useEffect, useState } from 'react';
+import {
+  useCreateTeam,
+  useDeleteTeam,
+  useRemoveTeamMember,
+} from './use-portfolio-query';
 
 export const useTeamCard = (
   team: TeamType,
@@ -17,23 +22,65 @@ export const useTeamCard = (
     id?: string | number;
   } | null>(null);
 
+  const createTeamMutation = useCreateTeam();
+  const deleteTeamMutation = useDeleteTeam();
+  const removeTeamMemberMutation = useRemoveTeamMember();
+
   useEffect(() => {
     setEditedTeam(team);
   }, [team]);
 
-  const handleSave = () => {
-    onUpdate(editedTeam);
-    setIsEditing(false);
-    setOpenMemberActionId(null);
+  const handleSave = async () => {
+    try {
+      if (team.id.toString().startsWith('team-')) {
+        const response = await createTeamMutation.mutateAsync(editedTeam);
+
+        if (response && response.data && response.data.id) {
+          // Store team ID in localStorage
+          const storedIds = localStorage.getItem('temp_portfolio_team_ids');
+          const teamIds = storedIds ? JSON.parse(storedIds) : [];
+          if (!teamIds.includes(response.data.id)) {
+            teamIds.push(response.data.id);
+            localStorage.setItem(
+              'temp_portfolio_team_ids',
+              JSON.stringify(teamIds),
+            );
+          }
+
+          // Update with new ID
+          onUpdate({ ...editedTeam, id: response.data.id.toString() });
+        }
+      } else {
+        // For existing teams,  update local state
+        onUpdate(editedTeam);
+      }
+
+      setIsEditing(false);
+      setOpenMemberActionId(null);
+    } catch (error) {
+      console.error('Failed to create team:', error);
+    }
   };
 
-  const handleRemoveMember = (memberId: string | number) => {
+  const handleRemoveMember = async (memberId: string | number) => {
+    // Optimistic update
     const updatedMembers = editedTeam.members.filter((m) => m.id !== memberId);
     setEditedTeam({
       ...editedTeam,
       count: updatedMembers.length,
       members: updatedMembers,
     });
+
+    if (!team.id.toString().startsWith('team-') && memberId) {
+      try {
+        await removeTeamMemberMutation.mutateAsync({
+          teamId: team.id,
+          memberId,
+        });
+      } catch (error) {
+        console.error('Failed to remove member:', error);
+      }
+    }
   };
 
   const initiateDeleteTeam = () => {
@@ -51,6 +98,12 @@ export const useTeamCard = (
 
     if (deleteContext.type === 'TEAM') {
       onDelete(team.id);
+      // If team has real ID, call API
+      if (!team.id.toString().startsWith('team-')) {
+        deleteTeamMutation
+          .mutateAsync(team.id)
+          .catch((err) => console.error(err));
+      }
     } else if (deleteContext.type === 'MEMBER' && deleteContext.id) {
       handleRemoveMember(deleteContext.id);
     }
