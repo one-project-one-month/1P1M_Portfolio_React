@@ -11,29 +11,27 @@ const UserManagementContainer = ({
   onPageChange,
 }: UserManagementContainerPropsType) => {
   const { data, isPending, isError } = useGetUserManagement({
-    keyword: filter?.search,
     page: currentPage,
     size: pageSize,
-    status: filter?.status,
-    sortDirection:
-      filter?.order === 'asc'
-        ? 'oldest'
-        : filter?.order === 'desc'
-          ? 'newest'
-          : undefined,
+    keyword: filter?.search,
+    sortField: filter?.status,
+    // status: filter?.status,
+    // sortDirection:
+    //   filter?.order === 'asc'
+    //     ? 'oldest'
+    //     : filter?.order === 'desc'
+    //       ? 'newest'
+    //       : undefined,
   });
 
   if (isPending) return <div className="text-slate-400">Loading ideas...</div>;
 
-  if (isError || !data?.success)
-    return <div className="text-rose-400">Failed to load users</div>;
+  if (isError) return <div className="text-rose-400">Failed to load users</div>;
 
   // Ensure children always receive an array (empty when no data).
   const items = data?.data ?? [];
-  const totalItems = data?.meta?.totalItems;
-  const totalPages = data?.meta?.totalItems
-    ? Math.ceil(data.meta.totalItems / pageSize)
-    : 0;
+  const totalItems = data?.meta?.totalItems ?? 0;
+  const totalPages = data?.meta?.totalPages ?? 0;
 
   return (
     <div>

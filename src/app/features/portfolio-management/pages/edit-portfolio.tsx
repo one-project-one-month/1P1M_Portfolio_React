@@ -1,18 +1,33 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PortfolioForm from '../components/portfolio-form';
-import { PORTFOLIO_MANAGEMENT_DATA, type ProjectData } from '../constants/data';
+import type { ProjectData } from '../constants/data';
+import { getProjectPortfolioDetailsV2 } from '../services/portfolio-management-service';
+import { mapApiToProjectData } from '../utils/helpers';
 
 const EditPortfolioPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+  const [projectData, setProjectData] = useState<ProjectData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [projects] = useState(PORTFOLIO_MANAGEMENT_DATA);
-
-  const projectData = useMemo(() => {
-    const id = parseInt(projectId || '0');
-    return projects.find((p) => p.id === id) || null;
-  }, [projectId, projects]);
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!projectId) return;
+      try {
+        setIsLoading(true);
+        const response = await getProjectPortfolioDetailsV2(projectId);
+        if (response && response.data) {
+          setProjectData(mapApiToProjectData(response.data));
+        }
+      } catch (error) {
+        console.error('Failed to fetch project', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProject();
+  }, [projectId]);
 
   const handleSave = (data: Partial<ProjectData>) => {
     console.log('Saving project:', data);
@@ -22,6 +37,10 @@ const EditPortfolioPage = () => {
   const handleCancel = () => {
     navigate('/admin/portfolio-management');
   };
+
+  if (isLoading) {
+    return <div className="p-6 text-white">Loading...</div>;
+  }
 
   if (!projectData) {
     return (

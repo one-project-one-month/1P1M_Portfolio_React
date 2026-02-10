@@ -5,7 +5,6 @@ import {
   FileText,
   FileUser,
   HardDrive,
-  SquareChartGantt,
   User,
   Users,
 } from 'lucide-react';
@@ -35,7 +34,7 @@ export const socials: NavLink[] = [
 ];
 
 export const ADMIN_NAVS: AdminNavLink[] = [
-  { id: 1, name: 'Dashboard', path: 'dashboard', icon: ChartGanttIcon },
+  { id: 1, name: 'Dashboard', path: '', icon: ChartGanttIcon },
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
   {
     id: 3,
@@ -56,8 +55,9 @@ export const ADMIN_NAVS: AdminNavLink[] = [
     path: 'timeline-management',
     icon: CalendarClock,
   },
-  { id: 7, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
-  { id: 8, name: 'Profile', path: 'admin-profile', icon: User },
+  { id: 7, name: 'Profile', path: 'admin-profile', icon: User },
 ];
 
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];
+
+export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB

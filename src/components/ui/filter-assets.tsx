@@ -9,6 +9,8 @@ interface FilterAssetsProps<T> {
   showCreateButton?: boolean;
   showFilter?: boolean;
   showLayout?: boolean;
+  showGridIcon?: boolean;
+  showListIcon?: boolean;
 
   viewLayout?: ViewLayout;
   onChangeLayout?: (layout: ViewLayout) => void;
@@ -26,6 +28,8 @@ const FilterAssets = <T,>({
   showCreateButton = false,
   showFilter = false,
   showLayout = false,
+  showGridIcon = true,
+  showListIcon = true,
 
   viewLayout = 'grid',
   onChangeLayout,
@@ -62,26 +66,30 @@ const FilterAssets = <T,>({
       {/* Layout Toggles */}
       {showLayout && (
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => onChangeLayout?.('list')}
-            className={`p-2 rounded-lg transition-colors ${
-              viewLayout === 'list'
-                ? 'bg-[#364153]/50 text-[#9C39FC]'
-                : 'text-[#99A1AF] hover:text-[#9C39FC]'
-            }`}
-          >
-            <List size={20} />
-          </button>
-          <button
-            onClick={() => onChangeLayout?.('grid')}
-            className={`p-2 rounded-lg transition-colors ${
-              viewLayout === 'grid'
-                ? 'bg-[#364153]/50 text-[#9C39FC]'
-                : 'text-[#99A1AF] hover:text-[#9C39FC]'
-            }`}
-          >
-            <LayoutGrid size={20} />
-          </button>
+          {showListIcon && (
+            <button
+              onClick={() => onChangeLayout?.('list')}
+              className={`p-2 rounded-lg transition-colors ${
+                viewLayout === 'list'
+                  ? 'bg-[#364153]/50 text-[#9C39FC]'
+                  : 'text-[#99A1AF] hover:text-[#9C39FC]'
+              }`}
+            >
+              <List size={20} />
+            </button>
+          )}
+          {showGridIcon && (
+            <button
+              onClick={() => onChangeLayout?.('grid')}
+              className={`p-2 rounded-lg transition-colors ${
+                viewLayout === 'grid'
+                  ? 'bg-[#364153]/50 text-[#9C39FC]'
+                  : 'text-[#99A1AF] hover:text-[#9C39FC]'
+              }`}
+            >
+              <LayoutGrid size={20} />
+            </button>
+          )}
         </div>
       )}
 
