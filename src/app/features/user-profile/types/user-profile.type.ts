@@ -1,11 +1,6 @@
 import type { ApiResponseType } from '@/types/api-response.type';
 import z from 'zod';
-import { projectIdeaSchema } from '../../idea-management/types/project-idea.types';
-
-// export const Role = {
-//   ADMIN: 'ADMIN',
-//   USER: 'USER',
-// } as const;
+import { IdeaSchema } from '../../ideas/shared/types/project-idea.types';
 
 export const devProfileSchema = z.object({
   userId: z.number(),
@@ -49,18 +44,15 @@ export const projectPortfolioSchema = z.object({
   repoLink: z.string().optional(),
   viewCount: z.number(),
   reactedCount: z.number(),
-
   teams: z.array(teamSchema),
   projectTypes: z.array(z.string()),
 });
 
-const projectIdeaInProfileSchema = projectIdeaSchema
-  .omit({ id: true })
-  .extend({ projectIdeaId: z.number() });
+export const projectIdeaSchema = IdeaSchema;
 
 export const userProfileSchema = z.object({
   devProfile: devProfileSchema,
-  projectIdeas: z.array(projectIdeaInProfileSchema),
+  projectIdeas: z.array(IdeaSchema),
   projectPortfolios: z.array(projectPortfolioSchema),
 });
 
@@ -70,9 +62,8 @@ export const editUserProfileSchema = devProfileSchema.omit({
 });
 
 export type DevProfileType = z.infer<typeof devProfileSchema>;
-export type ProjectIdeaType = z.infer<typeof projectIdeaInProfileSchema>;
+export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
 export type UserProfileType = z.infer<typeof userProfileSchema>;
 export type UserProfileResponseType = ApiResponseType<UserProfileType>;
-
 export type EditUserProfileType = z.infer<typeof editUserProfileSchema>;
 export type UserProfileEditResponseType = ApiResponseType<EditUserProfileType>;

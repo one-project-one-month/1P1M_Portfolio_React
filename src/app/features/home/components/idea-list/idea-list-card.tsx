@@ -1,17 +1,17 @@
 import {
   changeProjectIdeaStatus,
   changeProjectIdeaStatusColor,
-} from '@/app/features/idea-management/lib/utils';
-import type { ProjectIdeaType } from '@/app/features/idea-management/types/project-idea.types';
+} from '@/app/features/ideas/shared/lib';
+import type { IdeaType } from '@/app/features/ideas/shared/types/project-idea.types';
 import sampleImg from '@/assets/sample-user-img.jpg';
 import Tooltip from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
 
 type IdeaListCardProps = {
-  idea?: ProjectIdeaType | null;
-  onReact?: (idea: ProjectIdeaType) => void;
-  onViewDetail?: (idea: ProjectIdeaType) => void;
+  idea?: IdeaType | null;
+  onReact?: (idea: IdeaType) => void;
+  onViewDetail?: (idea: IdeaType) => void;
   disableActions?: boolean;
 };
 

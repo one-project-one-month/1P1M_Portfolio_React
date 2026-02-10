@@ -153,7 +153,7 @@ const ProjectIdeaDetailDialog = ({
                       {data.devName || 'Unknown'}
                     </h4>
                     <Dialog.Description className="font-thin">
-                      {data.devEmail ?? '-----'}
+                      {data.dev_Email ?? '-----'}
                     </Dialog.Description>
                   </div>
                 </div>

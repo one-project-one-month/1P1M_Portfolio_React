@@ -8,7 +8,7 @@ import type { IdeaType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 type Props = {
-  site: 'admin' | 'client';
+  site?: 'admin' | 'client';
   idea: IdeaType;
 };
 
