@@ -117,6 +117,7 @@ const TimelineManagement = () => {
             showFilter={true}
             showCreateButton={true}
             showLayout={true}
+            showGridIcon={false}
             // Layout Props
             viewLayout={currentLayout}
             onChangeLayout={setCurrentLayout}
