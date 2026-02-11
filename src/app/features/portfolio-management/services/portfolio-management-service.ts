@@ -178,15 +178,19 @@ export const getAllProjectPortfolios = async (
 };
 
 export const reactProject = async (projectPortfolioId: number | string) => {
-  const response = await apiClient.post(API_ENDPOINTS.REACT_PROJECT, {
-    projectPortfolioId,
+  const response = await apiClient.post(API_ENDPOINTS.REACT_PROJECT, null, {
+    params: {
+      projectPortfolioId,
+    },
   });
   return response.data;
 };
 
 export const unreactProject = async (projectPortfolioId: number | string) => {
-  const response = await apiClient.delete(API_ENDPOINTS.REACT_PROJECT, {
-    data: { projectPortfolioId },
+  const response = await apiClient.delete(API_ENDPOINTS.UNREACT_PROJECT, {
+    params: {
+      projectPortfolioId,
+    },
   });
   return response.data;
 };
