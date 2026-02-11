@@ -61,18 +61,6 @@ export default function IdeaCard({ site, idea }: Props) {
             className="size-8 md:size-10 rounded-full shrink-0"
           />
         </div>
-        {idea.leader_id && (
-          <div className="w-1/2 flex items-center justify-end gap-4">
-            <span className="text-sm md:text-lg text-muted whitespace-nowrap">
-              Leader:
-            </span>
-            <img
-              src={idea.leaderProfilePicUrl}
-              alt="username"
-              className="size-8 md:size-10 rounded-full shrink-0"
-            />
-          </div>
-        )}
       </div>
 
       <hr />

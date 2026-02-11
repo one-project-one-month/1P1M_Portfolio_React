@@ -150,35 +150,13 @@ const ProjectIdeaDetailDialog = ({
                   />
                   <div>
                     <h4 className="text-xl font-semibold capitalize">
-                      {data.devName || 'Unknown'}
+                      {data.devName || '-----'}
                     </h4>
                     <Dialog.Description className="font-thin">
                       {data.dev_Email ?? '-----'}
                     </Dialog.Description>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="text-xl font-semibold mb-2">Project Leader</h3>
-                {data.leader_id ? (
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={data.leaderProfilePicUrl}
-                      className="size-10 rounded-full object-cover"
-                      alt={data.leaderName || 'Leader'}
-                    />
-                    <div>
-                      <h4 className="text-xl font-semibold capitalize">
-                        {data.leaderName || 'Unknown'}
-                      </h4>
-                      <Dialog.Description className="font-thin">
-                        {data.leaderEmail ?? '-----'}
-                      </Dialog.Description>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center">-----</div>
-                )}
               </div>
             </div>
 
