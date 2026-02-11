@@ -104,5 +104,5 @@ export const NotFoundPage = PageLoader(
 );
 
 export const MyProfilePage = PageLoader(
-  lazy(() => import('@/app/features/user-profile/page')),
+  lazy(() => import('@/app/features/user-profile/user-profile-page')),
 );
