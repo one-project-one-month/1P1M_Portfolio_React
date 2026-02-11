@@ -30,8 +30,9 @@ export const editUserProfileService = async (
 ) => {
   try {
     const response = await apiClient.patch<UserProfileEditResponseType>(
-      `${API_ENDPOINTS.UPDATE_PROFILE}/${id}`,
+      API_ENDPOINTS.GET_PROFILE,
       formData,
+      { params: { id } },
     );
     return response.data;
   } catch (error) {
@@ -40,6 +41,31 @@ export const editUserProfileService = async (
     throw {
       success: false,
       message: 'Failed to edit user',
+    };
+  }
+};
+
+export const uploadDevImageService = async (
+  devProfileId: number,
+  file: File,
+) => {
+  try {
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${devProfileId}`,
+      file,
+      {
+        headers: {
+          'Content-Type': file.type,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error uploading profile image:', e);
+    throw {
+      success: false,
+      message: 'Failed to upload profile image',
     };
   }
 };
