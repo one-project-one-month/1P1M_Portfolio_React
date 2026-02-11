@@ -14,7 +14,11 @@ const DatePicker = ({ label, value, onChange }: DatePickerProps) => {
 
   const handleDateSelect = (selectedDate: Date | null) => {
     if (selectedDate && onChange) {
-      const formatted = selectedDate.toISOString().split('T')[0];
+      // const formatted = selectedDate.toISOString().split('T')[0];
+      const formatted = `${selectedDate.getFullYear()}-${String(
+        selectedDate.getMonth() + 1,
+      ).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`; // Fix date shift issue by creating date at noon to avoid timezone conversion
+
       onChange(formatted);
       setIsOpen(false);
     }
@@ -37,7 +41,7 @@ const DatePicker = ({ label, value, onChange }: DatePickerProps) => {
         <div className="p-4 bg-[#121212] rounded-2xl border border-white/10">
           <Calendar
             value={value ? new Date(value) : null}
-            onChange={handleDateSelect}
+            onSelect={handleDateSelect}
           />
           <div className="flex gap-x-4 mt-6">
             <button

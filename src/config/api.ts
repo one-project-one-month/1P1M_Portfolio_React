@@ -47,9 +47,12 @@ export const API_ENDPOINTS = {
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
+  TIMELINES: 'portfolio/api/v1/timelines',
 
   // Admin
-  USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  UPDATE_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
+  GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
 };
 

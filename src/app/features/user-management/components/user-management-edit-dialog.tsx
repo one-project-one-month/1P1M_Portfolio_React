@@ -1,21 +1,17 @@
 import Button from '@/app/features/auth/login/components/button';
+import { useEditUserManagement } from '@/app/features/user-management/hook/use-user-management';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
-import { useToast } from '@/components/ui/toast-provider';
 import { TechStacks } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@radix-ui/themes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import { Controller, useForm, type Resolver } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
-import { editUserManagementService } from '../services/user-management.service';
 import {
   editUserSchema,
   type EditUserManagementType,
   type UserManagementEditFormPropsType,
-  type UserManagementEditResponseType,
 } from '../types/user-management.types';
 
 const UserManagementEditDialog = ({
@@ -27,55 +23,81 @@ const UserManagementEditDialog = ({
   editDialogOpen: boolean;
   setEditDialogOpen: (open: boolean) => void;
 }) => {
-  const queryClient = useQueryClient();
-  const { addToast } = useToast();
+  // const queryClient = useQueryClient();
+  // const { addToast } = useToast();
+
+  const { mutate, isPending } = useEditUserManagement();
+
+  // const form = useForm<Partial<EditUserManagementType>>({
+  //   resolver: zodResolver(editUserSchema.partial()) as Resolver<
+  //     Partial<EditUserManagementType>
+  //   >,
+  //   defaultValues: {
+  //     name: data.name,
+  //     phone: data.phone,
+  //     role: data.role,
+  //     profilePictureUrl: data.profilePictureUrl,
+  //     telegramUsername: data.telegramUsername,
+  //     githubUrl: data.githubUrl,
+  //     linkedUrl: data.linkedUrl,
+  //     description: data.description,
+  //     status: data.status || 'ACTIVE',
+  //   },
+  //   mode: 'onSubmit',
+  // });
 
   const form = useForm<Partial<EditUserManagementType>>({
-    resolver: zodResolver(editUserSchema.partial()) as Resolver<
-      Partial<EditUserManagementType>
-    >,
+    resolver: zodResolver(editUserSchema.partial()),
     defaultValues: {
-      name: data.name,
-      phone: data.phone,
-      role: data.role,
-      profilePictureUrl: data.profilePictureUrl,
-      telegramUsername: data.telegramUsername,
-      githubUrl: data.githubUrl,
-      linkedInUrl: data.linkedInUrl,
-      description: data.description,
+      username: data.name || '',
+      phone: data.phone || '',
+      role: data.role || '',
+      // profilePictureUrl: data.profilePictureUrl || '',
+      telegramUsername: data.telegramUsername || '',
+      github_url: data.githubUrl || '',
+      linkedIn_url: data.linkedUrl || '',
+      description: data.description || '',
       status: data.status || 'ACTIVE',
     },
     mode: 'onSubmit',
   });
 
-  const { mutate, isPending } = useMutation<
-    UserManagementEditResponseType,
-    AxiosError<{ message: string }>,
-    { id: number; formData: EditUserManagementType }
-  >({
-    mutationFn: ({
-      id,
-      formData,
-    }: {
-      id: number;
-      formData: EditUserManagementType;
-    }) => editUserManagementService(id, formData),
-    onSuccess: (success) => {
-      queryClient.invalidateQueries({ queryKey: ['user-management'] });
-      addToast(success.message, 'success');
-      form.reset();
-    },
-    onError: (error) => {
-      addToast(error.message, 'error');
-    },
-  });
+  // const { mutate, isPending } = useMutation<
+  //   UserManagementEditResponseType,
+  //   AxiosError<{ message: string }>,
+  //   { id: number; formData: EditUserManagementType }
+  // >({
+  //   mutationFn: ({
+  //     id,
+  //     formData,
+  //   }: {
+  //     id: number;
+  //     formData: EditUserManagementType;
+  //   }) => editUserManagementService(id, formData),
+  //   onSuccess: (success) => {
+  //     queryClient.invalidateQueries({ queryKey: ['user-management'] });
+  //     addToast(success.message, 'success');
+  //     form.reset();
+  //   },
+  //   onError: (error) => {
+  //     addToast(error.message, 'error');
+  //   },
+  // });
 
   const handleEdit = (formData: Partial<EditUserManagementType>) => {
-    if (!data.id) {
-      addToast('Project idea ID is missing', 'error');
+    if (!data.userId) {
+      // addToast('Project idea ID is missing', 'error');
       return;
     }
-    mutate({ id: data.id, formData: formData as EditUserManagementType });
+    mutate(
+      {
+        userId: data.userId,
+        formData: formData as EditUserManagementType,
+      },
+      {
+        onSuccess: () => setEditDialogOpen(false),
+      },
+    );
   };
 
   return (
@@ -83,7 +105,12 @@ const UserManagementEditDialog = ({
       open={editDialogOpen}
       onOpenChange={(isOpen) => setEditDialogOpen(isOpen)}
     >
-      <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
+      <Dialog.Trigger>
+        <button type="button" className="text-white">
+          {trigger}
+        </button>
+        {/* {trigger || <div>View Detail</div>} */}
+      </Dialog.Trigger>
 
       <Dialog.Content
         size="4"
@@ -106,7 +133,7 @@ const UserManagementEditDialog = ({
                 />
                 <div className="w-full flex flex-col gap-[24px]">
                   <Controller
-                    name="name"
+                    name="username"
                     control={form.control}
                     render={({ field }) => (
                       <FormField placeholder="Bora" {...field} />
@@ -155,7 +182,7 @@ const UserManagementEditDialog = ({
                   />
 
                   <Controller
-                    name="githubUrl"
+                    name="github_url"
                     control={form.control}
                     render={({ field }) => (
                       <FormField
@@ -166,7 +193,7 @@ const UserManagementEditDialog = ({
                   />
 
                   <Controller
-                    name="linkedInUrl"
+                    name="linkedIn_url"
                     control={form.control}
                     render={({ field }) => (
                       <FormField
@@ -184,8 +211,17 @@ const UserManagementEditDialog = ({
                     )}
                   />
                   <div className="flex justify-between">
-                    <Button className="w-[40%]">Cancel</Button>
-                    <Button disabled={isPending} className="w-[40%]">
+                    <Button
+                      className="w-[40%]"
+                      onClick={() => setEditDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                      className="w-[40%]"
+                    >
                       {isPending ? 'Updating...' : 'Update'}
                     </Button>
                   </div>

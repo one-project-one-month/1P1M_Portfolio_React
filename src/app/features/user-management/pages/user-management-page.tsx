@@ -3,7 +3,7 @@ import { UserManagementHeaderSection } from '@/app/features/user-management/comp
 import { useState } from 'react';
 import type { FilterType } from '../types/user-management.types';
 
-const DEFAULT_PAGE_SIZE = 6;
+const DEFAULT_PAGE_SIZE = 5;
 const DEFAULT_STATUS = 'ALL';
 
 const UserManagement = () => {
@@ -13,7 +13,7 @@ const UserManagement = () => {
     search: '',
   });
   const [pagination, setPagination] = useState({
-    currentPage: 1,
+    currentPage: 0,
     totalItems: 0,
   });
 

@@ -1,3 +1,4 @@
+import { logout } from '@/app/features/opom-register/services/ulits';
 import { API_CONFIG } from '@/config/api';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
@@ -46,7 +47,7 @@ apiClient.interceptors.response.use(
 
     // 3. Standard Refresh Logic for all other 401s
     if (
-      (error.response?.status === 401 || error.response?.status === 401) &&
+      (error.response?.status === 401 || error.response?.status === 400) &&
       !originalRequest._retry
     ) {
       if (isRefreshing) {
@@ -70,7 +71,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        localStorage.removeItem('user');
+        logout();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

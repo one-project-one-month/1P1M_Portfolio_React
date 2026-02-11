@@ -1,20 +1,92 @@
-import { getUserManagementService } from '@/app/features/user-management/services/user-management.service';
-import type {
-  GetUserManagementParamsType,
-  UserManagementResponseType,
+import {
+  banUserService,
+  editUserManagementService,
+  getUserManagementDetail,
+  getUserManagementService,
+} from '@/app/features/user-management/services/user-management.service';
+import {
+  type EditUserManagementType,
+  type GetUserManagementParamsType,
+  type UserManagementDetailResponseType,
+  type UserManagementEditResponseType,
+  type UserManagementResponseType,
 } from '@/app/features/user-management/types/user-management.types';
-import { useQuery } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/toast-provider';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 export const useGetUserManagement = ({
   keyword,
   page,
   size,
-  status,
+  sortField,
   sortDirection,
 }: GetUserManagementParamsType) => {
   return useQuery<UserManagementResponseType>({
-    queryKey: ['user-management', keyword, page, size, status, sortDirection],
+    queryKey: [
+      'user-management',
+      keyword,
+      page,
+      size,
+      sortField,
+      sortDirection,
+    ],
     queryFn: () =>
-      getUserManagementService({ keyword, page, size, status, sortDirection }),
+      getUserManagementService({
+        keyword,
+        page,
+        size,
+        sortField,
+        sortDirection,
+      }),
+  });
+};
+
+export const useEditUserManagement = () => {
+  const { addToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UserManagementEditResponseType,
+    AxiosError<{ message: string }>,
+    { userId: number; formData: EditUserManagementType }
+  >({
+    mutationFn: ({ userId, formData }) =>
+      editUserManagementService(userId, formData),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['user-management'] });
+      addToast(response.message || 'User updated successfully', 'success');
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message || 'Failed to update user';
+      addToast(errorMessage, 'error');
+    },
+  });
+};
+
+export const useGetUserManagementDetail = (userId: number) => {
+  return useQuery<UserManagementDetailResponseType, AxiosError>({
+    queryKey: ['user-management-detail', userId],
+    queryFn: () => getUserManagementDetail(userId),
+    enabled: userId !== undefined && !isNaN(userId),
+  });
+};
+export const useBanUser = () => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+
+  return useMutation({
+    mutationFn: ({ userId, desc }: { userId: number; desc: string }) =>
+      banUserService(userId, desc),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-management'] });
+      addToast('User banned successfully', 'success');
+    },
+
+    onError: (error: AxiosError<{ message: string }>) => {
+      addToast(error.response?.data?.message || 'Failed to ban user', 'error');
+    },
   });
 };

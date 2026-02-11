@@ -50,12 +50,24 @@ const router = createBrowserRouter([
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
       {
-        path: '/portfolio/create-portfolio',
-        element: <PortfolioFormview />,
-      },
-      {
-        path: '/portfolio/update-portfolio/:projectId',
-        element: <PortfolioEditview />,
+        element: <ProtectedGuard allow={['USER']} />,
+        children: [
+          { path: '/portfolios', element: <PortfolioPage /> },
+          { path: '/developers', element: <DeveloperPage /> },
+          { path: 'profile/:username', element: <UserProfile /> },
+          { path: '/about us', element: <AboutUsPage /> },
+          { path: '/me', element: <MyProfilePage /> },
+          { path: '/ideas', element: <IdeaPage /> },
+          { path: 'opom-register', element: <OpomRegisterPage /> },
+          {
+            path: '/portfolios/create-portfolio',
+            element: <PortfolioFormview />,
+          },
+          {
+            path: '/portfolios/edit-portfolio/:projectId',
+            element: <PortfolioEditview />,
+          },
+        ],
       },
     ],
   },
@@ -92,8 +104,9 @@ const router = createBrowserRouter([
           },
 
           { path: 'user-management', element: <UserManagement /> },
+
           {
-            path: 'register-user/view-detail',
+            path: 'user-management/view-details/:userId',
             element: <UserManagementViewDetail />,
           },
 

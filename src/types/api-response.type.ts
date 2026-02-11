@@ -1,15 +1,16 @@
 export type MetaType = {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  method: string;
-  endpoint: string;
+  totalItems?: number;
+  totalPages?: number;
+  currentPage?: number;
+  method?: string;
+  endpoint?: string;
+  timestamp?: number;
 };
 
-export type ApiResponseType<T = string> = {
-  success: boolean;
+export type ApiResponseType<T> = {
+  success: number;
   code: number;
-  meta?: MetaType;
-  data: T;
   message: string;
+  meta: MetaType;
+  data: T;
 };

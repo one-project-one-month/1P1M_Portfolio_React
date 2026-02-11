@@ -1,55 +1,80 @@
-import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { ProjectData } from '../../portfolio-management/constants/data';
-import useGetPortfolioDetail from '../hooks/use-get-portfolio-detail';
+import { getProjectPortfolioDetailsV2 } from '../../portfolio-management/services/portfolio-management-service';
+import { mapApiToProjectData } from '../../portfolio-management/utils/helpers';
 import ProjectPortfolioForm from './project-portfolio-form';
 
-const PortfolioEditview = () => {
+const PortfolioEditView = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { projectDetailData } = location.state || {};
-  const [repoLink, setRepoLink] = useState(projectDetailData?.repoLink || '');
+  const [projectData, setProjectData] = useState<ProjectData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: projectData } = useGetPortfolioDetail(Number(projectId));
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!projectId) return;
+      try {
+        setIsLoading(true);
+        const response = await getProjectPortfolioDetailsV2(projectId);
+        if (response && response.data) {
+          setProjectData(mapApiToProjectData(response.data));
+        }
+      } catch (error) {
+        console.error('Failed to fetch project', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProject();
+  }, [projectId]);
 
   const handleSave = (data: Partial<ProjectData>) => {
-    console.log('Saving project:', data);
-    navigate('/portfolio');
+    console.log('Updating project:', data);
+    navigate('/portfolios');
   };
 
   const handleCancel = () => {
-    navigate('/portfolio');
+    navigate('/portfolios');
   };
 
-  const formattedData = (data: any) => {
-    return {
-      projectName: data.name,
-      image: data.projectPicUrl,
-      technologies: data.languageAndTools.map((tech: any) => ({
-        projectType: { id: tech.id, name: tech.type },
-        lauguages: tech.name,
-      })),
-      ...data,
-    };
-  };
+  if (isLoading) {
+    return (
+      <div className="h-60 text-white flex flex-col justify-center items-center">
+        Loading Project...
+      </div>
+    );
+  }
+
+  if (!projectData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-white">
+        <h1 className="text-2xl font-semibold mb-4">Project Not Found</h1>
+        <p className="text-white/60 mb-6">
+          The project you're looking for doesn't exist.
+        </p>
+        <button
+          onClick={handleCancel}
+          className="px-6 py-2 bg-[#9C39FC] hover:bg-[#9333ea] rounded-lg transition-colors"
+        >
+          Go Back to Portfolios
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center">
       <ProjectPortfolioForm
-        mode="edit"
-        initialData={
-          (projectDetailData && formattedData(projectDetailData)) ??
-          formattedData(projectData)
-        }
+        mode="view"
+        // mode="edit"
+        initialData={projectData}
         onSave={handleSave}
         onCancel={handleCancel}
         onClose={handleCancel}
-        repoLink={repoLink}
-        setRepoLink={setRepoLink}
       />
     </div>
   );
 };
 
-export default PortfolioEditview;
+export default PortfolioEditView;

@@ -5,6 +5,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FILTER_OPTIONS } from '../ideas/shared/constants';
 import DevCard from './components/dev-card';
 import { useDevProfileQuery } from './hooks/use-dev-profile';
 
@@ -63,7 +64,7 @@ const Developer = () => {
         showFilter
         searchPlaceholder="Search by developer name or skill"
         onSearchChange={(e) => setSearchTerm(e.target.value)}
-        filterOptions={['Popular', 'Newest', 'Oldest']}
+        filterOptions={FILTER_OPTIONS}
         onFilterChange={setFilter}
       />
 

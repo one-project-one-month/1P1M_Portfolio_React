@@ -8,16 +8,10 @@ export default function MainLayout() {
 
   return (
     <Background>
-      <div className="h-dvh w-dvw overflow-auto">
-        <div className="w-11/12 mx-auto">
+      <div className="h-dvh w-dvw overflow-auto overflow-x-hidden">
+        <div className="max-w-7xl w-full mx-auto">
           <Navbar auth={user ?? null} />
-        </div>
-
-        <div className="w-11/12 mx-auto">
           <Outlet />
-        </div>
-
-        <div className="w-11/12 mx-auto">
           <Footer />
         </div>
       </div>
