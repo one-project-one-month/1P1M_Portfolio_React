@@ -61,10 +61,7 @@ export default function EditStep2({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img
-              src={
-                currentLeader?.profilePictureUrl ??
-                'https://i.pravatar.cc/150?img=13'
-              }
+              src={currentLeader?.profilePictureUrl}
               alt="Leader avatar"
               className="h-12 w-12 rounded-full object-cover"
             />
