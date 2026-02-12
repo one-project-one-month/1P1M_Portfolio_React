@@ -1,3 +1,4 @@
+import IdeaListCardSkeleton from '@/app/features/home/components/idea-list/idea-list-card-skeleton';
 import type { IdeaType } from '../types/project-idea.types';
 import { EmptyIdeasState, IdeaCard } from './';
 
@@ -10,8 +11,10 @@ type Props = {
 const IdeaGrid = ({ site, data, isLoading = false }: Props) => {
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-100">
-        <h4 className="text-white text-xl">Loading....</h4>
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
+        {Array.from({ length: 6 }).map(() => {
+          return <IdeaListCardSkeleton />;
+        })}
       </div>
     );
   }
