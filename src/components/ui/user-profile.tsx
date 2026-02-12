@@ -1,50 +1,87 @@
-import Button from '@/app/features/auth/login/components/button';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useClickOutside } from '@/hooks/use-click-outside';
 import { logout } from '@/lib/utils';
+import { LogOut, Shield, User } from 'lucide-react';
 import { memo, useState } from 'react';
 
-type UserProfile = {
+type UserProfileProps = {
   username: string;
   email: string;
   img: string;
+  role: 'ADMIN' | 'USER';
 };
 
-const UserProfile = (Profile: UserProfile) => {
-  const profileRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
-
+const UserProfile = ({ username, email, img, role }: UserProfileProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const profileRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
   const { goTo } = useAppNavigation();
 
   return (
     <div ref={profileRef} className="relative">
+      {/* Trigger */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-x-3.5 text-white"
+        className="flex items-center gap-x-3.5 text-white hover:opacity-90 transition"
       >
-        <img className="size-12 rounded-full" src={Profile.img} />
-        <h4>{Profile.username}</h4>
+        <img
+          className="size-11 rounded-full object-cover border border-white/10 shadow-md"
+          src={img}
+          alt={username}
+        />
+        <h4 className="font-medium">{username}</h4>
       </button>
 
+      {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 z-[1000] w-[220px] rounded-md bg-gray-800 text-start shadow-lg flex flex-col px-2.5 py-4 gap-2">
-          <Button
-            onClick={() => {
-              setIsOpen(false);
-              goTo('/me');
-            }}
-            variant={'black_button'}
-            className="px-2.5 py-4"
-          >
-            View Profile
-          </Button>
-          <Button
-            onClick={logout}
-            variant={'white_button'}
-            className="text-gray-950"
-          >
-            Logout
-          </Button>
+        <div
+          className="absolute right-0 top-full mt-3 z-[1000] w-[240px] rounded-xl 
+                        bg-gray-900/95 backdrop-blur-md border border-white/10 
+                        shadow-2xl p-2 animate-in fade-in zoom-in-95 duration-150"
+        >
+          {/* Profile Info */}
+          <div className="px-3 py-3 border-b border-white/5">
+            <p className="text-sm font-semibold text-white">{username}</p>
+            <p className="text-xs text-gray-400 truncate">{email}</p>
+          </div>
+
+          <div className="flex flex-col mt-2 gap-1">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                goTo('/me');
+              }}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm 
+                         hover:bg-white/5 transition text-gray-200"
+            >
+              <User size={16} />
+              View Profile
+            </button>
+
+            {role === 'ADMIN' && (
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  goTo('/admin');
+                }}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm 
+                           hover:bg-white/5 transition text-gray-200"
+              >
+                <Shield size={16} />
+                Admin Dashboard
+              </button>
+            )}
+
+            <div className="h-px bg-white/5 my-2" />
+
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm 
+                         hover:bg-red-500/10 hover:text-red-400 transition text-gray-300"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
+          </div>
         </div>
       )}
     </div>

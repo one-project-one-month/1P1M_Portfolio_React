@@ -1,5 +1,6 @@
 import { useGetProjectIdea } from '@/app/features/ideas/shared/hooks';
 import type { IdeaType } from '@/app/features/ideas/shared/types/project-idea.types';
+import { LightbulbOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import IdeaListCard from './idea-list-card';
 import IdeaListCardSkeleton from './idea-list-card-skeleton';
@@ -34,8 +35,12 @@ function IdeaListSection() {
             <IdeaListCard key={idea.projectIdeaId} idea={idea} />
           ))
         ) : (
-          <div className="col-span-full text-center text-white/50 py-10">
-            No project ideas available.
+          <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+            <LightbulbOff size={48} className="mb-4 opacity-60" />
+            <p className="text-lg font-medium">No ideas yet</p>
+            <p className="text-sm mt-2 text-white/30">
+              Be the first to submit a project idea.
+            </p>
           </div>
         )}
       </div>

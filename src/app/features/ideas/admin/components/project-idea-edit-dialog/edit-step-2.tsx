@@ -1,3 +1,4 @@
+import defaultImg from '@/assets/sample-user-img.jpg';
 import { Button } from '@/components/ui/button';
 import { ArrowRightLeft, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -61,7 +62,7 @@ export default function EditStep2({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img
-              src={currentLeader?.profilePictureUrl}
+              src={currentLeader?.profilePictureUrl || defaultImg}
               alt="Leader avatar"
               className="h-12 w-12 rounded-full object-cover"
             />
@@ -127,7 +128,7 @@ export default function EditStep2({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <img
-                            src={leader.profilePictureUrl}
+                            src={leader.profilePictureUrl || defaultImg}
                             alt={leader.name}
                             className="h-9 w-9 rounded-full object-cover"
                           />
