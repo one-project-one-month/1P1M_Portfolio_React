@@ -5,8 +5,7 @@ import type { TeamType } from '@/types/portfolio-management';
 export interface CreateTeamRequest {
   team: {
     teamName: string;
-    description: string;
-    imageUrl: string;
+    contact_link: string;
     members: {
       memberId: number | string;
       roleInTeam: string;
@@ -37,8 +36,7 @@ export const createTeam = async (
   const requestBody: CreateTeamRequest = {
     team: {
       teamName: team.name,
-      description: 'Default description',
-      imageUrl: 'https://example.com/team-image.jpg',
+      contact_link: 'https://www.facebook.com/myanmartech',
       members: team.members.map((member) => ({
         memberId: member.id ?? '',
         roleInTeam: member.role || 'Member',
@@ -60,6 +58,8 @@ export interface CreateProjectPortfolioRequest {
   description: string;
   projectLink: string;
   repoLink: string;
+  startDate: string;
+  endDate?: string;
   teamIds: number[];
   languageAndTools: {
     name: string;
@@ -173,6 +173,24 @@ export const getAllProjectPortfolios = async (
 
   const response = await apiClient.get(API_ENDPOINTS.GET_PROJECT_V2, {
     params,
+  });
+  return response.data;
+};
+
+export const reactProject = async (projectPortfolioId: number | string) => {
+  const response = await apiClient.post(API_ENDPOINTS.REACT_PROJECT, null, {
+    params: {
+      projectPortfolioId,
+    },
+  });
+  return response.data;
+};
+
+export const unreactProject = async (projectPortfolioId: number | string) => {
+  const response = await apiClient.delete(API_ENDPOINTS.UNREACT_PROJECT, {
+    params: {
+      projectPortfolioId,
+    },
   });
   return response.data;
 };
