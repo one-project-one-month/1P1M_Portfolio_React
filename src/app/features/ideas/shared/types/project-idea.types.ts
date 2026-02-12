@@ -140,6 +140,9 @@ export type IdeaHeaderPropsType = {
 export type IdeaEditFormPropsType = {
   data: IdeaType;
   trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  clientMode?: boolean;
 };
 
 // export type LeaderRole = 'Backend' | 'Frontend' | 'UI | UX Designer';

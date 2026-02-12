@@ -101,7 +101,7 @@ export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
           />
 
           <DropdownMenu.Item asChild>
-            <NavLink to="/admin/idea-management/portfolio/import">
+            <NavLink to="/admin/portfolio-management/create-portfolio">
               Import Portfolio
             </NavLink>
           </DropdownMenu.Item>

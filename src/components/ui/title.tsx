@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from './button';
 
 const Title = ({
-  page,
   title = 'Page Title',
   onCreate = false,
   showSearch = true,
@@ -182,7 +181,7 @@ const Title = ({
             className="h-11 px-8"
             onClick={onCreate}
           >
-            Create {page}
+            Create
           </Button>
         )}
       </div>
