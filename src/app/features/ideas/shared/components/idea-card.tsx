@@ -89,7 +89,7 @@ export default function IdeaCard({
           <button
             type="button"
             disabled={disableActions}
-            // onClick={() => onReact?.(idea)}
+            onClick={() => onReact?.()}
             className="flex text-xs items-center gap-x-2 hover:text-white transition disabled:opacity-50"
           >
             <HeartIcon className="w-4" />

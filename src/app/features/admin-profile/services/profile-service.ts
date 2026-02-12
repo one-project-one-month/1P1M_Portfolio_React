@@ -32,7 +32,7 @@ export const profileService = {
     //TODO: we need to refactor how we get userID
 
     const formData = new FormData();
-    formData.append('devProfileId', userId);
+    formData.append('devProfileId', userId as any);
     formData.append('file', file);
 
     const response = await apiClient.patch(
