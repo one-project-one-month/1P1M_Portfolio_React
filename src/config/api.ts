@@ -50,7 +50,6 @@ export const API_ENDPOINTS = {
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
-  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjectIdeas',
   UPDATE_PROJECT_IDEA: '/portfolio/api/v1/project-idea/updateProjectIdea',
   ASSIGN_LEADER: '/portfolio/api/v1/project-idea/assignLeader',
   TIMELINES: 'portfolio/api/v1/timelines',
