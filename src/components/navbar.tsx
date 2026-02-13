@@ -75,6 +75,7 @@ function Navbar({ auth }: NavbarProps) {
             email={auth?.email}
             img={auth?.profile ?? sampleUserImgUrl}
             username={auth.username}
+            role={auth?.role ?? 'USER'}
           />
         ) : (
           <Button

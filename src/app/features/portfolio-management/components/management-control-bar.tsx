@@ -79,7 +79,7 @@ const ManagementControlBar = ({
           />
 
           <Button variant="primary" size="primary" onClick={onCreateProject}>
-            Create Idea
+            Create Portfolio
           </Button>
         </div>
       </div>

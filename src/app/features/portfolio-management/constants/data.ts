@@ -49,6 +49,7 @@ export interface ProjectData {
   repoLink?: string;
   reactCount?: number;
   viewCount?: number;
+  isReacted?: boolean;
 }
 
 // Project Types available in the form

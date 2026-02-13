@@ -57,6 +57,8 @@ export const useProfile = (userId: number | null) => {
   };
 
   const onSubmit = form.handleSubmit((values) => {
+    console.log(values);
+
     mutation.mutate(values);
   });
 
