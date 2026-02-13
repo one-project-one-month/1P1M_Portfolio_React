@@ -1,5 +1,4 @@
 import type { DropdownItem } from '@/types/portfolio-management';
-import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { ProjectData } from '../../constants/data';
@@ -127,65 +126,6 @@ export const PortfolioBasicInfo = ({
             )}
           />
         )}
-      </div>
-
-      {/* Dates */}
-      <div className="flex md:flex-row flex-col gap-6">
-        <div className="flex-1 flex flex-col gap-1">
-          <label className="text-[#F9FAFB] text-sm font-medium">
-            Start Date*
-          </label>
-          {isReadOnly ? (
-            <div className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal flex items-center">
-              {startDate || '-'}
-            </div>
-          ) : (
-            <div>
-              <div
-                onClick={() => !isReadOnly && openDatePicker('start')}
-                className={`h-10 px-3 pr-10 w-full bg-white/[0.09] border rounded-md text-[#F3F4F6] text-sm font-normal flex items-center cursor-pointer hover:border-[#9C39FC] transition-colors relative ${
-                  form.formState.errors.startDate
-                    ? 'border-red-500'
-                    : 'border-white/15'
-                }`}
-              >
-                <span
-                  className={startDate ? 'text-[#F3F4F6]' : 'text-[#6A7282]'}
-                >
-                  {startDate || 'e.g., Nov 15, 2025'}
-                </span>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white opacity-50 pointer-events-none" />
-              </div>
-              {form.formState.errors.startDate && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.startDate.message}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-        <div className="flex-1 flex flex-col gap-1">
-          <label className="text-[#F9FAFB] text-sm font-medium">
-            Completed Date (Optional)
-          </label>
-          {isReadOnly ? (
-            <div className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal flex items-center">
-              {completedDate || '-'}
-            </div>
-          ) : (
-            <div
-              onClick={() => !isReadOnly && openDatePicker('complete')}
-              className="h-10 px-3 pr-10 w-full bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal flex items-center cursor-pointer hover:border-[#9C39FC] transition-colors relative"
-            >
-              <span
-                className={completedDate ? 'text-[#F3F4F6]' : 'text-[#6A7282]'}
-              >
-                {completedDate || 'e.g., Dec 15, 2025'}
-              </span>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-white opacity-50 pointer-events-none" />
-            </div>
-          )}
-        </div>
       </div>
 
       <DatePickerDialog
