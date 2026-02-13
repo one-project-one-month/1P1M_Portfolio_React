@@ -1,201 +1,122 @@
-import { COLORS } from '@/constants/colors';
+import sampleImg from '@/assets/sample-user-img.jpg';
 import { cn } from '@/lib/utils';
-import { useUserInfoStore } from '@/store/user-info-store';
 import { Tooltip } from '@radix-ui/themes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ExternalLink, Eye, Heart } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
 import { ProjectIdeaDropDown } from '../../admin/components/project-idea-drop-down';
 import { changeProjectIdeaStatus, changeProjectIdeaStatusColor } from '../lib';
-import {
-  reactProjectIdea,
-  unreactProjectIdea,
-} from '../services/project-idea.service';
 import type { IdeaType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 type Props = {
   site?: 'admin' | 'client';
   idea: IdeaType;
+  onReact?: () => void;
+  disableActions?: false;
 };
 
-export default function IdeaCard({ site, idea }: Props) {
-  const queryClient = useQueryClient();
-  const { userInfo } = useUserInfoStore();
+export default function IdeaCard({
+  site,
+  idea,
+  disableActions = false,
+  onReact,
+}: Props) {
+  const {
+    projectIdeaName = 'Untitled Project',
+    status = 'PENDING',
+    description = 'No description provided.',
+    projectTypes = [],
+    ownerProfilePicUrl,
+    leaderProfilePicUrl,
+    reactionCount = 0,
+    viewCount = 0,
+  } = idea;
 
-  // Initialize reaction state from localStorage
-  const [isReacted, setIsReacted] = useState(() => {
-    if (!userInfo?.userId) return false;
-    const storageKey = `reactions_user_${userInfo.userId}`;
-    const reactions = localStorage.getItem(storageKey);
-    if (!reactions) return false;
-    try {
-      const parsed: Record<number, boolean> = JSON.parse(reactions);
-      return parsed[idea.projectIdeaId] === true;
-    } catch {
-      return false;
-    }
-  });
-  const [reactionCount, setReactionCount] = useState(idea.reactionCount);
-
-  // Sync reaction state to localStorage
-  useEffect(() => {
-    if (!userInfo?.userId) return;
-
-    const storageKey = `reactions_user_${userInfo.userId}`;
-    const reactions = localStorage.getItem(storageKey);
-    let parsed: Record<number, boolean> = {};
-
-    if (reactions) {
-      try {
-        parsed = JSON.parse(reactions);
-      } catch {
-        parsed = {};
-      }
-    }
-
-    if (isReacted) {
-      parsed[idea.projectIdeaId] = true;
-    } else {
-      delete parsed[idea.projectIdeaId];
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(parsed));
-  }, [isReacted, idea.projectIdeaId, userInfo?.userId]);
-
-  // React
-  const { mutate: react, isPending: isReacting } = useMutation({
-    mutationFn: () => reactProjectIdea(idea.projectIdeaId),
-    onSuccess: () => {
-      setIsReacted(true);
-      setReactionCount((prev) => prev + 1);
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
-    },
-    onError: (error) => {
-      console.error('Failed to react:', error);
-    },
-  });
-
-  // Unreact
-  const { mutate: unreact, isPending: isUnreacting } = useMutation({
-    mutationFn: () => unreactProjectIdea(idea.projectIdeaId),
-    onSuccess: () => {
-      setIsReacted(false);
-      setReactionCount((prev) => Math.max(0, prev - 1));
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
-    },
-    onError: (error) => {
-      console.error('Failed to unreact:', error);
-    },
-  });
-
-  const handleReactionToggle = () => {
-    if (!userInfo) {
-      // Optionally show a login prompt or toast
-      return;
-    }
-
-    if (isReacting || isUnreacting) return;
-
-    if (isReacted) {
-      unreact();
-    } else {
-      react();
-    }
-  };
   return (
-    <div className="px-8 py-6 space-y-4 md:space-y-6 rounded-xl bg-[#FFFFFF1A] border border-[#FFFFFF1A] backdrop-blur-md">
-      {/* Title and status */}
-      <div className="flex items-start justify-between gap-2 md:gap-4">
-        <Tooltip content={idea.projectIdeaName}>
-          <h3 className="capitalize text-lg md:text-xl font-bold text-white flex-1 line-clamp-2">
-            {idea.projectIdeaName}
+    <div className="bg-white/10 flex flex-col gap-2 p-5 backdrop-blur-xs text-white/70 w-full rounded-xl border border-white/5">
+      <div className="flex justify-between items-center">
+        <Tooltip content={projectIdeaName}>
+          <h3 className="capitalize font-bold text-white flex-1 line-clamp-2">
+            {projectIdeaName}
           </h3>
         </Tooltip>
+
         <span
           className={cn(
-            'px-4 py-1 text-xs md:text-sm text-white rounded-md font-semibold whitespace-nowrap',
-            changeProjectIdeaStatusColor(idea.status),
+            'px-4 py-1 text-xs text-white rounded-md font-semibold whitespace-nowrap',
+            changeProjectIdeaStatusColor(status),
           )}
         >
-          {changeProjectIdeaStatus(idea.status)}
+          {changeProjectIdeaStatus(status)}
         </span>
       </div>
 
-      {/* Desc */}
-      <p className="line-clamp-2 text-sm md:text-base text-muted">
-        {idea.description}
+      <p className="text-sm line-clamp-2 h-10">
+        {description || 'No description provided.'}
       </p>
 
-      {/* Project types */}
-      <div className="flex items-center justify-start gap-2 md:gap-x-4 flex-wrap">
-        {idea.projectTypes.map((item) => (
-          <span
-            key={item}
-            className={`border border-[${COLORS.primary}]! px-3 py-1 md:px-5 text-xs md:text-sm text-muted rounded-md capitalize`}
-          >
-            {item}
-          </span>
+      <div className="flex items-center h-8 gap-x-1 flex-wrap">
+        {projectTypes.length > 0 ? (
+          projectTypes.map((ty) => (
+            <div
+              key={ty}
+              className="text-xs border border-primary-custom px-2 p-1 rounded-md"
+            >
+              {ty}
+            </div>
+          ))
+        ) : (
+          <span className="text-xs text-white/40">No project type</span>
+        )}
+      </div>
+      <div className="flex justify-between border-b py-4">
+        {[
+          { label: 'Submitter', url: ownerProfilePicUrl },
+          { label: 'Leader', url: leaderProfilePicUrl },
+        ].map(({ label, url }) => (
+          <div key={label} className="flex text-sm items-center gap-x-2">
+            <span>{label}</span>
+            <img
+              className="aspect-square w-6 object-cover rounded-full"
+              src={url || sampleImg}
+              alt={label}
+            />
+          </div>
         ))}
       </div>
 
-      {/* Submitter and leader */}
-      <div className="flex items-center justify-between gap-x-4 md:gap-x-8 lg:gap-x-16 mt-10">
-        <div className="w-1/2 flex items-center justify-start gap-4">
-          <span className="text-sm md:text-lg text-muted whitespace-nowrap">
-            Submitter:
-          </span>
-          <img
-            src={idea.ownerProfilePicUrl}
-            alt={idea.devName}
-            className="size-8 md:size-10 rounded-full shrink-0"
-          />
-        </div>
-      </div>
-
-      <hr />
-
-      {/* Like, view and edit */}
-      <div className="flex items-center justify-between p-1 md:p-2">
-        <div className="w-1/2 flex items-center justify-start gap-2 md:gap-6">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-x-4">
           <button
             type="button"
-            onClick={handleReactionToggle}
-            disabled={isReacting || isUnreacting || !userInfo}
-            className={cn(
-              'flex items-center gap-1 md:gap-2 text-sm md:text-base transition-colors',
-              isReacted
-                ? 'text-red-500 hover:text-red-600'
-                : 'text-muted hover:text-red-500',
-              (!userInfo || isReacting || isUnreacting) &&
-                'opacity-50 cursor-not-allowed',
-            )}
+            disabled={disableActions}
+            onClick={() => onReact?.()}
+            className="flex text-xs items-center gap-x-2 hover:text-white transition disabled:opacity-50"
           >
-            <Heart size={25} className={cn(isReacted && 'fill-current')} />
-            {reactionCount}
+            <HeartIcon className="w-4" />
+            <span>{reactionCount}</span>
           </button>
-          <span className="flex items-center gap-1 md:gap-2 text-muted text-sm md:text-base">
-            <Eye size={25} />
-            {idea.viewCount}
-          </span>
+
+          <div className="flex text-xs items-center gap-x-2">
+            <Eye className="w-4" />
+            <span>{viewCount}</span>
+          </div>
         </div>
-        <div className="w-1/2 flex items-center justify-end">
-          {site === 'admin' ? (
-            <ProjectIdeaDropDown type="grid" data={idea} />
-          ) : (
-            <ProjectIdeaDetailDialog
-              data={idea}
-              trigger={
-                <button
-                  type="button"
-                  className="text-white hover:text-[#A855F7] transition-colors"
-                >
-                  <ExternalLink size={25} />
-                </button>
-              }
-            />
-          )}
-        </div>
+
+        {site === 'admin' ? (
+          <ProjectIdeaDropDown type="grid" data={idea} />
+        ) : (
+          <ProjectIdeaDetailDialog
+            data={idea}
+            trigger={
+              <button
+                type="button"
+                className="text-white hover:text-[#A855F7] transition-colors"
+              >
+                <ExternalLink size={18} />
+              </button>
+            }
+          />
+        )}
       </div>
     </div>
   );

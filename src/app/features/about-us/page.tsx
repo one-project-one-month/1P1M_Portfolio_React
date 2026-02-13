@@ -3,6 +3,11 @@ import AboutUsCard from './components/about-us-card';
 import StatsGrid from './components/stats-grid';
 import TeamBar from './components/team-bar';
 
+import IconGrowSlots from '@/assets/icons/IconGrowSlots';
+import missionImg from '@/assets/mission.png';
+import valueImg from '@/assets/value.png';
+import vissionImg from '@/assets/vission.png';
+
 const AboutUsPage = () => {
   const navigate = useNavigate();
 
@@ -54,9 +59,36 @@ const AboutUsPage = () => {
           </div>
         </div>
         <div className="mt-12 flex flex-col lg:flex-row items-center justify-between w-full gap-8 lg:gap-6">
-          <AboutUsCard />
-          <AboutUsCard />
-          <AboutUsCard />
+          <AboutUsCard
+            title="Mission"
+            description="To provide a structured, fast-paced environment where designers and devs level up by shipping actual products, not just earning certificates."
+            image={missionImg}
+          />
+          <AboutUsCard
+            title="Vission"
+            description='To eliminate the "no experience" paradox and establish Myanmar’s tech talent as a global force of innovation'
+            image={vissionImg}
+          />
+          <AboutUsCard
+            title="Value"
+            description="To provide a structured, fast-paced environment where designers and devs level up by shipping actual products, not just earning certificates."
+            image={valueImg}
+          />
+        </div>
+      </section>
+
+      <section className="my-30 mt-40">
+        <div className="w-full h-full flex flex-col justify-center items-center">
+          <h2 className="text-4xl font-bold">
+            <span className="text-white">How We Build </span>
+            <span className="text-[#FFBA00]">Together</span>
+            <div className="w-24 h-1 bg-[#BD7AFD] mb-8" />
+          </h2>
+          <p className="text-[#B4BCD0] max-w-100 mx-auto w-full text-center text-md font-light">
+            Teams come together each month to turn ideas into real
+            products—fast, collaborative, and hands-on.
+          </p>
+          <IconGrowSlots />
         </div>
       </section>
 

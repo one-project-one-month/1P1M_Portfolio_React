@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL || 'http://3.26.96.212:8080',
+  API_URL: import.meta.env.VITE_API_URL,
 
   // OAuth Configuration
   GITHUB_CLIENT_ID: import.meta.env.VITE_GITHUB_CLIENT_ID,
@@ -30,6 +30,7 @@ export const API_ENDPOINTS = {
   RESET_PASSWORD: '/portfolio/api/v1/auth/users/password/reset',
   GET_ALL_PROJECTS: '/portfolio/api/v2/project-portfolio',
   REACT_PROJECT: '/portfolio/api/v1/project-portfolio/react',
+  UNREACT_PROJECT: '/portfolio/api/v1/project-portfolio/unreact',
   REACT_PROJECT_IDEA: '/portfolio/api/v1/project-idea/react',
   UNREACT_PROJECT_IDEA: '/portfolio/api/v1/project-idea/unreact',
   GET_IDEA_REACTION_COUNT: '/portfolio/api/v1/project-idea/react/count',
@@ -38,6 +39,7 @@ export const API_ENDPOINTS = {
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
   GET_PROFILE_DATA: '/portfolio/api/v1/auth/users/getProfileData',
   UPDATE_PROFILE: '/portfolio/api/v1/profiles',
+  GET_PROJECT_IDEAS: '/portfolio/api/v1/project-idea/getAllProjects',
   // V2 Endpoints
   CREATE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   CREATE_PROJECT_V2: '/portfolio/api/v2/project-portfolio',

@@ -26,7 +26,9 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     leader: getTeamLeaderFromMembers(allMembers),
     title: item.name,
     projectName: item.name,
-    status: mapBackendToFrontendStatus(item.status),
+    status: mapBackendToFrontendStatus(
+      item.projectPortfolioStatus || item.status,
+    ),
     members: allMembers.map((m: any) => ({
       ...m,
       role:
@@ -61,7 +63,8 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     description: item.description || '',
     projectLink: item.projectLink || '',
     repoLink: item.repoLink || '',
-    reactCount: item.reactCount || 0,
+    reactCount: item.reactedCount || item.reactCount || 0,
     viewCount: item.viewCount || 0,
+    isReacted: item.isReacted || false,
   };
 };

@@ -31,3 +31,5 @@ export const useUserInfoStore = create<UserInfoStore>()(
     },
   ),
 );
+
+export const userId = useUserInfoStore.getState().userInfo?.userId;

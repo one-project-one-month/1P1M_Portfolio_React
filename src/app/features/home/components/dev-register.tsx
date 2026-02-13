@@ -1,7 +1,8 @@
-import SkeletonCard from '@/components/ui/skeleton-card';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import type { DevProfile, FeaturedDevProps } from '@/types/dev';
+import { Users } from 'lucide-react';
 import DevCard from '../../developers/components/dev-card';
+import DevCardSkeleton from '../../developers/components/dev-skeleton-card';
 
 const FeaturedDevelopersSection = ({
   profiles,
@@ -19,7 +20,9 @@ const FeaturedDevelopersSection = ({
   };
 
   const renderSkeletons = () => {
-    return <SkeletonCard />;
+    return Array.from({ length: 6 }).map((_, i) => {
+      return <DevCardSkeleton key={i} />;
+    });
   };
 
   const renderError = () => (
@@ -36,8 +39,19 @@ const FeaturedDevelopersSection = ({
   const renderDevs = () => {
     if (devProfiles.length === 0) {
       return (
-        <div className="col-span-full py-12 text-gray-500">
-          No profiles found at this time.
+        <div className="col-span-full flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="p-4 rounded-full bg-white/5 mb-4">
+            <Users size={36} className="text-gray-500" />
+          </div>
+
+          <p className="text-lg font-medium text-gray-300">
+            No developer profiles yet
+          </p>
+
+          <p className="mt-2 text-sm text-gray-500 max-w-md">
+            We're still building our network. Check back later for featured
+            developers.
+          </p>
         </div>
       );
     }
