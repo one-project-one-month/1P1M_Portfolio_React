@@ -3,9 +3,7 @@ import { Flex } from '@radix-ui/themes';
 const PortfolioCardSkeleton = () => {
   return (
     <div className="animate-pulse w-full flex flex-col bg-[#FFFFFF17] backdrop-blur-md rounded-[12px] p-[24px] border border-[#FFFFFF33] box-border shadow-sm gap-4">
-      <div className="h-[145px] rounded overflow-hidden">
-        <div className="h-[145px] rounded bg-white/20" />
-      </div>
+      <div className="h-[145px] rounded-xl bg-white/20" />
 
       <div className="flex flex-col gap-2">
         <div className="h-3 w-3/6 rounded bg-white/15" />
@@ -26,11 +24,11 @@ const PortfolioCardSkeleton = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="h-7 w-2/6 rounded bg-white/15" />
+        <div className="h-7 w-20 rounded-lg bg-white/15" />
         <Flex gap="4">
-          <div className="h-5 w-10 rounded bg-white/15" />
-          <div className="h-5 w-10 rounded bg-white/15" />
-          <div className="h-5 w-10 rounded bg-white/15" />
+          <div className="h-5 w-8 rounded bg-white/15" />
+          <div className="h-5 w-8 rounded bg-white/15" />
+          <div className="h-5 w-8 rounded bg-white/15" />
         </Flex>
       </div>
     </div>

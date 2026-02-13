@@ -1,11 +1,9 @@
 import type { DropdownItem } from '@/types/portfolio-management';
-import { useState } from 'react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { ProjectData } from '../../constants/data';
 import { statusOptions } from '../../constants/data';
 import type { PortfolioFormValues } from '../../portfolio-schema';
 import StatusDropdown from '../status-dropdown';
-import DatePickerDialog from './date-picker-dialog';
 
 interface PortfolioBasicInfoProps {
   initialData?: ProjectData | null;
@@ -19,21 +17,9 @@ export const PortfolioBasicInfo = ({
   isReadOnly,
   accessFrom,
 }: PortfolioBasicInfoProps) => {
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [activeDateField, setActiveDateField] = useState<'start' | 'complete'>(
-    'start',
-  );
-
   const projectName = form.watch('projectName');
   const description = form.watch('description');
-  const startDate = form.watch('startDate');
-  const completedDate = form.watch('completedDate');
   const status = form.watch('status');
-
-  const openDatePicker = (field: 'start' | 'complete') => {
-    setActiveDateField(field);
-    setDatePickerOpen(true);
-  };
 
   return (
     <>
@@ -127,27 +113,6 @@ export const PortfolioBasicInfo = ({
           />
         )}
       </div>
-
-      <DatePickerDialog
-        isOpen={datePickerOpen}
-        onClose={() => setDatePickerOpen(false)}
-        selectedDate={
-          activeDateField === 'start'
-            ? startDate
-              ? new Date(startDate)
-              : null
-            : completedDate
-              ? new Date(completedDate)
-              : null
-        }
-        onSelect={(date) => {
-          if (activeDateField === 'start') {
-            form.setValue('startDate', date);
-          } else {
-            form.setValue('completedDate', date);
-          }
-        }}
-      />
     </>
   );
 };
