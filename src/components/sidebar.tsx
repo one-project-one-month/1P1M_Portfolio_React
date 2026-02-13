@@ -1,4 +1,4 @@
-import { opomIconUrl, sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { ADMIN_NAVS } from '@/constants';
 import { logout } from '@/lib/utils.ts';
 import { useUserInfoStore } from '@/store/user-info-store';
@@ -19,7 +19,11 @@ const Sidebar = () => {
 
         <nav className="text-sm">
           <div className="flex items-center gap-x-4 px-4">
-            <img src={sampleUserImgUrl} className="size-12 rounded-full" />
+            <img
+              src={user?.profile || ''}
+              className="size-12 rounded-full"
+              alt={user?.username}
+            />
             <Tooltip content={user?.username ?? 'User'}>
               <span className="font-medium text-base">
                 {user?.username ?? 'User'}
