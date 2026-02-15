@@ -28,7 +28,7 @@ const teamSchema = z.object({
 export const portfolioFormSchema = z.object({
   projectName: z.string().min(1, 'Project name is required'),
   description: z.string(),
-  startDate: z.string().min(1, 'Start date is required'),
+  startDate: z.string(),
   completedDate: z.string(),
   status: dropdownItemSchema.nullable(),
   technologies: z.array(technologySchema),

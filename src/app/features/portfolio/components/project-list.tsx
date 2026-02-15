@@ -1,8 +1,6 @@
-import projectImage from '@/assets/ProjectImage.png';
 import type { PortfolioProjectType } from '@/types/portfolio.type';
 import { List } from 'lucide-react';
 import React from 'react';
-import { useHandleReact } from '../hooks/use-handle-react';
 import PortfolioCardSkeleton from './portfolio-card-skeleton';
 import ProjectCard from './project-card';
 
@@ -13,8 +11,6 @@ const ProjectList = ({
   projects: PortfolioProjectType[];
   isLoading: boolean;
 }) => {
-  const { reactedProjects, handleReact } = useHandleReact(projects);
-
   return (
     <div className="w-full">
       {isLoading ? (
@@ -25,20 +21,12 @@ const ProjectList = ({
         </div>
       ) : (
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-          {reactedProjects.length > 0 ? (
-            reactedProjects.map((project) => (
+          {projects.length > 0 ? (
+            projects.map((project) => (
               <React.Fragment
                 key={`${project.id}-${projects.indexOf(project)}`}
               >
-                <ProjectCard
-                  image={project.projectPicUrl || projectImage}
-                  title={project.name}
-                  description={project.description}
-                  initialLikes={project.reactedCount || 0}
-                  initialViews={project.view_count || 0}
-                  onClickReact={() => handleReact(project.id)}
-                  project={project}
-                />
+                <ProjectCard project={project} />
               </React.Fragment>
             ))
           ) : (

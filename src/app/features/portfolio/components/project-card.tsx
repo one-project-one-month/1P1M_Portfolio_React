@@ -4,28 +4,59 @@ import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import PjImage from '@/assets/project-image.png';
-import type { DeveloperType, ProjectCardType } from '@/types/portfolio.type';
+import type {
+  DeveloperType,
+  PortfolioProjectType,
+} from '@/types/portfolio.type';
 import { Flex } from '@radix-ui/themes';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  useReactProject,
+  useUnreactProject,
+} from '../../portfolio-management/hooks/use-portfolio-query';
 import StatusTag from './status-tag';
 
-export default function ProjectCard({
-  image,
-  title,
-  initialLikes = 0,
-  initialViews = 0,
-  onClickReact,
-  project,
-}: ProjectCardType) {
-  const [liked, setLiked] = useState(initialLikes || false);
+interface ProjectCardProps {
+  project: PortfolioProjectType;
+}
+
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const {
+    id: projectId,
+    projectPicUrl: image,
+    name: title,
+    viewCount = 0,
+    reactedCount = 0,
+    isAlreadyReacted,
+    projectPortfolioStatus,
+  } = project;
+  const [isReacted, setIsReacted] = useState(isAlreadyReacted || false);
+  const [reactCount, setReactCount] = useState(reactedCount);
   const navigate = useNavigate();
 
-  const handleLikeClick = () => {
-    // Only trigger if not already liked locally
-    if (!liked) {
-      setLiked(true);
-      onClickReact();
+  const reactMutation = useReactProject();
+  const unreactMutation = useUnreactProject();
+
+  const handleReactClick = () => {
+    if (isReacted) {
+      setIsReacted(false);
+      setReactCount((prev) => Math.max(0, prev - 1));
+      unreactMutation.mutate(projectId, {
+        onError: () => {
+          setIsReacted(true);
+          setReactCount((prev) => prev + 1);
+        },
+      });
+    } else {
+      setIsReacted(true);
+      setReactCount((prev) => prev + 1);
+      reactMutation.mutate(projectId, {
+        onError: () => {
+          setIsReacted(false);
+          setReactCount((prev) => Math.max(0, prev - 1));
+        },
+      });
     }
   };
 
@@ -33,8 +64,8 @@ export default function ProjectCard({
 
   return (
     <div className="flex justify-center items-center">
-      <div className="w-full flex flex-col bg-[#FFFFFF17] backdrop-blur-md rounded-[12px] p-[24px] border border-[#FFFFFF33] box-border shadow-sm gap-4">
-        <div className="h-[145px] rounded-[8px] overflow-hidden">
+      <div className="w-full flex flex-col bg-[#FFFFFF17] backdrop-blur-md rounded-2xl p-[24px] border border-[#FFFFFF33] box-border shadow-sm gap-4">
+        <div className="h-36.25 rounded-xl overflow-hidden">
           <img
             src={image}
             alt={title}
@@ -60,12 +91,19 @@ export default function ProjectCard({
                 {allMembers
                   ?.slice(0, 3)
                   .map((member: DeveloperType, index: number) => (
-                    <img
-                      key={`${member.id}-${index}`}
-                      src={member.profilePictureUrl || sampleUserImgUrl}
-                      alt={member.name}
-                      className="h-8   w-8 rounded-full border-2 border-[#111827] object-cover"
-                    />
+                    <Link
+                      key={member.id}
+                      to={`/profile/${member.id}`}
+                      className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-[#1F2937] bg-gray-300 block hover:z-50 hover:-translate-y-1 hover:scale-150 transition-all duration-200 ease-out cursor-pointer"
+                      style={{ zIndex: allMembers.length - index }}
+                    >
+                      <img
+                        key={`${member.id}-${index}`}
+                        src={member.profilePictureUrl || sampleUserImgUrl}
+                        alt={member.name}
+                        className="h-8 w-8 rounded-full border-2 border-[#111827] object-cover"
+                      />
+                    </Link>
                   ))}
                 {allMembers && allMembers.length > 3 && (
                   <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#111827] bg-gray-800 text-xs font-bold text-white">
@@ -78,28 +116,27 @@ export default function ProjectCard({
         </div>
 
         <div className="flex items-center justify-between">
-          <StatusTag status={project.projectPortfolioStatus} />
+          <StatusTag status={projectPortfolioStatus} />
           <Flex gap="4">
             {/* Reaction Button */}
             <button
-              onClick={handleLikeClick}
+              onClick={handleReactClick}
               className="flex items-center gap-2 hover:scale-105 transition-transform"
             >
               <img
-                src={liked ? activeHeartIcon : heartIcon}
+                src={isReacted ? activeHeartIcon : heartIcon}
                 alt="Like"
                 className="w-5 h-5"
               />
               <span className="text-[#99A1AF] text-sm font-sans">
-                {/* DISPLAY PROP DIRECTLY */}
-                {initialLikes}
+                {reactCount}
               </span>
             </button>
 
             <div className="flex items-center gap-2">
-              <img src={eyeIcon} alt="Views" className="w-[25px] h-[25px]" />
+              <img src={eyeIcon} alt="Views" className="w-6.25 h-6.25" />
               <span className="text-[#99A1AF] text-sm font-sans">
-                {initialViews}
+                {viewCount}
               </span>
             </div>
 
