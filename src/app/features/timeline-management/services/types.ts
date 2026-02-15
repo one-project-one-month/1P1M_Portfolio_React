@@ -1,6 +1,7 @@
 export interface StatusOption {
   id: string;
   name: string;
+  slug: string;
 }
 
 export interface Timeline {

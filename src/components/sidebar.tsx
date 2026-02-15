@@ -1,5 +1,6 @@
-import { opomIconUrl, sampleUserImgUrl } from '@/assets/icons/iconUrls';
+import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { ADMIN_NAVS } from '@/constants';
+import { logout } from '@/lib/utils.ts';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { Tooltip } from '@radix-ui/themes';
 import { LogOut } from 'lucide-react';
@@ -18,7 +19,11 @@ const Sidebar = () => {
 
         <nav className="text-sm">
           <div className="flex items-center gap-x-4 px-4">
-            <img src={sampleUserImgUrl} className="size-12 rounded-full" />
+            <img
+              src={user?.profile || ''}
+              className="size-12 rounded-full"
+              alt={user?.username}
+            />
             <Tooltip content={user?.username ?? 'User'}>
               <span className="font-medium text-base">
                 {user?.username ?? 'User'}
@@ -40,7 +45,10 @@ const Sidebar = () => {
           ))}
         </nav>
       </div>
-      <button className="flex gap-x-4 p-4 items-center font-medium text-base w-full truncate transition-colors duration-100 text-white hover:bg-white/4">
+      <button
+        className="flex gap-x-4 p-4 items-center font-medium text-base w-full truncate transition-colors duration-100 text-white hover:bg-white/4"
+        onClick={logout}
+      >
         <LogOut size={20} />
         Logout
       </button>

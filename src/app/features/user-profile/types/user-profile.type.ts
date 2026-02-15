@@ -1,23 +1,18 @@
 import type { ApiResponseType } from '@/types/api-response.type';
 import z from 'zod';
-import { projectIdeaSchema } from '../../idea-management/types/project-idea.types';
-
-// export const Role = {
-//   ADMIN: 'ADMIN',
-//   USER: 'USER',
-// } as const;
+import { IdeaSchema } from '../../ideas/shared/types/project-idea.types';
 
 export const devProfileSchema = z.object({
   userId: z.number(),
-  email: z.string(),
+  email: z.email(),
   name: z.string(),
   profilePictureUrl: z.string(),
+  phone: z.string().optional(),
   github: z.string(),
   linkedIn: z.string(),
   aboutDev: z.string(),
   techStacks: z.array(z.string()),
   dev_id: z.number(),
-  phone: z.string().optional(),
   telegramUsername: z.string().optional(),
 });
 
@@ -49,30 +44,33 @@ export const projectPortfolioSchema = z.object({
   repoLink: z.string().optional(),
   viewCount: z.number(),
   reactedCount: z.number(),
-
   teams: z.array(teamSchema),
   projectTypes: z.array(z.string()),
 });
 
-const projectIdeaInProfileSchema = projectIdeaSchema
-  .omit({ id: true })
-  .extend({ projectIdeaId: z.number() });
+export const projectIdeaSchema = IdeaSchema;
 
 export const userProfileSchema = z.object({
   devProfile: devProfileSchema,
-  projectIdeas: z.array(projectIdeaInProfileSchema),
+  projectIdeas: z.array(IdeaSchema),
   projectPortfolios: z.array(projectPortfolioSchema),
 });
 
-export const editUserProfileSchema = devProfileSchema.omit({
-  userId: true,
-  email: true,
+export const editUserProfileSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  profilePictureUrl: z.string().optional(),
+  phone: z.string().optional().optional(),
+  github: z.string().optional(),
+  linkedIn: z.string().optional(),
+  aboutDev: z.string().optional(),
+  techStacks: z.array(z.string()).optional(),
+  dev_id: z.number(),
+  telegramUsername: z.string().optional(),
 });
 
 export type DevProfileType = z.infer<typeof devProfileSchema>;
-export type ProjectIdeaType = z.infer<typeof projectIdeaInProfileSchema>;
+export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
 export type UserProfileType = z.infer<typeof userProfileSchema>;
 export type UserProfileResponseType = ApiResponseType<UserProfileType>;
-
 export type EditUserProfileType = z.infer<typeof editUserProfileSchema>;
 export type UserProfileEditResponseType = ApiResponseType<EditUserProfileType>;

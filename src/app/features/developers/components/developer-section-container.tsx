@@ -1,11 +1,11 @@
 import DevProfileCard from '@/components/ui/dev-profile-card';
 import Pagination from '@/components/ui/pagination';
-import SkeletonCard from '@/components/ui/skeleton-card';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDevProfileQuery } from '../hooks/use-dev-profile';
+import DevCardSkeleton from './dev-skeleton-card';
 
 const DeveloperSectionContainer = ({
   searchTerm,
@@ -54,7 +54,7 @@ const DeveloperSectionContainer = ({
       <div className="grow">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {devsLoading || devsFetching ? (
-            <SkeletonCard />
+            <DevCardSkeleton />
           ) : (
             DevProfileDatas.map((devProfile, idx) => (
               <DevProfileCard

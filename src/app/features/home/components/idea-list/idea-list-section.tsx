@@ -1,5 +1,6 @@
-import { useGetProjectIdea } from '@/app/features/idea-management/hooks/use-project-ideas';
-import type { ProjectIdeaType } from '@/app/features/idea-management/types/project-idea.types';
+import { useGetProjectIdea } from '@/app/features/ideas/shared/hooks';
+import type { IdeaType } from '@/app/features/ideas/shared/types/project-idea.types';
+import { LightbulbOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import IdeaListCard from './idea-list-card';
 import IdeaListCardSkeleton from './idea-list-card-skeleton';
@@ -7,7 +8,7 @@ import IdeaListCardSkeleton from './idea-list-card-skeleton';
 function IdeaListSection() {
   const { data, isLoading } = useGetProjectIdea({ page: 0 });
 
-  const ideaLists = data?.data.slice(0, 6) ?? ([] as ProjectIdeaType[]);
+  const ideaLists = data?.data.slice(0, 6) ?? ([] as IdeaType[]);
 
   return (
     <section>
@@ -30,10 +31,16 @@ function IdeaListSection() {
             <IdeaListCardSkeleton key={i} />
           ))
         ) : ideaLists.length > 0 ? (
-          ideaLists.map((idea) => <IdeaListCard key={idea.id} idea={idea} />)
+          ideaLists.map((idea) => (
+            <IdeaListCard key={idea.projectIdeaId} idea={idea} />
+          ))
         ) : (
-          <div className="col-span-full text-center text-white/50 py-10">
-            No project ideas available.
+          <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+            <LightbulbOff size={48} className="mb-4 opacity-60" />
+            <p className="text-lg font-medium">No ideas yet</p>
+            <p className="text-sm mt-2 text-white/30">
+              Be the first to submit a project idea.
+            </p>
           </div>
         )}
       </div>
