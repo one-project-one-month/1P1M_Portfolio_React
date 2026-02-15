@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
       {
-        element: <ProtectedGuard allow={['USER']} />,
+        element: <ProtectedGuard allow={['USER', 'ADMIN']} />,
         children: [
           { path: '/portfolios', element: <PortfolioPage /> },
           { path: '/developers', element: <DeveloperPage /> },
