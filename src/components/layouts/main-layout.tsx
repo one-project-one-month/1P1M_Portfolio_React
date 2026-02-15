@@ -9,7 +9,7 @@ export default function MainLayout() {
   return (
     <Background>
       <div className="h-dvh w-dvw overflow-auto overflow-x-hidden">
-        <div className="max-w-7xl w-full mx-auto">
+        <div className="max-w-7xl px-5 w-full mx-auto">
           <Navbar auth={user ?? null} />
           <Outlet />
           <Footer />
