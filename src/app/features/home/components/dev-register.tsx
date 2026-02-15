@@ -14,9 +14,7 @@ const FeaturedDevelopersSection = ({
   const devProfiles = profiles ?? [];
 
   const handleProfileView = (devData: DevProfile) => {
-    const identifier = devData.name || devData.dev_id;
-
-    goTo(`/profile/${identifier}`, { state: { devData } });
+    goTo(`/profile/${devData.dev_id}`);
   };
 
   const renderSkeletons = () => {

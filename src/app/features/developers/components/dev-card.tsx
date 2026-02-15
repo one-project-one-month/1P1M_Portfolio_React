@@ -13,8 +13,7 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
     <div className="w-full mt-12">
       <div className="h-full bg-white/10 rounded-lg p-6 relative flex flex-col backdrop-blur-xs overflow-visible border border-white/5">
         <div className="flex gap-6">
-          {/* LEFT */}
-          <div className="flex flex-col items-center shrink-0 w-[120px]">
+          <div className="flex flex-col items-center shrink-0 w-30">
             <div className="size-[120px] -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
               <img
                 src={profilePictureUrl || sampleUserImgUrl}
@@ -50,13 +49,12 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
             )}
           </div>
 
-          {/* RIGHT */}
           <div className="flex flex-col pt-1 w-full text-start overflow-hidden">
             <h3 className="text-2xl font-bold text-white truncate leading-tight">
               {name}
             </h3>
 
-            <div className="mt-2 mb-3 min-h-[28px]">
+            <div className="mt-2 mb-3 min-h-7">
               <span className="inline-block bg-[#2E3140] border border-white/10 text-[#7F8EA3] text-xs px-3 py-1 rounded-lg truncate max-w-full">
                 {tech_stack?.length
                   ? tech_stack.slice(0, 2).join(', ')

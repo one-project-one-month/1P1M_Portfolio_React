@@ -1,5 +1,6 @@
 import projectImage from '@/assets/ProjectImage.png';
 import type { PortfolioProjectType } from '@/types/portfolio.type';
+import { List } from 'lucide-react';
 import React from 'react';
 import { useHandleReact } from '../hooks/use-handle-react';
 import PortfolioCardSkeleton from './portfolio-card-skeleton';
@@ -41,9 +42,11 @@ const ProjectList = ({
               </React.Fragment>
             ))
           ) : (
-            <div className="col-span-full flex items-center justify-center py-12">
-              <p className="text-white text-center text-lg">
-                No projects found.
+            <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+              <List size={48} className="mb-4 opacity-60" />
+              <p className="text-lg font-medium">No Portfolios yet</p>
+              <p className="text-sm mt-2 text-white/30">
+                Create a project portfolio.
               </p>
             </div>
           )}
