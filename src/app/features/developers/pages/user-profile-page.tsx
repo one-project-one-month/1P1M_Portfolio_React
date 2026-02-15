@@ -16,7 +16,7 @@ function UserProfilePage() {
   const { userId } = useParams();
 
   if (!userId) {
-    return;
+    navigate('/not-found');
   }
 
   const { data, isLoading, isError } = useGetUserProfile({
@@ -27,7 +27,7 @@ function UserProfilePage() {
   const ideaLists = (data?.data.projectIdeas ?? []) as IdeaType[];
   const projectLists = data?.data.projectPortfolios ?? [];
 
-  if (isError) return navigate('/not-found');
+  if (isError) navigate('/not-found');
 
   return (
     <div className="w-full">
@@ -76,7 +76,10 @@ function UserProfilePage() {
               <h1 className="text-white text-xl mb-6 font-semibold">
                 Project Portfolios
               </h1>
-              <ProjectList isLoading={isLoading} projects={projectLists} />
+              <ProjectList
+                isLoading={isLoading}
+                projects={projectLists as any}
+              />
             </div>
           </div>
         )}
