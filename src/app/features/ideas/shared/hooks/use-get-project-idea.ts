@@ -15,6 +15,7 @@ export const useGetProjectIdea = ({
   return useQuery<IdeasResponseType>({
     queryKey: ['ideas', keyword, page, size, status, sortOrder],
     queryFn: () => getProjectIdea({ keyword, page, size, status, sortOrder }),
+    // staleTime: 5 * 60 * 1000,
     placeholderData: (previousData) => previousData,
   });
 };

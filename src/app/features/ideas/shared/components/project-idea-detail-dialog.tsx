@@ -1,6 +1,7 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import { COLORS } from '@/constants/colors';
+import { useUserInfoStore } from '@/store/user-info-store';
 import { Badge, Dialog } from '@radix-ui/themes';
 import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -15,12 +16,23 @@ const ProjectIdeaDetailDialog = ({
   trigger?: ReactNode;
   data: IdeaType;
 }) => {
+  const user = useUserInfoStore((state) => state.userInfo);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
+  // Check if current user is the owner of this idea
+  const userId = user?.userId ? user.userId : null;
+  const isOwner = userId != null && userId === data.dev_id;
+
+  // Check if current user is admin
+  const userRole = user?.role;
+  const isAdmin = userRole === 'ADMIN';
+
+  // Show edit button if owner or admin
+  const canEdit = isOwner || isAdmin;
+
   const handleEditClick = () => {
     setDetailDialogOpen(false);
-    // Small delay to allow detail dialog to close before opening edit dialog
     setTimeout(() => {
       setEditDialogOpen(true);
     }, 100);
@@ -172,13 +184,15 @@ const ProjectIdeaDetailDialog = ({
                   Cancel
                 </Button>
               </Dialog.Close>
-              <Button
-                type="button"
-                className="lg:w-1/2 text-lg"
-                onClick={handleEditClick}
-              >
-                Edit Idea
-              </Button>
+              {canEdit && (
+                <Button
+                  type="button"
+                  className="lg:w-1/2 text-lg"
+                  onClick={handleEditClick}
+                >
+                  Edit Idea
+                </Button>
+              )}
             </div>
           </div>
         </Dialog.Content>
@@ -188,6 +202,7 @@ const ProjectIdeaDetailDialog = ({
         data={data}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
+        clientMode={!isAdmin}
       />
     </>
   );

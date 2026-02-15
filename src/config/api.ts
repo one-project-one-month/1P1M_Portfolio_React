@@ -31,6 +31,9 @@ export const API_ENDPOINTS = {
   GET_ALL_PROJECTS: '/portfolio/api/v2/project-portfolio',
   REACT_PROJECT: '/portfolio/api/v1/project-portfolio/react',
   UNREACT_PROJECT: '/portfolio/api/v1/project-portfolio/unreact',
+  REACT_PROJECT_IDEA: '/portfolio/api/v1/project-idea/react',
+  UNREACT_PROJECT_IDEA: '/portfolio/api/v1/project-idea/unreact',
+  GET_IDEA_REACTION_COUNT: '/portfolio/api/v1/project-idea/react/count',
   GET_PROJECT_PORTFOLIO: '/portfolio/api/v2/project-portfolio',
   OPOM_REGISTER: '/portfolio/api/v1/auth/register',
   GET_ALL_OPOM_REGISTER: '/portfolio/api/v1/auth/getAllOpomRegister',
@@ -47,6 +50,8 @@ export const API_ENDPOINTS = {
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
+  UPDATE_PROJECT_IDEA: '/portfolio/api/v1/project-idea/updateProjectIdea',
+  ASSIGN_LEADER: '/portfolio/api/v1/project-idea/assignLeader',
   TIMELINES: 'portfolio/api/v1/timelines',
 
   // Admin

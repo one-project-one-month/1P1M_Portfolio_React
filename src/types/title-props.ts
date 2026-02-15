@@ -1,7 +1,6 @@
 import type { ChangeEvent } from 'react';
 
 export interface TitleProps {
-  page?: string;
   title?: string;
   onCreate?: (() => void) | false;
   showSearch?: boolean;
