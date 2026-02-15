@@ -1,7 +1,7 @@
 import { useToast } from '@/components/ui/toast-provider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { editProjectIdea } from '../../shared/services/project-idea.service';
+import { updateProjectIdeaInformation } from '../../shared/services/project-idea.service';
 import type {
   EditIdeaType,
   IdeaEditResponseType,
@@ -24,7 +24,7 @@ export const useEditIdeaManagement = () => {
     { id: number; formData: EditIdeaType }
   >({
     mutationFn: ({ id, formData }: { id: number; formData: EditIdeaType }) =>
-      editProjectIdea(id, formData),
+      updateProjectIdeaInformation(id, formData),
     onSuccess: (success) => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(success.message, 'success');

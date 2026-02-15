@@ -5,10 +5,10 @@ import type { DevProfile } from '@/types/dev';
 import { Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FILTER_OPTIONS } from '../ideas/shared/constants';
-import DevCard from './components/dev-card';
-import DevCardSkeleton from './components/dev-skeleton-card';
-import { useDevProfileQuery } from './hooks/use-dev-profile';
+import { FILTER_OPTIONS } from '../../ideas/shared/constants';
+import DevCard from '../components/dev-card';
+import DevCardSkeleton from '../components/dev-skeleton-card';
+import { useDevProfileQuery } from '../hooks/use-dev-profile';
 
 const Developer = () => {
   const [curPage, setCurPage] = useState(0);
@@ -50,11 +50,7 @@ const Developer = () => {
   const totalPages = data?.meta?.totalPages ?? 1;
 
   const handleProfileView = (devId: number) => {
-    const devData = DevProfileDatas.find((dev) => dev.dev_id === devId);
-
-    if (!devData) return;
-    const username = devData.email.split('@')[0];
-    navigate(`/profile/${username}`, { state: { devData } });
+    navigate(`/profile/${devId}`);
   };
 
   return (

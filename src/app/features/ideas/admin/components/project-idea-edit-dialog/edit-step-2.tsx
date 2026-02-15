@@ -14,10 +14,12 @@ export default function EditStep2({
   form,
   onBack,
   onNext,
+  isPending = false,
 }: {
   form: UseFormReturn<Partial<EditIdeaType>>;
   onBack: () => void;
   onNext: () => void;
+  isPending?: boolean;
 }) {
   const [leaderQuery, setLeaderQuery] = useState('');
   const { data: developersData, isLoading } = useGetDevelopers();
@@ -174,6 +176,7 @@ export default function EditStep2({
           size="primary"
           className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
           onClick={onBack}
+          disabled={isPending}
         >
           Back
         </Button>
@@ -184,8 +187,9 @@ export default function EditStep2({
           size="primary"
           className="flex-1 bg-[#A855F7] text-white hover:bg-[#9333EA]"
           onClick={onNext}
+          disabled={isPending}
         >
-          Next
+          {isPending ? 'Assigning...' : 'Next'}
         </Button>
       </div>
     </div>

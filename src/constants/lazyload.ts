@@ -46,15 +46,15 @@ export const ResetPasswordPage = PageLoader(
 );
 
 export const DeveloperPage = PageLoader(
-  lazy(() => import('@/app/features/developers/page')),
+  lazy(() => import('@/app/features/developers/pages/page')),
+);
+
+export const UserProfilePage = PageLoader(
+  lazy(() => import('@/app/features/developers/pages/user-profile-page')),
 );
 
 export const IdeaPage = PageLoader(
   lazy(() => import('@/app/features/ideas/client/pages/idea-page')),
-);
-
-export const UserProfilePage = PageLoader(
-  lazy(() => import('@/app/features/developers/components/user-profile')),
 );
 
 export const AdminLayout = PageLoader(

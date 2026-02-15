@@ -35,7 +35,7 @@ function Navbar({ auth }: NavbarProps) {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="relative flex w-full justify-between items-center py-6 z-50 px-4 md:px-8">
+    <nav className="relative flex w-full justify-between items-center py-6 z-50">
       {/* Logo Section */}
       <div className="">
         <img
