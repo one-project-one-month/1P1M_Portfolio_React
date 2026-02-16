@@ -1,6 +1,11 @@
 import { useGetProjectIdea } from '@/app/features/ideas/shared/hooks';
+import {
+  useReactProjectIdea,
+  useUnReactProjectIdea,
+} from '@/app/features/ideas/shared/hooks/project-idea.query';
 import type { IdeaType } from '@/app/features/ideas/shared/types/project-idea.types';
 import { LightbulbOff } from 'lucide-react';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import IdeaListCard from './idea-list-card';
 import IdeaListCardSkeleton from './idea-list-card-skeleton';
@@ -8,7 +13,19 @@ import IdeaListCardSkeleton from './idea-list-card-skeleton';
 function IdeaListSection() {
   const { data, isLoading } = useGetProjectIdea({ page: 0 });
 
-  const ideaLists = data?.data.slice(0, 6) ?? ([] as IdeaType[]);
+  const { mutate: react } = useReactProjectIdea();
+  const { mutate: unreact } = useUnReactProjectIdea();
+
+  const ideaLists = (data?.data.slice(0, 6) ?? []) as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
+
+  const handleReactIdea = useCallback(
+    (id: number, isReacted: boolean) => {
+      isReacted ? unreact(id) : react(id);
+    },
+    [react, unreact],
+  );
 
   return (
     <section>
@@ -32,7 +49,11 @@ function IdeaListSection() {
           ))
         ) : ideaLists.length > 0 ? (
           ideaLists.map((idea) => (
-            <IdeaListCard key={idea.projectIdeaId} idea={idea} />
+            <IdeaListCard
+              key={idea.projectIdeaId}
+              idea={idea}
+              onReact={handleReactIdea}
+            />
           ))
         ) : (
           <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">

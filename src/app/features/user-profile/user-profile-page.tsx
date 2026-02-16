@@ -1,6 +1,7 @@
 import PjImage from '@/assets/project-image.png';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { IdeaCard } from '../ideas/shared/components';
+import type { IdeaType } from '../ideas/shared/types/project-idea.types';
 import ProjectCard from '../portfolio/components/project-card';
 import { ProfileActions } from './components/profile-actions';
 import { ProfileHeader } from './components/profile-header';
@@ -18,7 +19,9 @@ const UserProfile = () => {
     userId,
   });
   const devProfile = data?.data.devProfile;
-  const projectIdeas = data?.data.projectIdeas;
+  const projectIdeas = data?.data.projectIdeas as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
   const projectPortfolios = data?.data.projectPortfolios;
 
   if (isPending) {
@@ -73,6 +76,7 @@ const UserProfile = () => {
               devName: '',
               ownerProfilePicUrl: idea.ownerProfilePicUrl || '',
               leaderProfilePicUrl: idea.leaderProfilePicUrl || '',
+              isAlreadyReacted: idea.isAlreadyReacted,
             }}
           />
         ))}

@@ -1,14 +1,29 @@
 import IdeaListCardSkeleton from '@/app/features/home/components/idea-list/idea-list-card-skeleton';
+import { useCallback } from 'react';
+import {
+  useReactProjectIdea,
+  useUnReactProjectIdea,
+} from '../hooks/project-idea.query';
 import type { IdeaType } from '../types/project-idea.types';
 import { EmptyIdeasState, IdeaCard } from './';
 
 type Props = {
   site: 'admin' | 'client';
-  data: IdeaType[];
+  data: (IdeaType & { isAlreadyReacted: boolean })[];
   isLoading?: boolean;
 };
 
 const IdeaGrid = ({ site, data, isLoading = false }: Props) => {
+  const { mutate: react } = useReactProjectIdea();
+  const { mutate: unreact } = useUnReactProjectIdea();
+
+  const handleReactIdea = useCallback(
+    (id: number, isReacted: boolean) => {
+      isReacted ? unreact(id) : react(id);
+    },
+    [react, unreact],
+  );
+
   if (isLoading) {
     return (
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
@@ -26,7 +41,12 @@ const IdeaGrid = ({ site, data, isLoading = false }: Props) => {
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12">
       {data.map((idea) => (
-        <IdeaCard key={idea.projectIdeaId} site={site} idea={idea} />
+        <IdeaCard
+          key={idea.projectIdeaId}
+          site={site}
+          idea={idea}
+          onReact={handleReactIdea}
+        />
       ))}
     </div>
   );
