@@ -1,3 +1,4 @@
+import type { YearToDateGrowthResponse } from '@/types/dashboard.type';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -35,24 +36,6 @@ const labels = [
   'December',
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: [100, 10, 30, null, 40, 30, null, 30, 12, 80, 50],
-      borderColor: '#9C39FC',
-      backgroundColor: 'white',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => Math.floor(Math.random() * 100)),
-      borderColor: '#00C951',
-      backgroundColor: 'white',
-    },
-  ],
-};
-
 const options = {
   responsive: true,
   plugins: {
@@ -78,7 +61,33 @@ const options = {
   },
 };
 
-function YearToDateGrowthChart() {
+type YearToDateGrowthChartProps = {
+  chartData: YearToDateGrowthResponse | null;
+  check: { hasRegisters: boolean; hasProjects: boolean };
+};
+
+function YearToDateGrowthChart({
+  chartData,
+  check,
+}: YearToDateGrowthChartProps) {
+  const data = {
+    labels,
+    datasets: [
+      check.hasProjects && {
+        label: 'Projects',
+        data: chartData?.data.projects ?? [],
+        borderColor: '#9C39FC',
+        backgroundColor: 'white',
+      },
+      check.hasRegisters && {
+        label: 'Registers',
+        data: chartData?.data.register ?? [],
+        borderColor: '#00C951',
+        backgroundColor: 'white',
+      },
+    ],
+  };
+
   return <Line className="max-h-76" options={options} data={data} />;
 }
 
