@@ -5,7 +5,7 @@ export type DashboardSummary = {
     currentTitle: string;
     currentTeams: number;
     currentProjects: number;
-    nextRegister: Date; //ISO string
+    nextRegister: Date;
   };
 };
 
@@ -31,7 +31,7 @@ export type PopularPortfolioAndProjectIdeas = {
       member: number;
       status: string;
       progress: number;
-    };
+    }[];
     popularProjects: {
       projectName: string;
       submitter: string;
@@ -70,4 +70,13 @@ export type RoleDistributionAndTechStackResponse = {
     roles: { label: string; rate: number }[];
     techStacks: { label: string; rate: number }[];
   };
+};
+
+export type DashboardSummaryData = {
+  totalProjects: number;
+  currentActiveUsers: number;
+  currentTitle: string;
+  currentTeams: number;
+  currentProjects: number;
+  nextRegister: string | null;
 };
