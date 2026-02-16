@@ -31,7 +31,7 @@ export type PopularPortfolioAndProjectIdeas = {
       member: number;
       status: string;
       progress: number;
-    }[];
+    };
     popularProjects: {
       projectName: string;
       submitter: string;
