@@ -1,6 +1,5 @@
 import { UserManagementDropDown } from '@/app/features/user-management/components/user-management-drop-down';
 import type { UserManagementType } from '@/app/features/user-management/types/user-management.types';
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Link } from 'react-router-dom';
 
 const truncate = (text: string, max = 15) =>
@@ -13,11 +12,11 @@ const statusColor: Record<UserManagementType['status'], string> = {
 
 const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
   return (
-    <div className="mx-auto overflow-x-auto">
-      <div className="rounded-xl border border-slate-700 bg-slate-900/20">
+    <div className="mx-auto overflow-x-auto mt-6">
+      <div className="rounded-xl border border-[#99A1AF] bg-[rgba(255,255,255,0.09)]">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-white text-bold text-xl">
+            <tr className="border-b border-[#99A1AF] font-sans text-[#FFFFFF] text-bold text-xl">
               {[
                 'No',
                 'Name',
@@ -37,19 +36,22 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
 
           <tbody className="divide-y divide-slate-800">
             {data.map((user) => (
-              <tr key={user.userId} className="hover:bg-slate-800/40">
-                <td className="py-4 text-center text-slate-400">
+              <tr
+                key={user.userId}
+                className="hover:bg-slate-800/40 border-b font-medium text-sm text-[#99A1AF] border-[#99A1AF]"
+              >
+                <td className="py-9 text-center text-slate-400">
                   {user.devId}
                 </td>
                 <td className="py-4 ">
                   <div className="flex  items-center gap-3">
                     <img
-                      src={sampleUserImgUrl}
+                      src={user.profilePictureUrl}
                       className="size-10 rounded-full object-cover"
                     />
                     <Link
                       to={`view-details/${user.userId}`}
-                      className=" text-slate-400 text-sm hover:text-[#9C39FC] font-semibold"
+                      className=" text-slate-400 text-sm capitalize hover:text-[#9C39FC] font-semibold"
                     >
                       {truncate(user.name, 5)}
                     </Link>
@@ -61,10 +63,10 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
                 <td className="py-4 text-center text-slate-400">
                   {user.telegramUsername}
                 </td>
-                <td className="py-4 text-center text-slate-400">
+                <td className="py-4 text-center text-slate-400 underline">
                   {truncate(user.githubUrl, 14)}
                 </td>
-                <td className="py-4 text-center text-slate-400">
+                <td className="py-4 text-center text-slate-400 underline">
                   {truncate(user.linkedUrl, 15)}
                 </td>
                 <td className="py-4 text-center text-sm">

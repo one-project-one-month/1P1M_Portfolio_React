@@ -37,7 +37,7 @@ const UserManagementContainer = ({
     <div>
       <UserManagementTable data={items} />
 
-      <div className="flex items-center justify-between mt-14">
+      <div className="flex items-center text-center justify-between mt-14">
         {/* Total Count */}
         <span className={`text-[${COLORS.secondary}] font-semibold`}>
           Total - {totalItems}

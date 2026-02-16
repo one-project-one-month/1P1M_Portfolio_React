@@ -67,7 +67,7 @@ export const UserManagementHeaderSection = ({
 
           <InputField
             type="text"
-            placeholder="Search by project title"
+            placeholder="Search by user"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full pl-12"

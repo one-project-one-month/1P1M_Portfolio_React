@@ -1,15 +1,15 @@
 import {
   banUserService,
   editUserManagementService,
-  getUserManagementDetail,
   getUserManagementService,
+  getUserProfileDetail,
 } from '@/app/features/user-management/services/user-management.service';
 import {
   type EditUserManagementType,
   type GetUserManagementParamsType,
-  type UserManagementDetailResponseType,
   type UserManagementEditResponseType,
   type UserManagementResponseType,
+  type UserProfileDetailResponseType,
 } from '@/app/features/user-management/types/user-management.types';
 import { useToast } from '@/components/ui/toast-provider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -65,10 +65,18 @@ export const useEditUserManagement = () => {
   });
 };
 
-export const useGetUserManagementDetail = (userId: number) => {
-  return useQuery<UserManagementDetailResponseType, AxiosError>({
+// export const useGetUserManagementDetail = (userId: number) => {
+//   return useQuery<UserManagementDetailResponseType, AxiosError>({
+//     queryKey: ['user-management-detail', userId],
+//     queryFn: () => getUserManagementDetail(userId),
+//     enabled: userId !== undefined && !isNaN(userId),
+//   });
+// };
+
+export const useGetUserProfileDetail = (userId: number) => {
+  return useQuery<UserProfileDetailResponseType, AxiosError>({
     queryKey: ['user-management-detail', userId],
-    queryFn: () => getUserManagementDetail(userId),
+    queryFn: () => getUserProfileDetail(userId),
     enabled: userId !== undefined && !isNaN(userId),
   });
 };

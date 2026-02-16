@@ -5,6 +5,7 @@ import {
   type UserManagementDetailResponseType,
   type UserManagementEditResponseType,
   type UserManagementResponseType,
+  type UserProfileDetailResponseType,
 } from '@/app/features/user-management/types/user-management.types';
 import { API_ENDPOINTS } from '@/config/api';
 import type { AxiosError } from 'axios';
@@ -59,6 +60,23 @@ export const getUserManagementDetail = async (userId: number) => {
   try {
     const response = await apiClient.get<UserManagementDetailResponseType>(
       `${API_ENDPOINTS.GET_USER_MANAGEMENT_DETAIL}/${userId}`,
+    );
+
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error detail user:', e);
+    throw {
+      success: false,
+      message: 'Failed to load detail user',
+    };
+  }
+};
+
+export const getUserProfileDetail = async (userId: number) => {
+  try {
+    const response = await apiClient.get<UserProfileDetailResponseType>(
+      `${API_ENDPOINTS.GET_PROFILE_DATA}?userId=${userId}`,
     );
 
     return response.data;
