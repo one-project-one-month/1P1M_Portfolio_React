@@ -70,23 +70,32 @@ function YearToDateGrowthChart({
   chartData,
   check,
 }: YearToDateGrowthChartProps) {
-  const data = {
-    labels,
-    datasets: [
-      check.hasProjects && {
-        label: 'Projects',
-        data: chartData?.data.projects ?? [],
-        borderColor: '#9C39FC',
-        backgroundColor: 'white',
-      },
-      check.hasRegisters && {
-        label: 'Registers',
-        data: chartData?.data.register ?? [],
-        borderColor: '#00C951',
-        backgroundColor: 'white',
-      },
-    ],
-  };
+  const datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+  }[] = [];
+
+  if (check.hasProjects) {
+    datasets.push({
+      label: 'Projects',
+      data: chartData?.data.projects ?? [],
+      borderColor: '#9C39FC',
+      backgroundColor: 'white',
+    });
+  }
+
+  if (check.hasRegisters) {
+    datasets.push({
+      label: 'Registers',
+      data: chartData?.data.register ?? [],
+      borderColor: '#00C951',
+      backgroundColor: 'white',
+    });
+  }
+
+  const data = { labels, datasets };
 
   return <Line className="max-h-76" options={options} data={data} />;
 }
