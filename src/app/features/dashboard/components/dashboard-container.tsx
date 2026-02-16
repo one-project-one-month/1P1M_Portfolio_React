@@ -17,7 +17,6 @@ function DashboardContainer() {
     inactiveUsers,
     projectStatus,
     projectDeadlines,
-    popularData,
     roleDistribution,
   } = useDashboard();
 
