@@ -37,17 +37,15 @@ function Navbar({ auth }: NavbarProps) {
   return (
     <nav className="relative flex w-full justify-between items-center py-6 z-50">
       {/* Logo Section */}
-      <div className="">
-        <img
-          src={opomIconUrl}
-          alt="Company Logo"
-          className="cursor-pointer h-8 transition-transform active:scale-95"
-          onClick={() => {
-            handleHomeNav(userRole);
-            closeMenu();
-          }}
-        />
-      </div>
+      <img
+        src={opomIconUrl}
+        alt="Company Logo"
+        className="cursor-pointer h-8 transition-transform active:scale-95 hover:scale-105"
+        onClick={() => {
+          handleHomeNav(userRole);
+          closeMenu();
+        }}
+      />
 
       {/* Desktop Navigation Links */}
       <div className="hidden md:flex gap-x-10 font-medium">

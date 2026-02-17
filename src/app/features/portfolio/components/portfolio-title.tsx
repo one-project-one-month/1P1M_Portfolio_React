@@ -64,7 +64,7 @@ const PortfolioTitle = ({
   }, []);
 
   return (
-    <div className="relative w-full flex md:flex-row flex-col justify-between items-center gap-8 pt-3 pb-10">
+    <div className="relative w-full flex md:flex-row flex-col justify-between items-center gap-8 pt-6 pb-10">
       {/* Title & Desktop Search Section */}
       <div className="flex w-2/3 h-11 justify-between items-center gap-5">
         <div className="relative text-nowrap">

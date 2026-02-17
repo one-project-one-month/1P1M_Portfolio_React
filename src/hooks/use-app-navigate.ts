@@ -1,5 +1,6 @@
 import type { UserRole } from '@/types/nav-props';
 import { useNavigate, type NavigateOptions, type To } from 'react-router-dom';
+
 export const useAppNavigation = () => {
   const navigate = useNavigate();
   const goTo = (to: To, options?: NavigateOptions) => {
