@@ -1,14 +1,18 @@
 import { ChevronLeft } from 'lucide-react';
 import { Accordion } from 'radix-ui';
 import React from 'react';
-import '../style/config.css';
 
 type ConfigAccordionProps = {
+  fieldId: number;
   trigger: React.ReactNode;
   config: React.ReactNode;
 };
 
-const ConfigAccordion = ({ trigger, config }: ConfigAccordionProps) => {
+const ConfigAccordion = ({
+  fieldId,
+  trigger,
+  config,
+}: ConfigAccordionProps) => {
   return (
     <Accordion.Root
       className="AccordionRoot flex flex-col gap-4"
@@ -16,7 +20,7 @@ const ConfigAccordion = ({ trigger, config }: ConfigAccordionProps) => {
       defaultValue="item-1"
       collapsible
     >
-      <Accordion.Item className="AccordionItem" value="item-1">
+      <Accordion.Item className="AccordionItem" value={`item-${fieldId}`}>
         <Accordion.Header>
           <div className="group flex w-full items-center gap-10">
             {trigger}

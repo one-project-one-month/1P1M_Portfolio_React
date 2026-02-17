@@ -91,3 +91,7 @@ h3 {
     height: 0;
   }
 }
+
+.custom-select-container .rt-SelectTriggerInner {
+  color: white
+}
