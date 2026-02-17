@@ -9,7 +9,7 @@ import { useToast } from '@/components/ui/toast-provider';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const formatStatus = (val) =>
+const formatStatus = (val?: string) =>
   val ? val.charAt(0).toUpperCase() + val.slice(1).toLowerCase() : 'Active';
 
 const TimelineList: React.FC<TimelineProps> = ({ data, refreshData }) => {
