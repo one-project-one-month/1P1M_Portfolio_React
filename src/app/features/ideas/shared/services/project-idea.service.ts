@@ -11,6 +11,7 @@ import type {
   IdeaStatusType,
   IdeaStatusUpdateResponseType,
 } from '../types/project-idea.types';
+import { statusToNumber } from '../utils/status-mapper';
 
 // GET
 export const getProjectIdea = async ({
@@ -58,15 +59,18 @@ export const createProjectIdea = async (formData: CreateIdeaType) => {
 
 // Update
 export const updateProjectIdeaStatus = async (
-  id: number,
-  formData: IdeaStatusType,
+  projectIdeaId: number,
+  status: IdeaStatusType,
 ) => {
   try {
+    const numericStatus = statusToNumber(status.status);
+
     const response = await apiClient.patch<IdeaStatusUpdateResponseType>(
-      `${API_ENDPOINTS.PROJECT_IDEA}/updateProjectIdea`,
-      formData,
-      { params: { projectIdeaId: id } },
+      API_ENDPOINTS.PROJECT_IDEA,
+      null,
+      { params: { projectIdeaId, status: numericStatus } },
     );
+
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
@@ -79,11 +83,11 @@ export const updateProjectIdeaStatus = async (
 };
 
 // DELETE
-export const deleteProjectIdea = async (id: number) => {
+export const deleteProjectIdea = async (projectIdeaId: number) => {
   try {
     const response = await apiClient.delete<IdeaDeleteResponseType>(
       API_ENDPOINTS.PROJECT_IDEA,
-      { params: { projectIdeaId: id } },
+      { params: { projectIdeaId } },
     );
     return response.data;
   } catch (error) {
@@ -158,11 +162,11 @@ export const updateProjectIdeaInformation = async (
 // Assign Leader to Project Idea
 export const assignProjectLeader = async (
   projectIdeaId: number,
-  leaderId: number,
+  devId: number,
 ) => {
   try {
     const response = await apiClient.patch(API_ENDPOINTS.ASSIGN_LEADER, null, {
-      params: { projectIdeaId, leaderId },
+      params: { projectIdeaId, devId },
     });
     return response.data;
   } catch (error) {

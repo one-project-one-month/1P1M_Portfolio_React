@@ -19,7 +19,11 @@ const IdeaGrid = ({ site, data, isLoading = false }: Props) => {
 
   const handleReactIdea = useCallback(
     (id: number, isReacted: boolean) => {
-      isReacted ? unreact(id) : react(id);
+      if (isReacted) {
+        unreact(id);
+      } else {
+        react(id);
+      }
     },
     [react, unreact],
   );

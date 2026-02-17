@@ -5,7 +5,6 @@ import {
   AdminProfilePage,
   DashboardPage,
   DeveloperPage,
-  IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
   MyProfilePage,
@@ -98,11 +97,6 @@ const router = createBrowserRouter([
             element: <EditPortfolioPage />,
           },
           { path: 'idea-management', element: <IdeaManagementPage /> },
-          {
-            path: 'idea-management/portfolio/import',
-            element: <IdeaManagementEditPage />,
-          },
-
           { path: 'user-management', element: <UserManagement /> },
 
           {
