@@ -1,9 +1,11 @@
-import FormWrapper from '@/components/ui/form-wrapper';
+import { Button } from '@/components/ui/button';
+import FormBackground from '@/components/ui/form-bg';
 import PasswordField from '@/components/ui/password-field';
 import TextField from '@/components/ui/text-field';
 import { type FormEvent, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import AuthFormHeading from '../../auth-form-heading';
 import { checkEmailExists, sendOtpCode } from '../services/api';
 
 export default function RegisterForm() {
@@ -151,40 +153,69 @@ export default function RegisterForm() {
   }
 
   return (
-    <FormWrapper
-      title="Register Your Account"
-      subtitle="Please fill in the details below"
-      onSubmit={handleSubmit}
-      loading={loading}
-      buttonText="Continue"
-    >
-      <TextField
-        ref={emailRef}
-        type="email"
-        name="regemail"
-        id="regemail"
-        label="Email"
-        placeholder="nora@gmail.com"
-        error={emailError}
+    <FormBackground className="w-full max-w-md lg:max-w-lg px-4 sm:px-0 h-fit flex flex-col gap-6 mx-auto">
+      <AuthFormHeading
+        title="Register Your Account"
+        desc="Please fill in the details below"
       />
 
-      <PasswordField
-        ref={passwordRef}
-        name="password"
-        id="password"
-        label="Password"
-        placeholder="Enter your password"
-        error={passwordError}
-      />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="mb-1 relative">
+          <TextField
+            ref={emailRef}
+            type="email"
+            name="regemail"
+            id="regemail"
+            label="Email"
+            placeholder="nora@gmail.com"
+            error={emailError}
+          />
+        </div>
 
-      <PasswordField
-        ref={cfmpasswordRef}
-        name="cfmpassword"
-        id="cfmpassword"
-        label="Confirm Password"
-        placeholder="Confirm your password"
-        error={cmfPasswordError}
-      />
-    </FormWrapper>
+        <div className="mb-1 relative">
+          <PasswordField
+            ref={passwordRef}
+            name="password"
+            id="password"
+            label="Password"
+            placeholder="Enter your password"
+            error={passwordError}
+          />
+        </div>
+
+        <div className="mb-1 relative">
+          <PasswordField
+            ref={cfmpasswordRef}
+            name="cfmpassword"
+            id="cfmpassword"
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            error={cmfPasswordError}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          variant="primary"
+          size="primary"
+          className="w-full h-12 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          disabled={loading}
+        >
+          {loading ? 'Processing...' : 'Continue'}
+        </Button>
+      </form>
+
+      <div className="flex w-full items-center justify-center gap-1">
+        <span className="font-sans text-sm text-gray-300">
+          Already have an account?
+        </span>
+        <NavLink
+          to={'/auth/log-in'}
+          className="font-sans text-sm text-[#99A1AF] font-semibold hover:text-white transition-colors"
+        >
+          Login here
+        </NavLink>
+      </div>
+    </FormBackground>
   );
 }
