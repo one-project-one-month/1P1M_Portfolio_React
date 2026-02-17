@@ -9,6 +9,9 @@ import { useToast } from '@/components/ui/toast-provider';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
+const formatStatus = (val) =>
+  val ? val.charAt(0).toUpperCase() + val.slice(1).toLowerCase() : 'Active';
+
 const TimelineList: React.FC<TimelineProps> = ({ data, refreshData }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -103,7 +106,7 @@ const TimelineList: React.FC<TimelineProps> = ({ data, refreshData }) => {
                 <span
                   className={`px-2.5 py-1 rounded-m text-md text-white font-semibold`}
                 >
-                  {item.timelineStatus || 'Active'}
+                  {formatStatus(item.timeLineStatus)}
                 </span>
               </td>
               <td className="px-6 py-4 text-right">
