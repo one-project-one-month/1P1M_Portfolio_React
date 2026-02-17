@@ -1,13 +1,14 @@
 import Pagination from '@/components/ui/pagination';
-import SkeletonCard from '@/components/ui/skeleton-card';
 import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
+import { Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FILTER_OPTIONS } from '../ideas/shared/constants';
-import DevCard from './components/dev-card';
-import { useDevProfileQuery } from './hooks/use-dev-profile';
+import { FILTER_OPTIONS } from '../../ideas/shared/constants';
+import DevCard from '../components/dev-card';
+import DevCardSkeleton from '../components/dev-skeleton-card';
+import { useDevProfileQuery } from '../hooks/use-dev-profile';
 
 const Developer = () => {
   const [curPage, setCurPage] = useState(0);
@@ -49,15 +50,11 @@ const Developer = () => {
   const totalPages = data?.meta?.totalPages ?? 1;
 
   const handleProfileView = (devId: number) => {
-    const devData = DevProfileDatas.find((dev) => dev.dev_id === devId);
-
-    if (!devData) return;
-    const username = devData.email.split('@')[0];
-    navigate(`/profile/${username}`, { state: { devData } });
+    navigate(`/profile/${devId}`);
   };
 
   return (
-    <div className="flex flex-col min-h-[80vh]">
+    <div className="flex flex-col">
       <Title
         title="Developer Profiles"
         showSearch
@@ -71,11 +68,25 @@ const Developer = () => {
       <div className="grow">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {devsLoading || devsFetching ? (
-            <SkeletonCard />
+            Array.from({ length: 6 }).map((_, i) => <DevCardSkeleton key={i} />)
+          ) : DevProfileDatas.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+              <div className="p-5 rounded-full bg-white/5 mb-6">
+                <Users size={42} className="text-gray-500" />
+              </div>
+
+              <h3 className="text-xl font-semibold text-gray-300">
+                No Developers Found
+              </h3>
+
+              <p className="mt-3 text-sm text-gray-500 max-w-md">
+                Try adjusting your search or filter to find more developers.
+              </p>
+            </div>
           ) : (
-            DevProfileDatas.map((devProfile, idx) => (
+            DevProfileDatas.map((devProfile) => (
               <DevCard
-                key={idx}
+                key={devProfile.dev_id}
                 devProfile={devProfile}
                 viewProfile={() => handleProfileView(devProfile.dev_id)}
               />

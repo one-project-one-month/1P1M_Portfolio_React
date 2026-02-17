@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import type { ProjectData } from '../constants/data';
+import {
+  useReactProject,
+  useUnreactProject,
+} from '../hooks/use-portfolio-query';
 import ChangeStatusDialog from './change-status-dialog';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
@@ -45,9 +49,38 @@ export const ProjectCard = ({
     status,
     reactCount = 0,
     viewCount = 0,
+    isReacted = false,
   } = data;
   const displayMembers = members.slice(0, 3);
   const remainingCount = Math.max(0, members.length - 3);
+
+  const [localIsReacted, setLocalIsReacted] = useState(isReacted);
+  const [localReactCount, setLocalReactCount] = useState(reactCount);
+
+  const reactMutation = useReactProject();
+  const unreactMutation = useUnreactProject();
+
+  const handleReactClick = () => {
+    if (localIsReacted) {
+      setLocalIsReacted(false);
+      setLocalReactCount((prev) => Math.max(0, prev - 1));
+      unreactMutation.mutate(id, {
+        onError: () => {
+          setLocalIsReacted(true);
+          setLocalReactCount((prev) => prev + 1);
+        },
+      });
+    } else {
+      setLocalIsReacted(true);
+      setLocalReactCount((prev) => prev + 1);
+      reactMutation.mutate(id, {
+        onError: () => {
+          setLocalIsReacted(false);
+          setLocalReactCount((prev) => Math.max(0, prev - 1));
+        },
+      });
+    }
+  };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
@@ -235,10 +268,21 @@ export const ProjectCard = ({
           </span>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-[#9CA3AF]">
-              <Heart className="w-4 h-4" fill="#9CA3AF" />
-              <span className="text-sm">{formatCount(reactCount)}</span>
-            </div>
+            <button
+              onClick={handleReactClick}
+              className="flex items-center gap-1 text-[#9CA3AF] hover:text-red-500 transition-colors cursor-pointer"
+            >
+              <Heart
+                className="w-4 h-4"
+                fill={localIsReacted ? '#EF4444' : '#9CA3AF'}
+                stroke={localIsReacted ? '#EF4444' : '#9CA3AF'}
+              />
+              <span
+                className={`text-sm ${localIsReacted ? 'text-red-500' : ''}`}
+              >
+                {formatCount(localReactCount)}
+              </span>
+            </button>
 
             <div className="flex items-center gap-1 text-[#9CA3AF]">
               <Eye className="w-4 h-4" />

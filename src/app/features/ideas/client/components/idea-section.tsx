@@ -4,7 +4,7 @@ import IdeaList from './idea-list';
 
 type Props = {
   isLoading: boolean;
-  ideas: IdeaType[];
+  ideas: (IdeaType & { isAlreadyReacted: boolean })[];
   totalPages: number | 1;
   currentPage: 0 | number;
   onPageChange: (page: number) => void;

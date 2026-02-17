@@ -4,15 +4,15 @@ import { IdeaSchema } from '../../ideas/shared/types/project-idea.types';
 
 export const devProfileSchema = z.object({
   userId: z.number(),
-  email: z.string(),
+  email: z.email(),
   name: z.string(),
   profilePictureUrl: z.string(),
+  phone: z.string().optional(),
   github: z.string(),
   linkedIn: z.string(),
   aboutDev: z.string(),
   techStacks: z.array(z.string()),
   dev_id: z.number(),
-  phone: z.string().optional(),
   telegramUsername: z.string().optional(),
 });
 
@@ -56,9 +56,16 @@ export const userProfileSchema = z.object({
   projectPortfolios: z.array(projectPortfolioSchema),
 });
 
-export const editUserProfileSchema = devProfileSchema.omit({
-  userId: true,
-  email: true,
+export const editUserProfileSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  profilePictureUrl: z.string().optional(),
+  phone: z.string().optional().optional(),
+  github: z.string().optional(),
+  linkedIn: z.string().optional(),
+  aboutDev: z.string().optional(),
+  techStacks: z.array(z.string()).optional(),
+  dev_id: z.number(),
+  telegramUsername: z.string().optional(),
 });
 
 export type DevProfileType = z.infer<typeof devProfileSchema>;

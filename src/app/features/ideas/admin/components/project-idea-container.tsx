@@ -1,7 +1,10 @@
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { memo } from 'react';
-import type { IdeaContainerPropsType } from '../../shared/types/project-idea.types';
+import type {
+  IdeaContainerPropsType,
+  IdeaType,
+} from '../../shared/types/project-idea.types';
 import { useGetIdeaManagement } from '../hooks/use-idea-management';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
@@ -27,7 +30,9 @@ const IdeaContainer = ({
     return <div className="text-rose-400">Failed to load ideas</div>;
 
   // Ensure children always receive an array (empty when no data).
-  const items = data?.data ?? [];
+  const items = (data?.data ?? []) as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
   const totalItems = data?.meta?.totalItems;
   const totalPages = data?.meta?.totalItems
     ? Math.ceil(data.meta.totalItems / pageSize)

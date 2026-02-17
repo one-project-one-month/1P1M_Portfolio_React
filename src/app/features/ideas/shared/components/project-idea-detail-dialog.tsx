@@ -1,6 +1,7 @@
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import { COLORS } from '@/constants/colors';
+import { useUserInfoStore } from '@/store/user-info-store';
 import { Badge, Dialog } from '@radix-ui/themes';
 import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -15,12 +16,23 @@ const ProjectIdeaDetailDialog = ({
   trigger?: ReactNode;
   data: IdeaType;
 }) => {
+  const user = useUserInfoStore((state) => state.userInfo);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
+  // Check if current user is the owner of this idea
+  const userId = user?.userId ? user.userId : null;
+  const isOwner = userId != null && userId === data.dev_id;
+
+  // Check if current user is admin
+  const userRole = user?.role;
+  const isAdmin = userRole === 'ADMIN';
+
+  // Show edit button if owner or admin
+  const canEdit = isOwner || isAdmin;
+
   const handleEditClick = () => {
     setDetailDialogOpen(false);
-    // Small delay to allow detail dialog to close before opening edit dialog
     setTimeout(() => {
       setEditDialogOpen(true);
     }, 100);
@@ -150,35 +162,13 @@ const ProjectIdeaDetailDialog = ({
                   />
                   <div>
                     <h4 className="text-xl font-semibold capitalize">
-                      {data.devName || 'Unknown'}
+                      {data.devName || '-----'}
                     </h4>
                     <Dialog.Description className="font-thin">
                       {data.dev_Email ?? '-----'}
                     </Dialog.Description>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="text-xl font-semibold mb-2">Project Leader</h3>
-                {data.leader_id ? (
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={data.leaderProfilePicUrl}
-                      className="size-10 rounded-full object-cover"
-                      alt={data.leaderName || 'Leader'}
-                    />
-                    <div>
-                      <h4 className="text-xl font-semibold capitalize">
-                        {data.leaderName || 'Unknown'}
-                      </h4>
-                      <Dialog.Description className="font-thin">
-                        {data.leaderEmail ?? '-----'}
-                      </Dialog.Description>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center">-----</div>
-                )}
               </div>
             </div>
 
@@ -194,13 +184,15 @@ const ProjectIdeaDetailDialog = ({
                   Cancel
                 </Button>
               </Dialog.Close>
-              <Button
-                type="button"
-                className="lg:w-1/2 text-lg"
-                onClick={handleEditClick}
-              >
-                Edit Idea
-              </Button>
+              {canEdit && (
+                <Button
+                  type="button"
+                  className="lg:w-1/2 text-lg"
+                  onClick={handleEditClick}
+                >
+                  Edit Idea
+                </Button>
+              )}
             </div>
           </div>
         </Dialog.Content>
@@ -210,6 +202,7 @@ const ProjectIdeaDetailDialog = ({
         data={data}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
+        clientMode={!isAdmin}
       />
     </>
   );

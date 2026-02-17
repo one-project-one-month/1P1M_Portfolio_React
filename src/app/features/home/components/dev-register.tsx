@@ -1,7 +1,8 @@
-import SkeletonCard from '@/components/ui/skeleton-card';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import type { DevProfile, FeaturedDevProps } from '@/types/dev';
+import { Users } from 'lucide-react';
 import DevCard from '../../developers/components/dev-card';
+import DevCardSkeleton from '../../developers/components/dev-skeleton-card';
 
 const FeaturedDevelopersSection = ({
   profiles,
@@ -13,22 +14,27 @@ const FeaturedDevelopersSection = ({
   const devProfiles = profiles ?? [];
 
   const handleProfileView = (devData: DevProfile) => {
-    const identifier = devData.name || devData.dev_id;
-
-    goTo(`/profile/${identifier}`, { state: { devData } });
+    goTo(`/profile/${devData.dev_id}`);
   };
 
   const renderSkeletons = () => {
-    return <SkeletonCard />;
+    return Array.from({ length: 6 }).map((_, i) => {
+      return <DevCardSkeleton key={i} />;
+    });
   };
 
   const renderError = () => (
-    <div className="col-span-full py-12 text-center" role="alert">
-      <p className="text-lg text-red-400">Unable to load developer profiles.</p>
-      <p className="mt-2 text-sm text-gray-500">
-        {error instanceof Error
-          ? error.message
-          : 'Please check your connection.'}
+    <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+      <div className="rounded-full bg-white/5 mb-6">
+        <Users size={42} className="text-gray-500" />
+      </div>
+
+      <h3 className="text-xl font-semibold text-gray-300">
+        No Developers Found
+      </h3>
+
+      <p className="mt-3 text-sm text-gray-500 max-w-md">
+        Try adjusting your search or filter to find more developers.
       </p>
     </div>
   );
@@ -36,8 +42,19 @@ const FeaturedDevelopersSection = ({
   const renderDevs = () => {
     if (devProfiles.length === 0) {
       return (
-        <div className="col-span-full py-12 text-gray-500">
-          No profiles found at this time.
+        <div className="col-span-full flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="p-4 rounded-full bg-white/5 mb-4">
+            <Users size={36} className="text-gray-500" />
+          </div>
+
+          <p className="text-lg font-medium text-gray-300">
+            No developer profiles yet
+          </p>
+
+          <p className="mt-2 text-sm text-gray-500 max-w-md">
+            We're still building our network. Check back later for featured
+            developers.
+          </p>
         </div>
       );
     }
@@ -55,7 +72,7 @@ const FeaturedDevelopersSection = ({
 
   return (
     <section className="flex flex-col justify-center text-center text-gray-200 mb-12">
-      <div className="w-full flex justify-between items-end my-8 px-2">
+      <div className="w-full flex justify-between items-center my-8 px-2">
         <div>
           <h2 className="text-3xl md:text-5xl mb-2 font-bold">Dev Profiles</h2>
           <div className="w-1/2 h-2 rounded-full bg-primary-custom"></div>
