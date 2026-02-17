@@ -1,3 +1,4 @@
+import IconActiveHeart from '@/assets/icons/IconActiveHeart';
 import sampleImg from '@/assets/sample-user-img.jpg';
 import { cn } from '@/lib/utils';
 import { Tooltip } from '@radix-ui/themes';
@@ -9,8 +10,8 @@ import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
 type Props = {
   site?: 'admin' | 'client';
-  idea: IdeaType;
-  onReact?: () => void;
+  idea: IdeaType & { isAlreadyReacted: boolean };
+  onReact?: (id: number, isReacted: boolean) => void;
   disableActions?: false;
 };
 
@@ -29,6 +30,7 @@ export default function IdeaCard({
     leaderProfilePicUrl,
     reactionCount = 0,
     viewCount = 0,
+    isAlreadyReacted,
   } = idea;
 
   return (
@@ -89,10 +91,14 @@ export default function IdeaCard({
           <button
             type="button"
             disabled={disableActions}
-            onClick={() => onReact?.()}
+            onClick={() => onReact?.(idea.projectIdeaId, isAlreadyReacted)}
             className="flex text-xs items-center gap-x-2 hover:text-white transition disabled:opacity-50"
           >
-            <HeartIcon className="w-4" />
+            {isAlreadyReacted ? (
+              <IconActiveHeart className="w-4 text-white" />
+            ) : (
+              <HeartIcon className="w-4" />
+            )}
             <span>{reactionCount}</span>
           </button>
 

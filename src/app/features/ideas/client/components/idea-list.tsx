@@ -3,7 +3,7 @@ import type { IdeaType } from '../../shared/types/project-idea.types';
 
 type Props = {
   isLoading?: boolean;
-  data: IdeaType[];
+  data: (IdeaType & { isAlreadyReacted: boolean })[];
 };
 
 const IdeaList = ({ data, isLoading = false }: Props) => {

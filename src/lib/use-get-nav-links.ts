@@ -12,7 +12,7 @@ export const getNavLinks = (): NavLink[] => {
     {
       id: 4,
       name: 'About Us',
-      path: '/about us',
+      path: '/about-us',
     },
   ];
 

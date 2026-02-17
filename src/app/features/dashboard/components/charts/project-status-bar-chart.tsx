@@ -20,17 +20,6 @@ ChartJS.register(
 
 const labels = ['Active', 'Completed', 'On Hold'];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: [12, 18, 3],
-      backgroundColor: ['#00C951', '#9C39FC', '#FB2C36'],
-    },
-  ],
-};
-
 const options = {
   responsive: true,
   plugins: {
@@ -61,7 +50,22 @@ const options = {
   },
 };
 
-function ProjectStatusBarChart() {
+type ProjectStatusBarChartProps = {
+  chartData: number[];
+};
+
+function ProjectStatusBarChart({ chartData }: ProjectStatusBarChartProps) {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: chartData,
+        backgroundColor: ['#00C951', '#9C39FC', '#FB2C36'],
+      },
+    ],
+  };
+
   return (
     <div className="flex-1 relative">
       <Bar options={options} data={data} />

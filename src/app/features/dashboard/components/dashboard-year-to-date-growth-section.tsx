@@ -1,13 +1,34 @@
+import type { YearToDateGrowthResponse } from '@/types/dashboard.type';
 import { useState } from 'react';
 import YearToDateGrowthChart from './charts/year-to-date-growth-chart';
 import CheckboxWithText from './common/checkbox-with-text';
 import { DateRangePicker } from './common/date-range-picker';
 
-function DashboardYearToDateGrowthSection() {
+type DashboardYearToDateGrowthSectionProps = {
+  data: YearToDateGrowthResponse | null;
+};
+
+function DashboardYearToDateGrowthSection({
+  data,
+}: DashboardYearToDateGrowthSectionProps) {
   const [range, setRange] = useState({
     from: new Date(2026, 0),
     to: new Date(2026, 11),
   });
+
+  const [check, setCheck] = useState({ hasProjects: true, hasRegisters: true });
+
+  const handleProjectCheckToggle = () => {
+    setCheck((prev) => {
+      return { ...prev, hasProjects: !prev.hasProjects };
+    });
+  };
+
+  const handleRegisterCheckToggle = () => {
+    setCheck((prev) => {
+      return { ...prev, hasRegisters: !prev.hasRegisters };
+    });
+  };
 
   return (
     <div className="custom-card">
@@ -23,15 +44,15 @@ function DashboardYearToDateGrowthSection() {
           <div className="flex gap-2">
             <CheckboxWithText
               label="Projects"
-              checked={true}
-              onCheckedChange={() => {}}
+              checked={check.hasProjects}
+              onCheckedChange={handleProjectCheckToggle}
               textClassName="text-white"
               color="purple"
             />
             <CheckboxWithText
               label="OPOM Register"
-              checked={true}
-              onCheckedChange={() => {}}
+              checked={check.hasRegisters}
+              onCheckedChange={handleRegisterCheckToggle}
               textClassName="text-white"
               color="green"
             />
@@ -40,7 +61,7 @@ function DashboardYearToDateGrowthSection() {
             <DateRangePicker value={range} onChange={setRange as any} />
           </div>
         </div>
-        <YearToDateGrowthChart />
+        <YearToDateGrowthChart chartData={data} check={check} />
       </div>
     </div>
   );
