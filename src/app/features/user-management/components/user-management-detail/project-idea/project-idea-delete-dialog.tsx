@@ -1,11 +1,21 @@
+import type { IdeaDeleteResponseType } from '@/app/features/user-management/types/project-idea-type';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { type ReactNode } from 'react';
 
 type UserProjectIdeaDeleteProps = {
   trigger?: ReactNode;
   deleteOpen: boolean;
   setDeleteOpen: (open: boolean) => void;
+  deleteMutate: UseMutateFunction<
+    IdeaDeleteResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number },
+    unknown
+  >;
+  projectIdeaId: number;
 };
 
 const UserProjectIdeaDeleteDialog = ({

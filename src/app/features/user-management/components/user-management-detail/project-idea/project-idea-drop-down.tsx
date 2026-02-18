@@ -2,15 +2,22 @@ import UserProjectIdeaDeleteDialog from '@/app/features/user-management/componen
 import PorjectIdeaViewDetailDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-detail-dialog';
 import ProjectIdeaEditDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-edit-dialog';
 import UserProjectIdeaStatusChangeDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
+import { useDeleteProjectIdea } from '@/app/features/user-management/hook/use-project-idea';
+import type { IdeaType } from '@/app/features/user-management/types/project-idea-type';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
-
-export const ProjectIdeaDropDown = () => {
+export const ProjectIdeaDropDown = ({
+  projectIdeas,
+}: {
+  projectIdeas: IdeaType;
+}) => {
   const [viewDetailOpen, setViewDetailOpend] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [statusChangeOpen, setStatusChangeOpen] = useState(false);
+
+  const { mutate: deleteMutate } = useDeleteProjectIdea();
 
   return (
     <>
@@ -88,6 +95,8 @@ export const ProjectIdeaDropDown = () => {
       <UserProjectIdeaDeleteDialog
         deleteOpen={deleteOpen}
         setDeleteOpen={setDeleteOpen}
+        deleteMutate={deleteMutate}
+        projectIdeaId={projectIdeas.projectIdeaId}
       />
 
       <UserProjectIdeaStatusChangeDialog

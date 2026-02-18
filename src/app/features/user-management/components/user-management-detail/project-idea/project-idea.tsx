@@ -110,7 +110,7 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   </div>
                 </div>
                 <div>
-                  <ProjectIdeaDropDown />
+                  <ProjectIdeaDropDown projectIdeas={projectIdeas} />
                 </div>
               </div>
             </div>
