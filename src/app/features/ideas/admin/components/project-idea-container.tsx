@@ -1,11 +1,11 @@
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { memo } from 'react';
+import { useGetProjectIdea } from '../../shared/hooks';
 import type {
   IdeaContainerPropsType,
   IdeaType,
 } from '../../shared/types/project-idea.types';
-import { useGetIdeaManagement } from '../hooks/use-idea-management';
 import IdeaManagementGrid from './grid-view';
 import IdeaManagementTable from './list-view';
 
@@ -16,7 +16,7 @@ const IdeaContainer = ({
   pageSize,
   onPageChange,
 }: IdeaContainerPropsType) => {
-  const { data, isLoading, isError } = useGetIdeaManagement({
+  const { data, isLoading, isError } = useGetProjectIdea({
     keyword: filter?.search,
     page: currentPage,
     size: pageSize,

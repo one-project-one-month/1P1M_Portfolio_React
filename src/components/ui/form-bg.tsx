@@ -12,7 +12,7 @@ export default function FormBackground({
 }: Props & React.PropsWithChildren) {
   return (
     <div
-      className={` rounded-3xl  p-8 flex flex-col ${className}`}
+      className={`rounded-3xl p-8 flex flex-col ${className}`}
       style={{ backgroundColor: '#030712', opacity: 1, ...style }}
       {...props}
     >

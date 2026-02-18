@@ -1,3 +1,4 @@
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { OpomRegisteredListTableType } from '../types/opom-registered-list-type';
@@ -39,7 +40,7 @@ export const OpomRegisteredListTable = ({
                   <div className="flex items-center gap-3">
                     <img
                       // src={person.avatar}
-                      alt={person.name}
+                      alt={person.name || sampleUserImgUrl}
                       className="w-9 h-9 rounded-full object-cover border border-slate-700"
                     />
                     <Link

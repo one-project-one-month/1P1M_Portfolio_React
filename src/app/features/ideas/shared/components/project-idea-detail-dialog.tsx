@@ -1,4 +1,3 @@
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import { COLORS } from '@/constants/colors';
 import { useUserInfoStore } from '@/store/user-info-store';
@@ -156,16 +155,16 @@ const ProjectIdeaDetailDialog = ({
                 <h3 className="text-xl font-semibold mb-2">Submitter</h3>
                 <div className="flex items-center gap-4">
                   <img
-                    src={data.ownerProfilePicUrl || sampleUserImgUrl}
+                    src={data.ownerProfilePicUrl}
                     className="size-10 rounded-full object-cover"
-                    alt={data.devName || 'Submitter'}
+                    alt={data.devUsername}
                   />
                   <div>
                     <h4 className="text-xl font-semibold capitalize">
-                      {data.devName || '-----'}
+                      {data.devUsername}
                     </h4>
                     <Dialog.Description className="font-thin">
-                      {data.dev_Email ?? '-----'}
+                      {data.dev_Email}
                     </Dialog.Description>
                   </div>
                 </div>

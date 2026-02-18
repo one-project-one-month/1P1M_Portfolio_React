@@ -1,7 +1,6 @@
 import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { socials } from '@/constants';
 import { getNavLinks } from '@/lib/use-get-nav-links';
-
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -33,14 +32,14 @@ const Footer = () => {
           <h2 className="text-lg font-bold mb-4">Social</h2>
           <div className="flex flex-col gap-2">
             {socials.map((social) => (
-              <a
+              <Link
                 key={social.id}
-                href={social.path}
+                to={social.path}
                 className="text-[#ADADAD]"
                 target="_blank"
               >
                 {social.name}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

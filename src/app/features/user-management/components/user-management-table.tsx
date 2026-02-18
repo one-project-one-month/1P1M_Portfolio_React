@@ -1,7 +1,7 @@
 import { UserManagementDropDown } from '@/app/features/user-management/components/user-management-drop-down';
 import type { UserManagementType } from '@/app/features/user-management/types/user-management.types';
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Link } from 'react-router-dom';
-
 const truncate = (text: string, max = 15) =>
   (text ?? '').length > max ? text.slice(0, max) + '...' : text;
 
@@ -46,7 +46,7 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
                 <td className="py-4 ">
                   <div className="flex  items-center gap-3">
                     <img
-                      src={user.profilePictureUrl}
+                      src={user.profilePictureUrl || sampleUserImgUrl}
                       className="size-10 rounded-full object-cover"
                     />
                     <Link
@@ -82,6 +82,16 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
                 </td>
               </tr>
             ))}
+            {data.length === 0 && (
+              <tr>
+                <td
+                  colSpan={8}
+                  className="px-4 py-8 text-center text-slate-500"
+                >
+                  No User people found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

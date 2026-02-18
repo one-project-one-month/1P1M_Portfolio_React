@@ -36,12 +36,14 @@ export const getUserManagementService = async ({
     );
     return response.data;
   } catch (error) {
-    const e = error as AxiosError;
-    console.error('Error fetching user:', e);
-    throw {
-      success: false,
-      message: 'Failed to fetch users',
-    };
+    const e = error as AxiosError<{ message?: string }>;
+    const backendMessage = e.response?.data?.message || e.message;
+    console.error('Error fetching user:', backendMessage);
+    // throw {
+    //   success: false,
+    //   message: backendMessage,
+    // };
+    throw new Error(backendMessage);
   }
 };
 

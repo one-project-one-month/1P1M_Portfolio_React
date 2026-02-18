@@ -19,21 +19,18 @@ import DeveloperProfileCardSkeleton from '../components/developer-profile-skelet
 function UserProfilePage() {
   const navigate = useNavigate();
   const { userId } = useParams();
+  if (!userId) navigate('/not-found');
 
-  if (!userId) {
-    navigate('/not-found');
-  }
-
-  const { data, isLoading, isError } = useGetUserProfile({
-    userId: Number(userId),
-  });
+  const { data, isLoading, isError } = useGetUserProfile(Number(userId));
 
   const { mutate: react } = useReactProjectIdea();
   const { mutate: unreact } = useUnReactProjectIdea();
 
   const handleReactIdea = useCallback(
     (id: number, isReacted: boolean) => {
-      isReacted ? unreact(id) : react(id);
+      if (isReacted) {
+        unreact(id);
+      } else react(id);
     },
     [react, unreact],
   );

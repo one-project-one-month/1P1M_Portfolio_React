@@ -21,7 +21,7 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
   }
 
   return (
-    <div className="mx-auto overflow-x-auto">
+    <div className="mx-auto overflow-x-auto backdrop-blur-sm">
       <div className="rounded-xl border border-slate-700 bg-slate-900/20">
         <table className="w-full">
           <thead>
@@ -50,18 +50,18 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
 
                 {/* Developer */}
                 <td className="py-4">
-                  <div className="flex justify-center items-center gap-3">
+                  <div className="flex justify-start items-center gap-3">
                     <img
                       src={idea.ownerProfilePicUrl}
-                      alt={idea.devName}
+                      alt={idea.devUsername}
                       className="size-10 rounded-full object-cover"
                     />
                     <Link
-                      to={`/profile/${idea.devName}`}
+                      to={`/profile/${idea.dev_id}`}
                       state={{ userId: idea.dev_id }}
                       className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]"
                     >
-                      {truncateText(idea.devName || 'Unknown')}
+                      {truncateText(idea.devUsername)}
                     </Link>
                   </div>
                 </td>
@@ -73,24 +73,22 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
 
                 {/* Leader */}
                 <td className="py-4 text-sm text-slate-300">
-                  {idea.leader_id ? (
+                  {idea.leader_id !== 0 ? (
                     <div className="flex items-center justify-center gap-3">
-                      <img
-                        src={idea.leaderProfilePicUrl}
-                        alt={idea.leaderName || 'Leader'}
-                        className="size-10 rounded-full object-cover"
-                      />
                       <Link
                         to={`/profile/${idea.leader_id}`}
                         state={{ userId: idea.leader_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]"
                       >
-                        {idea.devName || 'Unknown'}
+                        <img
+                          src={idea.leaderProfilePicUrl}
+                          className="size-10 rounded-full object-cover"
+                        />{' '}
                       </Link>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-3">
-                      ------
+                      ---
                     </div>
                   )}
                 </td>
