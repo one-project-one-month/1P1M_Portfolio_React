@@ -14,6 +14,7 @@ export const ProfileSchema = z.object({
   email: z.string().email('Invalid email address'),
   phoneNumber: z.string().min(5, 'Phone number is required'),
   role: z.string(),
+  techStacks: z.array(z.string()).default([]),
   avatarUrl: z.string().optional(),
   avatarFile: z
     .any()
@@ -26,35 +27,40 @@ export const ProfileSchema = z.object({
       'Only .jpg, .jpeg, .png and .webp formats are supported.',
     )
     .optional(),
-  techStacks: z.array(z.string()).default([]),
-  socialAccounts: z.array(
-    z
-      .object({
+  socialAccounts: z
+    .array(
+      z.object({
         platform: z.string(),
         url: z.string().min(1, 'Required'),
-      })
-      .refine(
-        (data) => {
-          if (data.platform === 'Telegram') {
-            const telegramRegex = /^@?[\w\d_]{5,32}$/;
-            return telegramRegex.test(data.url);
+      }),
+    )
+    .superRefine((data, ctx) => {
+      data.forEach((item, idx) => {
+        if (item.platform === 'Telegram') {
+          const telegramRegex = /^@?[\w\d_]{5,32}$/;
+          if (!telegramRegex.test(item.url)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Invalid Telegram username',
+              path: [idx, 'url'],
+            });
           }
+        } else {
           try {
-            new URL(data.url);
-            return true;
+            new URL(item.url);
           } catch {
-            return false;
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Must be a valid URL',
+              path: [idx, 'url'],
+            });
           }
-        },
-        {
-          message: 'Must be a valid URL (or @username for Telegram)',
-          path: ['url'],
-        },
-      ),
-  ),
+        }
+      });
+    }),
   joinedDate: z.string().optional(),
   languagePreference: z.string().optional(),
   passwordLastUpdated: z.string().optional(),
 });
 
-export type ProfileFormValues = z.infer<typeof ProfileSchema>;
+export type ProfileFormValues = z.input<typeof ProfileSchema>;
