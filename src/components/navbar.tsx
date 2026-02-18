@@ -48,7 +48,7 @@ function Navbar({ auth }: NavbarProps) {
       />
 
       {/* Desktop Navigation Links */}
-      <div className="hidden md:flex gap-x-10 font-medium">
+      <div className="hidden md:flex gap-x-10 xl:gap-x-20 font-medium">
         {navLinks.map((link) => (
           <NavLink
             key={link.id}
@@ -83,11 +83,7 @@ function Navbar({ auth }: NavbarProps) {
             >
               Login
             </Button>
-            <Button
-              variant="secondary"
-              className="rounded-md px-6"
-              onClick={() => goTo('/auth/sign-up')}
-            >
+            <Button onClick={() => goTo('/auth/sign-up')}>
               Create Account
             </Button>
           </>

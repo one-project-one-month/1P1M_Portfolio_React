@@ -18,7 +18,7 @@ export const ShareProfileDialog = ({
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button>Share profile</Button>
+        <Button className="px-4">Share profile</Button>
       </Dialog.Trigger>
       <Dialog.Content
         size="2"

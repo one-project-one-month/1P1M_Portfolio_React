@@ -73,7 +73,7 @@ export default function LoginForm() {
           username: response.data?.username ?? '',
           userId: response.data?.userId ?? 0,
           role: response.data?.role ?? 'USER',
-          profile: null,
+          profile: response.data?.profilePictureUrl ?? null,
           email: response.data?.email ?? '',
         };
 

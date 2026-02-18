@@ -98,14 +98,11 @@ export default function UserEditDialog({
       queryClient.invalidateQueries({
         queryKey: ['user-profile', variables.devProfileId],
       });
-      addToast(
-        success.message || 'Profile picture uploaded successfully',
-        'success',
-      );
+      addToast(success.message, 'success');
       form.reset();
     },
     onError: (error) => {
-      addToast(error.message || 'Failed to upload picture', 'error');
+      addToast(error.message, 'error');
     },
   });
 
