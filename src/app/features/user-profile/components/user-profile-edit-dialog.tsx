@@ -20,6 +20,7 @@ import {
   editUserProfileService,
   uploadDevImageService,
 } from '../services/user-profile.service';
+import { getTechStackLabel, normalizeTechStack } from '../utils/string.utils';
 
 export default function UserEditDialog({
   data,
@@ -50,7 +51,7 @@ export default function UserEditDialog({
       github: data.github || '',
       linkedIn: data.linkedIn || '',
       aboutDev: data.aboutDev || '',
-      techStacks: data.techStacks || [],
+      techStacks: (data.techStacks || []).map(normalizeTechStack),
     },
     mode: 'onSubmit',
   });
@@ -80,7 +81,7 @@ export default function UserEditDialog({
     },
   });
 
-  const { mutate: uploadImage, isPending: isUploadingImage } = useMutation<
+  const { mutateAsync: uploadImage, isPending: isUploadingImage } = useMutation<
     { success: boolean; message: string },
     AxiosError<{ message: string }>,
     { devProfileId: number; file: File }
@@ -92,8 +93,15 @@ export default function UserEditDialog({
       devProfileId: number;
       file: File;
     }) => uploadDevImageService(devProfileId, file),
-    onSuccess: () => {
-      addToast('Profile picture uploaded successfully', 'success');
+    onSuccess: (success, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-profile', variables.devProfileId],
+      });
+      addToast(
+        success.message || 'Profile picture uploaded successfully',
+        'success',
+      );
+      form.reset();
     },
     onError: (error) => {
       addToast(error.message || 'Failed to upload picture', 'error');
@@ -169,7 +177,7 @@ export default function UserEditDialog({
       style={{ background: 'black', color: 'white' }}
     >
       <div className="flex items-center justify-end">
-        <Dialog.Close>
+        <Dialog.Close disabled={isPending || isUploadingImage}>
           <X size={30} />
         </Dialog.Close>
       </div>
@@ -220,23 +228,28 @@ export default function UserEditDialog({
                   name="techStacks"
                   control={form.control}
                   render={({ field }) => {
-                    const selectedValues = field.value || [];
-
-                    const handleToggleItem = (itemName: string) => {
-                      const isSelected = selectedValues.includes(itemName);
+                    const selectedValues = Array.isArray(field.value)
+                      ? Array.from(new Set(field.value.map(normalizeTechStack)))
+                      : [];
+                    const handleToggleItem = (itemValue: string) => {
+                      const normalizedValue = normalizeTechStack(itemValue);
+                      const isSelected =
+                        selectedValues.includes(normalizedValue);
                       const newSelection = isSelected
-                        ? selectedValues.filter((name) => name !== itemName)
-                        : [...selectedValues, itemName];
+                        ? selectedValues.filter(
+                            (value) => value !== normalizedValue,
+                          )
+                        : [...selectedValues, normalizedValue];
                       field.onChange(newSelection);
                     };
 
                     const handleRemoveItem = (
-                      itemName: string,
+                      itemValue: string,
                       event: React.MouseEvent,
                     ) => {
                       event.stopPropagation();
                       const newSelection = selectedValues.filter(
-                        (name) => name !== itemName,
+                        (value) => value !== itemValue,
                       );
                       field.onChange(newSelection);
                     };
@@ -269,7 +282,7 @@ export default function UserEditDialog({
                                   key={name}
                                   className="inline-flex items-center gap-1 px-2 py-1 rounded bg-purple-600/20 border border-purple-500/30 text-sm"
                                 >
-                                  {name}
+                                  {getTechStackLabel(name)}
                                   <button
                                     type="button"
                                     onClick={(e) => handleRemoveItem(name, e)}
@@ -291,13 +304,13 @@ export default function UserEditDialog({
                           <ul className="absolute z-10 mt-1 w-full bg-[#1f2937] border border-[#374151] rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {TechStacks.map((item) => {
                               const isSelected = selectedValues.includes(
-                                item.name,
+                                item.value,
                               );
                               return (
                                 <li
                                   key={item.id}
                                   className="px-4 py-2 cursor-pointer text-white hover:bg-[#374151] flex items-center justify-between"
-                                  onClick={() => handleToggleItem(item.name)}
+                                  onClick={() => handleToggleItem(item.value)}
                                 >
                                   <span>{item.name}</span>
                                   {isSelected && (
@@ -369,6 +382,7 @@ export default function UserEditDialog({
                 <div className="flex items-center gap-6 mt-4 justify-between">
                   <Button
                     type="button"
+                    disabled={isPending || isUploadingImage}
                     onClick={() => form.reset()}
                     className="w-1/2 bg-transparent border border-[#9C39FC]"
                   >

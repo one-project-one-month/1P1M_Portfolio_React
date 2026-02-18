@@ -50,12 +50,15 @@ export const uploadDevImageService = async (
   file: File,
 ) => {
   try {
+    const formData = new FormData();
+    formData.append('file', file);
+
     const response = await apiClient.patch(
       `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${devProfileId}`,
-      file,
+      formData,
       {
         headers: {
-          'Content-Type': file.type,
+          'Content-Type': 'multipart/form-data',
         },
       },
     );

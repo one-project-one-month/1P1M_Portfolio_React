@@ -68,6 +68,12 @@ function Navbar({ auth }: NavbarProps) {
 
       {/* Desktop Auth Section */}
       <div className="hidden md:flex items-center gap-3 ">
+        <Button
+          className="rounded-md border border-[#9C39FC] bg-transparent px-10"
+          onClick={() => goTo('/auth/log-in')}
+        >
+          Login
+        </Button>
         {auth ? (
           <UserProfile
             email={auth?.email}
