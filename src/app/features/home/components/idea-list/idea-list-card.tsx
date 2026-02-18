@@ -35,7 +35,6 @@ function IdeaListCard({
     description = 'No description provided.',
     projectTypes = [],
     ownerProfilePicUrl,
-    leaderProfilePicUrl,
     reactionCount = 0,
     viewCount = 0,
     isAlreadyReacted,
