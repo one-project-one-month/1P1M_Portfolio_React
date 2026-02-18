@@ -109,19 +109,29 @@ const UserManagementViewDetail = () => {
               </div>
 
               <div className="flex  gap-3">
-                <Link
-                  to={user?.devProfile.github}
-                  className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full"
-                >
-                  <img src={Github} className="w-4 h-4" />
-                </Link>
+                {user?.devProfile?.github && (
+                  <a
+                    href={
+                      user.devProfile.github.startsWith('http')
+                        ? user.devProfile.github
+                        : `https://${user.devProfile.github}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] rounded-full"
+                  >
+                    <img src={Github} className="w-4 h-4" alt="github" />
+                  </a>
+                )}
 
-                <Link
-                  to={user?.devProfile.linkedIn}
-                  className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full"
+                <a
+                  href={user?.devProfile?.linkedIn}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] rounded-full"
                 >
-                  <img src={LinkedIn} className="w-4 h-4" />
-                </Link>
+                  <img src={LinkedIn} className="w-4 h-4" alt="LinkedIn" />
+                </a>
                 <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
                   <img src={Behance} className="w-4 h-4" />
                 </div>

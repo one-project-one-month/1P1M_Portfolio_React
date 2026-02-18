@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import z from 'zod';
 
 export const UserManagementStatus = {
+  ALL: 'ALL',
   BANNED: 'Banned',
   ACTIVE: 'ACTIVE',
 } as const;
@@ -51,7 +52,7 @@ export const editUserSchema = z.object({
   github_url: z.string(),
   linkedIn_url: z.string(),
   description: z.string(),
-  status: z.enum(['ACTIVE', 'Banned']),
+  status: z.enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED]),
 });
 
 export const userDetailShema = z.object({
@@ -109,16 +110,16 @@ export const userProfileResponseSchema = z.object({
   projectPortfolios: z.array(projectPortfolioSchema),
 });
 
-// export const banUserSchema = userManagementSchema.pick({
-//   userId: true,
-//   desc: string,
-// });
-
 export const banUserSchema = z.object({
   userId: z.number(),
   desc: z.string(),
 });
 
+export const restoreUserSchema = z.object({
+  userId: z.number(),
+});
+export type UserManagementStatusType =
+  (typeof UserManagementStatus)[keyof typeof UserManagementStatus];
 export type GetUserManagementParamsType = {
   // keyword?: string;
   // page?: number;
@@ -128,6 +129,7 @@ export type GetUserManagementParamsType = {
   // sortDirection?: string;
 
   keyword?: string;
+  status?: UserManagementStatusType;
   page?: number;
   size?: number;
   sortField?: string;
@@ -136,7 +138,7 @@ export type GetUserManagementParamsType = {
 
 export type FilterType = {
   order: 'asc' | 'desc' | 'popular';
-  status: 'ALL' | 'Banned' | 'ACTIVE';
+  status: UserManagementStatusType;
   search?: string;
 };
 
@@ -160,6 +162,7 @@ export type UserManagementEditFormPropsType = {
 export type UserManagementType = z.infer<typeof userManagementSchema>;
 export type EditUserManagementType = z.infer<typeof editUserSchema>;
 export type BanUserType = z.infer<typeof banUserSchema>;
+export type RestoreUserType = z.infer<typeof restoreUserSchema>;
 export type UserManagementDetailType = z.infer<typeof userDetailShema>;
 export type UserProfileType = z.infer<typeof userProfileSchema>;
 export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
@@ -173,6 +176,7 @@ export type UserManagementByIdResponseType =
 export type UserManagementEditResponseType =
   ApiResponseType<EditUserManagementType>;
 export type UserBanResponseType = ApiResponseType<BanUserType>;
+export type UserRestoreResponseType = ApiResponseType<RestoreUserType>;
 export type UserManagementDetailResponseType =
   ApiResponseType<UserManagementDetailType>;
 export type UserProfileDetailResponseType =

@@ -1,8 +1,17 @@
+import UserProjectIdeaDeleteDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-delete-dialog';
+import PorjectIdeaViewDetailDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-detail-dialog';
+import ProjectIdeaEditDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-edit-dialog';
+import UserProjectIdeaStatusChangeDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 export const ProjectIdeaDropDown = () => {
+  const [viewDetailOpen, setViewDetailOpend] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [statusChangeOpen, setStatusChangeOpen] = useState(false);
+
   return (
     <>
       <DropdownMenu.Root>
@@ -22,12 +31,18 @@ export const ProjectIdeaDropDown = () => {
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content color="gray" variant="soft">
-          <DropdownMenu.Item asChild>
-            <Link to="">View Details</Link>
+          <DropdownMenu.Item
+            onSelect={(e) => {
+              e.preventDefault();
+              setViewDetailOpend(true);
+            }}
+          >
+            View Detail
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
+              setEditDialogOpen(true);
             }}
           >
             Edit Idea
@@ -35,6 +50,7 @@ export const ProjectIdeaDropDown = () => {
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
+              setDeleteOpen(true);
             }}
           >
             Delete Idea
@@ -43,6 +59,7 @@ export const ProjectIdeaDropDown = () => {
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
+              setStatusChangeOpen(true);
             }}
           >
             Change Status
@@ -57,6 +74,26 @@ export const ProjectIdeaDropDown = () => {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
+
+      <PorjectIdeaViewDetailDialog
+        viewDetailOpen={viewDetailOpen}
+        setViewDetailOpend={setViewDetailOpend}
+      />
+
+      <ProjectIdeaEditDialog
+        editDialogOpen={editDialogOpen}
+        setEditDialogOpen={setEditDialogOpen}
+      />
+
+      <UserProjectIdeaDeleteDialog
+        deleteOpen={deleteOpen}
+        setDeleteOpen={setDeleteOpen}
+      />
+
+      <UserProjectIdeaStatusChangeDialog
+        statusChangeOpen={statusChangeOpen}
+        setStatusChangeOpen={setStatusChangeOpen}
+      />
     </>
   );
 };

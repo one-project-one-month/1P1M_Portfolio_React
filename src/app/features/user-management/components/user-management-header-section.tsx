@@ -4,11 +4,14 @@ import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Check, ListFilter, Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-
+import {
+  UserManagementStatus,
+  type UserManagementStatusType,
+} from '../types/user-management.types';
 const STATUS_LIST = [
-  { value: 'ALL', name: 'All' },
-  { value: 'BANNED', name: 'Banned' },
-  { value: 'ACTIVE', name: 'Active' },
+  { value: UserManagementStatus.ALL, name: 'All' },
+  { value: UserManagementStatus.BANNED, name: 'Banned' },
+  { value: UserManagementStatus.ACTIVE, name: 'Active' },
 ];
 
 const ORDER_LIST = [
@@ -46,7 +49,7 @@ export const UserManagementHeaderSection = ({
   };
 
   // Status
-  const handleStatus = (status: 'ALL' | 'Banned' | 'ACTIVE') => {
+  const handleStatus = (status: UserManagementStatusType) => {
     setFilter({ ...filter, status });
     setOpen({ ...open, order: false });
   };
