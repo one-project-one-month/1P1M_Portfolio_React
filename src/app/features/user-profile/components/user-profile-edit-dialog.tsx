@@ -356,7 +356,7 @@ export default function UserEditDialog({
                         containerClass="!w-full"
                         inputClass="!w-full !h-12 !pl-14 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26] !text-[#F9FAFB] placeholder:!text-[#9CA3AF] focus:!ring-2 focus:!ring-[#9C39FC] focus:!border-[#9C39FC]"
                         buttonClass="!absolute !left-0 !top-0 !h-12 !w-12 !rounded-l-lg !border-r !border-[#FFFFFF26] !border-y-0 !border-l-0 !bg-transparent hover:!bg-[#FFFFFF10]"
-                        dropdownClass="!bg-[#111827] !border !border-[#374151]  !rounded-lg !shadow-xl"
+                        dropdownClass="!bg-[#111827] !border !border-[#374151] !text-[#F9FAFB] !rounded-lg !shadow-xl"
                         searchClass="!bg-[#1F2937] !border !border-[#374151] !text-[#F9FAFB] !rounded-md"
                       />
                     );
