@@ -7,11 +7,11 @@ import type {
   GetIdeaParamsType,
   IdeaCreateResponseType,
   IdeaDeleteResponseType,
-  IdeaEditResponseType,
   IdeasResponseType,
   IdeaStatusType,
   IdeaStatusUpdateResponseType,
 } from '../types/project-idea.types';
+import { statusToNumber } from '../utils/status-mapper';
 
 // GET
 export const getProjectIdea = async ({
@@ -57,36 +57,20 @@ export const createProjectIdea = async (formData: CreateIdeaType) => {
   }
 };
 
-// Edit
-export const editProjectIdea = async (id: number, formData: EditIdeaType) => {
-  try {
-    const response = await apiClient.patch<IdeaEditResponseType>(
-      `${API_ENDPOINTS.PROJECT_IDEA}/updateProjectIdea`,
-      formData,
-      { params: { projectIdeaId: id } },
-    );
-    return response.data;
-  } catch (error) {
-    const e = error as AxiosError;
-    console.error('Error editing project ideas:', e);
-    throw {
-      success: false,
-      message: 'Failed to editing project ideas',
-    };
-  }
-};
-
 // Update
 export const updateProjectIdeaStatus = async (
-  id: number,
-  formData: IdeaStatusType,
+  projectIdeaId: number,
+  status: IdeaStatusType,
 ) => {
   try {
+    const numericStatus = statusToNumber(status.status);
+
     const response = await apiClient.patch<IdeaStatusUpdateResponseType>(
-      `${API_ENDPOINTS.PROJECT_IDEA}/updateProjectIdea`,
-      formData,
-      { params: { projectIdeaId: id } },
+      API_ENDPOINTS.PROJECT_IDEA,
+      null,
+      { params: { projectIdeaId, status: numericStatus } },
     );
+
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
@@ -99,11 +83,11 @@ export const updateProjectIdeaStatus = async (
 };
 
 // DELETE
-export const deleteProjectIdea = async (id: number) => {
+export const deleteProjectIdea = async (projectIdeaId: number) => {
   try {
     const response = await apiClient.delete<IdeaDeleteResponseType>(
       API_ENDPOINTS.PROJECT_IDEA,
-      { params: { projectIdeaId: id } },
+      { params: { projectIdeaId } },
     );
     return response.data;
   } catch (error) {
@@ -112,6 +96,103 @@ export const deleteProjectIdea = async (id: number) => {
     throw {
       success: false,
       message: 'Failed to delete project ideas',
+    };
+  }
+};
+
+// React to Project Idea
+export const reactProjectIdea = async (projectIdeaId: number) => {
+  try {
+    const response = await apiClient.post(
+      API_ENDPOINTS.REACT_PROJECT_IDEA,
+      null,
+      { params: { projectIdeaId } },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error reacting to project idea:', e);
+    throw {
+      success: false,
+      message: 'Failed to react to project idea',
+    };
+  }
+};
+
+// Unreact to Project Idea
+export const unreactProjectIdea = async (projectIdeaId: number) => {
+  try {
+    const response = await apiClient.delete(
+      API_ENDPOINTS.UNREACT_PROJECT_IDEA,
+      { params: { projectIdeaId } },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error unreacting to project idea:', e);
+    throw {
+      success: false,
+      message: 'Failed to unreact to project idea',
+    };
+  }
+};
+
+// Update Project Idea Information
+export const updateProjectIdeaInformation = async (
+  projectIdeaId: number,
+  formData: Partial<EditIdeaType>,
+) => {
+  try {
+    const response = await apiClient.patch(
+      API_ENDPOINTS.UPDATE_PROJECT_IDEA,
+      formData,
+      { params: { projectIdeaId } },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error updating project idea information:', e);
+    throw {
+      success: false,
+      message: 'Failed to update project idea information',
+    };
+  }
+};
+
+// Assign Leader to Project Idea
+export const assignProjectLeader = async (
+  projectIdeaId: number,
+  devId: number,
+) => {
+  try {
+    const response = await apiClient.patch(API_ENDPOINTS.ASSIGN_LEADER, null, {
+      params: { projectIdeaId, devId },
+    });
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error assigning leader:', e);
+    throw {
+      success: false,
+      message: 'Failed to assign leader',
+    };
+  }
+};
+
+// Get Reaction Count
+export const getIdeaReactionCount = async (projectIdeaId: number) => {
+  try {
+    const response = await apiClient.get<{ data: number }>(
+      API_ENDPOINTS.GET_IDEA_REACTION_COUNT,
+      { params: { projectIdeaId } },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error getting reaction count:', e);
+    throw {
+      success: false,
+      message: 'Failed to get reaction count',
     };
   }
 };

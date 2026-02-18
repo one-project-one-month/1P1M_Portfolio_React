@@ -1,5 +1,6 @@
 import apiClient from '@/api/axios.ts';
 import { API_ENDPOINTS } from '@/config/api.ts';
+import { userId } from '@/store/user-info-store';
 import { type ProfileFormValues } from '../services/types';
 
 export const profileService = {
@@ -28,12 +29,20 @@ export const profileService = {
   },
 
   uploadAvatar: async (file: File): Promise<string> => {
+    //TODO: we need to refactor how we get userID
+
     const formData = new FormData();
+    formData.append('devProfileId', userId as any);
     formData.append('file', file);
 
-    const response = await apiClient.post(
+    const response = await apiClient.patch(
       API_ENDPOINTS.UPLOAD_DEV_IMAGE,
       formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
 
     return response.data.data.url;

@@ -28,11 +28,10 @@ export const IdeaSchema = z.object({
   reactionCount: z.number(),
   viewCount: z.number(),
   dev_id: z.number(),
-  devName: z.string().optional(),
-  dev_Email: z.email().optional(),
+  devUsername: z.string(),
+  dev_Email: z.email(),
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number().optional(),
-  leaderName: z.string().optional(),
   leaderEmail: z.email().optional(),
   leaderProfilePicUrl: z.string().optional(),
   projectTypes: z.array(z.string()),
@@ -54,7 +53,7 @@ export const editIdeaSchema = createIdeaSchema.extend({
     IdeaStatus.DELETED,
   ]),
   dev_id: z.number(),
-  devName: z.string().optional(),
+  devUsername: z.string(),
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number(),
   leaderProfilePicUrl: z.string().optional(),
@@ -140,6 +139,9 @@ export type IdeaHeaderPropsType = {
 export type IdeaEditFormPropsType = {
   data: IdeaType;
   trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  clientMode?: boolean;
 };
 
 // export type LeaderRole = 'Backend' | 'Frontend' | 'UI | UX Designer';

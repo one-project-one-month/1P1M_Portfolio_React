@@ -29,7 +29,9 @@ const IdeaSectionContainer = ({ query, status, order }: Props) => {
   });
 
   const totalPages = data?.meta.totalPages;
-  const ideas: IdeaType[] = data?.data || [];
+  const ideas = (data?.data || []) as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
 
   return (
     <IdeaSection

@@ -33,17 +33,6 @@ const labels = [
   'December',
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => Math.floor(Math.random() * 100)),
-      backgroundColor: '#9C39FC',
-    },
-  ],
-};
-
 const options = {
   responsive: true,
   plugins: {
@@ -69,7 +58,24 @@ const options = {
   },
 };
 
-function RegisterationAndCompletedChart() {
+type RegisterationAndCompletedChartProps = {
+  chartData: number[];
+};
+
+function RegisterationAndCompletedChart({
+  chartData,
+}: RegisterationAndCompletedChartProps) {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: chartData,
+        backgroundColor: '#9C39FC',
+      },
+    ],
+  };
+
   return <Bar className="max-h-70" options={options} data={data} />;
 }
 

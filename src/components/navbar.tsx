@@ -35,19 +35,17 @@ function Navbar({ auth }: NavbarProps) {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="relative flex w-full justify-between items-center py-6 z-50 px-4 md:px-8">
+    <nav className="relative flex w-full justify-between items-center py-6 z-50">
       {/* Logo Section */}
-      <div className="">
-        <img
-          src={opomIconUrl}
-          alt="Company Logo"
-          className="cursor-pointer h-8 transition-transform active:scale-95"
-          onClick={() => {
-            handleHomeNav(userRole);
-            closeMenu();
-          }}
-        />
-      </div>
+      <img
+        src={opomIconUrl}
+        alt="Company Logo"
+        className="cursor-pointer h-8 transition-transform active:scale-95 hover:scale-105"
+        onClick={() => {
+          handleHomeNav(userRole);
+          closeMenu();
+        }}
+      />
 
       {/* Desktop Navigation Links */}
       <div className="hidden md:flex gap-x-10 font-medium">
@@ -75,15 +73,24 @@ function Navbar({ auth }: NavbarProps) {
             email={auth?.email}
             img={auth?.profile ?? sampleUserImgUrl}
             username={auth.username}
+            role={auth?.role ?? 'USER'}
           />
         ) : (
-          <Button
-            variant="secondary"
-            className="rounded-md px-6"
-            onClick={() => goTo('/auth/sign-up')}
-          >
-            Create Account
-          </Button>
+          <>
+            <Button
+              className="rounded-md border border-[#9C39FC] bg-transparent px-10"
+              onClick={() => goTo('/auth/log-in')}
+            >
+              Login
+            </Button>
+            <Button
+              variant="secondary"
+              className="rounded-md px-6"
+              onClick={() => goTo('/auth/sign-up')}
+            >
+              Create Account
+            </Button>
+          </>
         )}
       </div>
 

@@ -9,7 +9,9 @@ import {
   getAllProfiles,
   getAllProjectPortfolios,
   getProjectPortfolioDetailsV2,
+  reactProject,
   removeTeamMember,
+  unreactProject,
   updateProjectPortfolio,
   updateProjectStatus,
   type CreateProjectPortfolioRequest,
@@ -212,6 +214,90 @@ export const useDeleteProject = () => {
     onError: (error: Error) => {
       console.error('Error Deleting Project:', error);
       addToast(error.message || 'Failed to delete project', 'error');
+    },
+  });
+};
+
+export const useReactProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (projectId: number | string) => reactProject(projectId),
+    onMutate: async (projectId) => {
+      await queryClient.cancelQueries({ queryKey: ['projectPortfolio'] });
+
+      const previousData = queryClient.getQueryData(['projectPortfolio']);
+
+      queryClient.setQueriesData(
+        { queryKey: ['projectPortfolio'] },
+        (oldData: any) => {
+          if (!oldData?.data) return oldData;
+          return {
+            ...oldData,
+            data: oldData.data.map((project: any) =>
+              project.id === projectId
+                ? {
+                    ...project,
+                    reactedCount: (project.reactedCount || 0) + 1,
+                    isReacted: true,
+                  }
+                : project,
+            ),
+          };
+        },
+      );
+
+      return { previousData };
+    },
+    onError: (_err, _projectId, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['projectPortfolio'], context.previousData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
+    },
+  });
+};
+
+export const useUnreactProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (projectId: number | string) => unreactProject(projectId),
+    onMutate: async (projectId) => {
+      await queryClient.cancelQueries({ queryKey: ['projectPortfolio'] });
+
+      const previousData = queryClient.getQueryData(['projectPortfolio']);
+
+      queryClient.setQueriesData(
+        { queryKey: ['projectPortfolio'] },
+        (oldData: any) => {
+          if (!oldData?.data) return oldData;
+          return {
+            ...oldData,
+            data: oldData.data.map((project: any) =>
+              project.id === projectId
+                ? {
+                    ...project,
+                    reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
+                    isReacted: false,
+                  }
+                : project,
+            ),
+          };
+        },
+      );
+
+      return { previousData };
+    },
+    onError: (_err, _projectId, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['projectPortfolio'], context.previousData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
     },
   });
 };

@@ -1,12 +1,21 @@
 import { Check } from 'lucide-react';
 import type { Step } from '../../../shared/types/project-idea.types';
 
-export default function Stepper({ step }: { step: Step }) {
-  const steps = [
+export default function Stepper({
+  step,
+  clientMode = false,
+}: {
+  step: Step;
+  clientMode?: boolean;
+}) {
+  const allSteps = [
     { num: '01', label: 'Information' },
     { num: '02', label: 'Project leader' },
     { num: '03', label: 'Change Status' },
   ];
+
+  // In client mode, show only step for info
+  const steps = clientMode ? [{ num: '01', label: 'Information' }] : allSteps;
 
   return (
     <div className="w-full">

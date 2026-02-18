@@ -5,7 +5,6 @@ import {
   AdminProfilePage,
   DashboardPage,
   DeveloperPage,
-  IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
   MyProfilePage,
@@ -15,10 +14,10 @@ import {
   TimelineManagementPage,
   UserManagement,
   UserManagementViewDetail,
+  UserProfilePage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import AboutUsPage from '../features/about-us/page';
-import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
@@ -44,18 +43,18 @@ const router = createBrowserRouter([
 
       { path: '/portfolios', element: <PortfolioPage /> },
       { path: '/developers', element: <DeveloperPage /> },
-      { path: 'profile/:username', element: <UserProfile /> },
-      { path: '/about us', element: <AboutUsPage /> },
+      { path: 'profile/:userId', element: <UserProfilePage /> },
+      { path: '/about-us', element: <AboutUsPage /> },
       { path: '/me', element: <MyProfilePage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
       {
-        element: <ProtectedGuard allow={['USER']} />,
+        element: <ProtectedGuard allow={['USER', 'ADMIN']} />,
         children: [
           { path: '/portfolios', element: <PortfolioPage /> },
           { path: '/developers', element: <DeveloperPage /> },
-          { path: 'profile/:username', element: <UserProfile /> },
-          { path: '/about us', element: <AboutUsPage /> },
+          { path: 'profile/:username', element: <UserProfilePage /> },
+          { path: '/about-us', element: <AboutUsPage /> },
           { path: '/me', element: <MyProfilePage /> },
           { path: '/ideas', element: <IdeaPage /> },
           { path: 'opom-register', element: <OpomRegisterPage /> },
@@ -98,11 +97,6 @@ const router = createBrowserRouter([
             element: <EditPortfolioPage />,
           },
           { path: 'idea-management', element: <IdeaManagementPage /> },
-          {
-            path: 'idea-management/portfolio/import',
-            element: <IdeaManagementEditPage />,
-          },
-
           { path: 'user-management', element: <UserManagement /> },
 
           {
@@ -117,7 +111,7 @@ const router = createBrowserRouter([
             element: <OpomRegisteredPeopleList />,
           },
           {
-            path: 'opom-registered-people-list/:id',
+            path: 'opom-registered-people-list/user-profile/:id',
             element: <PersonProfilePage />,
           },
         ],
