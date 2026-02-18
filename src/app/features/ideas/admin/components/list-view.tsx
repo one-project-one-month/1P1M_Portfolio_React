@@ -1,8 +1,12 @@
-import { Text, Tooltip } from '@radix-ui/themes';
+import { cn } from '@/lib/utils';
+import { Avatar, Text, Tooltip } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import { EmptyIdeasState } from '../../shared/components';
-import { STATUS_COLORS } from '../../shared/constants';
-import { formatStatus, truncateText } from '../../shared/lib';
+import {
+  changeProjectIdeaStatus,
+  changeProjectIdeaStatusColor,
+  truncateText,
+} from '../../shared/lib';
 import type { IdeaType } from '../../shared/types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
@@ -51,10 +55,12 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
                 {/* Developer */}
                 <td className="py-4">
                   <div className="flex justify-start items-center gap-3">
-                    <img
+                    <Avatar
                       src={idea.ownerProfilePicUrl}
-                      alt={idea.devUsername}
-                      className="size-10 rounded-full object-cover"
+                      radius="full"
+                      color="gray"
+                      className=" bg-gray-600!"
+                      fallback={idea.devUsername?.slice(0, 1)}
                     />
                     <Link
                       to={`/profile/${idea.dev_id}`}
@@ -96,10 +102,12 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
                 {/* Status */}
                 <td className="py-4 text-center text-sm">
                   <span
-                    className="capitalize"
-                    style={{ color: STATUS_COLORS[idea.status] }}
+                    className={cn(
+                      'capitalize',
+                      changeProjectIdeaStatusColor(idea.status),
+                    )}
                   >
-                    {formatStatus(idea.status)}
+                    {changeProjectIdeaStatus(idea.status)}
                   </span>
                 </td>
 
