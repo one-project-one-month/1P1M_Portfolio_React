@@ -14,6 +14,7 @@ import { Camera, Check, ChevronDown, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import FormField from '../../../../components/ui/form-field';
 import { useToast } from '../../../../components/ui/toast-provider';
 import {
@@ -333,13 +334,33 @@ export default function UserEditDialog({
                   name="phone"
                   control={form.control}
                   rules={{ required: 'Phone number is required' }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      country="mm"
-                      inputClass="!bg-[#374151] !w-full !h-12 !text-white"
-                    />
-                  )}
+                  render={({ field }) => {
+                    const phoneValue =
+                      typeof field.value === 'string'
+                        ? field.value.replace(/\D/g, '')
+                        : '';
+
+                    return (
+                      <PhoneInput
+                        country="mm"
+                        value={phoneValue}
+                        onChange={(value) =>
+                          field.onChange(value ? `+${value}` : '')
+                        }
+                        onBlur={() => field.onBlur()}
+                        inputProps={{
+                          name: field.name,
+                          id: field.name,
+                          placeholder: 'Enter your phone number',
+                        }}
+                        containerClass="!w-full"
+                        inputClass="!w-full !h-12 !pl-14 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26] !text-[#F9FAFB] placeholder:!text-[#9CA3AF] focus:!ring-2 focus:!ring-[#9C39FC] focus:!border-[#9C39FC]"
+                        buttonClass="!absolute !left-0 !top-0 !h-12 !w-12 !rounded-l-lg !border-r !border-[#FFFFFF26] !border-y-0 !border-l-0 !bg-transparent hover:!bg-[#FFFFFF10]"
+                        dropdownClass="!bg-[#111827] !border !border-[#374151] !text-[#F9FAFB] !rounded-lg !shadow-xl"
+                        searchClass="!bg-[#1F2937] !border !border-[#374151] !text-[#F9FAFB] !rounded-md"
+                      />
+                    );
+                  }}
                 />
 
                 <Controller
