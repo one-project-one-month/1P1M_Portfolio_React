@@ -1,6 +1,5 @@
 import apiClient from '@/api/axios.ts';
 import { API_ENDPOINTS } from '@/config/api.ts';
-import { userId } from '@/store/user-info-store';
 import { type ProfileFormValues } from '../services/types';
 
 export const profileService = {
@@ -23,52 +22,45 @@ export const profileService = {
       phoneNumber: dev.phone || '+95-9XXX-XXX-XXX',
       role: 'Admin',
       joinedDate: dev.joinedDate || 'N/A',
+      techStacks: dev.techStacks || [],
       languagePreference: 'English',
       passwordLastUpdated: dev.passwordLastUpdated || 'N/A',
     };
   },
 
-  uploadAvatar: async (file: File): Promise<string> => {
-    //TODO: we need to refactor how we get userID
-
+  uploadAvatar: async (file: File, userId: number): Promise<string> => {
     const formData = new FormData();
-    formData.append('devProfileId', userId as any);
+    formData.append('devProfileId', String(userId));
     formData.append('file', file);
 
     const response = await apiClient.patch(
       API_ENDPOINTS.UPLOAD_DEV_IMAGE,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
+      { headers: { 'Content-Type': 'multipart/form-data' } },
     );
-
     return response.data.data.url;
   },
 
   updateProfile: async (userId: number, data: ProfileFormValues) => {
-    let finalAvatarUrl = data.avatarUrl;
-
     if (data.avatarFile) {
-      finalAvatarUrl = await profileService.uploadAvatar(data.avatarFile);
+      await profileService.uploadAvatar(data.avatarFile, userId);
     }
 
     const payload = {
-      dev_id: userId,
       name: `${data.firstName} ${data.lastName}`.trim(),
-      email: data.email,
       github:
         data.socialAccounts.find((s) => s.platform === 'GitHub')?.url || '',
       linkedIn:
         data.socialAccounts.find((s) => s.platform === 'LinkedIn')?.url || '',
-      profilePictureUrl: finalAvatarUrl,
-      aboutDev: 'Updated profile info',
+      telegramUsername:
+        data.socialAccounts.find((s) => s.platform === 'Telegram')?.url || '',
+      phone: data.phoneNumber,
+      aboutDev: 'Updated profile',
+      techStacks: data.techStacks,
     };
 
-    const response = await apiClient.put(
-      `${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`,
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.UPDATE_PROFILE}?id=${userId}`,
       payload,
     );
 

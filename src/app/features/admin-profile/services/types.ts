@@ -26,11 +26,31 @@ export const ProfileSchema = z.object({
       'Only .jpg, .jpeg, .png and .webp formats are supported.',
     )
     .optional(),
+  techStacks: z.array(z.string()).default([]),
   socialAccounts: z.array(
-    z.object({
-      platform: z.string(),
-      url: z.string().url('Must be a valid URL'),
-    }),
+    z
+      .object({
+        platform: z.string(),
+        url: z.string().min(1, 'Required'),
+      })
+      .refine(
+        (data) => {
+          if (data.platform === 'Telegram') {
+            const telegramRegex = /^@?[\w\d_]{5,32}$/;
+            return telegramRegex.test(data.url);
+          }
+          try {
+            new URL(data.url);
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        {
+          message: 'Must be a valid URL (or @username for Telegram)',
+          path: ['url'],
+        },
+      ),
   ),
   joinedDate: z.string().optional(),
   languagePreference: z.string().optional(),
@@ -38,20 +58,3 @@ export const ProfileSchema = z.object({
 });
 
 export type ProfileFormValues = z.infer<typeof ProfileSchema>;
-
-export const MOCK_USER_DATA: ProfileFormValues = {
-  firstName: 'Thura',
-  lastName: 'Aung',
-  email: 'aungthurapm@email.com',
-  phoneNumber: '+95-998475225',
-  role: 'Admin',
-  avatarUrl: 'https://i.pravatar.cc/300',
-  socialAccounts: [
-    { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/thura' },
-    { platform: 'GitHub', url: 'https://github.com/thura' },
-    { platform: 'Telegram', url: 'https://t.me/thura77' },
-  ],
-  joinedDate: 'October 19, 2025',
-  languagePreference: 'English',
-  passwordLastUpdated: 'December 23, 2025',
-};
