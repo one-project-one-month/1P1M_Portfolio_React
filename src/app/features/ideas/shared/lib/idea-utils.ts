@@ -4,7 +4,6 @@ type ProjectIdeaStatus =
   | ''
   | 'PENDING'
   | 'APPROVED'
-  | 'ARCHIVED'
   | 'REJECTED'
   | 'IN_PROGRESS'
   | 'COMPLETED'
@@ -28,7 +27,6 @@ export const changeProjectIdeaStatus = (status: ProjectIdeaStatus): string => {
     '': 'All',
     PENDING: 'In progress',
     APPROVED: 'Approved',
-    ARCHIVED: 'Archived',
     REJECTED: 'Rejected',
     IN_PROGRESS: 'In-progress',
     COMPLETED: 'Completed',
@@ -45,12 +43,11 @@ export const changeProjectIdeaStatusColor = (
     '': '',
     PENDING: 'bg-[#FF8904]',
     APPROVED: 'bg-[#00A63E]',
-    ARCHIVED: 'bg-[#A6A09B]',
-    REJECTED: 'bg-[#A6A09B]',
-    IN_PROGRESS: 'bg-[#A6A09B]',
-    COMPLETED: 'bg-[#A6A09B]',
-    DELETED: 'bg-[#A6A09B]',
+    REJECTED: 'bg-[#EF4444]',
+    IN_PROGRESS: 'bg-[#3B82F6]',
+    COMPLETED: 'bg-[#10B981]',
+    DELETED: 'bg-[#6B7280]',
   };
 
-  return STATUS_BG_COLORS[status] || 'bg-[#A6A09B]';
+  return STATUS_BG_COLORS[status];
 };
