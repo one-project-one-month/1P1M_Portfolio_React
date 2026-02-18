@@ -7,6 +7,7 @@ export type DevProfile = {
   linkedIn: string;
   aboutDev: string;
   tech_stack: [string];
+  user_id: number;
 };
 
 export interface DevProfileCardProps {

@@ -25,10 +25,10 @@ export const formatStatus = (status: string): string => {
 export const changeProjectIdeaStatus = (status: ProjectIdeaStatus): string => {
   const STATUS_LABELS: Record<ProjectIdeaStatus, string> = {
     '': 'All',
-    PENDING: 'In progress',
+    PENDING: 'Pending',
     APPROVED: 'Approved',
     REJECTED: 'Rejected',
-    IN_PROGRESS: 'In-progress',
+    IN_PROGRESS: 'In Progress',
     COMPLETED: 'Completed',
     DELETED: 'Deleted',
   };

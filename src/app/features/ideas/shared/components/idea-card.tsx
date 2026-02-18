@@ -54,7 +54,7 @@ export default function IdeaCard({
         </span>
       </div>
 
-      <p className="text-sm line-clamp-2 h-10">
+      <p className="text-sm line-clamp-2 h-16 leading-8">
         {description || 'No description provided.'}
       </p>
 
