@@ -25,7 +25,7 @@ export const formatStatus = (status: string): string => {
 export const changeProjectIdeaStatus = (status: ProjectIdeaStatus): string => {
   const STATUS_LABELS: Record<ProjectIdeaStatus, string> = {
     '': 'All',
-    PENDING: 'In progress',
+    PENDING: 'Pending',
     APPROVED: 'Approved',
     REJECTED: 'Rejected',
     IN_PROGRESS: 'In-progress',
@@ -36,7 +36,7 @@ export const changeProjectIdeaStatus = (status: ProjectIdeaStatus): string => {
   return STATUS_LABELS[status] || status;
 };
 
-export const changeProjectIdeaStatusColor = (
+export const changeProjectIdeaStatusBgColor = (
   status: ProjectIdeaStatus,
 ): string => {
   const STATUS_BG_COLORS: Record<ProjectIdeaStatus, string> = {
@@ -47,6 +47,21 @@ export const changeProjectIdeaStatusColor = (
     IN_PROGRESS: 'bg-[#3B82F6]',
     COMPLETED: 'bg-[#10B981]',
     DELETED: 'bg-[#6B7280]',
+  };
+
+  return STATUS_BG_COLORS[status];
+};
+export const changeProjectIdeaStatusColor = (
+  status: ProjectIdeaStatus,
+): string => {
+  const STATUS_BG_COLORS: Record<ProjectIdeaStatus, string> = {
+    '': '',
+    PENDING: 'text-[#FF8904]',
+    APPROVED: 'text-[#00A63E]',
+    REJECTED: 'text-[#EF4444]',
+    IN_PROGRESS: 'text-[#3B82F6]',
+    COMPLETED: 'text-[#10B981]',
+    DELETED: 'text-[#6B7280]',
   };
 
   return STATUS_BG_COLORS[status];
