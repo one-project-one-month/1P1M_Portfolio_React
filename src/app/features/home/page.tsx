@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CountdownItem } from './components/countdown-component';
 import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
+import IdeaListSection from './components/idea-list/idea-list-section';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -14,10 +15,11 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="">
+    <div className=" max-w-6xl mx-auto  w-full">
       {/* Start Welcome Page Content */}
-      <section className="flex flex-col items-center justify-center  text-center text-white h-[80vh] mt-14">
-        <Curve className="absolute top-[90px] w-screen h-[356px] z-0 pointer-events-none" />
+      <section className="flex relative  flex-col items-center justify-center  text-center text-white  my-14">
+        <Curve className="fixed left-1/2  top-1/2 overflow-y-hidden -translate-x-1/2 w-screen pointer-events-none" />
+
         <div className="text-4xl lg:text-8xl">
           <h1>An Open Space For</h1>
           <h1>
@@ -27,7 +29,11 @@ export default function HomePage() {
         </div>
 
         <div className="p-4 mt-2.5">
-          <CountdownTimer items={countdownItems} />
+          <CountdownTimer
+            deadline={'2026-2-9'}
+            items={countdownItems}
+            onTimeEnd={() => {}}
+          />
         </div>
 
         <div className="mt-8 flex-col items-center">
@@ -44,12 +50,10 @@ export default function HomePage() {
           </button>
         </div>
       </section>
-      {/* End Welcome Page Content */}
-      {/* Start About Section */}
-      <section className="flex flex-col items-center justify-center text-center text-[#E5E7EB] mb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-auto bg-[#050612] rounded-4xl border border-white/20 p-6">
-            <h1 className="text-3xl lg:text-4xl mb-8">
+      <section className="flex flex-col w-full items-center justify-center text-center text-[#E5E7EB] mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="h-auto lg:col-span-2 bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-6">
+            <h1 className="text-3xl text-start font-semibold lg:text-4xl mb-10">
               What is <span className="text-[#BD7AFD]">OPOM</span>?
             </h1>
             <div className="text-sm lg:text-2xl text-left space-y-4">
@@ -67,23 +71,23 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between items-center gap-8">
-            <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
-              <h3 className="text-lg md:text-2xl mb-8">
+          <div className="flex w-full flex-col justify-between items-center gap-4">
+            <div className="w-full bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-4">
+              <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
                 Who <span className="text-[#BD7AFD]">We </span>are?
               </h3>
-              <p className="text-sm">
+              <p className=" text-start">
                 We are a rapid development organization dedicated to delivering
                 a fully usable project every month. We support our community and
                 work intensely to present a tangible, user-ready product in 30
                 days.
               </p>
             </div>
-            <div className="max-w-[461px] bg-[#050612] rounded-4xl border border-white/20 p-4">
-              <h3 className="text-lg md:text-2xl mb-8">
+            <div className="w-full bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-4">
+              <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
                 What you have to <span className="text-[#BD7AFD]">Do </span>?
               </h3>
-              <p className="text-sm">
+              <p className=" text-start">
                 You can share the ideas you have in mind. From those, the most
                 popular projects will be selected and you will have to work on
                 them. You will have to present the project after one month.
@@ -92,9 +96,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* End About Section */}
       <FeaturedDevelopersSectionContainer />
       {/* <ApprovedIdeasSection /> */}
+      <IdeaListSection />
     </div>
   );
 }

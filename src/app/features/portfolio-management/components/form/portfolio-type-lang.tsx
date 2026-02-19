@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import type { DropdownItem } from '@/types/portfolio-management';
 import { Plus, Trash2 } from 'lucide-react';
 import {
   Controller,
@@ -7,10 +6,9 @@ import {
   type UseFormReturn,
 } from 'react-hook-form';
 import type { PortfolioFormValues } from '../../portfolio-schema';
-import TypeDropdown from '../type-dropdown';
 
 export interface TechnologyEntry {
-  projectType: DropdownItem | null;
+  projectType: string;
   languages: string;
 }
 
@@ -23,11 +21,6 @@ interface PortfolioTypeLangProps {
   >[];
   onAddTechnology: () => void;
   onRemoveTechnology: (index: number) => void;
-  onUpdateTechnology: (
-    index: number,
-    field: keyof TechnologyEntry,
-    value: unknown,
-  ) => void;
   isReadOnly: boolean;
 }
 
@@ -36,93 +29,74 @@ export const PortfolioTypeLang = ({
   technologyFields,
   onAddTechnology,
   onRemoveTechnology,
-  onUpdateTechnology,
   isReadOnly,
 }: PortfolioTypeLangProps) => {
   return (
-    <div className="space-y-6 text-white">
-      <h2 className="text-lg font-medium text-white">Type and Languages</h2>
+    <div className="flex flex-col gap-1">
+      <label className="text-[#F9FAFB] text-sm font-medium">
+        Type and Languages
+      </label>
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         {technologyFields.map((field, index) => (
-          <div key={field.id} className="flex gap-6 flex-wrap items-start">
-            <div className="space-y-1 w-[200px]">
-              {isReadOnly ? (
-                <p className="px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
-                  {form.watch(`technologies.${index}.projectType`)?.name || '-'}
-                </p>
-              ) : (
+          <div key={field.id} className="flex gap-3 flex-wrap items-center">
+            {isReadOnly ? (
+              <>
+                <span className="px-4 py-2 bg-[#9C39FC] rounded-md text-white text-xs font-medium">
+                  {form.watch(`technologies.${index}.projectType`) || 'Type'}
+                </span>
+                <div className="flex-1 min-w-[200px] h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal flex items-center">
+                  {form.watch(`technologies.${index}.languages`) || '-'}
+                </div>
+              </>
+            ) : (
+              <>
                 <Controller
                   control={form.control}
                   name={`technologies.${index}.projectType`}
                   render={({ field: controllerField }) => (
-                    <TypeDropdown
-                      placeholder="Type"
-                      menuList={[
-                        { id: 1, name: 'Frontend Developers' },
-                        { id: 2, name: 'Backend Developers' },
-                        { id: 3, name: 'Fullstack Developers' },
-                        { id: 4, name: 'UI/UX Designers' },
-                        { id: 5, name: 'Mobile Developers' },
-                        { id: 6, name: 'Machine Learning' },
-                        { id: 7, name: 'DevOps' },
-                        { id: 8, name: 'Game Developer' },
-                        { id: 9, name: 'Others' },
-                      ]}
-                      selectedValue={controllerField.value}
-                      onChange={(value: DropdownItem | null) => {
-                        controllerField.onChange(value);
-                        onUpdateTechnology(index, 'projectType', value);
-                      }}
+                    <input
+                      type="text"
+                      value={controllerField.value || ''}
+                      onChange={(e) => controllerField.onChange(e.target.value)}
+                      placeholder="Type (e.g., Fullstack)"
+                      className="px-4 py-2 bg-[#9C39FC] rounded-md text-white text-xs font-medium w-[180px] focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
                     />
                   )}
                 />
-              )}
-            </div>
-            <div className="flex-1 space-y-1 min-w-[200px] flex gap-2">
-              {isReadOnly ? (
-                <p className="flex-1 px-3 py-2 bg-[#1e293b] rounded-md text-white min-h-[40px]">
-                  {form.watch(`technologies.${index}.languages`) || '-'}
-                </p>
-              ) : (
-                <div className="flex-1 flex gap-2">
-                  <Controller
-                    control={form.control}
-                    name={`technologies.${index}.languages`}
-                    render={({ field: controllerField }) => (
-                      <input
-                        type="text"
-                        value={controllerField.value}
-                        onChange={(e) => {
-                          controllerField.onChange(e.target.value);
-                          onUpdateTechnology(
-                            index,
-                            'languages',
-                            e.target.value,
-                          );
-                        }}
-                        placeholder="Enter your languages or tools"
-                        className="w-full px-3 py-2 bg-[#0F172B] border border-[#FFFFFF]/15 rounded-md text-white placeholder:text-[#6A7282] focus:outline-none focus:border-[#9C39FC]"
-                      />
-                    )}
-                  />
-                  {technologyFields.length > 1 && (
-                    <button
-                      onClick={() => onRemoveTechnology(index)}
-                      className="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-md transition-colors"
-                    >
-                      <Trash2 size={20} />
-                    </button>
+                <Controller
+                  control={form.control}
+                  name={`technologies.${index}.languages`}
+                  render={({ field: controllerField }) => (
+                    <input
+                      type="text"
+                      value={controllerField.value}
+                      onChange={(e) => controllerField.onChange(e.target.value)}
+                      placeholder="Enter your languages or tools"
+                      className="flex-1 min-w-[200px] h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
+                    />
                   )}
-                </div>
-              )}
-            </div>
+                />
+                {technologyFields.length > 1 && (
+                  <button
+                    onClick={() => onRemoveTechnology(index)}
+                    className="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-md transition-colors"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                )}
+              </>
+            )}
           </div>
         ))}
       </div>
 
       {!isReadOnly && (
-        <Button variant={'primary'} onClick={onAddTechnology} className="gap-2">
+        <Button
+          variant="primary"
+          onClick={onAddTechnology}
+          className="gap-2 mt-3 w-fit"
+        >
           <Plus size={18} />
           Add
         </Button>

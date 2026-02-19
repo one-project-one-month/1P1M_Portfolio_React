@@ -1,6 +1,8 @@
-import { getTimelineData } from '@/app/features/timeline-management/services/timeline-service';
-import type { StatusOption } from '@/app/features/timeline-management/types.ts';
-import { useMemo, useState } from 'react';
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
+import type { StatusOption } from '@/app/features/timeline-management/services/types.ts';
+import { useDebounce } from '@/hooks/use-debounce.ts';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export const useTimeline = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,28 +12,47 @@ export const useTimeline = () => {
   const [currentLayout, setCurrentLayout] = useState<'list' | 'grid'>('list');
   const [curPage, setCurPage] = useState(0);
 
-  const allData = getTimelineData();
+  const debouncedSearchTerm = useDebounce(searchTerm);
 
-  const filteredData = useMemo(() => {
-    return allData.filter((item) => {
-      const matchesSearch = item.name
-        .toLowerCase()
-        .includes(searchTerm.trim().toLowerCase());
-      const matchesStatus =
-        !selectedStatus || item.status === selectedStatus.name;
-      return matchesSearch && matchesStatus;
-    });
-  }, [searchTerm, selectedStatus]);
+  const {
+    data: apiResponse,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['timelines', curPage, debouncedSearchTerm, selectedStatus],
+    queryFn: () =>
+      timelineService.getAllTimelines({
+        searchTerm: debouncedSearchTerm,
+        selectedStatus,
+        curPage,
+      }),
+    placeholderData: (previousData) => previousData,
+  });
+
+  const displayData = apiResponse?.data ?? [];
+
+  const handleSearchChange = (val: string) => {
+    setSearchTerm(val);
+    setCurPage(0);
+  };
+
+  const handleStatusChange = (status: StatusOption | undefined) => {
+    setSelectedStatus(status);
+    setCurPage(0);
+  };
 
   return {
     searchTerm,
-    setSearchTerm,
+    setSearchTerm: handleSearchChange,
     selectedStatus,
-    setSelectedStatus,
+    setSelectedStatus: handleStatusChange,
     currentLayout,
     setCurrentLayout,
     curPage,
     setCurPage,
-    filteredData,
+    displayData,
+    paginationMeta: apiResponse?.meta,
+    isLoading,
+    error,
   };
 };

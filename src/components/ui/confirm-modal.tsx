@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -25,11 +26,22 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     if (isOpen) setShouldRender(true);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
   if (!isOpen && !shouldRender) return null;
 
-  return (
+  return createPortal(
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-out 
+      className={`fixed inset-0 z-9999 flex items-center justify-center transition-opacity duration-300 ease-out 
             ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
     >
       {/* Overlay background */}
@@ -37,7 +49,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
       {/* Modal box */}
       <div
-        className={`relative w-[410px] bg-[#000000] border-2 border-[#364153] text-[#99A1AF] text-center rounded-3xl p-6 max-w-md shadow-2xl transition-all duration-300 ease-out transform ${isOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}
+        className={`relative w-102.5 bg-[#000000] border-2 border-[#364153] text-[#99A1AF] text-center rounded-3xl p-6 max-w-md shadow-2xl transition-all duration-300 ease-out transform ${isOpen ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}
             `}
       >
         <h2 className="text-xl font-semibold text-white">{title}</h2>
@@ -62,7 +74,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

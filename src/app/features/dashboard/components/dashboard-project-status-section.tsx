@@ -1,17 +1,26 @@
 import IconBarChart from '@/assets/icons/IconBarChart';
 import IconPieChart from '@/assets/icons/IconPieChart';
 import { cn } from '@/lib/utils';
+import type { ProjectStatusResponse } from '@/types/dashboard.type';
 import { useState } from 'react';
 import ProjectStatusBarChart from './charts/project-status-bar-chart';
 import ProjectStatusPieChart from './charts/project-status-pie-chart';
 import { StatusSummary } from './ui/status';
 
-function DashboardProjectStatusSection() {
-  const [tab, setTab] = useState<'pie' | 'bar'>('bar');
+type DashboardProjectStatusSectionProps = {
+  data: ProjectStatusResponse | null;
+};
+
+function DashboardProjectStatusSection({
+  data,
+}: DashboardProjectStatusSectionProps) {
+  const [tab, setTab] = useState<'pie' | 'bar'>('pie');
 
   const toggleTab = () => {
     setTab((prev) => (prev === 'pie' ? 'bar' : 'pie'));
   };
+
+  const { active, totalProjects, onHold, completed } = data?.data ?? {};
 
   return (
     <div className="custom-card flex flex-col h-full text-white">
@@ -39,22 +48,31 @@ function DashboardProjectStatusSection() {
         </div>
       </div>
       <div className="bg-slate-800 flex flex-col flex-1 rounded-lg mt-3 p-3">
-        {tab === 'pie' ? <ProjectStatusPieChart /> : <ProjectStatusBarChart />}
+        {tab === 'pie' ? (
+          <ProjectStatusPieChart
+            chartData={[active ?? 0, completed ?? 0, onHold ?? 0]}
+            total={totalProjects ?? 0}
+          />
+        ) : (
+          <ProjectStatusBarChart
+            chartData={[active ?? 0, completed ?? 0, onHold ?? 0]}
+          />
+        )}
         <StatusSummary
           items={[
             {
               label: 'Active',
-              count: 12,
+              count: active ?? 0,
               colorClass: 'bg-secondary-custom',
             },
             {
               label: 'Completed',
-              count: 18,
+              count: completed ?? 0,
               colorClass: 'bg-primary-custom',
             },
             {
               label: 'On Hold',
-              count: 3,
+              count: onHold ?? 0,
               colorClass: 'bg-red-500',
             },
           ]}

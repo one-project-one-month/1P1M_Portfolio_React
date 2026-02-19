@@ -1,8 +1,9 @@
 import { API_CONFIG } from '@/config/api';
+import { logout } from '@/lib/utils';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 interface FailedRequest {
-  resolve: (token?: string) => void;
+  resolve: (value?: unknown) => void;
   reject: (err: any) => void;
 }
 
@@ -20,11 +21,8 @@ let failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: any = null) => {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve();
-    }
+    if (error) prom.reject(error);
+    else prom.resolve();
   });
   failedQueue = [];
 };
@@ -36,48 +34,54 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    const isAuthPath =
-      originalRequest.url?.includes('/auth/') &&
-      !originalRequest.url?.includes('/auth/setup-profile');
+    if (!originalRequest) return Promise.reject(error);
 
-    if (isAuthPath) {
+    const status = error.response?.status;
+
+    if (status !== 401 && status !== 400) {
       return Promise.reject(error);
     }
 
-    // 3. Standard Refresh Logic for all other 401s
-    if (
-      (error.response?.status === 401 || error.response?.status === 401) &&
-      !originalRequest._retry
-    ) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => apiClient(originalRequest))
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        await apiClient.post(
-          '/portfolio/api/v1/auth/users/refresh',
-          {},
-          { withCredentials: true },
-        );
-        processQueue(null);
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError);
-        localStorage.removeItem('user');
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+    const isRefreshEndpoint = originalRequest.url?.includes(
+      '/auth/users/refresh',
+    );
+    if (isRefreshEndpoint) {
+      logout();
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    if (originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then(() => apiClient(originalRequest))
+        .catch((err) => Promise.reject(err));
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    try {
+      await apiClient.post(
+        '/portfolio/api/v1/auth/users/refresh',
+        {},
+        { withCredentials: true },
+      );
+
+      processQueue(null);
+
+      return apiClient(originalRequest);
+    } catch (refreshError) {
+      processQueue(refreshError);
+      logout();
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
+    }
   },
 );
 

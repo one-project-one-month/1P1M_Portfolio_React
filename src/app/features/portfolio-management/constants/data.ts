@@ -1,7 +1,11 @@
 import ProjectImage from '@/assets/ProjectImage.png';
 import UserImage from '@/assets/sample-user-img.jpg';
 
-export type ProjectStatus = 'Completed' | 'In Progress' | 'Unqualified';
+export type ProjectStatus =
+  | 'Planning'
+  | 'Completed'
+  | 'In Progress'
+  | 'Unqualified';
 
 export interface Member {
   id: string | number;
@@ -41,7 +45,11 @@ export interface ProjectData {
     languages: string;
   }[];
   teams: TeamData[];
-  projectLink?: string; // Simplified to just a URL string
+  projectLink?: string;
+  repoLink?: string;
+  reactCount?: number;
+  viewCount?: number;
+  isReacted?: boolean;
 }
 
 // Project Types available in the form
@@ -985,9 +993,10 @@ export const MOCK_USERS = [
 ];
 
 export const statusOptions = [
-  { id: 1, name: 'Completed' },
+  { id: 1, name: 'Planning' },
   { id: 2, name: 'In Progress' },
-  { id: 3, name: 'Unqualified' },
+  { id: 3, name: 'Completed' },
+  { id: 4, name: 'Unqualified' },
 ];
 
 export const teamTypes = [

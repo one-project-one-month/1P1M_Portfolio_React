@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from './delete-dialog';
 
 interface CalendarProps {
@@ -17,6 +17,7 @@ interface CalendarProps {
 
 export function Calendar({
   onSelect,
+  value,
   onRangeSelect,
   mode = 'single',
   initialDate = new Date(),
@@ -26,11 +27,16 @@ export function Calendar({
   headerClassName,
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(initialDate);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    initialDate || null,
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(value || null);
   const [rangeStart, setRangeStart] = useState<Date | null>(propsRangeStart);
   const [rangeEnd, setRangeEnd] = useState<Date | null>(propsRangeEnd);
+
+  useEffect(() => {
+    if (value) {
+      setSelectedDate(value);
+      setCurrentDate(new Date(value.getFullYear(), value.getMonth(), 1));
+    }
+  }, [value]);
 
   const monthNames = [
     'January',
@@ -78,6 +84,7 @@ export function Calendar({
       currentDate.getFullYear(),
       currentDate.getMonth(),
       day,
+      12, // Fix date shift issue by creating date at noon to avoid timezone conversion
     );
 
     if (mode === 'single') {

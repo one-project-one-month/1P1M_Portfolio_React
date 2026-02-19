@@ -9,7 +9,11 @@ export type TeamDropdownProps = {
   onAddTeam: (teamName: string) => void;
 };
 
-export type ProjectStatus = 'Completed' | 'In-Progress' | 'Unqualified';
+export type ProjectStatus =
+  | 'Planning'
+  | 'In Progress'
+  | 'Completed'
+  | 'Unqualified';
 
 export interface Member {
   id?: string | number;

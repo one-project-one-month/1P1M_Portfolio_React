@@ -5,7 +5,6 @@ import {
   AdminProfilePage,
   DashboardPage,
   DeveloperPage,
-  IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
   MyProfilePage,
@@ -15,13 +14,14 @@ import {
   TimelineManagementPage,
   UserManagement,
   UserManagementViewDetail,
+  UserProfilePage,
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import AboutUsPage from '../features/about-us/page';
-import UserProfile from '../features/developers/components/user-profile';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
+import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PortfolioErrorBoundary />,
     children: [
       {
         index: true,
@@ -42,18 +43,30 @@ const router = createBrowserRouter([
 
       { path: '/portfolios', element: <PortfolioPage /> },
       { path: '/developers', element: <DeveloperPage /> },
-      { path: 'profile/:username', element: <UserProfile /> },
-      { path: '/about us', element: <AboutUsPage /> },
+      { path: 'profile/:userId', element: <UserProfilePage /> },
+      { path: '/about-us', element: <AboutUsPage /> },
       { path: '/me', element: <MyProfilePage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
       {
-        path: '/portfolio/create-portfolio',
-        element: <PortfolioFormview />,
-      },
-      {
-        path: '/portfolio/update-portfolio/:projectId',
-        element: <PortfolioEditview />,
+        element: <ProtectedGuard allow={['USER', 'ADMIN']} />,
+        children: [
+          { path: '/portfolios', element: <PortfolioPage /> },
+          { path: '/developers', element: <DeveloperPage /> },
+          { path: 'profile/:username', element: <UserProfilePage /> },
+          { path: '/about-us', element: <AboutUsPage /> },
+          { path: '/me', element: <MyProfilePage /> },
+          { path: '/ideas', element: <IdeaPage /> },
+          { path: 'opom-register', element: <OpomRegisterPage /> },
+          {
+            path: '/portfolios/create-portfolio',
+            element: <PortfolioFormview />,
+          },
+          {
+            path: '/portfolios/edit-portfolio/:projectId',
+            element: <PortfolioEditview />,
+          },
+        ],
       },
     ],
   },
@@ -84,14 +97,10 @@ const router = createBrowserRouter([
             element: <EditPortfolioPage />,
           },
           { path: 'idea-management', element: <IdeaManagementPage /> },
-          {
-            path: 'idea-management/portfolio/import',
-            element: <IdeaManagementEditPage />,
-          },
-
           { path: 'user-management', element: <UserManagement /> },
+
           {
-            path: 'user-management/view-detail/:id',
+            path: 'user-management/view-details/:userId',
             element: <UserManagementViewDetail />,
           },
 
@@ -102,7 +111,7 @@ const router = createBrowserRouter([
             element: <OpomRegisteredPeopleList />,
           },
           {
-            path: 'opom-registered-people-list/:id',
+            path: 'opom-registered-people-list/user-profile/:id',
             element: <PersonProfilePage />,
           },
         ],

@@ -2,8 +2,9 @@ import activeHeartIcon from '@/assets/icons/ActiveHeart.png';
 import externalLinkImg from '@/assets/icons/external-link.svg';
 import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import PjImage from '@/assets/project-image.png';
-import type { ProjectCardType } from '@/types/portfolio.type';
+import type { DeveloperType, ProjectCardType } from '@/types/portfolio.type';
 import { Flex } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +18,7 @@ export default function ProjectCard({
   onClickReact,
   project,
 }: ProjectCardType) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(initialLikes || false);
   const navigate = useNavigate();
 
   const handleLikeClick = () => {
@@ -27,6 +28,8 @@ export default function ProjectCard({
       onClickReact();
     }
   };
+
+  const allMembers = project.teams?.map((team) => team.members).flat() || [];
 
   return (
     <div className="flex justify-center items-center">
@@ -46,36 +49,36 @@ export default function ProjectCard({
           <h1 className="font-semibold leading-5 mb-2 text-white font-sans">
             {title}
           </h1>
-          <Flex className="text-[#D1D5DC] font-light leading-5 text-sm font-sans">
-            <span>Team Leader</span>
-            <span></span>
-          </Flex>
-          <Flex
-            align="center"
-            justify="between"
-            className="text-[#D1D5DC] font-light leading-5 text-sm font-sans"
-          >
-            <span>Team Members</span>
-            {/* <div className="flex -space-x-2">
-              {project?.members?.slice(0, 3).map((member, index) => (
-                <img
-                  key={`${member.id}-${index}`}
-                  src={member.profilePictureUrl || sampleUserImgUrl}
-                  alt={member.name}
-                  className="h-7 w-7 rounded-full border-2 border-[#111827] object-cover"
-                />
-              ))}
-              {project.team.members && project.teams.members.length > 3 && (
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#111827] bg-gray-800 text-xs font-bold text-white">
-                  +{project.teams.members.length - 3}
-                </div>
-              )}
-            </div> */}
-          </Flex>
+          {allMembers.length > 0 && (
+            <Flex
+              align="center"
+              justify="between"
+              className="text-[#D1D5DC] font-light leading-5 text-sm font-sans"
+            >
+              <span>Team Members</span>
+              <div className="flex -space-x-2">
+                {allMembers
+                  ?.slice(0, 3)
+                  .map((member: DeveloperType, index: number) => (
+                    <img
+                      key={`${member.id}-${index}`}
+                      src={member.profilePictureUrl || sampleUserImgUrl}
+                      alt={member.name}
+                      className="h-8   w-8 rounded-full border-2 border-[#111827] object-cover"
+                    />
+                  ))}
+                {allMembers && allMembers.length > 3 && (
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#111827] bg-gray-800 text-xs font-bold text-white">
+                    +{allMembers.length - 3}
+                  </div>
+                )}
+              </div>
+            </Flex>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
-          <StatusTag status={'Complete'} />
+          <StatusTag status={project.projectPortfolioStatus} />
           <Flex gap="4">
             {/* Reaction Button */}
             <button
@@ -106,9 +109,7 @@ export default function ProjectCard({
               height={20}
               className="cursor-pointer"
               onClick={() =>
-                navigate(`/portfolio/update-portfolio/${project}`, {
-                  state: { projectDetailData: project },
-                })
+                navigate(`/portfolios/edit-portfolio/${project.id}`)
               }
             />
           </Flex>

@@ -10,7 +10,7 @@ export default function Background({
 }: ComponentProps<'div'>) {
   return (
     <div
-      className={`relative h-screen w-full ${className}`}
+      className={`relative overflow-hidden h-screen w-full ${className}`}
       style={{
         backgroundImage: `url(${bg})`,
         backgroundSize: 'cover',

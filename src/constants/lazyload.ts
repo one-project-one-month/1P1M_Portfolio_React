@@ -46,15 +46,15 @@ export const ResetPasswordPage = PageLoader(
 );
 
 export const DeveloperPage = PageLoader(
-  lazy(() => import('@/app/features/developers/page')),
-);
-
-export const IdeaPage = PageLoader(
-  lazy(() => import('@/app/features/projects/page')),
+  lazy(() => import('@/app/features/developers/pages/page')),
 );
 
 export const UserProfilePage = PageLoader(
-  lazy(() => import('@/app/features/developers/components/user-profile')),
+  lazy(() => import('@/app/features/developers/pages/user-profile-page')),
+);
+
+export const IdeaPage = PageLoader(
+  lazy(() => import('@/app/features/ideas/client/pages/idea-page')),
 );
 
 export const AdminLayout = PageLoader(
@@ -69,24 +69,17 @@ export const PortfolioManagementPage = PageLoader(
   lazy(() => import('@/app/features/portfolio-management/page')),
 );
 export const IdeaManagementPage = PageLoader(
-  lazy(
-    () => import('@/app/features/idea-management/pages/idea-management-page'),
-  ),
+  lazy(() => import('@/app/features/ideas/admin/pages/idea-management-page')),
 );
 
 export const TimelineManagementPage = PageLoader(
   lazy(() => import('@/app/features/timeline-management/page.tsx')),
 );
 
-export const IdeaManagementEditPage = PageLoader(
-  lazy(
-    () =>
-      import('@/app/features/idea-management/pages/idea-management-edit-page'),
-  ),
-);
-
 export const UserManagement = PageLoader(
-  lazy(() => import('@/app/features/user-management/pages/index')),
+  lazy(
+    () => import('@/app/features/user-management/pages/user-management-page'),
+  ),
 );
 
 export const UserManagementViewDetail = PageLoader(
@@ -105,5 +98,5 @@ export const NotFoundPage = PageLoader(
 );
 
 export const MyProfilePage = PageLoader(
-  lazy(() => import('@/app/features/user-profile/page')),
+  lazy(() => import('@/app/features/user-profile/user-profile-page')),
 );

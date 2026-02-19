@@ -13,6 +13,7 @@ type ActiveUserChartProps = {
   label?: string;
   className?: string;
   cutout?: string;
+  month?: string;
 };
 
 export default function ActiveUserChart({
@@ -21,6 +22,7 @@ export default function ActiveUserChart({
   colors = ['#3B82F6', '#60A5FA', '#BFDBFE'],
   label,
   className,
+  month = 'January',
   cutout = '85%',
 }: ActiveUserChartProps) {
   const [ready, setReady] = useState(false);
@@ -81,7 +83,7 @@ export default function ActiveUserChart({
       {/* Center text */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
         {label && <p className="text-xs font-medium text-gray-400">{label}</p>}
-        <MonthDropdown value="Janaury" onChange={() => {}} />
+        <MonthDropdown value={month} onChange={() => {}} />
       </div>
     </div>
   );

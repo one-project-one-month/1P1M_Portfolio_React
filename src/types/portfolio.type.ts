@@ -14,6 +14,7 @@ export type DeveloperType = {
 export type PortfolioSectionContainerProps = {
   query: string | null;
   sortDirection: 'asc' | 'desc' | null;
+  status?: string;
 };
 
 export type PortfolioProjectType = {
@@ -23,15 +24,14 @@ export type PortfolioProjectType = {
   description: string;
   projectLink: string;
   repoLink: string;
-  reaction_count?: number;
-  team: {
+  reactedCount?: number;
+  projectPortfolioStatus: string;
+  teams: {
     members: DeveloperType[];
-  };
+  }[];
   view_count?: number;
   reactedProjectPortfolios: number[];
-  projectPortfolioDetails: {
-    languageAndTools: string[];
-  };
+  languageAndTools: string[];
 };
 
 export type projectSectionViewType = {
@@ -48,6 +48,7 @@ export type GetPortfolioParamsType = {
   sortDirection?: string | null;
   sortField?: string;
   size?: number;
+  projectPortfolioStatus?: string;
 };
 
 export type ProjectCardType = {
@@ -57,7 +58,7 @@ export type ProjectCardType = {
   initialLikes?: number;
   initialViews?: number;
   onClickReact: () => void;
-  project: PortfolioProjectType[];
+  project: PortfolioProjectType;
 };
 
 export type ProjectPortfolioDetailType = {
@@ -77,4 +78,40 @@ export interface ProjectRequestBody {
   projectLink: string;
   repoLink: string;
   image: string;
+}
+
+export interface Developer {
+  id: number;
+  name: string;
+  profilePictureUrl: string | null;
+  github: string;
+  linkedIn: string;
+  aboutDev: string;
+  roleInTeam: string;
+}
+
+export interface AssignedDevs {
+  developers: Developer[];
+}
+
+export interface ProjectPortfolio {
+  id: number;
+  name: string;
+  projectPicUrl: string;
+  description: string;
+  projectLink: string;
+  repoLink: string;
+  reaction_count: number;
+
+  assignedDevs: AssignedDevs;
+
+  reactedProjectPortfolios: unknown[]; // change later if API returns structure
+  projectPortfolioDetails: unknown | null;
+
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | string;
+
+  languageAndTools: string[];
+
+  owner: boolean;
+  alreadyReacted: boolean;
 }

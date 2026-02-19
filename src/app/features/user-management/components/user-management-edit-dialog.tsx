@@ -1,83 +1,116 @@
 import Button from '@/app/features/auth/login/components/button';
-import {
-  useEditUserManagement,
-  useGetUserManagementDetail,
-} from '@/app/features/user-management/hook/use-user-management';
-import { type EditUserManagementType } from '@/app/features/user-management/types/user-management.types';
+import { useEditUserManagement } from '@/app/features/user-management/hook/use-user-management';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
 import { TechStacks } from '@/constants';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@radix-ui/themes';
-import { useEffect, type ReactNode } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
-type UserManagementEditDialogProps = {
-  trigger?: ReactNode;
-  userId: number;
-};
+import {
+  editUserSchema,
+  type EditUserManagementType,
+  type UserManagementEditFormPropsType,
+} from '../types/user-management.types';
 
-const UserManagementEdit = ({
+const UserManagementEditDialog = ({
   trigger,
-  userId,
-}: UserManagementEditDialogProps) => {
-  const { mutate: editUser, isPending } = useEditUserManagement();
-  const { data: userDetail } = useGetUserManagementDetail(userId);
-  const user = Array.isArray(userDetail?.data)
-    ? userDetail?.data[0]
-    : userDetail?.data;
-  const { control, handleSubmit, reset } = useForm<EditUserManagementType>({
+  data,
+  editDialogOpen,
+  setEditDialogOpen,
+}: UserManagementEditFormPropsType & {
+  editDialogOpen: boolean;
+  setEditDialogOpen: (open: boolean) => void;
+}) => {
+  // const queryClient = useQueryClient();
+  // const { addToast } = useToast();
+
+  const { mutate, isPending } = useEditUserManagement();
+
+  // const form = useForm<Partial<EditUserManagementType>>({
+  //   resolver: zodResolver(editUserSchema.partial()) as Resolver<
+  //     Partial<EditUserManagementType>
+  //   >,
+  //   defaultValues: {
+  //     name: data.name,
+  //     phone: data.phone,
+  //     role: data.role,
+  //     profilePictureUrl: data.profilePictureUrl,
+  //     telegramUsername: data.telegramUsername,
+  //     githubUrl: data.githubUrl,
+  //     linkedUrl: data.linkedUrl,
+  //     description: data.description,
+  //     status: data.status || 'ACTIVE',
+  //   },
+  //   mode: 'onSubmit',
+  // });
+
+  const form = useForm<Partial<EditUserManagementType>>({
+    resolver: zodResolver(editUserSchema.partial()),
     defaultValues: {
-      username: '',
-      email: '',
-      role: '',
-      phone: '',
-      telegramUsername: '',
-      gitHub_url: '',
-      linkedIn_url: '',
-      description: '',
-      techStack: [],
+      username: data.name || '',
+      phone: data.phone || '',
+      role: data.role || '',
+      // profilePictureUrl: data.profilePictureUrl || '',
+      telegramUsername: data.telegramUsername || '',
+      github_url: data.githubUrl || '',
+      linkedIn_url: data.linkedUrl || '',
+      description: data.description || '',
+      status: data.status || 'ACTIVE',
     },
+    mode: 'onSubmit',
   });
 
-  useEffect(() => {
-    if (!user) return;
-    reset({
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      telegramUsername: user.telegramUsername,
-      gitHub_url: user.githubUrl,
-      linkedIn_url: user.linkedUrl,
-      description: user.aboutDev,
-      techStack: user.techStack,
-    });
-  }, [user, reset]);
+  // const { mutate, isPending } = useMutation<
+  //   UserManagementEditResponseType,
+  //   AxiosError<{ message: string }>,
+  //   { id: number; formData: EditUserManagementType }
+  // >({
+  //   mutationFn: ({
+  //     id,
+  //     formData,
+  //   }: {
+  //     id: number;
+  //     formData: EditUserManagementType;
+  //   }) => editUserManagementService(id, formData),
+  //   onSuccess: (success) => {
+  //     queryClient.invalidateQueries({ queryKey: ['user-management'] });
+  //     addToast(success.message, 'success');
+  //     form.reset();
+  //   },
+  //   onError: (error) => {
+  //     addToast(error.message, 'error');
+  //   },
+  // });
 
-  const onSubmit = (data: EditUserManagementType) => {
-    editUser({
-      id: userId,
-      data,
-    });
+  const handleEdit = (formData: Partial<EditUserManagementType>) => {
+    if (!data.userId) {
+      // addToast('Project idea ID is missing', 'error');
+      return;
+    }
+    mutate(
+      {
+        userId: data.userId,
+        formData: formData as EditUserManagementType,
+      },
+      {
+        onSuccess: () => setEditDialogOpen(false),
+      },
+    );
   };
+
   return (
     <Dialog.Root
-      onOpenChange={(open) => {
-        if (open && user) {
-          reset({
-            username: user.username,
-            email: user.email,
-            role: user.role,
-            telegramUsername: user.telegramUsername,
-            gitHub_url: user.githubUrl,
-            linkedIn_url: user.linkedUrl,
-            description: user.aboutDev,
-            techStack: user.techStack,
-          });
-        }
-      }}
+      open={editDialogOpen}
+      onOpenChange={(isOpen) => setEditDialogOpen(isOpen)}
     >
-      <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
+      <Dialog.Trigger>
+        <button type="button" className="text-white">
+          {trigger}
+        </button>
+        {/* {trigger || <div>View Detail</div>} */}
+      </Dialog.Trigger>
 
       <Dialog.Content
         size="4"
@@ -89,10 +122,10 @@ const UserManagementEdit = ({
             Update the user information!
           </h1>
           <p className="text-[#6A7282] text-lg leading-7">
-            Modiy existing user information and save the latest updates
+            Modify existing user information and save the latest updates
           </p>
           <div className="w-full flex ">
-            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+            <form onSubmit={form.handleSubmit(handleEdit)} className="w-full">
               <div className="space-y-4 w-full flex flex-row gap-6">
                 <img
                   src={sampleUserImgUrl}
@@ -101,21 +134,25 @@ const UserManagementEdit = ({
                 <div className="w-full flex flex-col gap-[24px]">
                   <Controller
                     name="username"
-                    control={control}
+                    control={form.control}
                     render={({ field }) => (
                       <FormField placeholder="Bora" {...field} />
                     )}
                   />
 
                   <Controller
-                    name="techStack"
-                    control={control}
+                    name="role"
+                    control={form.control}
                     render={({ field }) => (
                       <FormDropdown
                         placeholder="Tech Stack"
                         menuList={TechStacks}
-                        selectedValue={TechStacks.find((t) => t.name) || null}
-                        onChange={(item) => field.onChange(item.name)}
+                        selectedValue={
+                          TechStacks.find(
+                            (item) => item.name === field.value,
+                          ) || null
+                        }
+                        onChange={field.onChange}
                       />
                     )}
                   />
@@ -130,7 +167,8 @@ const UserManagementEdit = ({
 
                   <Controller
                     name="phone"
-                    control={control}
+                    control={form.control}
+                    rules={{ required: 'Phone number is required' }}
                     render={({ field }) => (
                       <PhoneInput
                         {...field}
@@ -142,35 +180,57 @@ const UserManagementEdit = ({
 
                   <Controller
                     name="telegramUsername"
-                    control={control}
-                    render={({ field }) => (
-                      <FormField placeholder="@bora" {...field} />
-                    )}
-                  />
-
-                  <Controller
-                    name="gitHub_url"
-                    control={control}
-                    render={({ field }) => (
-                      <FormField placeholder="www.github.com/bora" {...field} />
-                    )}
-                  />
-
-                  <Controller
-                    name="linkedIn_url"
-                    control={control}
+                    control={form.control}
                     render={({ field }) => (
                       <FormField
-                        placeholder="www.linkedin.com/in/bora"
+                        placeholder="Enter your telegram username"
                         {...field}
                       />
                     )}
                   />
 
+                  <Controller
+                    name="github_url"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormField
+                        placeholder="Enter your github url"
+                        {...field}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="linkedIn_url"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormField
+                        placeholder="Enter your linkedin url"
+                        {...field}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="description"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormField placeholder="Enter description" {...field} />
+                    )}
+                  />
                   <div className="flex justify-between">
-                    <Button className="w-[40%]">Cancel</Button>
-                    <Button className="w-[40%]">
-                      {isPending ? 'Updating....' : 'Update'}
+                    <Button
+                      className="w-[40%]"
+                      onClick={() => setEditDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                      className="w-[40%]"
+                    >
+                      {isPending ? 'Updating...' : 'Update'}
                     </Button>
                   </div>
                 </div>
@@ -183,4 +243,4 @@ const UserManagementEdit = ({
   );
 };
 
-export default UserManagementEdit;
+export default UserManagementEditDialog;

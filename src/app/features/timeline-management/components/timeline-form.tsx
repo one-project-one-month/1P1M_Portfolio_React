@@ -1,62 +1,69 @@
-import type { Timeline } from '@/app/features/timeline-management/types.ts';
+import { timelineService } from '@/app/features/timeline-management/services/timeline-service.ts';
+import type { TimelineFormProps } from '@/app/features/timeline-management/services/types.ts';
 import ModalWrapper from '@/components/modal-wrapper';
 import DatePicker from '@/components/ui/date-picker';
 import FormTextField from '@/components/ui/form-text-field.tsx';
 import { useToast } from '@/components/ui/toast-provider.tsx';
 import { useEffect, useState } from 'react';
 
-type TimelineProps = {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  data?: Timeline | null;
-};
+const statusOptions = [
+  { id: '1', name: 'Active', slug: 'ACTIVE' },
+  { id: '2', name: 'Upcoming', slug: 'UPCOMING' },
+  { id: '3', name: 'Finished', slug: 'FINISHED' },
+];
 
-const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
+const TimelineForm = ({
+  isOpen,
+  setIsOpen,
+  data,
+  onSuccess,
+}: TimelineFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     startDate: '',
     endDate: '',
+    timeLineStatus: 'Active',
   });
+
   const [nameError, setNameError] = useState<string>('');
-  const [descriptionError, setDescriptionError] = useState<string>('');
   const { addToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setNameError('');
-      setDescriptionError('');
       if (data) {
         setFormData({
           name: data.name || '',
-          description: data.description || '',
-          startDate: data.startDate || '',
-          endDate: data.endDate || '',
+          startDate: data.startDate?.split('T')[0] || '',
+          endDate: data.endDate?.split('T')[0] || '',
+          timeLineStatus: (data.timeLineStatus || 'ACTIVE').toUpperCase(),
         });
       } else {
-        setFormData({ name: '', description: '', startDate: '', endDate: '' });
+        setFormData({
+          name: '',
+          startDate: '',
+          endDate: '',
+          timeLineStatus: 'ACTIVE',
+        });
       }
     }
   }, [data, isOpen]);
 
   const handleClose = () => setIsOpen(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     setNameError('');
-    setDescriptionError('');
 
-    const { name, description, startDate, endDate } = formData;
-
+    const { name, startDate, endDate } = formData;
     let hasError = false;
 
     if (!name.trim()) {
       setNameError('Name is required');
-      hasError = true;
-    }
-    if (!description.trim()) {
-      setDescriptionError('Description is required');
       hasError = true;
     }
 
@@ -67,25 +74,37 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
       return;
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    if (end < start) {
+    if (new Date(endDate) < new Date(startDate)) {
       addToast('End date cannot be earlier than the start date.', 'error');
       return;
     }
 
-    if (data?.id) {
-      console.log('Updating existing item:', data.id);
-      console.log('Submitting Data:', formData);
-      // TODO: await updateTimeline(data.id, formData)
-    } else {
-      console.log('Creating new item');
-      console.log('Submitting Data:', formData);
-      // TODO: await createTimeline(formData)
-    }
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        ...formData,
+        startDate: new Date(formData.startDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString(),
+      };
 
-    handleClose();
+      if (data?.id) {
+        await timelineService.updateTimeline(data.id, payload);
+        addToast('Timeline updated!', 'success');
+      } else {
+        await timelineService.createTimeline(payload);
+        addToast('Timeline created!', 'success');
+      }
+
+      setIsOpen(false);
+      if (typeof onSuccess === 'function') onSuccess();
+    } catch (error: any) {
+      addToast(
+        error?.response?.data?.message || 'Something went wrong',
+        'error',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -93,37 +112,124 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
       <div className="flex flex-col gap-y-6 p-2 text-white">
         <FormTextField
           label="Event Title"
-          placeholder="Enter your title"
-          className="text-xl font-semibold mb-2"
+          placeholder="Enter title"
           value={formData.name}
-          onChange={(e) => {
-            setFormData({ ...formData, name: e.target.value });
-            if (nameError) setNameError('');
-          }}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           error={nameError}
         />
 
-        <FormTextField
-          label="Update Description"
-          placeholder="Description"
-          className="text-xl font-semibold mb-2"
-          value={formData.description}
-          onChange={(e) => {
-            setFormData({ ...formData, description: e.target.value });
-            if (descriptionError) setDescriptionError('');
-          }}
-          error={descriptionError}
-        />
+        <div className="flex flex-col gap-y-2 relative">
+          <label className="text-sm font-medium text-gray-300">Status</label>
+
+          {/* Trigger Button */}
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center justify-between w-full p-4 rounded-xl bg-[#1A1A1A] border border-white/10 text-white hover:border-[#9C39FC]/50 transition-all duration-200"
+          >
+            <span className="flex items-center gap-x-2">
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  formData.timeLineStatus === 'ACTIVE'
+                    ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]'
+                    : formData.timeLineStatus === 'UPCOMING'
+                      ? 'bg-blue-500'
+                      : 'bg-gray-500'
+                }`}
+              />
+              {statusOptions.find((opt) => opt.slug === formData.timeLineStatus)
+                ?.name || formData.timeLineStatus}
+            </span>
+            <svg
+              className={`w-5 h-5 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setIsDropdownOpen(false)}
+              />
+
+              <div className="absolute top-[85px] left-0 w-full bg-[#252525] border border-white/10 rounded-xl shadow-2xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                {statusOptions.map((option) => {
+                  const isSelected = formData.timeLineStatus === option.slug;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => {
+                        // We set the SLUG (UPPERCASE) to the state
+                        setFormData({
+                          ...formData,
+                          timeLineStatus: option.slug,
+                        });
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between p-4 text-left hover:bg-[#9C39FC]/10 transition-colors ${
+                        isSelected
+                          ? 'bg-[#9C39FC]/20 text-[#B76EFA]'
+                          : 'text-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-x-3">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            option.slug === 'ACTIVE'
+                              ? 'bg-green-500'
+                              : option.slug === 'UPCOMING'
+                                ? 'bg-blue-500'
+                                : 'bg-gray-500'
+                          }`}
+                        />
+                        {/* Show the friendly Name in the list */}
+                        {option.name}
+                      </div>
+
+                      {isSelected && (
+                        <svg
+                          className="w-4 h-4 text-[#B76EFA]"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
 
         <div className="flex flex-col gap-y-3">
-          <h3 className="font-semibold text-xl text-white">Detail Date</h3>
+          <h3 className="font-semibold text-lg">Dates</h3>
           <div className="flex gap-x-4">
             <div className="flex-1">
               <DatePicker
                 label="Start date"
                 value={formData.startDate}
-                onChange={(date: string) =>
-                  setFormData({ ...formData, startDate: date })
+                onChange={(date) =>
+                  setFormData((p) => ({ ...p, startDate: date }))
                 }
               />
             </div>
@@ -131,8 +237,8 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
               <DatePicker
                 label="End date"
                 value={formData.endDate}
-                onChange={(date: string) =>
-                  setFormData({ ...formData, endDate: date })
+                onChange={(date) =>
+                  setFormData((p) => ({ ...p, endDate: date }))
                 }
               />
             </div>
@@ -143,16 +249,18 @@ const TimelineForm = ({ isOpen, setIsOpen, data }: TimelineProps) => {
           <button
             type="button"
             onClick={handleClose}
-            className="flex-1 py-3 px-6 rounded-xl border border-[#9C39FC] text-white font-semibold hover:bg-white/5 transition-colors"
+            className="flex-1 py-3 rounded-xl border border-[#9C39FC] text-white"
+            disabled={isSubmitting}
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex-1 py-3 px-6 rounded-xl bg-[#9C39FC] text-white font-semibold hover:bg-[#8A2BE2] transition-colors shadow-lg shadow-[#9C39FC]/20"
+            className="flex-1 py-3 rounded-xl bg-[#9C39FC] text-white shadow-lg shadow-[#9C39FC]/20"
+            disabled={isSubmitting}
           >
-            {data ? 'Update' : 'Save'}
+            {isSubmitting ? 'Processing...' : data ? 'Update' : 'Save'}
           </button>
         </div>
       </div>

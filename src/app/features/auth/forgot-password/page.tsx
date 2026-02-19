@@ -8,16 +8,18 @@ export default function ForgotPasswordPage() {
     useForgotPassword();
 
   return (
-    <Background className="h-screen flex items-center justify-center">
-      <FormBackground className="flex items-center justify-around flex-col">
-        <ForgotPasswordForm
-          email={email}
-          setEmail={setEmail}
-          emailError={emailError}
-          loading={loading}
-          onContinue={handleContinue}
-        />
-      </FormBackground>
+    <Background>
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <FormBackground className="w-full md:max-w-md flex flex-col items-center justify-around">
+          <ForgotPasswordForm
+            email={email}
+            setEmail={setEmail}
+            emailError={emailError}
+            loading={loading}
+            onContinue={handleContinue}
+          />
+        </FormBackground>
+      </div>
     </Background>
   );
 }

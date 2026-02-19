@@ -79,6 +79,11 @@ export default async function uploadDevImage(
     const response = await apiClient.patch(
       `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${id}`,
       file,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
 
     return response.data;

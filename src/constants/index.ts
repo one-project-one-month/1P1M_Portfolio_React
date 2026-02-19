@@ -5,7 +5,6 @@ import {
   FileText,
   FileUser,
   HardDrive,
-  SquareChartGantt,
   User,
   Users,
 } from 'lucide-react';
@@ -19,12 +18,12 @@ export const Platforms = [
 ];
 
 export const TechStacks = [
-  { id: 1, name: 'Backend' },
-  { id: 2, name: 'Frontend' },
-  { id: 3, name: 'UXUI' },
-  { id: 4, name: 'QAQC' },
-  { id: 5, name: 'Full Stack' },
-  { id: 6, name: 'DevOps' },
+  { id: 1, value: 'backend', name: 'Backend' },
+  { id: 2, value: 'frontend', name: 'Frontend' },
+  { id: 3, value: 'uiux', name: 'UIUX' },
+  { id: 4, value: 'qaqc', name: 'QAQC' },
+  { id: 5, value: 'fullstack', name: 'Full stack' },
+  { id: 6, value: 'devops', name: 'DevOps' },
 ];
 
 export const socials: NavLink[] = [
@@ -35,24 +34,30 @@ export const socials: NavLink[] = [
 ];
 
 export const ADMIN_NAVS: AdminNavLink[] = [
-  { id: 1, name: 'Dashboard', path: 'dashboard', icon: ChartGanttIcon },
+  { id: 1, name: 'Dashboard', path: '', icon: ChartGanttIcon },
   { id: 2, name: 'User Management', path: 'user-management', icon: Users },
-  { id: 3, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
-    id: 6,
+    id: 3,
     name: 'OPOM Registered Users',
     path: 'opom-registered-people-list',
     icon: FileUser,
   },
+  { id: 4, name: 'Idea Management', path: 'idea-management', icon: FileText },
   {
-    id: 4,
+    id: 5,
     name: 'Portfolio Management',
     path: 'portfolio-management',
     icon: HardDrive,
   },
-  { id: 3, name: 'Schedule', path: 'timeline-management', icon: CalendarClock },
-  { id: 5, name: 'User Report', path: 'user-report', icon: SquareChartGantt },
-  { id: 5, name: 'Profile', path: 'admin-profile', icon: User },
+  {
+    id: 6,
+    name: 'Timeline Management',
+    path: 'timeline-management',
+    icon: CalendarClock,
+  },
+  { id: 7, name: 'Profile', path: 'admin-profile', icon: User },
 ];
 
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];
+
+export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB

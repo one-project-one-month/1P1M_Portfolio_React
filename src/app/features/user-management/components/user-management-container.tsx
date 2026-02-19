@@ -1,78 +1,56 @@
-import UserManagement from '@/app/features/user-management/components/user-management-table';
-import type {
-  UserManagementContainePropsType,
-  UserManagementType,
-} from '@/app/features/user-management/types/user-management.types';
+import UserManagementTable from '@/app/features/user-management/components/user-management-table';
+import type { UserManagementContainerPropsType } from '@/app/features/user-management/types/user-management.types';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
-import { useEffect } from 'react';
 import { useGetUserManagement } from '../hook/use-user-management';
+
 const UserManagementContainer = ({
-  searchQuery,
-  selectedFilter,
-  page,
-  size,
+  filter,
+  currentPage,
+  pageSize,
   onPageChange,
-  totalUser,
-  onTotalChange,
-}: UserManagementContainePropsType) => {
-  const { data } = useGetUserManagement({
-    page,
-    size,
-    keyword: searchQuery,
-    sortField: selectedFilter,
+}: UserManagementContainerPropsType) => {
+  const { data, isPending, isError, error } = useGetUserManagement({
+    page: currentPage,
+    size: pageSize,
+    keyword: filter?.search,
+    sortField: filter?.status,
+    // status: filter?.status,
+    // sortDirection:
+    //   filter?.order === 'asc'
+    //     ? 'oldest'
+    //     : filter?.order === 'desc'
+    //       ? 'newest'
+    //       : undefined,
   });
-  console.log(data);
 
-  useEffect(() => {
-    if (data?.meta?.totalItems && onTotalChange) {
-      onTotalChange(data.meta.totalItems);
-    }
-  }, [data?.meta?.totalItems, onTotalChange]);
+  if (isPending) return <div className="text-slate-400">Loading User...</div>;
+  if (isError)
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-rose-500 text-base font-medium">
+          {(error as Error)?.message}
+        </p>
+      </div>
+    );
 
-  const handleEdit = (id: number) => {
-    console.log(id);
-  };
-  const handleBanned = (id: number) => {
-    console.log(id);
-  };
-
-  const handleRestored = (id: number) => {
-    console.log(id);
-  };
-  const handleViewDetail = (id: number) => {
-    console.log(id);
-  };
-
-  const items = (data?.data ?? []).filter((user: UserManagementType) => {
-    if (selectedFilter === 'All') return true;
-    if (selectedFilter === 'Banned')
-      return user.status?.toLowerCase() === 'banned';
-    if (selectedFilter === 'Approved')
-      return user.status?.toLowerCase() === 'active';
-    return true;
-  });
-  const totalPages = data?.meta ? Math.ceil(data.meta.totalItems / size) : 0;
+  // Ensure children always receive an array (empty when no data).
+  const items = data?.data ?? [];
+  const totalItems = data?.meta?.totalItems ?? 0;
+  const totalPages = data?.meta?.totalPages ?? 0;
 
   return (
     <div>
-      <UserManagement
-        data={items}
-        handleEdit={handleEdit}
-        handleViewDetail={handleViewDetail}
-        handleBanned={handleBanned}
-        handleRestore={handleRestored}
-        userId={0}
-      />
+      <UserManagementTable data={items} />
 
-      <div className="flex items-center justify-between mt-14">
+      <div className="flex items-center text-center justify-between mt-14">
         {/* Total Count */}
         <span className={`text-[${COLORS.secondary}] font-semibold`}>
-          Total - {totalUser}
+          Total - {totalItems}
         </span>
         {onPageChange && totalPages > 1 && (
           <Pagination
-            currentPage={page}
+            currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />

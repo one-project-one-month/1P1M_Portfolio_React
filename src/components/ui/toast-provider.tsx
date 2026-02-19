@@ -40,18 +40,18 @@ const Icons: Record<ToastType, React.ReactNode> = {
       <path
         d="M8.66675 12.6331L10.1726 14.3541C10.596 14.838 11.3594 14.8023 11.7358 14.2811L15.3334 9.2998"
         stroke="#009966"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle
         cx="12"
         cy="12"
         r="9"
         stroke="#009966"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   ),
@@ -66,25 +66,25 @@ const Icons: Record<ToastType, React.ReactNode> = {
       <path
         d="M12 16.3733V15.8733"
         stroke="#FF6467"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M12 7.62671V13.1267"
         stroke="#FF6467"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle
         cx="12"
         cy="12"
         r="9"
         stroke="#FF6467"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   ),

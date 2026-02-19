@@ -3,21 +3,18 @@ import Navbar from '@/components/navbar';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { Outlet } from 'react-router-dom';
 import Footer from '../footer';
+
 export default function MainLayout() {
-  const user = useUserInfoStore.getState().userInfo;
+  const user = useUserInfoStore((state) => state.userInfo);
 
   return (
     <Background>
-      <div className="h-dvh w-dvw overflow-auto">
-        <div className="w-11/12 mx-auto">
+      <div className="h-dvh w-dvw overflow-auto overflow-x-hidden">
+        <div className="w-full px-16 mx-auto">
           <Navbar auth={user ?? null} />
         </div>
-
-        <div className="w-11/12 mx-auto">
+        <div className="max-w-3/4 px-5 mx-auto">
           <Outlet />
-        </div>
-
-        <div className="w-11/12 mx-auto">
           <Footer />
         </div>
       </div>

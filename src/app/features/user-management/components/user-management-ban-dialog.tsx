@@ -1,17 +1,30 @@
-import { useBanUserManagement } from '@/app/features/user-management/hook/use-user-management';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { useState, type ReactNode } from 'react';
+import type { UserBanResponseType } from '../types/user-management.types';
+
 type UserManagementBanDialogProps = {
   trigger?: ReactNode;
+  banOpen: boolean;
+  setBanOpen: (open: boolean) => void;
+  banMutate: UseMutateFunction<
+    UserBanResponseType,
+    AxiosError<{ message: string }>,
+    { userId: number; desc: string },
+    unknown
+  >;
   userId: number;
 };
 
 const UserManagementBanDialog = ({
   trigger,
+  banOpen,
+  setBanOpen,
+  banMutate,
   userId,
 }: UserManagementBanDialogProps) => {
-  const { mutate: banUser } = useBanUserManagement();
   const banData = [
     {
       name: 'Spamming or Self-Promotion',
@@ -47,7 +60,7 @@ const UserManagementBanDialog = ({
     banUser({ id: userId, desc: reason });
   };
   return (
-    <Dialog.Root>
+    <Dialog.Root open={banOpen} onOpenChange={setBanOpen}>
       <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
 
       <Dialog.Content
@@ -78,7 +91,6 @@ const UserManagementBanDialog = ({
                 className="flex items-center   gap-5 "
                 onClick={() => toggleReason(item.name)}
               >
-                {' '}
                 <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
                   {selectReason.includes(item.name) && (
                     <div className="bg-[#9F0712] w-full h-full rounded-full cursor-pointer"></div>
@@ -101,7 +113,10 @@ const UserManagementBanDialog = ({
               Cancel
             </Button>
             <Button
-              onClick={hanleConfirm}
+              onClick={() => {
+                const reasonDescription = selectReason.join(', ');
+                banMutate({ userId, desc: reasonDescription });
+              }}
               className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
             >
               Confirm

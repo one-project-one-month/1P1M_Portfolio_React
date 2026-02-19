@@ -6,33 +6,55 @@ const Title = ({
   title = 'Page Title',
   onCreate = false,
   showSearch = true,
+  showOrder = false,
   showFilter = true,
   searchPlaceholder = 'Search...',
   onSearchChange,
-  filterOptions = ['Popular', 'Newest', 'Oldest'],
-  // initSelectedFilter = 'Popular',
+  selectedFilter,
+  setSelectedFilter,
+  selectedOrder,
+  filterOptions,
+  orderOptions = ['Popular', 'Newest', 'Oldest'],
   onFilterChange,
+  onOrderChange,
 }: TitleProps) => {
-  const [selectedFilter, setSelectedFilter] = useState<string>('Popular');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState({
+    order: false,
+    filter: false,
+  });
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
+  const orderMenuRef = useRef<HTMLDivElement>(null);
+  const filterMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      if (
+        orderMenuRef.current &&
+        !orderMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen((prev) => ({ ...prev, order: false }));
+      }
+      if (
+        filterMenuRef.current &&
+        !filterMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen((prev) => ({ ...prev, filter: false }));
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option: string) => {
-    setSelectedFilter(option);
+  const handleOrderSelect = (option: string) => {
+    if (onOrderChange) onOrderChange(option);
+    setIsOpen((prev) => ({ ...prev, order: false }));
+  };
+
+  const handleFilterSelect = (option: string) => {
+    if (setSelectedFilter) setSelectedFilter(option);
     if (onFilterChange) onFilterChange(option);
-    setIsOpen(false);
+    setIsOpen((prev) => ({ ...prev, filter: false }));
   };
 
   return (
@@ -40,7 +62,7 @@ const Title = ({
       {/* Title & Desktop Search Section */}
       <div className="flex w-2/3 h-11 justify-between items-center gap-8">
         <div className="relative text-nowrap">
-          <h1 className="text-3xl lg:text-5xl font-extrabold text-white">
+          <h1 className="text-2xl lg:text-4xl font-extrabold text-white">
             {title}
           </h1>
           <div className="w-1/2 h-1.5 absolute -bottom-2 left-0 bg-[#FFBA00] rounded"></div>
@@ -86,46 +108,81 @@ const Title = ({
         )}
       </div>
 
-      {/* Actions Section (Create & Filter) */}
+      {/* Actions Section (Create, Filter and Order) */}
       <div className="flex justify-center items-center gap-4">
-        {onCreate && (
-          <Button
-            variant="primary"
-            size="primary"
-            className="h-11"
-            onClick={onCreate}
+        {showOrder && (
+          <div
+            ref={orderMenuRef}
+            className="relative text-[#F9FAFB] select-none"
           >
-            Create
-          </Button>
-        )}
-
-        {showFilter && (
-          <div ref={menuRef} className="relative text-[#F9FAFB] select-none">
             <div
-              className="flex justify-center items-center border border-[#99A1AF] rounded-full px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors"
-              onClick={() => setIsOpen(!isOpen)}
+              className="flex justify-center items-center border border-white rounded-full px-6 py-2 cursor-pointer hover:bg-white/5 transition-colors"
+              onClick={() => setIsOpen({ ...isOpen, order: !isOpen.order })}
             >
               <FilterIcon />
-              <p className="ms-2">Filters</p>
+              <p className="ms-2">Order</p>
             </div>
 
-            {isOpen && (
+            {isOpen.order && (
               <div className="absolute right-0 w-46.75 bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
-                {filterOptions.map((option, index) => (
+                {orderOptions.map((option, index) => (
                   <div
                     key={index}
-                    className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${
-                      option === selectedFilter ? 'text-[#FFBA00]' : ''
+                    className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors capitalize ${
+                      option === selectedOrder ? 'text-[#FFBA00]' : ''
                     }`}
-                    onClick={() => handleSelect(option)}
+                    onClick={() => handleOrderSelect(option)}
                   >
-                    {option === selectedFilter && <CheckIcon />}
+                    {option === selectedOrder && <CheckIcon />}
                     {option}
                   </div>
                 ))}
               </div>
             )}
           </div>
+        )}
+
+        {showFilter && (
+          <div
+            ref={filterMenuRef}
+            className="relative text-[#F9FAFB] select-none"
+          >
+            <div
+              className="flex justify-center items-center border border-white rounded-full px-6 py-2 cursor-pointer hover:bg-white/5 transition-colors"
+              onClick={() => setIsOpen({ ...isOpen, filter: !isOpen.filter })}
+            >
+              <FilterIcon />
+              <p className="ms-2">Status</p>
+            </div>
+
+            {isOpen.filter && (
+              <div className="absolute right-0 w-46.75 bg-[#080D22] border border-white/10 cursor-pointer rounded-lg shadow-xl mt-2 z-20 overflow-hidden">
+                {filterOptions?.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${
+                      option.value === selectedFilter ? 'text-[#FFBA00]' : ''
+                    }`}
+                    onClick={() => handleFilterSelect(option.value)}
+                  >
+                    {option.value === selectedFilter && <CheckIcon />}
+                    {option.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {onCreate && (
+          <Button
+            variant="primary"
+            size="primary"
+            className="h-11 px-8"
+            onClick={onCreate}
+          >
+            Create
+          </Button>
         )}
       </div>
     </div>

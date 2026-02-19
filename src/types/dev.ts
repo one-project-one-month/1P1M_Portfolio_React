@@ -7,6 +7,7 @@ export type DevProfile = {
   linkedIn: string;
   aboutDev: string;
   tech_stack: [string];
+  user_id: number;
 };
 
 export interface DevProfileCardProps {
@@ -41,3 +42,18 @@ export interface GetDevProfilesParams {
   sortField?: string;
   sortDirection?: 'asc' | 'desc';
 }
+
+export type UserProfile = {
+  userId: number;
+  email: string;
+  name: string;
+  profilePictureUrl: string;
+  passwordLastUpdated: string;
+  joinedDate: string;
+  phone: string | null;
+  github: string;
+  linkedIn: string;
+  aboutDev: string;
+  techStacks: string[];
+  dev_id: number;
+};
