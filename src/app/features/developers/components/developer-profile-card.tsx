@@ -3,16 +3,21 @@ import Email from '@/assets/icons/Email.png';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import Phone from '@/assets/icons/Phone.png';
 import Telegram from '@/assets/icons/Telegram.png';
-import { Button } from '@/components/ui/button';
 import { copyToClipboard } from '@/lib/utils';
 import type { UserProfile } from '@/types/dev';
 import { GitBranch, LinkedinIcon } from 'lucide-react';
+import { ProfileActions } from '../../user-profile/components/profile-actions';
+import { truncate } from '../../user-profile/utils/string.utils';
 
 type DeveloperProfileCardProps = {
   user: UserProfile | null;
+  isMyProfile?: boolean;
 };
 
-function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
+function DeveloperProfileCard({
+  user,
+  isMyProfile = false,
+}: DeveloperProfileCardProps) {
   if (!user) return;
 
   const {
@@ -97,9 +102,11 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
           {displayName}
         </p>
 
-        <p className="text-[#99A1AF] flex items-center leading-5 text-sm">
+        <p className="text-[#99A1AF] flex gap-2 items-center leading-5 text-sm">
           {techStacks.map((t) => (
-            <span>{t}</span>
+            <span className="bg-slate-700/80 border rounded-md border-slate-400 px-3 p-1">
+              {t}
+            </span>
           ))}
         </p>
 
@@ -140,12 +147,19 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
 
         <p className="text-white text-sm h-10 line-clamp-2">{displayAbout}</p>
       </div>
-      <Button
+      {/* <Button
         onClick={handleShareProfile}
         className=" absolute right-3 top-3 h-10"
       >
         Share Profile
-      </Button>
+      </Button> */}
+      <ProfileActions
+        devProfile={user as any}
+        onCopy={handleShareProfile}
+        truncate={truncate}
+        className=" absolute right-3 top-3 h-10"
+        isMyProfile={isMyProfile}
+      />
     </div>
   );
 }
