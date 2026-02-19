@@ -7,11 +7,11 @@ import type {
   IdeaEditResponseType,
 } from '../../shared/types/project-idea.types';
 
-// Re-export shared hook for convenience
-export { useGetProjectIdea } from '../../shared/hooks/use-get-project-idea';
+// // Re-export shared hook for convenience
+// export { useGetProjectIdea } from '../../shared/hooks/use-get-project-idea';
 
-// Alias for admin use
-export { useGetProjectIdea as useGetIdeaManagement } from '../../shared/hooks/use-get-project-idea';
+// // Alias for admin use
+// export { useGetProjectIdea as useGetIdeaManagement } from '../../shared/hooks/use-get-project-idea';
 
 // EDIT
 export const useEditIdeaManagement = () => {

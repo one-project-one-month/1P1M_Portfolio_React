@@ -60,11 +60,13 @@ const ProjectIdeaStatus = ({
   statusChangeForm,
   editForm,
   isPending,
+  onBack,
 }: {
   type: 'status-change-form' | 'edit-form';
   statusChangeForm?: UseFormReturn<IdeaStatusType> | undefined;
   editForm?: UseFormReturn<Partial<EditIdeaType>> | undefined;
   isPending: boolean;
+  onBack?: () => void;
 }) => {
   return (
     <div className="space-y-10">
@@ -196,17 +198,30 @@ const ProjectIdeaStatus = ({
       )}
 
       <div className="mt-8 flex items-center justify-between gap-6">
-        <Dialog.Close>
+        {type === 'edit-form' && onBack ? (
           <Button
             type="button"
             variant="primary"
             size="primary"
             className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
             disabled={isPending}
+            onClick={onBack}
           >
-            Cancel
+            Back
           </Button>
-        </Dialog.Close>
+        ) : (
+          <Dialog.Close>
+            <Button
+              type="button"
+              variant="primary"
+              size="primary"
+              className="flex-1 border border-[#6B7280] bg-transparent text-white hover:border-[#A855F7]"
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+          </Dialog.Close>
+        )}
 
         <Button
           type="submit"

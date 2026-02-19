@@ -1,8 +1,12 @@
-import { Text, Tooltip } from '@radix-ui/themes';
+import { cn } from '@/lib/utils';
+import { Avatar, Text, Tooltip } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import { EmptyIdeasState } from '../../shared/components';
-import { STATUS_COLORS } from '../../shared/constants';
-import { formatStatus, truncateText } from '../../shared/lib';
+import {
+  changeProjectIdeaStatus,
+  changeProjectIdeaStatusColor,
+  truncateText,
+} from '../../shared/lib';
 import type { IdeaType } from '../../shared/types/project-idea.types';
 import { ProjectIdeaDropDown } from './project-idea-drop-down';
 
@@ -21,7 +25,7 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
   }
 
   return (
-    <div className="mx-auto overflow-x-auto">
+    <div className="mx-auto overflow-x-auto backdrop-blur-sm">
       <div className="rounded-xl border border-slate-700 bg-slate-900/20">
         <table className="w-full">
           <thead>
@@ -50,18 +54,20 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
 
                 {/* Developer */}
                 <td className="py-4">
-                  <div className="flex justify-center items-center gap-3">
-                    <img
+                  <div className="flex justify-start items-center gap-3">
+                    <Avatar
                       src={idea.ownerProfilePicUrl}
-                      alt={idea.devName}
-                      className="size-10 rounded-full object-cover"
+                      radius="full"
+                      color="gray"
+                      className=" bg-gray-600!"
+                      fallback={idea.devUsername?.slice(0, 1)}
                     />
                     <Link
-                      to={`/profile/${idea.devName}`}
+                      to={`/profile/${idea.dev_id}`}
                       state={{ userId: idea.dev_id }}
                       className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]"
                     >
-                      {truncateText(idea.devName || 'Unknown')}
+                      {truncateText(idea.devUsername)}
                     </Link>
                   </div>
                 </td>
@@ -73,24 +79,22 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
 
                 {/* Leader */}
                 <td className="py-4 text-sm text-slate-300">
-                  {idea.leader_id ? (
+                  {idea.leader_id !== 0 ? (
                     <div className="flex items-center justify-center gap-3">
-                      <img
-                        src={idea.leaderProfilePicUrl}
-                        alt={idea.leaderName || 'Leader'}
-                        className="size-10 rounded-full object-cover"
-                      />
                       <Link
                         to={`/profile/${idea.leader_id}`}
                         state={{ userId: idea.leader_id }}
                         className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]"
                       >
-                        {idea.devName || 'Unknown'}
+                        <img
+                          src={idea.leaderProfilePicUrl}
+                          className="size-10 rounded-full object-cover"
+                        />{' '}
                       </Link>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-3">
-                      ------
+                      ---
                     </div>
                   )}
                 </td>
@@ -98,10 +102,12 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
                 {/* Status */}
                 <td className="py-4 text-center text-sm">
                   <span
-                    className="capitalize"
-                    style={{ color: STATUS_COLORS[idea.status] }}
+                    className={cn(
+                      'capitalize',
+                      changeProjectIdeaStatusColor(idea.status),
+                    )}
                   >
-                    {formatStatus(idea.status)}
+                    {changeProjectIdeaStatus(idea.status)}
                   </span>
                 </td>
 

@@ -1,3 +1,4 @@
+import type { useRestoreUser } from '@/app/features/user-management/hook/use-user-management';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
 import { type ReactNode } from 'react';
@@ -7,13 +8,15 @@ type UserManagementRestoreDialogProps = {
   restoreOpen: boolean;
   setRestoreOpen: (open: boolean) => void;
   userId: number;
+  restoreMutate: ReturnType<typeof useRestoreUser>['mutate'];
 };
 
 const UserManagementRestoreDialog = ({
   trigger,
   restoreOpen,
   setRestoreOpen,
-  //   userId,
+  restoreMutate,
+  userId,
 }: UserManagementRestoreDialogProps) => {
   return (
     <Dialog.Root open={restoreOpen} onOpenChange={setRestoreOpen}>
@@ -46,7 +49,10 @@ const UserManagementRestoreDialog = ({
             <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
               Cancel
             </Button>
-            <Button className="w-[45%] bg-[#008236] hover:bg-[#008236] focus:bg-[#008236]">
+            <Button
+              onClick={() => restoreMutate({ userId })}
+              className="w-[45%] bg-[#008236] hover:bg-[#008236] focus:bg-[#008236]"
+            >
               Confirm
             </Button>
           </div>

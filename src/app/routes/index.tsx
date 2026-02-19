@@ -5,7 +5,6 @@ import {
   AdminProfilePage,
   DashboardPage,
   DeveloperPage,
-  IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
   MyProfilePage,
@@ -99,11 +98,6 @@ const router = createBrowserRouter([
             element: <EditPortfolioPage />,
           },
           { path: 'idea-management', element: <IdeaManagementPage /> },
-          {
-            path: 'idea-management/portfolio/import',
-            element: <IdeaManagementEditPage />,
-          },
-
           { path: 'user-management', element: <UserManagement /> },
 
           {
@@ -118,7 +112,7 @@ const router = createBrowserRouter([
             element: <OpomRegisteredPeopleList />,
           },
           {
-            path: 'opom-registered-people-list/:id',
+            path: 'opom-registered-people-list/user-profile/:id',
             element: <PersonProfilePage />,
           },
           {

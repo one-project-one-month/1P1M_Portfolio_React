@@ -18,49 +18,49 @@ function IconGrowSlots(props: IconProps) {
         d="M87.4034 450.168C91.1533 450.168 94.1992 453.224 94.1993 457.001C94.1993 460.778 91.1534 463.834 87.4034 463.834C83.6532 463.834 80.6065 460.778 80.6065 457.001C80.6066 453.224 83.6532 450.168 87.4034 450.168Z"
         fill="#9C39FC"
         stroke="#9C39FC"
-        stroke-width="1.51515"
+        strokeWidth="1.51515"
       />
       <path
         d="M87.4025 470C94.5474 470 100.34 464.18 100.34 457C100.34 449.82 94.5474 444 87.4025 444C80.2575 444 74.4653 449.82 74.4653 457C74.4653 464.18 80.2575 470 87.4025 470Z"
         stroke="#9C39FC"
-        stroke-width="1.51515"
-        stroke-miterlimit="10"
+        strokeWidth="1.51515"
+        strokeMiterlimit="10"
       />
       <path
         d="M334.204 341.168C337.954 341.168 341 344.224 341 348.001C341 351.778 337.954 354.834 334.204 354.834C330.453 354.834 327.407 351.778 327.407 348.001C327.407 344.224 330.454 341.168 334.204 341.168Z"
         fill="#9C39FC"
         stroke="#9C39FC"
-        stroke-width="1.51515"
+        strokeWidth="1.51515"
       />
       <path
         d="M334.203 361C341.348 361 347.14 355.18 347.14 348C347.14 340.82 341.348 335 334.203 335C327.058 335 321.266 340.82 321.266 348C321.266 355.18 327.058 361 334.203 361Z"
         stroke="#9C39FC"
-        stroke-width="1.51515"
-        stroke-miterlimit="10"
+        strokeWidth="1.51515"
+        strokeMiterlimit="10"
       />
       <path
         d="M618.82 230.168C622.57 230.168 625.616 233.224 625.616 237.001C625.616 240.778 622.57 243.834 618.82 243.834C615.07 243.834 612.023 240.778 612.023 237.001C612.023 233.224 615.07 230.168 618.82 230.168Z"
         fill="#9C39FC"
         stroke="#9C39FC"
-        stroke-width="1.51515"
+        strokeWidth="1.51515"
       />
       <path
         d="M618.819 250C625.964 250 631.756 244.18 631.756 237C631.756 229.82 625.964 224 618.819 224C611.674 224 605.882 229.82 605.882 237C605.882 244.18 611.674 250 618.819 250Z"
         stroke="#9C39FC"
-        stroke-width="1.51515"
-        stroke-miterlimit="10"
+        strokeWidth="1.51515"
+        strokeMiterlimit="10"
       />
       <path
         d="M882.538 149.168C886.288 149.168 889.334 152.224 889.334 156.001C889.334 159.778 886.288 162.834 882.538 162.834C878.788 162.834 875.741 159.778 875.741 156.001C875.741 152.224 878.788 149.168 882.538 149.168Z"
         fill="#9C39FC"
         stroke="#9C39FC"
-        stroke-width="1.51515"
+        strokeWidth="1.51515"
       />
       <path
         d="M882.537 169C889.682 169 895.474 163.18 895.474 156C895.474 148.82 889.682 143 882.537 143C875.392 143 869.6 148.82 869.6 156C869.6 163.18 875.392 169 882.537 169Z"
         stroke="#9C39FC"
-        stroke-width="1.51515"
-        stroke-miterlimit="10"
+        strokeWidth="1.51515"
+        strokeMiterlimit="10"
       />
       <g filter="url(#filter0_d_12106_8404)">
         <path
@@ -142,9 +142,9 @@ function IconGrowSlots(props: IconProps) {
           width="177"
           height="114"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -176,9 +176,9 @@ function IconGrowSlots(props: IconProps) {
           width="177"
           height="114"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -210,9 +210,9 @@ function IconGrowSlots(props: IconProps) {
           width="177"
           height="114"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -244,9 +244,9 @@ function IconGrowSlots(props: IconProps) {
           width="177"
           height="114"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

@@ -121,7 +121,7 @@ export default function Pagination({
   if (finalTotalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-8">
+    <div className="flex items-center justify-center gap-3">
       <ArrowButton
         icon={LeftIcon}
         altText="Previous Page"

@@ -61,6 +61,11 @@ export const API_ENDPOINTS = {
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
   GET_CONFIGURATIONS: '/portfolio/api/v1/configurations',
   CONFIGURATIONS_DETAIL: '/portfolio/api/v1/configurations/details',
+  RESTORE_USER: '/portfolio/api/v1/admin/userManagement/restore',
+
+  //Admin Project Idea
+  DELETE_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
+  APPROVED_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

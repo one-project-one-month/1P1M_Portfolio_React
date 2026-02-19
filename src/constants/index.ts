@@ -19,12 +19,12 @@ export const Platforms = [
 ];
 
 export const TechStacks = [
-  { id: 1, name: 'Backend' },
-  { id: 2, name: 'Frontend' },
-  { id: 3, name: 'UXUI' },
-  { id: 4, name: 'QAQC' },
-  { id: 5, name: 'Full Stack' },
-  { id: 6, name: 'DevOps' },
+  { id: 1, value: 'backend', name: 'Backend' },
+  { id: 2, value: 'frontend', name: 'Frontend' },
+  { id: 3, value: 'uiux', name: 'UIUX' },
+  { id: 4, value: 'qaqc', name: 'QAQC' },
+  { id: 5, value: 'fullstack', name: 'Full stack' },
+  { id: 6, value: 'devops', name: 'DevOps' },
 ];
 
 export const socials: NavLink[] = [

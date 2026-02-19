@@ -12,12 +12,10 @@ import { useGetUserProfile } from './hooks/use-user-profile';
 import { truncate } from './utils/string.utils';
 
 const UserProfile = () => {
-  const userId = useUserInfoStore((state) => state.userInfo?.userId);
   const { copyToClipboard } = useClipboard();
+  const userId = useUserInfoStore((state) => state.userInfo?.userId);
 
-  const { data, isPending, isError } = useGetUserProfile({
-    userId,
-  });
+  const { data, isPending, isError } = useGetUserProfile(userId);
   const devProfile = data?.data.devProfile;
   const projectIdeas = data?.data.projectIdeas as (IdeaType & {
     isAlreadyReacted: boolean;
@@ -35,8 +33,8 @@ const UserProfile = () => {
   return (
     <div className="space-y-14 py-10">
       {/* Profile Section */}
-      <div className="py-6 px-12 flex items-start justify-between bg-[#FFFFFF1A] rounded-lg backdrop-blur-md">
-        <div className="max-w-9/12 flex items-start gap-6 py-4">
+      <div className="py-6 px-4 md:px-12 flex flex-col md:flex-row items-start md:items-start justify-between gap-6 md:gap-0 bg-[#FFFFFF1A] rounded-lg backdrop-blur-md">
+        <div className="w-full md:max-w-9/12 flex flex-col sm:flex-row items-start gap-6 py-2 md:py-4">
           <ProfileHeader devProfile={devProfile} />
           <ProfileInfo devProfile={devProfile} onCopy={copyToClipboard} />
         </div>
@@ -50,7 +48,7 @@ const UserProfile = () => {
 
       {/* Project Ideas Section */}
       <ProjectSection
-        title="My Project Idea"
+        title="Project Ideas"
         isEmpty={!projectIdeas || projectIdeas.length === 0}
         emptyMessage="No project ideas"
       >
@@ -71,9 +69,10 @@ const UserProfile = () => {
               reactionCount: idea.reactionCount,
               viewCount: idea.viewCount,
               dev_id: idea.dev_id,
+              dev_Email: idea.dev_Email,
               leader_id: idea.leader_id,
               projectTypes: idea.projectTypes,
-              devName: '',
+              devUsername: idea.devUsername,
               ownerProfilePicUrl: idea.ownerProfilePicUrl || '',
               leaderProfilePicUrl: idea.leaderProfilePicUrl || '',
               isAlreadyReacted: idea.isAlreadyReacted,
@@ -84,7 +83,7 @@ const UserProfile = () => {
 
       {/* Project Portfolios Section */}
       <ProjectSection
-        title="My Project Portfolios"
+        title="Project Portfolios"
         isEmpty={!projectPortfolios || projectPortfolios.length === 0}
         emptyMessage="No project portfolios"
       >

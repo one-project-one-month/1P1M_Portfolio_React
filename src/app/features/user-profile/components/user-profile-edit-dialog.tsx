@@ -14,12 +14,14 @@ import { Camera, Check, ChevronDown, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import FormField from '../../../../components/ui/form-field';
 import { useToast } from '../../../../components/ui/toast-provider';
 import {
   editUserProfileService,
   uploadDevImageService,
 } from '../services/user-profile.service';
+import { getTechStackLabel, normalizeTechStack } from '../utils/string.utils';
 
 export default function UserEditDialog({
   data,
@@ -50,7 +52,7 @@ export default function UserEditDialog({
       github: data.github || '',
       linkedIn: data.linkedIn || '',
       aboutDev: data.aboutDev || '',
-      techStacks: data.techStacks || [],
+      techStacks: (data.techStacks || []).map(normalizeTechStack),
     },
     mode: 'onSubmit',
   });
@@ -80,7 +82,7 @@ export default function UserEditDialog({
     },
   });
 
-  const { mutate: uploadImage, isPending: isUploadingImage } = useMutation<
+  const { mutateAsync: uploadImage, isPending: isUploadingImage } = useMutation<
     { success: boolean; message: string },
     AxiosError<{ message: string }>,
     { devProfileId: number; file: File }
@@ -92,11 +94,15 @@ export default function UserEditDialog({
       devProfileId: number;
       file: File;
     }) => uploadDevImageService(devProfileId, file),
-    onSuccess: () => {
-      addToast('Profile picture uploaded successfully', 'success');
+    onSuccess: (success, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-profile', variables.devProfileId],
+      });
+      addToast(success.message, 'success');
+      form.reset();
     },
     onError: (error) => {
-      addToast(error.message || 'Failed to upload picture', 'error');
+      addToast(error.message, 'error');
     },
   });
 
@@ -169,7 +175,7 @@ export default function UserEditDialog({
       style={{ background: 'black', color: 'white' }}
     >
       <div className="flex items-center justify-end">
-        <Dialog.Close>
+        <Dialog.Close disabled={isPending || isUploadingImage}>
           <X size={30} />
         </Dialog.Close>
       </div>
@@ -220,23 +226,28 @@ export default function UserEditDialog({
                   name="techStacks"
                   control={form.control}
                   render={({ field }) => {
-                    const selectedValues = field.value || [];
-
-                    const handleToggleItem = (itemName: string) => {
-                      const isSelected = selectedValues.includes(itemName);
+                    const selectedValues = Array.isArray(field.value)
+                      ? Array.from(new Set(field.value.map(normalizeTechStack)))
+                      : [];
+                    const handleToggleItem = (itemValue: string) => {
+                      const normalizedValue = normalizeTechStack(itemValue);
+                      const isSelected =
+                        selectedValues.includes(normalizedValue);
                       const newSelection = isSelected
-                        ? selectedValues.filter((name) => name !== itemName)
-                        : [...selectedValues, itemName];
+                        ? selectedValues.filter(
+                            (value) => value !== normalizedValue,
+                          )
+                        : [...selectedValues, normalizedValue];
                       field.onChange(newSelection);
                     };
 
                     const handleRemoveItem = (
-                      itemName: string,
+                      itemValue: string,
                       event: React.MouseEvent,
                     ) => {
                       event.stopPropagation();
                       const newSelection = selectedValues.filter(
-                        (name) => name !== itemName,
+                        (value) => value !== itemValue,
                       );
                       field.onChange(newSelection);
                     };
@@ -269,7 +280,7 @@ export default function UserEditDialog({
                                   key={name}
                                   className="inline-flex items-center gap-1 px-2 py-1 rounded bg-purple-600/20 border border-purple-500/30 text-sm"
                                 >
-                                  {name}
+                                  {getTechStackLabel(name)}
                                   <button
                                     type="button"
                                     onClick={(e) => handleRemoveItem(name, e)}
@@ -291,13 +302,13 @@ export default function UserEditDialog({
                           <ul className="absolute z-10 mt-1 w-full bg-[#1f2937] border border-[#374151] rounded-lg shadow-lg max-h-60 overflow-y-auto">
                             {TechStacks.map((item) => {
                               const isSelected = selectedValues.includes(
-                                item.name,
+                                item.value,
                               );
                               return (
                                 <li
                                   key={item.id}
                                   className="px-4 py-2 cursor-pointer text-white hover:bg-[#374151] flex items-center justify-between"
-                                  onClick={() => handleToggleItem(item.name)}
+                                  onClick={() => handleToggleItem(item.value)}
                                 >
                                   <span>{item.name}</span>
                                   {isSelected && (
@@ -320,13 +331,33 @@ export default function UserEditDialog({
                   name="phone"
                   control={form.control}
                   rules={{ required: 'Phone number is required' }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      country="mm"
-                      inputClass="!bg-[#374151] !w-full !h-12 !text-white"
-                    />
-                  )}
+                  render={({ field }) => {
+                    const phoneValue =
+                      typeof field.value === 'string'
+                        ? field.value.replace(/\D/g, '')
+                        : '';
+
+                    return (
+                      <PhoneInput
+                        country="mm"
+                        value={phoneValue}
+                        onChange={(value) =>
+                          field.onChange(value ? `+${value}` : '')
+                        }
+                        onBlur={() => field.onBlur()}
+                        inputProps={{
+                          name: field.name,
+                          id: field.name,
+                          placeholder: 'Enter your phone number',
+                        }}
+                        containerClass="!w-full"
+                        inputClass="!w-full !h-12 !pl-14 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26] !text-[#F9FAFB] placeholder:!text-[#9CA3AF] focus:!ring-2 focus:!ring-[#9C39FC] focus:!border-[#9C39FC]"
+                        buttonClass="!absolute !left-0 !top-0 !h-12 !w-12 !rounded-l-lg !border-r !border-[#FFFFFF26] !border-y-0 !border-l-0 !bg-transparent hover:!bg-[#FFFFFF10]"
+                        dropdownClass="!bg-[#111827] !border !border-[#374151] !text-[#F9FAFB] !rounded-lg !shadow-xl"
+                        searchClass="!bg-[#1F2937] !border !border-[#374151] !text-[#F9FAFB] !rounded-md"
+                      />
+                    );
+                  }}
                 />
 
                 <Controller
@@ -369,6 +400,7 @@ export default function UserEditDialog({
                 <div className="flex items-center gap-6 mt-4 justify-between">
                   <Button
                     type="button"
+                    disabled={isPending || isUploadingImage}
                     onClick={() => form.reset()}
                     className="w-1/2 bg-transparent border border-[#9C39FC]"
                   >
