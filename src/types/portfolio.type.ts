@@ -79,3 +79,39 @@ export interface ProjectRequestBody {
   repoLink: string;
   image: string;
 }
+
+export interface Developer {
+  id: number;
+  name: string;
+  profilePictureUrl: string | null;
+  github: string;
+  linkedIn: string;
+  aboutDev: string;
+  roleInTeam: string;
+}
+
+export interface AssignedDevs {
+  developers: Developer[];
+}
+
+export interface ProjectPortfolio {
+  id: number;
+  name: string;
+  projectPicUrl: string;
+  description: string;
+  projectLink: string;
+  repoLink: string;
+  reaction_count: number;
+
+  assignedDevs: AssignedDevs;
+
+  reactedProjectPortfolios: unknown[]; // change later if API returns structure
+  projectPortfolioDetails: unknown | null;
+
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | string;
+
+  languageAndTools: string[];
+
+  owner: boolean;
+  alreadyReacted: boolean;
+}
