@@ -10,6 +10,7 @@ import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import LinkedIn from '@/assets/icons/Linkedin.png';
 import Phone from '@/assets/icons/Phone.png';
 import Telegram from '@/assets/icons/Telegram.png';
+import { useToast } from '@/components/ui/toast-provider';
 import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,6 +18,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const UserManagementViewDetail = () => {
   const { userId } = useParams();
+  const { addToast } = useToast();
 
   const id = Number(userId);
 
@@ -29,6 +31,20 @@ const UserManagementViewDetail = () => {
   if (!data?.data) return null;
 
   const user = data.data;
+
+  const handleCopy = (text: string) => {
+    if (!text) return;
+
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        addToast('Copied to clipboard!', 'success', 3000);
+      })
+      .catch((err) => {
+        console.error('Failed to copy!', err);
+        addToast('Failed to copy!', 'error', 3000);
+      });
+  };
 
   return (
     <div className="w-full">
@@ -61,9 +77,13 @@ const UserManagementViewDetail = () => {
                 <p className="text-[#FFFFFF] font-semibold text-base leading-7">
                   {user?.devProfile.name}
                 </p>
-                <p className="text-[#99A1AF] leading-5 text-sm ">
-                  {user?.devProfile.techStacks}
-                </p>
+                <div className="text-[#99A1AF]  flex gap-3 leading-5 text-sm">
+                  {user?.devProfile.techStacks?.map((stack, index) => (
+                    <p key={index} className="bg-[#1E2132] px-2 p-1 rounded-sm">
+                      {stack}
+                    </p>
+                  ))}
+                </div>
               </div>
 
               <div className="flex flex-col gap-3">
@@ -78,7 +98,12 @@ const UserManagementViewDetail = () => {
                       {user?.devProfile.email}
                     </p>
                   </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+                  <img
+                    src={Copy}
+                    alt=""
+                    className="w-4 h-4 text-[#364153]"
+                    onClick={() => handleCopy(user?.devProfile.email || '')}
+                  />
                 </div>
 
                 <div className="flex  items-center  gap-3">
@@ -92,7 +117,12 @@ const UserManagementViewDetail = () => {
                       {user?.devProfile.phone}
                     </p>
                   </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+                  <img
+                    src={Copy}
+                    alt=""
+                    className="w-4 h-4 text-[#364153]"
+                    onClick={() => handleCopy(user?.devProfile.phone || '')}
+                  />
                 </div>
 
                 <div className="flex  items-center  gap-3">
@@ -104,7 +134,12 @@ const UserManagementViewDetail = () => {
                     />
                     <p className="text-[#99A1AF] text-sm leading-5">@nayGa4u</p>
                   </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
+                  <img
+                    src={Copy}
+                    alt=""
+                    className="w-4 h-4 text-[#364153]"
+                    onClick={() => handleCopy('@nayGa4u')}
+                  />
                 </div>
               </div>
 

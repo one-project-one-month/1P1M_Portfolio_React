@@ -60,6 +60,10 @@ export const API_ENDPOINTS = {
   GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
   RESTORE_USER: '/portfolio/api/v1/admin/userManagement/restore',
+
+  //Admin Project Idea
+  DELETE_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
+  APPROVED_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

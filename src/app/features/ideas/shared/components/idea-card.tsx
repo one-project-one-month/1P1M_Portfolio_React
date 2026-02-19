@@ -1,9 +1,10 @@
 import IconActiveHeart from '@/assets/icons/IconActiveHeart';
 import { cn } from '@/lib/utils';
-import { Tooltip } from '@radix-ui/themes';
+import { Avatar, Tooltip } from '@radix-ui/themes';
 import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
 import { ProjectIdeaDropDown } from '../../admin/components/project-idea-drop-down';
-import { changeProjectIdeaStatus, changeProjectIdeaStatusColor } from '../lib';
+import { changeProjectIdeaStatus } from '../lib';
+import { changeProjectIdeaStatusBgColor } from '../lib/idea-utils';
 import type { IdeaType } from '../types/project-idea.types';
 import ProjectIdeaDetailDialog from './project-idea-detail-dialog';
 
@@ -26,6 +27,7 @@ export default function IdeaCard({
     description = 'No description provided.',
     projectTypes = [],
     ownerProfilePicUrl,
+    devUsername,
     reactionCount = 0,
     viewCount = 0,
     isAlreadyReacted,
@@ -36,7 +38,7 @@ export default function IdeaCard({
   );
 
   return (
-    <div className="bg-white/10 flex flex-col gap-2 p-5 backdrop-blur-xs text-white/70 w-full rounded-xl border border-white/5">
+    <div className="bg-white/10 flex flex-col gap-y-2 p-5 backdrop-blur-xs text-white/70 w-full rounded-xl border border-white/5">
       <div className="flex justify-between items-center">
         <Tooltip content={projectIdeaName}>
           <h3 className="capitalize font-bold text-white flex-1 line-clamp-2">
@@ -47,14 +49,14 @@ export default function IdeaCard({
         <span
           className={cn(
             'px-4 py-1 text-xs text-white rounded-md font-semibold whitespace-nowrap',
-            changeProjectIdeaStatusColor(status),
+            changeProjectIdeaStatusBgColor(status),
           )}
         >
           {changeProjectIdeaStatus(status)}
         </span>
       </div>
 
-      <p className="text-sm line-clamp-2 h-16 leading-8">
+      <p className="text-sm line-clamp-2 h-10 my-4">
         {description || 'No description provided.'}
       </p>
 
@@ -75,14 +77,17 @@ export default function IdeaCard({
       <div className="flex justify-between border-b py-4">
         <div className="flex text-sm items-center gap-x-2">
           <span>Submitter</span>
-          <img
-            className="aspect-square w-8 object-cover rounded-full"
+          <Avatar
             src={ownerProfilePicUrl}
+            radius="full"
+            color="gray"
+            className=" bg-gray-600!"
+            fallback={devUsername?.slice(0, 1)}
           />
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-3">
         <div className="flex items-center gap-x-4">
           <button
             type="button"
