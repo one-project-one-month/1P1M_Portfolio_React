@@ -8,7 +8,6 @@ import UserEditDialog from './user-profile-edit-dialog';
 
 interface ProfileActionsProps {
   devProfile: DevProfileType;
-  userId?: number;
   onCopy: (text: string) => void;
   truncate: (text: string, max?: number) => string;
   className?: string;
@@ -17,7 +16,6 @@ interface ProfileActionsProps {
 
 export const ProfileActions = ({
   devProfile,
-  userId,
   onCopy,
   truncate,
   className,
@@ -49,7 +47,7 @@ export const ProfileActions = ({
         </Dialog.Root>
       )}
 
-      <ShareProfileDialog userId={userId} onCopy={onCopy} truncate={truncate} />
+      <ShareProfileDialog onCopy={onCopy} truncate={truncate} />
     </div>
   );
 };

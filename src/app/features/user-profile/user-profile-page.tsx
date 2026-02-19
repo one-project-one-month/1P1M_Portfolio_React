@@ -23,7 +23,6 @@ const UserProfile = () => {
   const userId = useUserInfoStore((state) => state.userInfo?.userId);
 
   const { data, isError, isLoading } = useGetUserProfile(userId);
-  const devProfile = data?.data.devProfile;
 
   const { mutate: react } = useReactProjectIdea();
   const { mutate: unreact } = useUnReactProjectIdea();

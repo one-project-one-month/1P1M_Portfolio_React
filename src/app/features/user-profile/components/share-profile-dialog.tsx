@@ -3,13 +3,11 @@ import { Dialog, IconButton, Tooltip } from '@radix-ui/themes';
 import { Copy, X } from 'lucide-react';
 
 interface ShareProfileDialogProps {
-  userId?: number;
   onCopy: (text: string) => void;
   truncate: (text: string, max?: number) => string;
 }
 
 export const ShareProfileDialog = ({
-  userId,
   onCopy,
   truncate,
 }: ShareProfileDialogProps) => {
