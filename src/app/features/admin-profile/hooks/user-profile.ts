@@ -1,3 +1,4 @@
+'use client';
 import { profileService } from '@/app/features/admin-profile/services/profile-service.ts';
 import { useToast } from '@/components/ui/toast-provider.tsx';
 import { useUserInfoStore } from '@/store/user-info-store.ts';
@@ -18,12 +19,21 @@ export const useProfile = (userId: number | null) => {
   const { data, isLoading: isFetching } = useQuery({
     queryKey: ['profile', userId],
     queryFn: () => profileService.getProfile(userId as number),
-    enabled: typeof userId === 'number' && !isNaN(userId) && userId > 0,
+    enabled: !!userId && !isNaN(userId),
   });
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileSchema),
-    values: data,
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      role: 'Admin',
+      techStacks: [],
+      socialAccounts: [],
+    },
+    values: data as ProfileFormValues,
     mode: 'onChange',
   });
 
@@ -42,9 +52,7 @@ export const useProfile = (userId: number | null) => {
       setIsEditing(false);
       addToast('Profile Updated Successfully!', 'success');
     },
-    onError: (error) => {
-      console.error('Update failed:', error);
-      // Optional: Add an error toast here
+    onError: () => {
       addToast('Failed to update profile.', 'error');
     },
   });
@@ -56,11 +64,11 @@ export const useProfile = (userId: number | null) => {
     setIsEditing(false);
   };
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log(values);
-
+  const onSubmit = (values: ProfileFormValues) => {
     mutation.mutate(values);
-  });
+  };
+
+  const handleSubmit = form.handleSubmit(onSubmit);
 
   return {
     form,
@@ -72,6 +80,6 @@ export const useProfile = (userId: number | null) => {
     isSaving: mutation.isPending,
     handleEdit,
     handleCancel,
-    handleSubmit: onSubmit,
+    handleSubmit,
   };
 };

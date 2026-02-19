@@ -3,14 +3,15 @@ import {
   changeProjectIdeaStatusColor,
 } from '@/app/features/ideas/shared/lib';
 import type { IdeaType } from '@/app/features/ideas/shared/types/project-idea.types';
+import IconActiveHeart from '@/assets/icons/IconActiveHeart';
 import sampleImg from '@/assets/sample-user-img.jpg';
 import Tooltip from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
+import { Eye, HeartIcon } from 'lucide-react';
 
 type IdeaListCardProps = {
-  idea?: IdeaType | null;
-  onReact?: (idea: IdeaType) => void;
+  idea?: (IdeaType & { isAlreadyReacted: boolean }) | null;
+  onReact?: (id: number, isReacted: boolean) => void;
   onViewDetail?: (idea: IdeaType) => void;
   disableActions?: boolean;
 };
@@ -18,7 +19,6 @@ type IdeaListCardProps = {
 function IdeaListCard({
   idea,
   onReact,
-  onViewDetail,
   disableActions = false,
 }: IdeaListCardProps) {
   if (!idea) {
@@ -38,6 +38,7 @@ function IdeaListCard({
     leaderProfilePicUrl,
     reactionCount = 0,
     viewCount = 0,
+    isAlreadyReacted,
   } = idea;
 
   return (
@@ -98,10 +99,14 @@ function IdeaListCard({
           <button
             type="button"
             disabled={disableActions}
-            onClick={() => onReact?.(idea)}
+            onClick={() => onReact?.(idea.projectIdeaId, idea.isAlreadyReacted)}
             className="flex text-xs items-center gap-x-2 hover:text-white transition disabled:opacity-50"
           >
-            <HeartIcon className="w-4" />
+            {isAlreadyReacted ? (
+              <IconActiveHeart className="w-4 text-white" />
+            ) : (
+              <HeartIcon className="w-4" />
+            )}
             <span>{reactionCount}</span>
           </button>
 
@@ -111,14 +116,14 @@ function IdeaListCard({
           </div>
         </div>
 
-        <button
+        {/* <button
           type="button"
           disabled={disableActions}
           onClick={() => onViewDetail?.(idea)}
           className="hover:text-white transition disabled:opacity-50"
         >
           <ExternalLink className="w-4" />
-        </button>
+        </button> */}
       </div>
     </div>
   );

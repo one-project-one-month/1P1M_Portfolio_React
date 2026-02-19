@@ -1,15 +1,17 @@
 import UserManagementContainer from '@/app/features/user-management/components/user-management-container';
 import { UserManagementHeaderSection } from '@/app/features/user-management/components/user-management-header-section';
 import { useState } from 'react';
-import type { FilterType } from '../types/user-management.types';
+import {
+  UserManagementStatus,
+  type FilterType,
+} from '../types/user-management.types';
 
 const DEFAULT_PAGE_SIZE = 5;
-const DEFAULT_STATUS = 'ALL';
 
 const UserManagement = () => {
   const [filter, setFilter] = useState<FilterType>({
     order: 'desc',
-    status: DEFAULT_STATUS,
+    status: UserManagementStatus.ALL,
     search: '',
   });
   const [pagination, setPagination] = useState({

@@ -7,7 +7,7 @@ const OpomRegisteredPeopleList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [totalUser, setTotalUser] = useState(0);
-  const pageSize = 10;
+  const pageSize = 5;
 
   return (
     <div className="space-y-6 w-full">

@@ -10,7 +10,7 @@ const UserManagementContainer = ({
   pageSize,
   onPageChange,
 }: UserManagementContainerPropsType) => {
-  const { data, isPending, isError } = useGetUserManagement({
+  const { data, isPending, isError, error } = useGetUserManagement({
     page: currentPage,
     size: pageSize,
     keyword: filter?.search,
@@ -24,9 +24,15 @@ const UserManagementContainer = ({
     //       : undefined,
   });
 
-  if (isPending) return <div className="text-slate-400">Loading ideas...</div>;
-
-  if (isError) return <div className="text-rose-400">Failed to load users</div>;
+  if (isPending) return <div className="text-slate-400">Loading User...</div>;
+  if (isError)
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-rose-500 text-base font-medium">
+          {(error as Error)?.message}
+        </p>
+      </div>
+    );
 
   // Ensure children always receive an array (empty when no data).
   const items = data?.data ?? [];
@@ -37,7 +43,7 @@ const UserManagementContainer = ({
     <div>
       <UserManagementTable data={items} />
 
-      <div className="flex items-center justify-between mt-14">
+      <div className="flex items-center text-center justify-between mt-14">
         {/* Total Count */}
         <span className={`text-[${COLORS.secondary}] font-semibold`}>
           Total - {totalItems}

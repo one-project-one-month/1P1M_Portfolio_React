@@ -1,9 +1,14 @@
 import BackButton from '@/components/common/back-button';
 import type { UserProfile } from '@/types/dev';
 import { LightbulbOff } from 'lucide-react';
+import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import IdeaListCard from '../../home/components/idea-list/idea-list-card';
 import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
+import {
+  useReactProjectIdea,
+  useUnReactProjectIdea,
+} from '../../ideas/shared/hooks/project-idea.query';
 import type { IdeaType } from '../../ideas/shared/types/project-idea.types';
 import PortfolioCardSkeleton from '../../portfolio/components/portfolio-card-skeleton';
 import ProjectList from '../../portfolio/components/project-list';
@@ -14,17 +19,26 @@ import DeveloperProfileCardSkeleton from '../components/developer-profile-skelet
 function UserProfilePage() {
   const navigate = useNavigate();
   const { userId } = useParams();
+  if (!userId) navigate('/not-found');
 
-  if (!userId) {
-    navigate('/not-found');
-  }
+  const { data, isLoading, isError } = useGetUserProfile(Number(userId));
 
-  const { data, isLoading, isError } = useGetUserProfile({
-    userId: Number(userId),
-  });
+  const { mutate: react } = useReactProjectIdea();
+  const { mutate: unreact } = useUnReactProjectIdea();
+
+  const handleReactIdea = useCallback(
+    (id: number, isReacted: boolean) => {
+      if (isReacted) {
+        unreact(id);
+      } else react(id);
+    },
+    [react, unreact],
+  );
 
   const user = (data?.data.devProfile ?? null) as UserProfile | null;
-  const ideaLists = (data?.data.projectIdeas ?? []) as IdeaType[];
+  const ideaLists = (data?.data.projectIdeas ?? []) as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
   const projectLists = data?.data.projectPortfolios ?? [];
 
   if (isError) navigate('/not-found');
@@ -59,7 +73,11 @@ function UserProfilePage() {
                   ideaLists
                     .slice(0, 3)
                     .map((idea) => (
-                      <IdeaListCard key={idea.projectIdeaId} idea={idea} />
+                      <IdeaListCard
+                        key={idea.projectIdeaId}
+                        idea={idea}
+                        onReact={handleReactIdea}
+                      />
                     ))
                 ) : (
                   <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">

@@ -5,7 +5,6 @@ import {
   AdminProfilePage,
   DashboardPage,
   DeveloperPage,
-  IdeaManagementEditPage,
   IdeaManagementPage,
   IdeaPage,
   MyProfilePage,
@@ -45,7 +44,7 @@ const router = createBrowserRouter([
       { path: '/portfolios', element: <PortfolioPage /> },
       { path: '/developers', element: <DeveloperPage /> },
       { path: 'profile/:userId', element: <UserProfilePage /> },
-      { path: '/about us', element: <AboutUsPage /> },
+      { path: '/about-us', element: <AboutUsPage /> },
       { path: '/me', element: <MyProfilePage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
@@ -55,7 +54,7 @@ const router = createBrowserRouter([
           { path: '/portfolios', element: <PortfolioPage /> },
           { path: '/developers', element: <DeveloperPage /> },
           { path: 'profile/:username', element: <UserProfilePage /> },
-          { path: '/about us', element: <AboutUsPage /> },
+          { path: '/about-us', element: <AboutUsPage /> },
           { path: '/me', element: <MyProfilePage /> },
           { path: '/ideas', element: <IdeaPage /> },
           { path: 'opom-register', element: <OpomRegisterPage /> },
@@ -98,11 +97,6 @@ const router = createBrowserRouter([
             element: <EditPortfolioPage />,
           },
           { path: 'idea-management', element: <IdeaManagementPage /> },
-          {
-            path: 'idea-management/portfolio/import',
-            element: <IdeaManagementEditPage />,
-          },
-
           { path: 'user-management', element: <UserManagement /> },
 
           {
@@ -117,7 +111,7 @@ const router = createBrowserRouter([
             element: <OpomRegisteredPeopleList />,
           },
           {
-            path: 'opom-registered-people-list/:id',
+            path: 'opom-registered-people-list/user-profile/:id',
             element: <PersonProfilePage />,
           },
         ],

@@ -5,11 +5,18 @@ import ProjectIdeaStatus from '../project-idea-status';
 export default function EditStep3({
   form,
   isPending,
+  onBack,
 }: {
   form: UseFormReturn<Partial<EditIdeaType>>;
   isPending: boolean;
+  onBack?: () => void;
 }) {
   return (
-    <ProjectIdeaStatus type="edit-form" editForm={form} isPending={isPending} />
+    <ProjectIdeaStatus
+      type="edit-form"
+      editForm={form}
+      isPending={isPending}
+      onBack={onBack}
+    />
   );
 }

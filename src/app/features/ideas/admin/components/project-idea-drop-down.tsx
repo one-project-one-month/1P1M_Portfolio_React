@@ -83,7 +83,12 @@ export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
             data={data}
           />
 
-          <DropdownMenu.Item onClick={() => setDeleteOpen(true)}>
+          <DropdownMenu.Item
+            onSelect={(e) => {
+              e.preventDefault();
+              setDeleteOpen(true);
+            }}
+          >
             Delete Idea
           </DropdownMenu.Item>
 

@@ -9,7 +9,7 @@ export interface Timeline {
   name: string;
   startDate: string;
   endDate: string;
-  timelineStatus: string;
+  timeLineStatus: string;
 }
 
 export interface TimelineProps {

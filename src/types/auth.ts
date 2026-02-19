@@ -7,6 +7,7 @@ export interface LoginResponse {
   userId: number | undefined;
   username: string | undefined;
   email: string | undefined;
+  profilePictureUrl: string | null | undefined;
   roleId: number;
   role: 'ADMIN' | 'USER' | null;
   isNewUserLogin: boolean;
