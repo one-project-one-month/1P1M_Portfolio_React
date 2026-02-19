@@ -1,126 +1,134 @@
-import PjImage from '@/assets/project-image.png';
+import BackButton from '@/components/common/back-button';
 import { useUserInfoStore } from '@/store/user-info-store';
-import { IdeaCard } from '../ideas/shared/components';
+import type { UserProfile } from '@/types/dev';
+import type { ProjectPortfolio } from '@/types/portfolio.type';
+import { LightbulbOff, List } from 'lucide-react';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DeveloperProfileCard from '../developers/components/developer-profile-card';
+import DeveloperProfileCardSkeleton from '../developers/components/developer-profile-skeleton-card';
+import ProjectCard from '../developers/components/project-card';
+import IdeaListCard from '../home/components/idea-list/idea-list-card';
+import IdeaListCardSkeleton from '../home/components/idea-list/idea-list-card-skeleton';
+import {
+  useReactProjectIdea,
+  useUnReactProjectIdea,
+} from '../ideas/shared/hooks/project-idea.query';
 import type { IdeaType } from '../ideas/shared/types/project-idea.types';
-import ProjectCard from '../portfolio/components/project-card';
-import { ProfileActions } from './components/profile-actions';
-import { ProfileHeader } from './components/profile-header';
-import { ProfileInfo } from './components/profile-info';
-import { ProjectSection } from './components/project-section';
-import { useClipboard } from './hooks/use-clipboard';
+import PortfolioCardSkeleton from '../portfolio/components/portfolio-card-skeleton';
 import { useGetUserProfile } from './hooks/use-user-profile';
-import { truncate } from './utils/string.utils';
 
 const UserProfile = () => {
-  const { copyToClipboard } = useClipboard();
+  const navigate = useNavigate();
   const userId = useUserInfoStore((state) => state.userInfo?.userId);
 
-  const { data, isPending, isError } = useGetUserProfile(userId);
-  const devProfile = data?.data.devProfile;
-  const projectIdeas = data?.data.projectIdeas as (IdeaType & {
+  const { data, isError, isLoading } = useGetUserProfile(userId);
+
+  const { mutate: react } = useReactProjectIdea();
+  const { mutate: unreact } = useUnReactProjectIdea();
+
+  const handleReactIdea = useCallback(
+    (id: number, isReacted: boolean) => {
+      if (isReacted) {
+        unreact(id);
+      } else react(id);
+    },
+    [react, unreact],
+  );
+
+  const user = (data?.data.devProfile ?? null) as UserProfile | null;
+  const ideaLists = (data?.data.projectIdeas ?? []) as (IdeaType & {
     isAlreadyReacted: boolean;
   })[];
-  const projectPortfolios = data?.data.projectPortfolios;
+  const projectLists = (data?.data.projectPortfolios ?? []) as
+    | ProjectPortfolio[]
+    | [];
 
-  if (isPending) {
-    return <div className="text-slate-400">Loading profile...</div>;
-  }
-
-  if (isError || !data || !devProfile) {
+  if (isError) {
     return <div className="text-rose-400">Failed to load profile</div>;
   }
 
   return (
-    <div className="space-y-14 py-10">
-      {/* Profile Section */}
-      <div className="py-6 px-4 md:px-12 flex flex-col md:flex-row items-start md:items-start justify-between gap-6 md:gap-0 bg-[#FFFFFF1A] rounded-lg backdrop-blur-md">
-        <div className="w-full md:max-w-9/12 flex flex-col sm:flex-row items-start gap-6 py-2 md:py-4">
-          <ProfileHeader devProfile={devProfile} />
-          <ProfileInfo devProfile={devProfile} onCopy={copyToClipboard} />
-        </div>
-        <ProfileActions
-          devProfile={devProfile}
-          userId={userId}
-          onCopy={copyToClipboard}
-          truncate={truncate}
-        />
+    <div className="w-full">
+      <BackButton onClick={() => navigate(-1)} />
+      <div className="my-3">
+        {isLoading ? (
+          <div className="flex flex-col gap-6">
+            <DeveloperProfileCardSkeleton />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <IdeaListCardSkeleton key={i} />
+              ))}
+            </div>
+            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map(() => {
+                return <PortfolioCardSkeleton />;
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <DeveloperProfileCard isMyProfile={true} user={user} />
+            <div>
+              <h1 className="text-white text-xl mb-6 font-semibold">
+                Project Idea
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {ideaLists.length > 0 ? (
+                  ideaLists
+                    .slice(0, 3)
+                    .map((idea) => (
+                      <IdeaListCard
+                        key={idea.projectIdeaId}
+                        idea={idea}
+                        onReact={handleReactIdea}
+                      />
+                    ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+                    <LightbulbOff size={48} className="mb-4 opacity-60" />
+                    <p className="text-lg font-medium">No ideas yet</p>
+                    <p className="text-sm mt-2 text-white/30">
+                      Submit a project idea.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div>
+              <h1 className="text-white text-xl mb-6 font-semibold">
+                Project Portfolios
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projectLists.length > 0 ? (
+                  projectLists
+                    .slice(0, 3)
+                    .map((pro) => (
+                      <ProjectCard
+                        views={0}
+                        react={pro.reaction_count}
+                        title={pro.name}
+                        developers={pro.assignedDevs.developers}
+                        id={pro.id}
+                        status={pro.status}
+                        image={pro.projectPicUrl}
+                        isReacted={pro.alreadyReacted}
+                      />
+                    ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+                    <List size={48} className="mb-4 opacity-60" />
+                    <p className="text-lg font-medium">No Portfolios yet</p>
+                    <p className="text-sm mt-2 text-white/30">
+                      Create a project portfolio.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Project Ideas Section */}
-      <ProjectSection
-        title="Project Ideas"
-        isEmpty={!projectIdeas || projectIdeas.length === 0}
-        emptyMessage="No project ideas"
-      >
-        {projectIdeas?.map((idea) => (
-          <IdeaCard
-            key={idea.projectIdeaId}
-            idea={{
-              projectIdeaId: idea.projectIdeaId,
-              projectIdeaName: idea.projectIdeaName,
-              status: idea.status as
-                | 'REJECTED'
-                | 'APPROVED'
-                | 'IN_PROGRESS'
-                | 'COMPLETED'
-                | 'PENDING'
-                | 'DELETED',
-              description: idea.description,
-              reactionCount: idea.reactionCount,
-              viewCount: idea.viewCount,
-              dev_id: idea.dev_id,
-              dev_Email: idea.dev_Email,
-              leader_id: idea.leader_id,
-              projectTypes: idea.projectTypes,
-              devUsername: idea.devUsername,
-              ownerProfilePicUrl: idea.ownerProfilePicUrl || '',
-              leaderProfilePicUrl: idea.leaderProfilePicUrl || '',
-              isAlreadyReacted: idea.isAlreadyReacted,
-            }}
-          />
-        ))}
-      </ProjectSection>
-
-      {/* Project Portfolios Section */}
-      <ProjectSection
-        title="Project Portfolios"
-        isEmpty={!projectPortfolios || projectPortfolios.length === 0}
-        emptyMessage="No project portfolios"
-      >
-        {projectPortfolios?.map((project) => (
-          <ProjectCard
-            key={project.id}
-            image={project.projectPicUrl || PjImage}
-            title={project.name}
-            description={project.description || ''}
-            initialLikes={project.reactedCount || 0}
-            initialViews={project.viewCount || 0}
-            onClickReact={() => {}}
-            project={{
-              ...project,
-              description: project.description || '',
-              projectLink: project.projectLink || '',
-              repoLink: project.repoLink || '',
-              projectPortfolioStatus: 'ACTIVE',
-              reactedProjectPortfolios: [],
-              languageAndTools: project.projectTypes || [],
-              teams: project.teams.map((team) => ({
-                members: team.members.map((member) => ({
-                  id:
-                    typeof member.id === 'number'
-                      ? member.id
-                      : parseInt(member.id as string),
-                  name: member.name,
-                  profilePictureUrl: member.profilePictureUrl,
-                  github: member.github,
-                  linkedIn: member.linkedIn,
-                  aboutDev: member.aboutDev,
-                })),
-              })),
-            }}
-          />
-        ))}
-      </ProjectSection>
     </div>
   );
 };

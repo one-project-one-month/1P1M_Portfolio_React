@@ -39,8 +39,8 @@ export const OpomRegisteredListTable = ({
                 <td className=" py-4">
                   <div className="flex items-center gap-3">
                     <img
-                      // src={person.avatar}
-                      alt={person.name || sampleUserImgUrl}
+                      src={sampleUserImgUrl}
+                      alt={person.name}
                       className="w-9 h-9 rounded-full object-cover border border-slate-700"
                     />
                     <Link

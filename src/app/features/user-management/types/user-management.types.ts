@@ -64,7 +64,14 @@ export const userDetailShema = z.object({
 export const projectIdeaSchema = z.object({
   projectIdeaId: z.number(),
   projectIdeaName: z.string(),
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED']),
+  status: z.enum([
+    'REJECTED',
+    'APPROVED',
+    'IN_PROGRESS',
+    'COMPLETED',
+    'DELETED',
+    'PENDING',
+  ]),
   description: z.string(),
   reactionCount: z.number(),
   viewCount: z.number(),

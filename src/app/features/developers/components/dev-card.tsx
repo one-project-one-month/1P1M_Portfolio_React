@@ -54,12 +54,20 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
               {name}
             </h3>
 
-            <div className="mt-2 mb-3 min-h-7">
-              <span className="inline-block bg-[#2E3140] border border-white/10 text-[#7F8EA3] text-xs px-3 py-1 rounded-lg truncate max-w-full">
-                {tech_stack?.length
-                  ? tech_stack.slice(0, 2).join(', ')
-                  : 'No techstack'}
-              </span>
+            <div className="mt-2 flex gap-2 mb-3 min-h-7">
+              {tech_stack?.length ? (
+                tech_stack
+                  .slice(0, 2)
+                  .map((t) => (
+                    <span className="bg-slate-700/80 border text-xs text-slate-400 rounded-md border-slate-400 px-3 p-1">
+                      {t}
+                    </span>
+                  ))
+              ) : (
+                <span className="bg-slate-700/80 border text-xs text-slate-400 rounded-md border-slate-400 px-3 p-1">
+                  No techstack
+                </span>
+              )}
             </div>
 
             <p className="text-[#99A1AF] text-sm leading-relaxed line-clamp-2 h-12">

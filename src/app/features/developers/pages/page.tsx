@@ -49,8 +49,8 @@ const Developer = () => {
   const DevProfileDatas = (data?.data ?? []) as DevProfile[];
   const totalPages = data?.meta?.totalPages ?? 1;
 
-  const handleProfileView = (devId: number) => {
-    navigate(`/profile/${devId}`);
+  const handleProfileView = (user_id: number) => {
+    navigate(`/profile/${user_id}`);
   };
 
   return (
@@ -88,14 +88,14 @@ const Developer = () => {
               <DevCard
                 key={devProfile.dev_id}
                 devProfile={devProfile}
-                viewProfile={() => handleProfileView(devProfile.dev_id)}
+                viewProfile={() => handleProfileView(devProfile.user_id)}
               />
             ))
           )}
         </div>
       </div>
 
-      <div className="w-full flex justify-center">
+      <div className="w-full mt-4 flex justify-center">
         <Pagination
           currentPage={curPage}
           totalPages={totalPages}
