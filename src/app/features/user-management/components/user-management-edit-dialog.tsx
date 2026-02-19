@@ -145,7 +145,7 @@ const UserManagementEditDialog = ({
                     control={form.control}
                     render={({ field }) => (
                       <FormDropdown
-                        placeholder="Tech Stack"
+                        placeholder="Role"
                         menuList={TechStacks}
                         selectedValue={
                           TechStacks.find(
@@ -154,14 +154,6 @@ const UserManagementEditDialog = ({
                         }
                         onChange={field.onChange}
                       />
-                    )}
-                  />
-
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <FormField placeholder="Email" {...field} />
                     )}
                   />
 

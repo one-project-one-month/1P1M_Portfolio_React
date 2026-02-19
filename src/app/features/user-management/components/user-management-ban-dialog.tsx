@@ -45,19 +45,12 @@ const UserManagementBanDialog = ({
       description: 'Reason not covered by the options above.',
     },
   ];
-
   const [selectReason, setSelectedReason] = useState<string[]>([]);
 
   const toggleReason = (reason: string) => {
     setSelectedReason((pre) =>
       pre.includes(reason) ? pre.filter((r) => r !== reason) : [...pre, reason],
     );
-  };
-
-  const hanleConfirm = () => {
-    const reason = selectReason.join(',');
-    if (!reason) return;
-    banUser({ id: userId, desc: reason });
   };
   return (
     <Dialog.Root open={banOpen} onOpenChange={setBanOpen}>
