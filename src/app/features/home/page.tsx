@@ -18,7 +18,9 @@ export default function HomePage() {
     <div className=" max-w-6xl mx-auto  w-full">
       {/* Start Welcome Page Content */}
       <section className="flex relative  flex-col items-center justify-center  text-center text-white  my-14">
-        <Curve className="fixed left-1/2  top-1/2 overflow-y-hidden -translate-x-1/2 w-screen pointer-events-none" />
+        <div className="absolute h-100 overflow-hidden left-1/2  top-1/2 overflow-y-hidden -translate-x-1/2 w-screen">
+          <Curve className="w-full pointer-events-none" />
+        </div>
 
         <div className="text-4xl lg:text-8xl">
           <h1>An Open Space For</h1>

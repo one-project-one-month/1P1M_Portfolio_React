@@ -13,7 +13,7 @@ export const ShareProfileDialog = ({
   onCopy,
   truncate,
 }: ShareProfileDialogProps) => {
-  const shareUrl = `${window.location.href}/${userId}`;
+  const shareUrl = window.location.href;
 
   return (
     <Dialog.Root>
