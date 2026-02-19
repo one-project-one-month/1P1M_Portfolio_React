@@ -175,7 +175,10 @@ export default function UserEditDialog({
       style={{ background: 'black', color: 'white' }}
     >
       <div className="flex items-center justify-end">
-        <Dialog.Close disabled={isPending || isUploadingImage}>
+        <Dialog.Close
+          className="cursor-pointer"
+          disabled={isPending || isUploadingImage}
+        >
           <X size={30} />
         </Dialog.Close>
       </div>
@@ -398,14 +401,16 @@ export default function UserEditDialog({
                   )}
                 />
                 <div className="flex items-center gap-6 mt-4 justify-between">
-                  <Button
-                    type="button"
-                    disabled={isPending || isUploadingImage}
-                    onClick={() => form.reset()}
-                    className="w-1/2 bg-transparent border border-[#9C39FC]"
-                  >
-                    Cancel
-                  </Button>
+                  <Dialog.Close disabled={isPending || isUploadingImage}>
+                    <Button
+                      type="button"
+                      disabled={isPending || isUploadingImage}
+                      className="w-1/2 bg-transparent border border-[#9C39FC]"
+                    >
+                      Cancel
+                    </Button>
+                  </Dialog.Close>
+
                   <Button
                     type="submit"
                     disabled={isPending || isUploadingImage}
