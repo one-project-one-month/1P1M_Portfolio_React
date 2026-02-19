@@ -4,7 +4,7 @@ import { logout } from '@/lib/utils.ts';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { Tooltip } from '@radix-ui/themes';
 import { LogOut } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const user = useUserInfoStore.getState().userInfo;
@@ -14,7 +14,13 @@ const Sidebar = () => {
       <div className="space-y-10">
         {/* logo */}
         <div className="text-center flex justify-start items-center px-4">
-          <img src={opomIconUrl} alt="OPOM" />
+          <Link to="/">
+            <img
+              src={opomIconUrl}
+              alt="Company Logo"
+              className="cursor-pointer h-8 transition-transform active:scale-95 hover:scale-105"
+            />
+          </Link>
         </div>
 
         <nav className="text-sm">

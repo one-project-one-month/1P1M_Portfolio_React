@@ -45,28 +45,31 @@ export const editProjectIdeaService = async (
   }
 };
 
-export const deleteProjectIdeaService = async (projectIdeaId: number) => {
+export const deleteProjectIdeaService = async (ideaId: number) => {
   try {
-    const response = await apiClient.patch<IdeaDeleteResponseType>(
-      `${API_ENDPOINTS.RESTORE_USER}/${projectIdeaId}`,
+    const response = await apiClient.delete<IdeaDeleteResponseType>(
+      `${API_ENDPOINTS.DELETE_PROJECT_IDEA}/${ideaId}`,
     );
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
-    console.error('Error banning user:', e);
+    console.error('Error delete project idea:', e);
     throw e;
   }
 };
 
-export const ideaStatusChangeService = async (projectIdeaId: number) => {
+export const ideaStatusChangeService = async (
+  projectIdeaId: number,
+  status: number,
+) => {
   try {
     const response = await apiClient.patch<IdeaStatusUpdateResponseType>(
-      `${API_ENDPOINTS.RESTORE_USER}/${projectIdeaId}`,
+      `/portfolio/api/v1/project-idea?projectIdeaId=${projectIdeaId}&status=${status}`,
     );
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
-    console.error('Error banning user:', e);
+    console.error('Error idea status change error:', e);
     throw e;
   }
 };

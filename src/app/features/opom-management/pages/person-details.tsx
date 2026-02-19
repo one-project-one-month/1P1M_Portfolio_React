@@ -60,9 +60,13 @@ const PersonProfilePage = () => {
                 <p className="text-[#FFFFFF] font-semibold text-base leading-7">
                   {user?.devProfile.name}
                 </p>
-                <p className="text-[#99A1AF] leading-5 text-sm ">
-                  {user?.devProfile.techStacks}
-                </p>
+                <div className="text-[#99A1AF]  flex gap-3 leading-5 text-sm">
+                  {user?.devProfile.techStacks?.map((stack, index) => (
+                    <p key={index} className="bg-[#1E2132] px-2 p-1 rounded-sm">
+                      {stack}
+                    </p>
+                  ))}
+                </div>
               </div>
 
               <div className="flex flex-col gap-3">

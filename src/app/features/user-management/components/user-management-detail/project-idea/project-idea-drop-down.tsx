@@ -2,26 +2,39 @@ import UserProjectIdeaDeleteDialog from '@/app/features/user-management/componen
 import PorjectIdeaViewDetailDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-detail-dialog';
 import ProjectIdeaEditDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-edit-dialog';
 import UserProjectIdeaStatusChangeDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
-import { useDeleteProjectIdea } from '@/app/features/user-management/hook/use-project-idea';
+import {
+  useDeleteProjectIdea,
+  useEditProjectIdea,
+  useProjectIdeaStatusChage,
+} from '@/app/features/user-management/hook/use-project-idea';
 import type { IdeaType } from '@/app/features/user-management/types/project-idea-type';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 export const ProjectIdeaDropDown = ({
-  projectIdeas,
+  projectIdea,
 }: {
-  projectIdeas: IdeaType;
+  projectIdea: IdeaType;
 }) => {
   const [viewDetailOpen, setViewDetailOpend] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [statusChangeOpen, setStatusChangeOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const { mutate: editMutate } = useEditProjectIdea();
   const { mutate: deleteMutate } = useDeleteProjectIdea();
+  const { mutate: statusChageMutate } = useProjectIdeaStatusChage();
+
+  const handleItemClick = (callback: () => void) => {
+    setDropdownOpen(false);
+    callback();
+  };
 
   return (
     <>
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenu.Trigger>
           <Button
             variant="ghost"
@@ -41,7 +54,7 @@ export const ProjectIdeaDropDown = ({
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
-              setViewDetailOpend(true);
+              handleItemClick(() => setViewDetailOpend(true));
             }}
           >
             View Detail
@@ -49,7 +62,7 @@ export const ProjectIdeaDropDown = ({
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
-              setEditDialogOpen(true);
+              handleItemClick(() => setEditDialogOpen(true));
             }}
           >
             Edit Idea
@@ -57,6 +70,7 @@ export const ProjectIdeaDropDown = ({
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
+              handleItemClick(() => setDeleteOpen(true));
               setDeleteOpen(true);
             }}
           >
@@ -66,7 +80,7 @@ export const ProjectIdeaDropDown = ({
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
-              setStatusChangeOpen(true);
+              handleItemClick(() => setStatusChangeOpen(true));
             }}
           >
             Change Status
@@ -77,7 +91,9 @@ export const ProjectIdeaDropDown = ({
               e.preventDefault();
             }}
           >
-            Import Portfolio
+            <Link to="/admin/portfolio-management/create-portfolio">
+              Import Portfolio
+            </Link>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
@@ -90,18 +106,22 @@ export const ProjectIdeaDropDown = ({
       <ProjectIdeaEditDialog
         editDialogOpen={editDialogOpen}
         setEditDialogOpen={setEditDialogOpen}
+        editMutate={editMutate}
+        projectIdea={projectIdea}
       />
 
       <UserProjectIdeaDeleteDialog
         deleteOpen={deleteOpen}
         setDeleteOpen={setDeleteOpen}
         deleteMutate={deleteMutate}
-        projectIdeaId={projectIdeas.projectIdeaId}
+        projectIdeaId={projectIdea.projectIdeaId}
       />
 
       <UserProjectIdeaStatusChangeDialog
         statusChangeOpen={statusChangeOpen}
         setStatusChangeOpen={setStatusChangeOpen}
+        statusChageMutate={statusChageMutate}
+        projectIdeaId={projectIdea.projectIdeaId}
       />
     </>
   );

@@ -29,12 +29,14 @@ export const IdeaSchema = z.object({
   viewCount: z.number(),
   dev_id: z.number(),
   devUsername: z.string(),
-  dev_Email: z.email(),
+
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number().optional(),
   leaderEmail: z.email().optional(),
   leaderProfilePicUrl: z.string().optional(),
   projectTypes: z.array(z.string()),
+  dev_Email: z.string().nullable(),
+  isAlreadyReacted: z.boolean(),
 });
 
 export const createIdeaSchema = z.object({
@@ -52,6 +54,7 @@ export const editIdeaSchema = createIdeaSchema.extend({
     IdeaStatus.PENDING,
     IdeaStatus.DELETED,
   ]),
+  projectIdeaId: z.number(),
   dev_id: z.number(),
   devUsername: z.string(),
   ownerProfilePicUrl: z.string().optional(),

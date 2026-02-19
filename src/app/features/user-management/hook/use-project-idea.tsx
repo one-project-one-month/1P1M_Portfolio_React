@@ -19,10 +19,13 @@ export const useEditProjectIdea = () => {
   return useMutation<
     IdeaEditResponseType,
     AxiosError<{ message: string }>,
-    { projectIdeaId: number; formData: EditIdeaType }
+    // { projectIdeaId: number; formData: EditIdeaType }
+    EditIdeaType
   >({
-    mutationFn: ({ projectIdeaId, formData }) =>
-      editProjectIdeaService(projectIdeaId, formData),
+    // mutationFn: ({ projectIdeaId, formData }) =>
+    //   editProjectIdeaService(projectIdeaId, formData),
+    mutationFn: (formData) =>
+      editProjectIdeaService(formData.projectIdeaId, formData),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(
@@ -73,8 +76,13 @@ export const useProjectIdeaStatusChage = () => {
   const { addToast } = useToast();
 
   return useMutation({
-    mutationFn: ({ projectIdeaId }: { projectIdeaId: number }) =>
-      ideaStatusChangeService(projectIdeaId),
+    mutationFn: ({
+      projectIdeaId,
+      status,
+    }: {
+      projectIdeaId: number;
+      status: number;
+    }) => ideaStatusChangeService(projectIdeaId, status),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });

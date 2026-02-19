@@ -22,7 +22,23 @@ const UserProjectIdeaDeleteDialog = ({
   trigger,
   deleteOpen,
   setDeleteOpen,
+  deleteMutate,
+  projectIdeaId,
 }: UserProjectIdeaDeleteProps) => {
+  const handleDelete = () => {
+    deleteMutate(
+      { projectIdeaId },
+      {
+        onSuccess: () => {
+          setDeleteOpen(false);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      },
+    );
+  };
+
   return (
     <Dialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
       <Dialog.Trigger>
@@ -55,10 +71,16 @@ const UserProjectIdeaDeleteDialog = ({
           </div>
 
           <div className="flex justify-between">
-            <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
+            <Button
+              onClick={() => setDeleteOpen(false)}
+              className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]"
+            >
               Cancel
             </Button>
-            <Button className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]">
+            <Button
+              onClick={handleDelete}
+              className="w-[45%]  bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
+            >
               Confirm
             </Button>
           </div>

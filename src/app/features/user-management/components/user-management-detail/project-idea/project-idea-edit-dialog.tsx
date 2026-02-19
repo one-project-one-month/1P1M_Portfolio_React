@@ -2,89 +2,141 @@ import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import FormField from '@/components/ui/form-field';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { Checkbox, Dialog } from '@radix-ui/themes';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+
+import {
+  editIdeaSchema,
+  type EditIdeaType,
+  type IdeaType,
+} from '@/app/features/user-management/types/project-idea-type';
 
 type ProjectIdeaEditDialogProps = {
   trigger?: React.ReactNode;
   editDialogOpen: boolean;
   setEditDialogOpen: (open: boolean) => void;
+
+  projectIdea: IdeaType;
+  editMutate: (data: EditIdeaType) => void;
 };
 
-const projectSchema = z.object({
-  name: z.string().min(3, 'Project name must be at least 3 characters'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
-  projectType: z.array(z.string()).min(1, 'Select at least one project type'),
-  teamLeader: z.array(z.string()).min(1, 'Team Leader name'),
-});
-
-type ProjectFormValues = z.infer<typeof projectSchema>;
+type Status = 'Pending' | 'Approved' | 'Archived';
+type statusChangeDataProps = { name: Status; description: string };
 
 const projectTypeOptions = ['Mobile', 'Website', 'Desktop', 'Game'];
-const teamLeadrOptions = ['Backend', 'Frontend', 'Ui|Ux'];
 
 export default function ProjectIdeaEditDialog({
   trigger,
   editDialogOpen,
   setEditDialogOpen,
+  projectIdea,
+  editMutate,
 }: ProjectIdeaEditDialogProps) {
   const [step, setStep] = useState(1);
   const [projectTypeShow, setProjectTypeShowed] = useState(false);
   const [search, setSearch] = useState('');
 
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectSchema),
+  const statusChageData: statusChangeDataProps[] = [
+    {
+      name: 'Pending',
+      description: 'This idea remains under consideration.',
+    },
+    {
+      name: 'Approved',
+      description: 'This idea is confirmed to proceed.',
+    },
+    {
+      name: 'Archived',
+      description: 'This idea is no longer active .',
+    },
+  ];
+
+  const developers = [
+    {
+      dev_id: 1,
+      name: 'Tina',
+      email: 'tina@gmail.com',
+      role: 'UI | UX Designer',
+      profilePictureUrl: sampleUserImgUrl,
+    },
+    {
+      dev_id: 2,
+      name: 'Bora',
+      email: 'bora@gmail.com',
+      role: 'Backend',
+      profilePictureUrl: sampleUserImgUrl,
+    },
+  ];
+
+  const [selectReason, setSelectedReason] = useState<string | null>(null);
+
+  const toggleReason = (reason: string) => {
+    setSelectedReason((pre) => (pre === reason ? null : reason));
+  };
+
+  const statusColorList: Record<Status, string> = {
+    Pending: 'text-[#FD9A00]',
+    Approved: 'text-[#7CCF00]',
+    Archived: 'text-[#00B8DB]',
+  };
+
+  const statusColor = (name: Status) => statusColorList[name];
+
+  const form = useForm<EditIdeaType>({
+    resolver: zodResolver(editIdeaSchema),
     defaultValues: {
-      name: 'Smart Order & Booking Management System',
-      description:
-        'A web-based system that allows customers to book tables and place food orders online.',
-      projectType: ['Website', 'Mobile'],
-      teamLeader: ['Backend'],
+      projectIdeaId: projectIdea.projectIdeaId,
+      projectIdeaName: projectIdea.projectIdeaName,
+      description: projectIdea.description,
+      projectTypes: projectIdea.projectTypes,
+      status: projectIdea.status,
+      dev_id: projectIdea.dev_id,
+      devUsername: projectIdea.devUsername,
+      ownerProfilePicUrl: projectIdea.ownerProfilePicUrl,
+      leader_id: projectIdea.leader_id ?? 0,
+      leaderProfilePicUrl: projectIdea.leaderProfilePicUrl,
     },
   });
 
   const selectedTypes = useWatch({
     control: form.control,
-    name: 'projectType',
+    name: 'projectTypes',
   });
 
   const selectedLeader = useWatch({
     control: form.control,
-    name: 'teamLeader',
+    name: 'leader_id',
   });
 
   const filteredOptions = projectTypeOptions.filter((opt) =>
     opt.toLowerCase().includes(search.toLocaleLowerCase()),
   );
-
-  const filterLeaderOptions = teamLeadrOptions.filter((item) =>
-    item.toLocaleUpperCase().includes(search.toLocaleLowerCase()),
-  );
-
   const toggleType = (type: string) => {
     const current = selectedTypes || [];
     if (current.includes(type)) {
       form.setValue(
-        'projectType',
+        'projectTypes',
         current.filter((t) => t !== type),
         { shouldValidate: true },
       );
     } else {
-      form.setValue('projectType', [...current, type], {
+      form.setValue('projectTypes', [...current, type], {
         shouldValidate: true,
       });
     }
   };
 
-  const onSubmit = (data: ProjectFormValues) => {
-    console.log('FORM DATA:', data);
-
+  const onSubmit = (data: EditIdeaType) => {
     if (step < 3) {
       setStep(step + 1);
     } else {
+      editMutate({
+        ...data,
+        projectIdeaId: projectIdea.projectIdeaId,
+      });
       setEditDialogOpen(false);
     }
   };
@@ -98,6 +150,7 @@ export default function ProjectIdeaEditDialog({
       <Dialog.Trigger>
         <button className="text-white">{trigger}</button>
       </Dialog.Trigger>
+      <DialogTitle></DialogTitle>
 
       <Dialog.Content
         size="4"
@@ -170,7 +223,7 @@ export default function ProjectIdeaEditDialog({
                   </label>
 
                   <Controller
-                    name="name"
+                    name="projectIdeaName"
                     control={form.control}
                     render={({ field }) => (
                       <FormField placeholder="" {...field} />
@@ -204,8 +257,8 @@ export default function ProjectIdeaEditDialog({
                   >
                     <div className="flex gap-3">
                       {' '}
-                      {selectedTypes.map((type) => (
-                        <div className="flex bg-gray-500 p-2 ">
+                      {selectedTypes?.map((type) => (
+                        <div key={type} className="flex bg-gray-500 p-2 ">
                           <p className="text-xs">{type}</p>
                           <X
                             size="15"
@@ -232,11 +285,7 @@ export default function ProjectIdeaEditDialog({
                       />
                       <div className="flex flex-col h-20 gap-3 mt-2 overflow-auto">
                         {filteredOptions.map((item) => (
-                          <div
-                            key={item}
-                            className="flex gap-1"
-                            // onClick={() => toggleType(item)}
-                          >
+                          <div key={item} className="flex gap-1">
                             <Checkbox
                               onCheckedChange={() => toggleType(item)}
                               checked={selectedTypes?.includes(item)}
@@ -253,63 +302,121 @@ export default function ProjectIdeaEditDialog({
 
             {step === 2 && (
               <div className="flex flex-col gap-5">
-                <p className=" text-gray-400">Current Team Leader</p>
-                <div className="h-[128px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-3">
-                  {selectedLeader.map((item) => (
-                    <div className="w-full flex justify-between items-center">
-                      <div className="flex gap-3">
-                        <img
-                          src={sampleUserImgUrl}
-                          className="w-15 rounded-full"
-                          alt=""
-                        />
-                        <div>
-                          <p>Name</p>
-                          <p>Email</p>
-                        </div>
-                      </div>
-                      <p>{item}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-gray-400">Current Team Leader</p>
 
-                <div className="">
-                  <input
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="text-xs  w-full focus:outline-none p-4 rounded-lg bg-[#FFFFFF17]"
-                  />
-                  <div className="flex flex-col gap-3 mt-2 ">
-                    {filterLeaderOptions.map((item) => (
-                      <div className="w-full border-[#FFFFFF26] mb-5 p-3 bg-[#FFFFFF17] h-14 flex gap-3 justify-between items-center">
-                        <div className="flex items-center gap-3">
+                {developers
+                  .filter((dev) => dev.dev_id === selectedLeader)
+                  .map((dev) => (
+                    <div
+                      key={dev.dev_id}
+                      className="h-[100px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-4"
+                    >
+                      <div className="flex gap-3 items-center w-full justify-between">
+                        <div className="flex gap-3 items-center">
                           <img
-                            src={sampleUserImgUrl}
-                            className="w-8 h-8 rounded-full"
-                            alt=""
+                            src={dev.profilePictureUrl ?? sampleUserImgUrl}
+                            className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
-                            <p className="text-xs">Name</p>
-                            <p className="text-xs">Email</p>
+                            <p className="text-white">{dev.name}</p>
+                            <p className="text-xs text-gray-400">{dev.email}</p>
                           </div>
                         </div>
-                        <p className="text-base">{item}</p>
+
+                        <p className="text-sm text-gray-400">{dev.role}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                <input
+                  placeholder="Search developer"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="text-xs w-full focus:outline-none p-4 rounded-lg bg-[#FFFFFF17]"
+                />
+
+                <div className="flex flex-col gap-3 mt-2">
+                  {developers
+                    .filter((dev) =>
+                      dev.name.toLowerCase().includes(search.toLowerCase()),
+                    )
+                    .map((dev) => (
+                      <div
+                        key={dev.dev_id}
+                        onClick={() => {
+                          form.setValue('leader_id', dev.dev_id);
+                          form.setValue(
+                            'leaderProfilePicUrl',
+                            dev.profilePictureUrl,
+                          );
+                        }}
+                        className={`cursor-pointer border p-3 rounded-xl flex justify-between items-center
+              ${
+                selectedLeader === dev.dev_id
+                  ? 'border-[#6F28B3] bg-[#1a0d2b]'
+                  : 'border-[#FFFFFF26] bg-[#FFFFFF10]'
+              }
+            `}
+                      >
+                        <div className="flex gap-3 items-center">
+                          <img
+                            src={dev.profilePictureUrl ?? sampleUserImgUrl}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                          <div>
+                            <p className="text-xs text-white">{dev.name}</p>
+                            <p className="text-xs text-gray-400">{dev.email}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-gray-400">{dev.role}</p>
                       </div>
                     ))}
-                  </div>
                 </div>
               </div>
             )}
 
             {step === 3 && (
-              <div className="text-center text-gray-400">
-                Change Status Step (Coming Next)
+              <div className="w-full flex flex-col gap-10">
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-[#F9FAFB] font-medium text-xl leading-8">
+                    Change the idea status!
+                  </h2>
+                  <p className="text-[#99A1AF] text-lg leading-7">
+                    Choose a status to reflect the current progress and next
+                    step of this idea.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-10">
+                  {statusChageData.map((item) => (
+                    <div
+                      className="flex items-center   gap-5 "
+                      onClick={() => toggleReason(item.name)}
+                    >
+                      <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
+                        {selectReason === item.name && (
+                          <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
+                        )}
+                      </div>
+                      <div className="h-full flex flex-col">
+                        <p
+                          className={` text-lg font-medium leading-5 ${statusColor(item.name)}`}
+                        >
+                          {item.name}
+                        </p>
+                        <p className="text-[#6A7282] text-xs leading-7">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
-          <div className="flex justify-between">
+          <DialogDescription className="flex justify-between">
             <Button
               type="button"
               onClick={() => {
@@ -327,7 +434,7 @@ export default function ProjectIdeaEditDialog({
             <Button type="submit" className="w-[45%] bg-[#6F28B3]">
               {step === 3 ? 'Confirm' : 'Next'}
             </Button>
-          </div>
+          </DialogDescription>
         </form>
       </Dialog.Content>
     </Dialog.Root>

@@ -2,6 +2,7 @@ import { ProjectIdeaDropDown } from '@/app/features/user-management/components/u
 import { type ProjectIdeaType } from '@/app/features/user-management/types/user-management.types';
 import Eye from '@/assets/icons/eye.png';
 import Heart from '@/assets/icons/Heart.png';
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 
 interface ProjectIdeaProps {
   user: {
@@ -10,9 +11,12 @@ interface ProjectIdeaProps {
 }
 
 const statusLabels: Record<ProjectIdeaType['status'], string> = {
-  PENDING: 'Pending',
-  APPROVED: 'Approved',
-  REJECTED: 'Rejected',
+  REJECTED: 'REJECTED',
+  APPROVED: 'APPROVED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  PENDING: 'PENDING',
+  DELETED: 'DELETED',
 };
 
 const ProjectIdea = ({ user }: ProjectIdeaProps) => {
@@ -23,11 +27,11 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
         <h1 className="text-[#FFFFFF] font-semibold text-2xl leading-9">
           Projects Ideas
         </h1>
-        <div className="w-full gap-10 grid grid-cols-2 lg:grid-cols-3">
+        <div className="w-full h-full gap-10 grid grid-cols-2 lg:grid-cols-3">
           {projectIdeas.map((item, index) => (
             <div
               key={index}
-              className="w-[100%] h-[320px] mx-auto  bg-white/10 border border-white/20 rounded-lg backdrop-blur-[64px] p-7 flex flex-col gap-5"
+              className="w-[100%]  mx-auto  bg-white/10 border border-white/20 rounded-lg backdrop-blur-[64px] p-7 flex flex-col gap-5"
             >
               <div className="flex text-white justify-between items-center">
                 <h2 className="text-[#F5EBFF] font-semibold text-base font-sans">
@@ -64,26 +68,26 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   <span className="text-sm text-[#99A1AF] font-normal">
                     Submitter:
                   </span>
-                  {item.ownerProfilePicUrl && (
+                  {
                     <img
-                      src={item.ownerProfilePicUrl}
+                      src={item.ownerProfilePicUrl || sampleUserImgUrl}
                       alt=""
                       className="w-[30px] h-[30px] rounded-2xl"
                     />
-                  )}
+                  }
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-[#99A1AF] font-normal">
                     Leader:
                   </span>
-                  {item.leaderProfilePicUrl && (
+                  {
                     <img
-                      src={item.leaderProfilePicUrl}
+                      src={item.leaderProfilePicUrl || sampleUserImgUrl}
                       alt=""
                       className="w-[30px] h-[30px] rounded-2xl"
                     />
-                  )}
+                  }
                 </div>
               </div>
 
@@ -109,8 +113,16 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                     </span>
                   </div>
                 </div>
-                <div>
-                  <ProjectIdeaDropDown projectIdeas={projectIdeas} />
+                <div className="flex ">
+                  <ProjectIdeaDropDown
+                    projectIdea={{
+                      ...item,
+                      devUsername: item.dev_Email ?? 'Unknown',
+                      ownerProfilePicUrl: item.ownerProfilePicUrl ?? undefined,
+                      leaderProfilePicUrl:
+                        item.leaderProfilePicUrl ?? undefined,
+                    }}
+                  />
                 </div>
               </div>
             </div>
