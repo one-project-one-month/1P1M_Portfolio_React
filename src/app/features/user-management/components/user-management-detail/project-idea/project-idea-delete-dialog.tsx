@@ -1,18 +1,44 @@
+import type { IdeaDeleteResponseType } from '@/app/features/user-management/types/project-idea-type';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { type ReactNode } from 'react';
 
 type UserProjectIdeaDeleteProps = {
   trigger?: ReactNode;
   deleteOpen: boolean;
   setDeleteOpen: (open: boolean) => void;
+  deleteMutate: UseMutateFunction<
+    IdeaDeleteResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number },
+    unknown
+  >;
+  projectIdeaId: number;
 };
 
 const UserProjectIdeaDeleteDialog = ({
   trigger,
   deleteOpen,
   setDeleteOpen,
+  deleteMutate,
+  projectIdeaId,
 }: UserProjectIdeaDeleteProps) => {
+  const handleDelete = () => {
+    deleteMutate(
+      { projectIdeaId },
+      {
+        onSuccess: () => {
+          setDeleteOpen(false);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      },
+    );
+  };
+
   return (
     <Dialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
       <Dialog.Trigger>
@@ -45,10 +71,16 @@ const UserProjectIdeaDeleteDialog = ({
           </div>
 
           <div className="flex justify-between">
-            <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
+            <Button
+              onClick={() => setDeleteOpen(false)}
+              className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]"
+            >
               Cancel
             </Button>
-            <Button className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]">
+            <Button
+              onClick={handleDelete}
+              className="w-[45%]  bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
+            >
               Confirm
             </Button>
           </div>
