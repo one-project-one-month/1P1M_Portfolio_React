@@ -1,11 +1,12 @@
 import TeamCard from '@/app/features/portfolio-management/components/team-card';
-import type { TeamType } from '@/types/portfolio-management';
+import type { Member, TeamType } from '@/types/portfolio-management';
 
 interface TeamFormProps {
   addedTeams: TeamType[];
   onAddMemberClick: (teamId: string) => void;
   onUpdateTeam: (updatedTeam: TeamType) => void;
   onDeleteTeam: (teamId: string) => void;
+  onDeleteMember: (teamId: string, updatedMember: Member[]) => void;
 }
 
 const TeamCreateForm = ({
@@ -13,6 +14,7 @@ const TeamCreateForm = ({
   onAddMemberClick,
   onUpdateTeam,
   onDeleteTeam,
+  onDeleteMember,
 }: TeamFormProps) => {
   return (
     <div className="space-y-3">
@@ -22,6 +24,7 @@ const TeamCreateForm = ({
           team={team}
           onDelete={onDeleteTeam}
           onUpdate={onUpdateTeam}
+          onDeleteMember={onDeleteMember}
           onAddMemberClick={onAddMemberClick}
         />
       ))}

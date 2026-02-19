@@ -106,3 +106,11 @@ export const NotFoundPage = PageLoader(
 export const MyProfilePage = PageLoader(
   lazy(() => import('@/app/features/user-profile/user-profile-page')),
 );
+
+export const PortfolioEditview = PageLoader(
+  lazy(() => import('@/app/features/portfolio/components/portfolio-edit-view')),
+);
+
+export const PortfolioFormview = PageLoader(
+  lazy(() => import('@/app/features/portfolio/components/portfolio-form-view')),
+);

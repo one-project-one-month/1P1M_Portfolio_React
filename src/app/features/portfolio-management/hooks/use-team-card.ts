@@ -1,14 +1,16 @@
-import type { TeamType } from '@/types/portfolio-management';
+import type { Member, TeamType } from '@/types/portfolio-management';
 import { useEffect, useState } from 'react';
 import {
   useCreateTeam,
   useDeleteTeam,
   useRemoveTeamMember,
+  useUpdateTeam,
 } from './use-portfolio-query';
 
 export const useTeamCard = (
   team: TeamType,
   onUpdate: (updatedTeam: TeamType) => void,
+  onDeleteMember: (teamId: string, updatedMembers: Member[]) => void,
 ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,6 +25,7 @@ export const useTeamCard = (
   } | null>(null);
 
   const createTeamMutation = useCreateTeam();
+  const updateTeamMutation = useUpdateTeam();
   const deleteTeamMutation = useDeleteTeam();
   const removeTeamMemberMutation = useRemoveTeamMember();
 
@@ -52,6 +55,10 @@ export const useTeamCard = (
         }
       } else {
         // For existing teams,  update local state
+        updateTeamMutation.mutate({
+          teamId: editedTeam.id,
+          teamName: editedTeam.name,
+        });
         onUpdate(editedTeam);
       }
 
@@ -70,6 +77,8 @@ export const useTeamCard = (
       count: updatedMembers.length,
       members: updatedMembers,
     });
+
+    onDeleteMember(team.id, updatedMembers);
 
     if (!team.id.toString().startsWith('team-') && memberId) {
       try {

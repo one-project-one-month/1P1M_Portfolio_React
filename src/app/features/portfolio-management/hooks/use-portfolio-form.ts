@@ -1,4 +1,7 @@
-import type { Member as ModalMember } from '@/types/portfolio-management';
+import type {
+  Member,
+  Member as ModalMember,
+} from '@/types/portfolio-management';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -15,9 +18,11 @@ import {
 } from '../portfolio-schema';
 import { type CreateProjectPortfolioRequest } from '../services/portfolio-management-service';
 import {
+  useAddLanguageAndTools,
   useAddTeamMember,
   useCreateProject,
   useCreateTeam,
+  useDeleteLanguageAndTools,
   useUpdateProject,
 } from './use-portfolio-query';
 
@@ -51,6 +56,7 @@ export const usePortfolioForm = ({
         ? statusOptions.find((s) => s.name === initialData.status) || null
         : null,
       technologies: initialData?.technologies?.map((t) => ({
+        id: t.projectType.id,
         projectType: t.projectType.name,
         languages: t.languages,
       })) || [{ projectType: '', languages: '' }],
@@ -74,17 +80,50 @@ export const usePortfolioForm = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
+  const addTechnologiesMutation = useAddLanguageAndTools();
+  const deleteTechnologiesMutation = useDeleteLanguageAndTools();
+
   const handleAddTechnology = () => {
-    appendTechnology({ projectType: '', languages: '' });
+    const currentTechnologies = form.getValues('technologies');
+    const technologies = currentTechnologies.filter(
+      (tech) => tech.projectType.trim() !== '' || tech.languages.trim() !== '',
+    );
+
+    const payload = {
+      languageAndTools: technologies.flatMap((tech) =>
+        tech.languages.split(',').map((lang) => ({
+          name: lang.trim(),
+          type: tech.projectType,
+        })),
+      ),
+    };
+
+    if (initialData?.id && technologies.length > 0)
+      addTechnologiesMutation.mutate({
+        projectPortfolioId: initialData.id,
+        payload,
+      });
   };
 
   const handleRemoveTechnology = async (index: number) => {
-    const techToRemove = technologyFields[index];
-    // Optimistic removal from UI form
-    removeTechnology(index);
-
-    if (initialData?.id && techToRemove) {
+    if (initialData?.id) {
+      const hello = form.getValues('technologies');
+      const tech = hello[index];
+      if (tech.id) {
+        deleteTechnologiesMutation.mutate({
+          pjId: initialData.id,
+          languageAndToolId: tech.id,
+        });
+        // Optimistic removal from UI form
+        removeTechnology(index);
+      } else {
+        removeTechnology(index);
+      }
     }
+  };
+
+  const handleAddNewRow = () => {
+    appendTechnology({ projectType: '', languages: '' });
   };
 
   const handleUpdateTechnology = (
@@ -99,16 +138,16 @@ export const usePortfolioForm = ({
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
   const createTeamMutation = useCreateTeam({
-    onMutate: async (newTeam) => {
+    onMutate: async ({ team }) => {
       // Snapshot
       const previousTeams = form.getValues('teams');
 
       // Optimistic Update
       const optimisticTeam: TeamData = {
         id: `team-${Date.now()}`, // Temporary ID
-        name: newTeam.name,
-        count: newTeam.members.length,
-        members: newTeam.members.map((m) => ({
+        name: team.name,
+        count: team.members.length,
+        members: team.members.map((m) => ({
           ...m,
           id: m.id || Date.now(),
         })),
@@ -124,13 +163,13 @@ export const usePortfolioForm = ({
       }
       console.error('Failed to create team via modal', err);
     },
-    onSuccess: (response, variables) => {
+    onSuccess: (response, { team }) => {
       if (response && response.data && response.data.id) {
         const currentTeams = form.getValues('teams');
         const updatedTeams = currentTeams.map((t) => {
           if (
-            t.name === variables.name &&
-            t.members.length === variables.members.length &&
+            t.name === team.name &&
+            t.members.length === team.members.length &&
             t.id.startsWith('team-')
           ) {
             return { ...t, id: response.data.id.toString() };
@@ -155,105 +194,109 @@ export const usePortfolioForm = ({
 
   const addTeamMemberMutation = useAddTeamMember();
 
-  const handleSaveForm = form.handleSubmit(async (data) => {
-    try {
-      // Get Team IDs from localStorage
-      const storedTeamIds = localStorage.getItem('temp_portfolio_team_ids');
-      const teamIds: number[] = storedTeamIds ? JSON.parse(storedTeamIds) : [];
+  const handleSaveForm = form.handleSubmit(
+    async (data) => {
+      try {
+        // Get Team IDs from localStorage
+        const storedTeamIds = localStorage.getItem('temp_portfolio_team_ids');
+        const teamIds: number[] = storedTeamIds
+          ? JSON.parse(storedTeamIds)
+          : [];
 
-      const payload: CreateProjectPortfolioRequest = {
-        name: data.projectName,
-        projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
-        description: data.description,
-        projectLink: data.projectLink,
-        repoLink: data.repoLink,
-        startDate: data.startDate,
-        teamIds: teamIds,
-        languageAndTools: data.technologies.flatMap((tech) =>
-          tech.languages.split(',').map((lang) => ({
-            name: lang.trim(),
-            type: tech.projectType || 'Language',
+        const payload: CreateProjectPortfolioRequest = {
+          name: data.projectName,
+          projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
+          description: data.description,
+          projectLink: data.projectLink,
+          repoLink: data.repoLink,
+          startDate: data.startDate,
+          teamIds: teamIds,
+          languageAndTools: data.technologies.flatMap((tech) =>
+            tech.languages.split(',').map((lang) => ({
+              name: lang.trim(),
+              type: tech.projectType,
+            })),
+          ),
+        };
+
+        if (data.completedDate) {
+          payload.endDate = data.completedDate;
+        }
+
+        if (initialData?.id) {
+          // Calculate diff for update
+          const updatePayload: Partial<CreateProjectPortfolioRequest> = {};
+
+          if (
+            normalize(data.projectName) !== normalize(initialData.projectName)
+          ) {
+            updatePayload.name = data.projectName;
+          }
+          if (
+            normalize(data.description) !== normalize(initialData.description)
+          ) {
+            updatePayload.description = data.description;
+          }
+          if (normalize(data.projectImage) !== normalize(initialData.image)) {
+            updatePayload.projectPicUrl = data.projectImage;
+          }
+          if (
+            normalize(data.projectLink) !== normalize(initialData.projectLink)
+          ) {
+            updatePayload.projectLink = data.projectLink;
+          }
+          if (normalize(data.repoLink) !== normalize(initialData.repoLink)) {
+            updatePayload.repoLink = data.repoLink;
+          }
+
+          // Only call update if there are changes
+          if (Object.keys(updatePayload).length > 0) {
+            await updateProjectMutation.mutateAsync({
+              id: initialData.id,
+              data: updatePayload,
+            });
+          }
+        } else {
+          await createProjectMutation.mutateAsync(payload);
+        }
+
+        // Cleanup localStorage
+        localStorage.removeItem('temp_portfolio_team_ids');
+
+        const validTechnologies = data.technologies.filter(
+          (t): t is { projectType: string; languages: string } =>
+            t.projectType !== '',
+        );
+
+        const formData: Partial<ProjectData> = {
+          id: initialData?.id,
+          projectName: data.projectName,
+          title: data.projectName,
+          description: data.description,
+          startDate: data.startDate,
+          completedDate: data.completedDate || null,
+          status: data.status?.name as ProjectData['status'],
+          technologies: validTechnologies.map((t) => ({
+            projectType: { id: 0, name: t.projectType },
+            languages: t.languages,
           })),
-        ),
-      };
+          teams: data.teams,
+          projectLink: data.projectLink,
+          repoLink: data.repoLink,
+          leader: initialData?.leader || '',
+          image: data.projectImage,
+          members: data.teams.flatMap((t) => t.members),
+        };
 
-      if (data.completedDate) {
-        payload.endDate = data.completedDate;
+        onSave?.(formData);
+      } catch (error) {
+        console.error('Failed to save project portfolio:', error);
       }
-
-      if (initialData?.id) {
-        // Calculate diff for update
-        const updatePayload: Partial<CreateProjectPortfolioRequest> = {};
-
-        if (
-          normalize(data.projectName) !== normalize(initialData.projectName)
-        ) {
-          updatePayload.name = data.projectName;
-        }
-        if (
-          normalize(data.description) !== normalize(initialData.description)
-        ) {
-          updatePayload.description = data.description;
-        }
-        if (normalize(data.projectImage) !== normalize(initialData.image)) {
-          updatePayload.projectPicUrl = data.projectImage;
-        }
-        if (
-          normalize(data.projectLink) !== normalize(initialData.projectLink)
-        ) {
-          updatePayload.projectLink = data.projectLink;
-        }
-        if (normalize(data.repoLink) !== normalize(initialData.repoLink)) {
-          updatePayload.repoLink = data.repoLink;
-        }
-        if (teamIds.length > 0) {
-          updatePayload.teamIds = teamIds;
-        }
-
-        // Only call update if there are changes
-        if (Object.keys(updatePayload).length > 0) {
-          await updateProjectMutation.mutateAsync({
-            id: initialData.id,
-            data: updatePayload,
-          });
-        }
-      } else {
-        await createProjectMutation.mutateAsync(payload);
-      }
-
-      // Cleanup localStorage
-      localStorage.removeItem('temp_portfolio_team_ids');
-
-      const validTechnologies = data.technologies.filter(
-        (t): t is { projectType: string; languages: string } =>
-          t.projectType !== '',
-      );
-
-      const formData: Partial<ProjectData> = {
-        id: initialData?.id,
-        projectName: data.projectName,
-        title: data.projectName,
-        description: data.description,
-        startDate: data.startDate,
-        completedDate: data.completedDate || null,
-        status: data.status?.name as ProjectData['status'],
-        technologies: validTechnologies.map((t) => ({
-          projectType: { id: 0, name: t.projectType },
-          languages: t.languages,
-        })),
-        teams: data.teams,
-        projectLink: data.projectLink,
-        repoLink: data.repoLink,
-        leader: initialData?.leader || '',
-        image: data.projectImage,
-        members: data.teams.flatMap((t) => t.members),
-      };
-
-      onSave?.(formData);
-    } catch (error) {
-      console.error('Failed to save project portfolio:', error);
-    }
-  });
+    },
+    (error) => {
+      console.log(error);
+    },
+  );
 
   const handleAddTeam = () => {
     setActiveTeamId('new-team');
@@ -308,8 +351,8 @@ export const usePortfolioForm = ({
         count: members.length,
         members: members,
       };
-
-      createTeamMutation.mutate(newTeam);
+      if (initialData?.id)
+        createTeamMutation.mutate({ projectId: initialData.id, team: newTeam });
     } else if (activeTeamId) {
       form.setValue(
         'teams',
@@ -329,6 +372,26 @@ export const usePortfolioForm = ({
 
     setIsModalOpen(false);
     setActiveTeamId(null);
+  };
+
+  const handleRemoveTeamMembers = (
+    teamId: string,
+    updatedMembers: Member[],
+  ) => {
+    const currentTeams = form.getValues('teams');
+    form.setValue(
+      'teams',
+      currentTeams.map((team) => {
+        if (String(team.id) === String(teamId)) {
+          return {
+            ...team,
+            count: updatedMembers.length,
+            members: updatedMembers,
+          };
+        }
+        return team;
+      }),
+    );
   };
 
   const handleRemoveTeam = (teamId: string) => {
@@ -386,6 +449,7 @@ export const usePortfolioForm = ({
     handleAddTechnology,
     handleRemoveTechnology,
     handleUpdateTechnology,
+    handleAddNewRow,
     isModalOpen,
     setIsModalOpen,
     activeTeamId,
@@ -393,6 +457,7 @@ export const usePortfolioForm = ({
     handleSaveForm,
     handleAddTeam,
     handleSaveTeamMembers,
+    handleRemoveTeamMembers,
     handleRemoveTeam,
     handleUpdateTeam,
     getTitle,

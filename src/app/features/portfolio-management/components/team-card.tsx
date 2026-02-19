@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import DeleteDialog from '@/components/ui/delete-dialog';
-import type { TeamType } from '@/types/portfolio-management';
+import type { Member, TeamType } from '@/types/portfolio-management';
 import {
   ChevronDown,
   ChevronUp,
@@ -15,6 +15,7 @@ interface TeamCardProps {
   team: TeamType;
   onUpdate: (updatedTeam: TeamType) => void;
   onDelete: (teamId: string) => void;
+  onDeleteMember: (teamId: string, updatedMembers: Member[]) => void;
   onAddMemberClick: (teamId: string) => void;
 }
 
@@ -22,6 +23,7 @@ const TeamCard = ({
   team,
   onUpdate,
   onDelete,
+  onDeleteMember,
   onAddMemberClick,
 }: TeamCardProps) => {
   const {
@@ -41,7 +43,7 @@ const TeamCard = ({
     handleConfirmDelete,
     handleRoleChange,
     updateTeamName,
-  } = useTeamCard(team, onUpdate);
+  } = useTeamCard(team, onUpdate, onDeleteMember);
 
   return (
     <>
@@ -99,7 +101,10 @@ const TeamCard = ({
                   <div className="flex items-center gap-12 flex-1">
                     <div className="flex items-center gap-3 w-[200px]">
                       <img
-                        src={member.avatarUrl}
+                        src={
+                          member.avatarUrl ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                        }
                         alt={member.name}
                         className="w-10 h-10 rounded-full border border-[#475569] object-cover"
                       />
@@ -132,7 +137,7 @@ const TeamCard = ({
 
                       {openMemberActionId === member.id && (
                         <div className="absolute right-0 top-full mt-1 w-48 bg-[#0F172A] border border-[#334155] rounded-lg shadow-xl z-20 overflow-hidden py-1">
-                          {member.role === 'Team Leader' ? (
+                          {/* {member.role === 'Team Leader' ? (
                             <>
                               <div className="w-full text-left px-4 py-2 text-sm text-[#9C39FC] font-medium cursor-default">
                                 Team Leader
@@ -160,7 +165,7 @@ const TeamCard = ({
                                 Member
                               </div>
                             </>
-                          )}
+                          )} */}
 
                           <button
                             onClick={() => initiateRemoveMember(member.id!)}
@@ -182,7 +187,10 @@ const TeamCard = ({
                 <div key={member.id} className="relative group/avatar">
                   <img
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-[#334155] object-cover"
-                    src={member.avatarUrl}
+                    src={
+                      member.avatarUrl ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                    }
                     alt={member.name}
                   />
                   {isEditing && (

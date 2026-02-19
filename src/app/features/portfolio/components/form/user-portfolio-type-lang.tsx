@@ -23,6 +23,7 @@ interface PortfolioTypeLangProps {
   >[];
   onAddTechnology: () => void;
   onRemoveTechnology: (index: number) => void;
+  onAddNewRow: () => void;
 }
 
 export const UserPortfolioTypeLang = ({
@@ -30,14 +31,19 @@ export const UserPortfolioTypeLang = ({
   technologyFields,
   onAddTechnology,
   onRemoveTechnology,
+  onAddNewRow,
 }: PortfolioTypeLangProps) => {
-  const existTechnology = technologyFields.find(
-    (tech) => tech.projectType?.trim() && tech.languages?.trim(),
-  );
-
   return (
     <div className="space-y-6 text-white mt-4 flex-1">
-      <span className="font-medium text-white">Type and Languages</span>
+      <div className="flex justify-between items-center">
+        <span className="font-medium text-white">Type and Languages</span>
+        <button
+          onClick={onAddNewRow}
+          className="bg-amber-300 text-sm py-2 px-5 rounded-md text-black"
+        >
+          Add New Row
+        </button>
+      </div>
 
       <div className="space-y-2 mt-2">
         {technologyFields.map((field, index) => (
@@ -51,7 +57,7 @@ export const UserPortfolioTypeLang = ({
                     value={controllerField.value ?? ''}
                     onChange={(e) => controllerField.onChange(e.target.value)}
                     placeholder="Type (e.g., Fullstack)"
-                    className="px-4 py-2 bg-[#9C39FC] rounded-md text-white font-medium w-full focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
+                    className="px-4 py-2 bg-[#9C39FC]! rounded-md text-white font-medium w-full focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
                   />
                 )}
               />
@@ -83,16 +89,14 @@ export const UserPortfolioTypeLang = ({
           </div>
         ))}
       </div>
-      {!existTechnology && (
-        <Button
-          variant="white_button"
-          onClick={onAddTechnology}
-          className="gap-2 w-full md:w-55"
-        >
-          <Plus size={18} />
-          Add
-        </Button>
-      )}
+      <Button
+        variant="white_button"
+        onClick={onAddTechnology}
+        className="gap-2 w-full md:w-55"
+      >
+        <Plus size={18} />
+        Add
+      </Button>
     </div>
   );
 };

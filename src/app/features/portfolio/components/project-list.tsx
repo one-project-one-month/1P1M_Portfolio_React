@@ -1,6 +1,7 @@
 import type { PortfolioProjectType } from '@/types/portfolio.type';
 import { List } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PortfolioCardSkeleton from './portfolio-card-skeleton';
 import ProjectCard from './project-card';
 
@@ -33,9 +34,12 @@ const ProjectList = ({
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
               <List size={48} className="mb-4 opacity-60" />
               <p className="text-lg font-medium">No Portfolios yet</p>
-              <p className="text-sm mt-2 text-white/30">
+              <Link
+                to={'/portfolios/create-portfolio'}
+                className="text-sm mt-2 text-primary-custom"
+              >
                 Create a project portfolio.
-              </p>
+              </Link>
             </div>
           )}
         </div>

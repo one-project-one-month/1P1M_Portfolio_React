@@ -1,10 +1,10 @@
+import AddMemberModal from '@/app/features/portfolio-management/components/add-member-modal';
 import { Button } from '@/components/ui/button';
 import type { Member as ModalMember } from '@/types/portfolio-management';
 import { Plus } from 'lucide-react';
 import type { UseFormReturn } from 'react-hook-form';
 import type { TeamData } from '../../../portfolio-management/constants/data';
 import type { PortfolioFormValues } from '../../../portfolio-management/portfolio-schema';
-import AddMemberModal from './add-member-modal';
 import TeamForm from './team-create-form';
 
 interface PortfolioTeamSectionProps {
@@ -15,6 +15,10 @@ interface PortfolioTeamSectionProps {
   handleSaveTeamMembers: (
     selectedMembers: ModalMember[],
     teamName: string,
+  ) => void;
+  handleRemoveTeamMembers: (
+    teamId: string,
+    updatedMembers: ModalMember[],
   ) => void;
   setActiveTeamId: (id: string | null) => void;
   isModalOpen: boolean;
@@ -29,6 +33,7 @@ export const UserPortfolioTeamSection = ({
   handleRemoveTeam,
   onUpdateTeam,
   handleSaveTeamMembers,
+  handleRemoveTeamMembers,
   setActiveTeamId,
   isModalOpen,
   setIsModalOpen,
@@ -58,6 +63,9 @@ export const UserPortfolioTeamSection = ({
           }}
           onUpdateTeam={(team) => onUpdateTeam(team as TeamData)}
           onDeleteTeam={handleRemoveTeam}
+          onDeleteMember={(teamId, members) =>
+            handleRemoveTeamMembers(teamId, members)
+          }
         />
       ) : (
         <p className="text-white/50 text-sm">No teams added yet.</p>

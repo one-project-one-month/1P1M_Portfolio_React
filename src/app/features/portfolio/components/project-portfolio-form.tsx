@@ -7,10 +7,10 @@ import { ChevronLeft, Loader2 } from 'lucide-react';
 import { useRef } from 'react';
 import { PortfolioBasicInfo } from '../../portfolio-management/components/form/portfolio-basic-info';
 import { PortfolioLinkSection } from '../../portfolio-management/components/form/portfolio-link-section';
-import { PortfolioTeamSection } from '../../portfolio-management/components/form/portfolio-team-section';
 import type { ProjectData } from '../../portfolio-management/constants/data';
 import { usePortfolioForm } from '../../portfolio-management/hooks/use-portfolio-form';
 import { useUploadImage } from '../../portfolio-management/hooks/use-upload-image';
+import { UserPortfolioTeamSection } from './form/user-portfolio-team-section';
 import { UserPortfolioTypeLang } from './form/user-portfolio-type-lang';
 
 export type PortfolioFormMode = 'create' | 'edit' | 'view';
@@ -37,12 +37,14 @@ const ProjectPortfolioForm = ({
     technologyFields,
     handleAddTechnology,
     handleRemoveTechnology,
+    handleAddNewRow,
     isModalOpen,
     setIsModalOpen,
     setActiveTeamId,
     handleSaveForm,
     handleAddTeam,
     handleSaveTeamMembers,
+    handleRemoveTeamMembers,
     handleRemoveTeam,
     handleUpdateTeam,
     getModalTeamName,
@@ -151,25 +153,30 @@ const ProjectPortfolioForm = ({
             isReadOnly={isReadOnly}
           />
           <PortfolioLinkSection form={form} isReadOnly={false} />
-          <UserPortfolioTypeLang
-            form={form}
-            technologyFields={technologyFields}
-            onAddTechnology={handleAddTechnology}
-            onRemoveTechnology={handleRemoveTechnology}
-          />
-          <PortfolioTeamSection
-            form={form}
-            handleAddTeam={handleAddTeam}
-            handleRemoveTeam={handleRemoveTeam}
-            onUpdateTeam={handleUpdateTeam}
-            handleSaveTeamMembers={handleSaveTeamMembers}
-            setActiveTeamId={setActiveTeamId}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            isReadOnly={isReadOnly}
-            getModalTeamName={getModalTeamName}
-            getModalInitialMembers={getModalInitialMembers}
-          />
+          {mode !== 'create' && (
+            <>
+              <UserPortfolioTypeLang
+                form={form}
+                technologyFields={technologyFields}
+                onAddTechnology={handleAddTechnology}
+                onRemoveTechnology={handleRemoveTechnology}
+                onAddNewRow={handleAddNewRow}
+              />
+              <UserPortfolioTeamSection
+                form={form}
+                handleAddTeam={handleAddTeam}
+                handleRemoveTeam={handleRemoveTeam}
+                onUpdateTeam={handleUpdateTeam}
+                handleSaveTeamMembers={handleSaveTeamMembers}
+                handleRemoveTeamMembers={handleRemoveTeamMembers}
+                setActiveTeamId={setActiveTeamId}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                getModalTeamName={getModalTeamName}
+                getModalInitialMembers={getModalInitialMembers}
+              />
+            </>
+          )}
 
           <div className="flex justify-end gap-4 pb-4 mt-5">
             {isReadOnly ? (

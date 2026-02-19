@@ -2,7 +2,6 @@ import activeHeartIcon from '@/assets/icons/ActiveHeart.png';
 import externalLinkImg from '@/assets/icons/external-link.svg';
 import eyeIcon from '@/assets/icons/eye.png';
 import heartIcon from '@/assets/icons/Heart.png';
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import PjImage from '@/assets/project-image.png';
 import type {
   DeveloperType,
@@ -94,14 +93,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     <Link
                       key={member.id}
                       to={`/profile/${member.id}`}
-                      className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-[#1F2937] bg-gray-300 block hover:z-50 hover:-translate-y-1 hover:scale-150 transition-all duration-200 ease-out cursor-pointer"
+                      className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#1F2937] bg-gray-300 block hover:z-50 hover:-translate-y-1 hover:scale-150 transition-all duration-200 ease-out cursor-pointer"
                       style={{ zIndex: allMembers.length - index }}
                     >
                       <img
                         key={`${member.id}-${index}`}
-                        src={member.profilePictureUrl || sampleUserImgUrl}
+                        src={
+                          member.profilePictureUrl ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                        }
                         alt={member.name}
-                        className="h-8 w-8 rounded-full border-2 border-[#111827] object-cover"
+                        className="h-9.2 w-10 rounded-full border-2 border-[#111827] object-cover"
                       />
                     </Link>
                   ))}

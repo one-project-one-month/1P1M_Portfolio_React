@@ -6,6 +6,7 @@ const dropdownItemSchema = z.object({
 });
 
 const technologySchema = z.object({
+  id: z.number().optional(),
   projectType: z.string(),
   languages: z.string(),
 });

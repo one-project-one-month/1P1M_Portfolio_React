@@ -49,7 +49,7 @@ export const API_ENDPOINTS = {
   LANGUAGE_AND_TOOL_V2: '/portfolio/api/v2/project-portfolio/language-and-tool',
   REMOVE_TEAM_V2: '/portfolio/api/v2/project-portfolio/teams',
   GET_PROJECT_V2: '/portfolio/api/v2/project-portfolio',
-  UPDATE_PROJECT_PATCH: '/portfolio/api/v1/project-portfolio',
+  UPDATE_PROJECT_PATCH: '/portfolio/api/v2/project-portfolio',
   UPDATE_PROJECT_IDEA: '/portfolio/api/v1/project-idea/updateProjectIdea',
   ASSIGN_LEADER: '/portfolio/api/v1/project-idea/assignLeader',
   TIMELINES: 'portfolio/api/v1/timelines',

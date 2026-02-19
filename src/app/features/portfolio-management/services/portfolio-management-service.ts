@@ -2,6 +2,8 @@ import apiClient from '@/api/axios';
 import { API_ENDPOINTS } from '@/config/api';
 import type { TeamType } from '@/types/portfolio-management';
 
+// Team Management
+
 export interface CreateTeamRequest {
   team: {
     teamName: string;
@@ -31,6 +33,7 @@ export interface CreateTeamResponse {
 }
 
 export const createTeam = async (
+  projectId: number,
   team: TeamType,
 ): Promise<CreateTeamResponse> => {
   const requestBody: CreateTeamRequest = {
@@ -44,10 +47,24 @@ export const createTeam = async (
     },
   };
 
-  const response = await apiClient.post<CreateTeamResponse>(
-    API_ENDPOINTS.CREATE_TEAM_V2,
-    requestBody,
-  );
+  const url = `${API_ENDPOINTS.CREATE_TEAM_V2}/${projectId}`;
+
+  const response = await apiClient.post<CreateTeamResponse>(url, requestBody);
+  return response.data;
+};
+
+export const updateTeam = async (teamId: number | string, teamName: string) => {
+  const url = `${API_ENDPOINTS.CREATE_TEAM_V2}/${teamId}`;
+  const response = await apiClient.patch(url, {
+    teamName,
+  });
+  return response.data;
+};
+
+export const deleteTeam = async (teamId: number | string) => {
+  const response = await apiClient.delete(API_ENDPOINTS.REMOVE_TEAM_V2, {
+    data: { teamId },
+  });
   return response.data;
 };
 
@@ -78,13 +95,8 @@ export const updateProjectPortfolio = async (
   projectPortfolioId: number | string,
   data: Partial<CreateProjectPortfolioRequest>,
 ) => {
-  const response = await apiClient.patch(
-    API_ENDPOINTS.UPDATE_PROJECT_PATCH,
-    data,
-    {
-      params: { projectPortfolioId },
-    },
-  );
+  const url = `${API_ENDPOINTS.UPDATE_PROJECT_PATCH}/${projectPortfolioId}`;
+  const response = await apiClient.patch(url, data);
   return response.data;
 };
 
@@ -112,14 +124,6 @@ export const removeTeamMember = async (
   return response.data;
 };
 
-// Team Management
-export const deleteTeam = async (teamId: number | string) => {
-  const response = await apiClient.delete(API_ENDPOINTS.REMOVE_TEAM_V2, {
-    data: { teamId },
-  });
-  return response.data;
-};
-
 // Project Portfolio Management
 export const updateProjectStatus = async (
   projectPortfolioId: number | string,
@@ -132,6 +136,27 @@ export const updateProjectStatus = async (
       status,
     },
   );
+  return response.data;
+};
+
+//Language and Tool
+
+export interface TechnologyRequest {
+  languageAndTools: {
+    name: string;
+    type: string;
+  }[];
+}
+
+export const addLanguageAndTool = async ({
+  projectPortfolioId,
+  payload,
+}: {
+  projectPortfolioId: number | string;
+  payload: TechnologyRequest;
+}) => {
+  const url = `${API_ENDPOINTS.LANGUAGE_AND_TOOL_V2}/${projectPortfolioId}`;
+  const response = await apiClient.post(url, payload);
   return response.data;
 };
 
