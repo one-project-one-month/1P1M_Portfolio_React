@@ -53,6 +53,7 @@ export const API_ENDPOINTS = {
   UPDATE_PROJECT_IDEA: '/portfolio/api/v1/project-idea/updateProjectIdea',
   ASSIGN_LEADER: '/portfolio/api/v1/project-idea/assignLeader',
   TIMELINES: 'portfolio/api/v1/timelines',
+  GET_PROJECT_IDEA_BY_ID: '/portfolio/api/v1/project-idea',
 
   // Admin
   GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',

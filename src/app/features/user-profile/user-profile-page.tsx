@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import DeveloperProfileCard from '../developers/components/developer-profile-card';
 import DeveloperProfileCardSkeleton from '../developers/components/developer-profile-skeleton-card';
 import ProjectCard from '../developers/components/project-card';
-import IdeaListCard from '../home/components/idea-list/idea-list-card';
 import IdeaListCardSkeleton from '../home/components/idea-list/idea-list-card-skeleton';
+import { IdeaCard } from '../ideas/shared/components';
 import {
   useReactProjectIdea,
   useUnReactProjectIdea,
@@ -71,18 +71,14 @@ const UserProfile = () => {
             <DeveloperProfileCard isMyProfile={true} user={user} />
             <div>
               <h1 className="text-white text-xl mb-6 font-semibold">
-                Project Idea
+                Project Ideas
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ideaLists.length > 0 ? (
                   ideaLists
                     .slice(0, 3)
                     .map((idea) => (
-                      <IdeaListCard
-                        key={idea.projectIdeaId}
-                        idea={idea}
-                        onReact={handleReactIdea}
-                      />
+                      <IdeaCard idea={idea} onReact={handleReactIdea} />
                     ))
                 ) : (
                   <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">

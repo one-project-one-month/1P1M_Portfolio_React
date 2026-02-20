@@ -27,13 +27,11 @@ export default function ProfilePage() {
   const { setValue, watch } = form;
 
   const avatarUrl = watch('avatarUrl');
-  const firstName = watch('firstName');
-  const lastName = watch('lastName');
+  const fullName = watch('name');
   const email = watch('email');
   const techStacks = watch('techStacks') || [];
 
-  const fullName = firstName ? `${firstName} ${lastName}` : 'Admin User';
-  const displayAvatar = avatarUrl || 'https://i.pravatar.cc/300';
+  const displayAvatar = avatarUrl;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -110,7 +108,7 @@ export default function ProfilePage() {
                   <p className="text-gray-400 text-sm">{email}</p>
                 </div>
 
-                {/* Tech Stacks Card (Moved here) */}
+                {/* Tech Stacks Card  */}
                 <div className="bg-[#15192b] border border-gray-800 rounded-xl p-6 shadow-lg">
                   <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">
                     Expertise
@@ -160,18 +158,11 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Personal Information */}
                   <InfoCard title="Personal Information">
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        name="firstName"
-                        label="First Name"
-                        disabled={!isEditing}
-                      />
-                      <FormField
-                        name="lastName"
-                        label="Last Name"
-                        disabled={!isEditing}
-                      />
-                    </div>
+                    <FormField
+                      name="name"
+                      label="Full Name"
+                      disabled={!isEditing}
+                    />
                     <FormField
                       name="email"
                       label="Email Address"
