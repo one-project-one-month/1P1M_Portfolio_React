@@ -9,8 +9,7 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export const ProfileSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  name: z.string().min(2, 'Name is too short'),
   email: z.string().email('Invalid email address'),
   phoneNumber: z.string().min(5, 'Phone number is required'),
   role: z.string(),
