@@ -61,11 +61,8 @@ export const editIdeaSchema = createIdeaSchema.extend({
   projectIdeaId: z.number(),
   // projectTypes: z.array(z.string()),
   dev_id: z.number(),
-  // devId: z.number(),
   devUsername: z.string(),
   ownerProfilePicUrl: z.string().optional(),
-  // leader_id: z.number(),
-  // leaderProfilePicUrl: z.string().optional(),
 });
 export const updateProjectIdeaSchema = z.object({
   projectName: z.string().min(1),
@@ -73,10 +70,28 @@ export const updateProjectIdeaSchema = z.object({
   projectType: z.array(z.string()).min(1),
 });
 
-// export const assingedLeaderSchema = z.object({
-//   projectIdeaId: z.number(),
-//   devId: z.number,
-// });
+export const projectIdeaDetailById = z.object({
+  projectIdeaId: z.number(),
+  projectIdeaName: z.string(),
+  status: z.enum([
+    IdeaStatus.REJECTED,
+    IdeaStatus.APPROVED,
+    IdeaStatus.IN_PROGRESS,
+    IdeaStatus.COMPLETED,
+    IdeaStatus.PENDING,
+    IdeaStatus.DELETED,
+  ]),
+  description: z.string(),
+  reactionCount: z.number(),
+  viewCount: z.number(),
+  dev_id: z.number(),
+  devUsername: z.string(),
+  ownerProfilePicUrl: z.string().optional(),
+  leaderProfilePicUrl: z.string().optional(),
+  projectTypes: z.array(z.string()),
+  dev_Email: z.string().nullable(),
+  isAlreadyReacted: z.boolean(),
+});
 
 export type Status =
   | 'REJECTED'
@@ -110,6 +125,9 @@ export const assignLeaderSchem = IdeaSchema.pick({
   dev_id: true,
 });
 
+export const projectIdeaReactSchema = IdeaSchema.pick({
+  projectIdeaId: true,
+});
 export const deleteIdeaSchema = IdeaSchema.pick({
   projectIdeaId: true,
 });
@@ -142,6 +160,8 @@ export type IdeaStatusType = z.infer<typeof IdeaStatusSchema>;
 export type DeleteIdeaType = z.infer<typeof deleteIdeaSchema>;
 export type AssignLeaderType = z.infer<typeof assignLeaderSchem>;
 export type UpdateProjectIdeaType = z.infer<typeof updateProjectIdeaSchema>;
+export type ProjectIdeaDetailByIdType = z.infer<typeof projectIdeaDetailById>;
+export type ProjectIdeaReactType = z.infer<typeof projectIdeaReactSchema>;
 
 // ------------------------------------- //
 
@@ -215,3 +235,9 @@ export type AssignLeaderResponseType = ApiResponseType<AssignLeaderType>;
 export type DeveloperProfileResponseType = ApiResponseType<DeveloperType[]>;
 export type UpdateProjectIdeaResponseType =
   ApiResponseType<UpdateProjectIdeaType>;
+
+export type ProjectIdeaDetailByIdResponseType =
+  ApiResponseType<ProjectIdeaDetailByIdType>;
+
+export type ProjectIdeaReactResponseType =
+  ApiResponseType<ProjectIdeaReactType>;

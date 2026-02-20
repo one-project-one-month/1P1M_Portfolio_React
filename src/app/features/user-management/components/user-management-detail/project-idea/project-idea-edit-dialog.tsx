@@ -1,7 +1,5 @@
 import { statusChageData } from '@/app/features/user-management/constant/status-change-data';
-
 import { statusColorList } from '@/app/features/user-management/constant/status.color';
-
 import { useDeveloperProfile } from '@/app/features/user-management/hook/use-project-idea';
 import {
   editIdeaSchema,
@@ -24,7 +22,7 @@ import { Checkbox, Dialog } from '@radix-ui/themes';
 import type { UseMutateFunction } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { ArrowLeftRight, Check, ChevronDown, ChevronUp, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 type ProjectIdeaEditDialogProps = {
@@ -118,32 +116,78 @@ export default function ProjectIdeaEditDialog({
     }
   };
 
+  useEffect(() => {
+    if (editDialogOpen) {
+      setTimeout(() => {
+        setStep(1);
+        form.reset({
+          projectIdeaId: projectIdea.projectIdeaId,
+          projectIdeaName: projectIdea.projectIdeaName,
+          projectName: projectIdea.projectName,
+          description: projectIdea.description,
+          projectType: projectIdea.projectTypes,
+          status: projectIdea.status,
+          dev_id: projectIdea.dev_id,
+          devUsername: projectIdea.devUsername,
+        });
+      }, 0);
+    }
+  }, [editDialogOpen, projectIdea]);
+
   const onSubmit = (data: EditIdeaType) => {
     if (step < 3) {
       setStep(step + 1);
-    } else {
-      editMutate({
-        projectIdeaId: data.projectIdeaId,
-        formData: {
-          projectName: data.projectIdeaName,
-          description: data.description,
-          projectType: data.projectType,
-        },
-      });
-
-      statusChageMutate({
-        projectIdeaId: projectIdea.projectIdeaId,
-        status: statusMap[data.status as Status],
-      });
-
-      assignLeaderMutate({
-        projectIdeaId: projectIdea.projectIdeaId,
-        devId: data.dev_id,
-      });
-
-      setEditDialogOpen(false);
+      return;
     }
-    form.reset();
+
+    const projectInfoPromise = new Promise<void>((resolve, reject) => {
+      editMutate(
+        {
+          projectIdeaId: data.projectIdeaId,
+          formData: {
+            projectName: data.projectName,
+            description: data.description,
+            projectType: data.projectType,
+          },
+        },
+        {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        },
+      );
+    });
+
+    const assignLeaderPromise = new Promise<void>((resolve, reject) => {
+      assignLeaderMutate(
+        { projectIdeaId: data.projectIdeaId, devId: data.dev_id },
+        {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        },
+      );
+    });
+
+    const changeStatusPromise = new Promise<void>((resolve, reject) => {
+      statusChageMutate(
+        {
+          projectIdeaId: data.projectIdeaId,
+          status: statusMap[data.status as Status],
+        },
+        {
+          onSuccess: () => resolve(),
+          onError: (err) => reject(err),
+        },
+      );
+    });
+
+    Promise.all([projectInfoPromise, assignLeaderPromise, changeStatusPromise])
+      .then(() => {
+        form.reset();
+        setEditDialogOpen(false);
+      })
+      .catch((err) => {
+        console.error('Failed to update project:', err);
+      });
   };
 
   const handleProjectTypeShow = () => {
@@ -151,7 +195,25 @@ export default function ProjectIdeaEditDialog({
   };
 
   return (
-    <Dialog.Root open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+    <Dialog.Root
+      open={editDialogOpen}
+      onOpenChange={(open) => {
+        setEditDialogOpen(open);
+        if (open) {
+          setStep(1);
+          form.reset({
+            projectIdeaId: projectIdea.projectIdeaId,
+            projectIdeaName: projectIdea.projectIdeaName,
+            projectName: projectIdea.projectIdeaName,
+            description: projectIdea.description,
+            projectType: projectIdea.projectTypes,
+            status: projectIdea.status,
+            dev_id: projectIdea.dev_id,
+            devUsername: projectIdea.devUsername,
+          });
+        }
+      }}
+    >
       <Dialog.Trigger>
         <button className="text-white">{trigger}</button>
       </Dialog.Trigger>

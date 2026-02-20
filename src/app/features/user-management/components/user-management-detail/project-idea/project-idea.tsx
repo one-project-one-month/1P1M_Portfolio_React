@@ -1,5 +1,10 @@
 import { ProjectIdeaDropDown } from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-drop-down';
+import {
+  useProjectIdeaReact,
+  useProjectIdeaUnReact,
+} from '@/app/features/user-management/hook/use-project-idea';
 import { type ProjectIdeaType } from '@/app/features/user-management/types/user-management.types';
+import HeartFill from '@/assets/icons/ActiveHeart.png';
 import Eye from '@/assets/icons/eye.png';
 import Heart from '@/assets/icons/Heart.png';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
@@ -29,6 +34,8 @@ const statusLabels: Record<ProjectIdeaType['status'], string> = {
 };
 
 const ProjectIdea = ({ user }: ProjectIdeaProps) => {
+  const { mutate: reactProject } = useProjectIdeaReact();
+  const { mutate: unReactProject } = useProjectIdeaUnReact();
   const projectIdeas = user?.projectIdeas ?? [];
   const truncate = (text: string, max = 250) =>
     (text ?? '').length > max ? text.slice(0, max) + '...' : text;
@@ -93,9 +100,16 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   <div className="flex justify-center items-center gap-2">
                     {' '}
                     <img
-                      src={Heart}
+                      src={item.isAlreadyReacted ? HeartFill : Heart}
                       alt=""
-                      className="w-[18px] text-[#D1D5DC]"
+                      className="w-[18px] text-[#D1D5DC] cursor-pointer"
+                      onClick={() => {
+                        if (item.isAlreadyReacted) {
+                          unReactProject({ projectIdeaId: item.projectIdeaId });
+                        } else {
+                          reactProject({ projectIdeaId: item.projectIdeaId });
+                        }
+                      }}
                     />
                     <span className="text-[#D1D5DC] font-sans text-sm font-medium ">
                       {item.reactionCount}

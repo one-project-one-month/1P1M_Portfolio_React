@@ -2,7 +2,6 @@ import ProjectIdea from '@/app/features/user-management/components/user-manageme
 import ProjectPortfolio from '@/app/features/user-management/components/user-management-detail/project-portfolio/project-portfolio';
 import UserShareProfile from '@/app/features/user-management/components/user-share-profile-dialog';
 import { useGetUserProfileDetail } from '@/app/features/user-management/hook/use-user-management';
-import Behance from '@/assets/icons/behance.png';
 import Copy from '@/assets/icons/copy.png';
 import Email from '@/assets/icons/Email.png';
 import Github from '@/assets/icons/GitHub.png';
@@ -48,7 +47,7 @@ const UserManagementViewDetail = () => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col gap-[38px] font-sans">
+      <div className="flex flex-col gap-4 font-sans">
         <div className="flex flex-col gap-4">
           <Link to="/admin/user-management" className="flex items-center ">
             <ChevronLeft className="w-8 h-8 text-[#F3F4F6]" strokeWidth={3} />
@@ -87,8 +86,8 @@ const UserManagementViewDetail = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center items-center gap-1">
+                <div className="flex items-center gap-3">
+                  <div className="flex justify-center items-center gap-2">
                     <img
                       src={Email}
                       alt=""
@@ -109,56 +108,60 @@ const UserManagementViewDetail = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="flex justify-center gap-1">
+                  <div className="flex justify-center gap-2">
                     <img
                       src={Phone}
                       alt="phone"
                       className="w-[15px] h-[16px]"
                     />
-
-                    <p className="text-[#99A1AF] text-sm leading-5">
-                      {user?.devProfile?.phone}
-                    </p>
+                    {user?.devProfile.phone ? (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        {user?.devProfile.phone}
+                      </p>
+                    ) : (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        No phone provided
+                      </p>
+                    )}
                   </div>
 
-                  <img
-                    src={Copy}
-                    alt="copy"
-                    className={`w-4 h-4 ${
-                      user?.devProfile?.phone
-                        ? 'cursor-pointer'
-                        : 'opacity-40 cursor-not-allowed'
-                    }`}
-                    onClick={() =>
-                      user?.devProfile?.phone &&
-                      handleCopy(user.devProfile.phone)
-                    }
-                  />
+                  {user?.devProfile.phone && (
+                    <img
+                      src={Copy}
+                      alt=""
+                      className="w-4 h-4 text-[#364153]"
+                      onClick={() => handleCopy(user?.devProfile.phone || '')}
+                    />
+                  )}
                 </div>
 
                 <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center gap-1">
+                  <div className="flex justify-center gap-2">
                     <img
                       src={Telegram}
                       alt=""
-                      className="w-[15px] h-[16px]  text-[#99A1AF]"
+                      className="w-[15px] h-[16px] text-[#99A1AF]"
                     />
-                    <p className="text-[#99A1AF] text-sm leading-5">
-                      {user?.devProfile?.telegramUsername}
-                    </p>
+                    {user.devProfile.telegramUsername ? (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        {user.devProfile.telegramUsername}
+                      </p>
+                    ) : (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        No telegram provided
+                      </p>
+                    )}
                   </div>
-                  <img
-                    src={Copy}
-                    alt=""
-                    className={`w-4 h-4 ${
-                      user?.devProfile?.telegramUsername
-                        ? 'cursor-pointer'
-                        : 'opacity-40 cursor-not-allowed'
-                    }`}
-                    onClick={() =>
-                      handleCopy(user.devProfile.telegramUsername || '')
-                    }
-                  />
+                  {user.devProfile.telegramUsername && (
+                    <img
+                      src={Copy}
+                      alt=""
+                      className="w-4 h-4 text-[#364153]"
+                      onClick={() =>
+                        handleCopy(user.devProfile.telegramUsername || '')
+                      }
+                    />
+                  )}
                 </div>
               </div>
 
@@ -180,9 +183,6 @@ const UserManagementViewDetail = () => {
                 >
                   <img src={LinkedIn} className="w-4 h-4" alt="LinkedIn" />
                 </a>
-                <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-                  <img src={Behance} className="w-4 h-4" />
-                </div>
               </div>
             </div>
           </div>

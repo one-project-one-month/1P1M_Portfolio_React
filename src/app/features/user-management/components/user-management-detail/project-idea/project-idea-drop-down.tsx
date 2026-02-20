@@ -103,6 +103,7 @@ export const ProjectIdeaDropDown = ({
       <PorjectIdeaViewDetailDialog
         viewDetailOpen={viewDetailOpen}
         setViewDetailOpend={setViewDetailOpend}
+        projectIdeaId={projectIdea.projectIdeaId}
       />
 
       <ProjectIdeaEditDialog

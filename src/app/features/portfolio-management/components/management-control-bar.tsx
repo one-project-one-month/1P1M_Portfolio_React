@@ -41,7 +41,7 @@ const ManagementControlBar = ({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-2">
         <div className="w-[585px] h-12 px-4 rounded-lg border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.09)] flex items-center gap-1.5">
           <Search className="w-5 h-5 text-[#6A7282]" />
           <input

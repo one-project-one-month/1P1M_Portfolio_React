@@ -27,9 +27,10 @@ const UserProfile = ({ username, email, img, role }: UserProfileProps) => {
         <Avatar
           src={img}
           alt={username}
-          fallback={username.slice(0, 1)}
           radius="full"
-          size="4"
+          color="gray"
+          className=" bg-gray-600!"
+          fallback={username?.slice(0, 1)}
         />
         <h4 className="font-medium">{username}</h4>
       </button>

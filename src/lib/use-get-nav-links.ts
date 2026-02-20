@@ -3,7 +3,7 @@ import type { NavLink } from '@/types/nav-props';
 export const getNavLinks = (): NavLink[] => {
   const links: NavLink[] = [
     { id: 1, name: 'Portfolios', path: '/portfolios' },
-    { id: 2, name: 'Dev Profiles', path: '/developers' },
+    { id: 2, name: 'Profiles', path: '/developers' },
     {
       id: 3,
       name: 'Ideas',
