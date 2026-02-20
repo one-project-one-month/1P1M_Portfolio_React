@@ -23,7 +23,7 @@ import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { Checkbox, Dialog } from '@radix-ui/themes';
 import type { UseMutateFunction } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { ArrowLeftRight, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { ArrowLeftRight, Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
@@ -50,7 +50,7 @@ type ProjectIdeaEditDialogProps = {
     AxiosError<{ message: string }>,
     { projectIdeaId: number; devId: number }
   >;
-  projectIdeaId: number;
+
   statusChageData: statusChangeDataProps[];
 };
 
@@ -164,7 +164,7 @@ export default function ProjectIdeaEditDialog({
           background: 'black',
           color: 'white',
           padding: '60px',
-          height: '788px',
+          height: '800px',
           border: '1px solid #364153',
         }}
       >
@@ -172,7 +172,7 @@ export default function ProjectIdeaEditDialog({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full h-full flex flex-col justify-between"
         >
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-6">
             <div className="relative flex items-center justify-between w-full">
               <div className="absolute top-4 left-7 right-7 flex justify-between w-[400px] mx-auto z-0">
                 <div
@@ -198,10 +198,14 @@ export default function ProjectIdeaEditDialog({
           ${
             step >= s
               ? 'bg-[#6F28B3] border-[#6F28B3] text-white'
-              : 'border-[#364153] bg-white'
+              : 'border-[#364153] '
           }`}
                   >
-                    {s}
+                    {step >= s ? (
+                      <Check className="w-4 h-4" />
+                    ) : (
+                      s.toString().padStart(2, '0')
+                    )}
                   </div>
 
                   <p className="text-sm mt-2">
@@ -214,10 +218,12 @@ export default function ProjectIdeaEditDialog({
             </div>
 
             {step === 1 && (
-              <div className="w-full flex flex-col gap-2 h-full">
+              <div className="w-full flex flex-col gap-4 h-full">
                 <div className="flex flex-col gap-1">
-                  <h2>Update the idea information</h2>
-                  <p>
+                  <h2 className="text-[#F9FAFB] font-medium font-sans text-2xl">
+                    Update the idea information
+                  </h2>
+                  <p className="text-[#6A7282] leading-7 text-lg">
                     Modify existing idea information and save the latest
                     updates.
                   </p>
@@ -247,7 +253,7 @@ export default function ProjectIdeaEditDialog({
                         {...field}
                         rows={4}
                         placeholder="Enter description"
-                        className="w-full border border-[#FFFFFF26] bg-[#FFFFFF17] rounded-lg px-4 py-3 text-white focus:outline-none resize-y"
+                        className="w-full text-sm border border-[#FFFFFF26] bg-[#FFFFFF17] rounded-lg px-4 py-3 text-white focus:outline-none resize-y"
                       />
                     )}
                   />
@@ -312,25 +318,29 @@ export default function ProjectIdeaEditDialog({
                 {developers
                   .filter((dev) => dev.dev_id === selectedLeader)
                   .map((dev) => (
-                    <div
-                      key={dev.dev_id}
-                      className="h-[100px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-4"
-                    >
-                      <div className="flex gap-3 items-center w-full justify-between">
-                        <div className="flex gap-3 items-center">
-                          <img
-                            src={dev.profilePictureUrl ?? sampleUserImgUrl}
-                            className="w-12 h-12 rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="text-white">{dev.name}</p>
-                            <p className="text-xs text-gray-400">{dev.email}</p>
+                    <div>
+                      <div
+                        key={dev.dev_id}
+                        className="h-[100px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-4"
+                      >
+                        <div className="flex gap-3 items-center w-full justify-between">
+                          <div className="flex gap-3 items-center">
+                            <img
+                              src={dev.profilePictureUrl ?? sampleUserImgUrl}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="text-white">{dev.name}</p>
+                              <p className="text-xs text-gray-400">
+                                {dev.email}
+                              </p>
+                            </div>
                           </div>
-                        </div>
 
-                        <p className="text-sm text-gray-400">
-                          {dev.tech_stack}
-                        </p>
+                          <p className="text-sm text-gray-400">
+                            {dev.tech_stack}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -375,10 +385,19 @@ export default function ProjectIdeaEditDialog({
                         </div>
 
                         <div>
-                          <p className="text-sm text-gray-400">
-                            {dev.tech_stack}
-                          </p>
-                          <ArrowLeftRight />
+                          <div className="flex gap-2 flex-wrap">
+                            {Array.isArray(dev.tech_stack) &&
+                              dev.tech_stack.map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="text-xs text-gray-400"
+                                >
+                                  {item}
+                                </p>
+                              ))}
+                          </div>
+
+                          <ArrowLeftRight color="#6F28B3" />
                         </div>
                       </div>
                     ))}

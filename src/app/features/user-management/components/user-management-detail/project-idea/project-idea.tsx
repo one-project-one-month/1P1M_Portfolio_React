@@ -110,11 +110,7 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   </div>
                 </div>
                 <div className="flex ">
-                  <ProjectIdeaDropDown
-                    projectIdea={{
-                      ...item,
-                    }}
-                  />
+                  <ProjectIdeaDropDown projectIdea={item} />
                 </div>
               </div>
             </div>

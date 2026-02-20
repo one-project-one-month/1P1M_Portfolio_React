@@ -112,6 +112,7 @@ export const ProjectIdeaDropDown = ({
         projectIdea={projectIdea}
         assignLeaderMutate={assignLeaderMutate}
         statusChageMutate={statusChageMutate}
+        statusChageData={[]}
       />
 
       <UserProjectIdeaDeleteDialog
