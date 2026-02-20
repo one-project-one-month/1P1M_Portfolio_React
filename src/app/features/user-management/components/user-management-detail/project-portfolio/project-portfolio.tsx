@@ -99,7 +99,7 @@ const ProjectPortfolio = ({ user }: ProjectPortfolioProps) => {
                         </div>
                       </div>
                       <div>
-                        <ProjectPortfolioDropDown />
+                        <ProjectPortfolioDropDown id={item.id} />
                       </div>
                     </div>
                   </div>
