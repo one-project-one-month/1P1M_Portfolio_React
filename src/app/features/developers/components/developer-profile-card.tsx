@@ -7,6 +7,7 @@ import { copyToClipboard } from '@/lib/utils';
 import type { UserProfile } from '@/types/dev';
 import { GitBranch, LinkedinIcon } from 'lucide-react';
 import { ProfileActions } from '../../user-profile/components/profile-actions';
+import type { DevProfileType } from '../../user-profile/types/user-profile.type';
 import { truncate } from '../../user-profile/utils/string.utils';
 
 type DeveloperProfileCardProps = {
@@ -31,13 +32,8 @@ function DeveloperProfileCard({
     techStacks,
   } = user;
 
-  //   const copyToClipboard = async (value?: string | null) => {
-  //     if (!value) return;
-  //     await navigator.clipboard.writeText(value);
-  //   };
-
   const handleShareProfile = () => {
-    copyToClipboard(window.location.href, 'Profile link');
+    copyToClipboard(window.location.href);
   };
 
   const displayName = name || 'Anonymous Developer';
@@ -72,7 +68,7 @@ function DeveloperProfileCard({
               className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed"
               title="No GitHub linked"
             >
-              <GitBranch />
+              <GitBranch className="border rounded-full w-7 h-7 p-1" />
             </span>
           )}
 
@@ -91,7 +87,7 @@ function DeveloperProfileCard({
               className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed"
               title="No LinkedIn linked"
             >
-              <LinkedinIcon />
+              <LinkedinIcon className="border rounded-full w-7 h-7 p-1" />
             </span>
           )}
         </div>
@@ -138,26 +134,23 @@ function DeveloperProfileCard({
           )}
         </div>
 
-        <div className="flex items-center gap-3 opacity-60">
-          <div className="flex items-center gap-1">
+        <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <img src={Telegram} alt="" className="w-5 h-5" />
             <p className="text-[#99A1AF] text-sm leading-5">Not provided</p>
           </div>
         </div>
 
-        <p className="text-white text-sm h-10 line-clamp-2">{displayAbout}</p>
+        <p className="text-white text-sm h-10 line-clamp-2 mt-2">
+          {displayAbout}
+        </p>
       </div>
-      {/* <Button
-        onClick={handleShareProfile}
-        className=" absolute right-3 top-3 h-10"
-      >
-        Share Profile
-      </Button> */}
+
       <ProfileActions
-        devProfile={user as any}
+        devProfile={user as DevProfileType}
         onCopy={handleShareProfile}
         truncate={truncate}
-        className=" absolute right-3 top-3 h-10"
+        className="absolute right-3 top-3 h-10"
         isMyProfile={isMyProfile}
       />
     </div>
