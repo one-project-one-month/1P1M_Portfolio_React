@@ -196,3 +196,21 @@ export const getIdeaReactionCount = async (projectIdeaId: number) => {
     };
   }
 };
+
+//get project idea by id
+export const getProjectIdeaById = async (projectIdeaId: number) => {
+  try {
+    const response = await apiClient.get(
+      API_ENDPOINTS.GET_PROJECT_IDEA_BY_ID + `/${projectIdeaId}`,
+    );
+
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error getting at project idea', e);
+    throw {
+      success: false,
+      message: 'Failed to get project idea',
+    };
+  }
+};
