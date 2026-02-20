@@ -55,7 +55,7 @@ export const UserManagementHeaderSection = ({
   };
 
   return (
-    <div className="flex flex-col gap-y-10">
+    <div className="flex flex-col gap-y-6 mb-6">
       <Title
         showSearch={false}
         showFilter={false}

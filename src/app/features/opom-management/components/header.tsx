@@ -1,5 +1,5 @@
 import InputField from '@/components/ui/input-field';
-import { COLORS } from '@/constants/colors';
+import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Check, ChevronDown, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -25,17 +25,14 @@ export const OpomRegisteredListHeader = ({
     setFilterOpen(false);
   };
   return (
-    <div className="flex flex-col gap-y-10 py-6">
-      <div>
-        <h1 className="text-3xl md:text-5xl font-extrabold text-white ps-2 mb-2">
-          OPOM Registered User List
-        </h1>
-        <div
-          className={`h-1.5 w-16 md:w-50 rounded-lg bg-[${COLORS.secondary}] `}
-        ></div>
-      </div>
+    <div className="flex flex-col gap-y-6 mb-6">
+      <Title
+        title="OPOM Registered User List"
+        showSearch={false}
+        showFilter={false}
+      />
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
         <div className="relative w-full md:w-96 lg:w-100">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4 z-10" />
 
