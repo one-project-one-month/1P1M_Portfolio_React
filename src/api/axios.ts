@@ -1,4 +1,3 @@
-import { API_CONFIG } from '@/config/api';
 import { logout } from '@/lib/utils';
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
@@ -8,7 +7,7 @@ interface FailedRequest {
 }
 
 const apiClient = axios.create({
-  baseURL: API_CONFIG.API_URL,
+  baseURL: '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

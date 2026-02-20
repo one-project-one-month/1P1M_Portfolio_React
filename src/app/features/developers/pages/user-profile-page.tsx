@@ -73,15 +73,13 @@ function UserProfilePage() {
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ideaLists.length > 0 ? (
-                  ideaLists
-                    .slice(0, 3)
-                    .map((idea) => (
-                      <IdeaListCard
-                        key={idea.projectIdeaId}
-                        idea={idea}
-                        onReact={handleReactIdea}
-                      />
-                    ))
+                  ideaLists.map((idea) => (
+                    <IdeaListCard
+                      key={idea.projectIdeaId}
+                      idea={idea}
+                      onReact={handleReactIdea}
+                    />
+                  ))
                 ) : (
                   <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
                     <LightbulbOff size={48} className="mb-4 opacity-60" />
@@ -99,20 +97,18 @@ function UserProfilePage() {
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projectLists.length > 0 ? (
-                  projectLists
-                    .slice(0, 3)
-                    .map((pro) => (
-                      <ProjectCard
-                        views={0}
-                        react={pro.reaction_count}
-                        title={pro.name}
-                        developers={pro.assignedDevs.developers}
-                        id={pro.id}
-                        status={pro.status}
-                        image={pro.projectPicUrl}
-                        isReacted={pro.alreadyReacted}
-                      />
-                    ))
+                  projectLists.map((pro) => (
+                    <ProjectCard
+                      views={0}
+                      react={pro.reaction_count}
+                      title={pro.name}
+                      developers={pro.assignedDevs.developers}
+                      id={pro.id}
+                      status={pro.status}
+                      image={pro.projectPicUrl}
+                      isReacted={pro.alreadyReacted}
+                    />
+                  ))
                 ) : (
                   <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
                     <List size={48} className="mb-4 opacity-60" />
