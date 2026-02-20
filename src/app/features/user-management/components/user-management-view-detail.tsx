@@ -114,7 +114,6 @@ const UserManagementViewDetail = () => {
                       alt="phone"
                       className="w-[15px] h-[16px]"
                     />
-
                     {user?.devProfile.phone ? (
                       <p className="text-[#99A1AF] text-sm leading-5">
                         {user?.devProfile.phone}
