@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Save, Trash2 } from 'lucide-react';
 import {
   Controller,
   type FieldArrayWithId,
@@ -19,17 +19,21 @@ interface PortfolioTypeLangProps {
     'technologies',
     'id'
   >[];
-  onAddTechnology: () => void;
+  onAddNewRow: () => void;
+  onSaveTechnologies: () => void;
   onRemoveTechnology: (index: number) => void;
   isReadOnly: boolean;
+  isEdit: boolean;
 }
 
 export const PortfolioTypeLang = ({
   form,
   technologyFields,
-  onAddTechnology,
+  onAddNewRow,
+  onSaveTechnologies,
   onRemoveTechnology,
   isReadOnly,
+  isEdit,
 }: PortfolioTypeLangProps) => {
   return (
     <div className="flex flex-col gap-1">
@@ -92,14 +96,27 @@ export const PortfolioTypeLang = ({
       </div>
 
       {!isReadOnly && (
-        <Button
-          variant="primary"
-          onClick={onAddTechnology}
-          className="gap-2 mt-3 w-fit"
-        >
-          <Plus size={18} />
-          Add
-        </Button>
+        <div className="flex gap-3 mt-3">
+          <Button
+            variant="primary"
+            onClick={onAddNewRow}
+            className="gap-2 w-fit"
+          >
+            <Plus size={18} />
+            {isEdit ? 'Add Row' : 'Add'}
+          </Button>
+
+          {isEdit && (
+            <Button
+              variant="primary"
+              onClick={onSaveTechnologies}
+              className="gap-2 w-fit bg-[#9C39FC] hover:bg-[#9C39FC]"
+            >
+              <Save size={18} />
+              Save
+            </Button>
+          )}
+        </div>
       )}
     </div>
   );
