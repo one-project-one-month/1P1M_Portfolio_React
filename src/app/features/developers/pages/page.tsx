@@ -3,7 +3,6 @@ import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
 import { Users } from 'lucide-react';
-import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ORDER_OPTIONS } from '../../ideas/shared/constants';
 import DevCard from '../components/dev-card';
@@ -33,16 +32,6 @@ const Developer = () => {
 
     setSearchParams(params);
   };
-
-  const { sortField, direction } = useMemo(() => {
-    if (filter === 'Popular')
-      return { sortField: '', direction: 'desc' as const };
-
-    if (filter === 'Newest')
-      return { sortField: '', direction: 'asc' as const };
-
-    return { sortField: '', direction: 'asc' as const };
-  }, [filter]);
 
   const {
     data,
