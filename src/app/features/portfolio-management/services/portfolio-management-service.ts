@@ -75,9 +75,12 @@ export interface CreateProjectPortfolioRequest {
   description: string;
   projectLink: string;
   repoLink: string;
-  startDate: string;
-  endDate?: string;
-  teamIds: number[];
+  teams: {
+    teamName: string;
+    description: string;
+    imageUrl: string;
+    memberIds: number[];
+  }[];
   languageAndTools: {
     name: string;
     type: string;

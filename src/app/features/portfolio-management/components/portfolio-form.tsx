@@ -35,9 +35,9 @@ const PortfolioForm = ({
     isReadOnly,
     isEdit,
     technologyFields,
-    handleAddTechnology,
+    handleSaveTechnologies,
     handleRemoveTechnology,
-    // handleUpdateTechnology - not currently used in this component
+    handleAddNewRow,
     isModalOpen,
     setIsModalOpen,
     setActiveTeamId,
@@ -139,9 +139,11 @@ const PortfolioForm = ({
           <PortfolioTypeLang
             form={form}
             technologyFields={technologyFields}
-            onAddTechnology={handleAddTechnology}
+            onAddNewRow={handleAddNewRow}
+            onSaveTechnologies={handleSaveTechnologies}
             onRemoveTechnology={handleRemoveTechnology}
             isReadOnly={isReadOnly}
+            isEdit={isEdit}
           />
 
           <PortfolioTeamSection

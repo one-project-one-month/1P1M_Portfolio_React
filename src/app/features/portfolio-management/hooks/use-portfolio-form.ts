@@ -5,7 +5,6 @@ import type {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { normalize } from 'zod';
 import type { PortfolioFormMode } from '../components/portfolio-form';
 import {
   statusOptions,
@@ -83,14 +82,20 @@ export const usePortfolioForm = ({
   const addTechnologiesMutation = useAddLanguageAndTools();
   const deleteTechnologiesMutation = useDeleteLanguageAndTools();
 
-  const handleAddTechnology = () => {
+  const handleSaveTechnologies = () => {
+    if (!isEdit || !initialData?.id) return;
+
     const currentTechnologies = form.getValues('technologies');
-    const technologies = currentTechnologies.filter(
-      (tech) => tech.projectType.trim() !== '' || tech.languages.trim() !== '',
+    const newTechnologies = currentTechnologies.filter(
+      (tech) =>
+        !tech.id &&
+        (tech.projectType.trim() !== '' || tech.languages.trim() !== ''),
     );
 
+    if (newTechnologies.length === 0) return;
+
     const payload = {
-      languageAndTools: technologies.flatMap((tech) =>
+      languageAndTools: newTechnologies.flatMap((tech) =>
         tech.languages.split(',').map((lang) => ({
           name: lang.trim(),
           type: tech.projectType,
@@ -98,28 +103,23 @@ export const usePortfolioForm = ({
       ),
     };
 
-    if (initialData?.id && technologies.length > 0)
-      addTechnologiesMutation.mutate({
-        projectPortfolioId: initialData.id,
-        payload,
-      });
+    addTechnologiesMutation.mutate({
+      projectPortfolioId: initialData.id,
+      payload,
+    });
   };
 
   const handleRemoveTechnology = async (index: number) => {
-    if (initialData?.id) {
-      const hello = form.getValues('technologies');
-      const tech = hello[index];
-      if (tech.id) {
-        deleteTechnologiesMutation.mutate({
-          pjId: initialData.id,
-          languageAndToolId: tech.id,
-        });
-        // Optimistic removal from UI form
-        removeTechnology(index);
-      } else {
-        removeTechnology(index);
-      }
+    const techs = form.getValues('technologies');
+    const tech = techs[index];
+
+    if (isEdit && initialData?.id && tech.id) {
+      deleteTechnologiesMutation.mutate({
+        pjId: initialData.id,
+        languageAndToolId: tech.id,
+      });
     }
+    removeTechnology(index);
   };
 
   const handleAddNewRow = () => {
@@ -197,59 +197,26 @@ export const usePortfolioForm = ({
   const handleSaveForm = form.handleSubmit(
     async (data) => {
       try {
-        // Get Team IDs from localStorage
-        const storedTeamIds = localStorage.getItem('temp_portfolio_team_ids');
-        const teamIds: number[] = storedTeamIds
-          ? JSON.parse(storedTeamIds)
-          : [];
-
-        const payload: CreateProjectPortfolioRequest = {
-          name: data.projectName,
-          projectPicUrl: data.projectImage || 'https://via.placeholder.com/150',
-          description: data.description,
-          projectLink: data.projectLink,
-          repoLink: data.repoLink,
-          startDate: data.startDate,
-          teamIds: teamIds,
-          languageAndTools: data.technologies.flatMap((tech) =>
-            tech.languages.split(',').map((lang) => ({
-              name: lang.trim(),
-              type: tech.projectType,
-            })),
-          ),
-        };
-
-        if (data.completedDate) {
-          payload.endDate = data.completedDate;
-        }
-
         if (initialData?.id) {
-          // Calculate diff for update
+          // --- EDIT MODE: only patch changed basic fields ---
           const updatePayload: Partial<CreateProjectPortfolioRequest> = {};
 
-          if (
-            normalize(data.projectName) !== normalize(initialData.projectName)
-          ) {
+          if (data.projectName !== initialData.projectName) {
             updatePayload.name = data.projectName;
           }
-          if (
-            normalize(data.description) !== normalize(initialData.description)
-          ) {
+          if (data.description !== initialData.description) {
             updatePayload.description = data.description;
           }
-          if (normalize(data.projectImage) !== normalize(initialData.image)) {
+          if (data.projectImage !== initialData.image) {
             updatePayload.projectPicUrl = data.projectImage;
           }
-          if (
-            normalize(data.projectLink) !== normalize(initialData.projectLink)
-          ) {
+          if (data.projectLink !== initialData.projectLink) {
             updatePayload.projectLink = data.projectLink;
           }
-          if (normalize(data.repoLink) !== normalize(initialData.repoLink)) {
+          if (data.repoLink !== initialData.repoLink) {
             updatePayload.repoLink = data.repoLink;
           }
 
-          // Only call update if there are changes
           if (Object.keys(updatePayload).length > 0) {
             await updateProjectMutation.mutateAsync({
               id: initialData.id,
@@ -257,11 +224,36 @@ export const usePortfolioForm = ({
             });
           }
         } else {
+          // --- CREATE MODE: build inline teams + lang/tools ---
+          const teams = data.teams.map((team) => ({
+            teamName: team.name,
+            description: 'Team for project portfolio',
+            imageUrl: 'https://via.placeholder.com/150',
+            memberIds: team.members
+              .map((m) =>
+                typeof m.id === 'number' ? m.id : parseInt(String(m.id), 10),
+              )
+              .filter((id) => !isNaN(id)),
+          }));
+
+          const payload: CreateProjectPortfolioRequest = {
+            name: data.projectName,
+            projectPicUrl:
+              data.projectImage || 'https://via.placeholder.com/150',
+            description: data.description,
+            projectLink: data.projectLink,
+            repoLink: data.repoLink,
+            teams,
+            languageAndTools: data.technologies.flatMap((tech) =>
+              tech.languages.split(',').map((lang) => ({
+                name: lang.trim(),
+                type: tech.projectType,
+              })),
+            ),
+          };
+
           await createProjectMutation.mutateAsync(payload);
         }
-
-        // Cleanup localStorage
-        localStorage.removeItem('temp_portfolio_team_ids');
 
         const validTechnologies = data.technologies.filter(
           (t): t is { projectType: string; languages: string } =>
@@ -351,8 +343,14 @@ export const usePortfolioForm = ({
         count: members.length,
         members: members,
       };
-      if (initialData?.id)
+
+      if (isEdit && initialData?.id) {
         createTeamMutation.mutate({ projectId: initialData.id, team: newTeam });
+      } else {
+        // Create mode: only update local form state
+        const currentTeams = form.getValues('teams');
+        form.setValue('teams', [...currentTeams, newTeam]);
+      }
     } else if (activeTeamId) {
       form.setValue(
         'teams',
@@ -446,7 +444,7 @@ export const usePortfolioForm = ({
     isReadOnly,
     isEdit,
     technologyFields,
-    handleAddTechnology,
+    handleSaveTechnologies,
     handleRemoveTechnology,
     handleUpdateTechnology,
     handleAddNewRow,

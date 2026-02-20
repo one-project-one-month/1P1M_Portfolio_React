@@ -2,14 +2,10 @@ import DeleteDialog from '@/components/ui/delete-dialog';
 import type { ProjectStatus } from '@/types/portfolio-management';
 import { clsx } from 'clsx';
 import { Eye, Heart, MoreVertical } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import type { ProjectData } from '../constants/data';
-import {
-  useReactProject,
-  useUnreactProject,
-} from '../hooks/use-portfolio-query';
+import { useProjectCard } from '../hooks/use-project-card';
 import ChangeStatusDialog from './change-status-dialog';
 import { ProjectActionMenu } from './project-action-menu';
 import { SuccessToast } from './success-toast';
@@ -39,121 +35,33 @@ export const ProjectCard = ({
   onDelete,
   onStatusChange,
 }: ProjectCardProps) => {
-  const navigate = useNavigate();
-  const {
-    id,
-    image,
-    title,
-    leader,
-    members,
-    status,
-    reactCount = 0,
-    viewCount = 0,
-    isReacted = false,
-  } = data;
+  const { id, image, title, leader, members, status, viewCount = 0 } = data;
   const displayMembers = members.slice(0, 3);
   const remainingCount = Math.max(0, members.length - 3);
 
-  const [localIsReacted, setLocalIsReacted] = useState(isReacted);
-  const [localReactCount, setLocalReactCount] = useState(reactCount);
-
-  const reactMutation = useReactProject();
-  const unreactMutation = useUnreactProject();
-
-  const handleReactClick = () => {
-    if (localIsReacted) {
-      setLocalIsReacted(false);
-      setLocalReactCount((prev) => Math.max(0, prev - 1));
-      unreactMutation.mutate(id, {
-        onError: () => {
-          setLocalIsReacted(true);
-          setLocalReactCount((prev) => prev + 1);
-        },
-      });
-    } else {
-      setLocalIsReacted(true);
-      setLocalReactCount((prev) => prev + 1);
-      reactMutation.mutate(id, {
-        onError: () => {
-          setLocalIsReacted(false);
-          setLocalReactCount((prev) => Math.max(0, prev - 1));
-        },
-      });
-    }
-  };
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showMembersPopover, setShowMembersPopover] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const [statusDialogProjectId, setStatusDialogProjectId] = useState<
-    number | null
-  >(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node)
-      ) {
-        setShowMembersPopover(false);
-      }
-    };
-
-    if (isMenuOpen || showMembersPopover) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isMenuOpen, showMembersPopover]);
-
-  useEffect(() => {
-    if (showSuccessToast) {
-      const timer = setTimeout(() => {
-        setShowSuccessToast(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccessToast]);
-
-  const handleView = () => {
-    navigate(`/admin/portfolio-management/view-project-portfolio/${id}`);
-    setIsMenuOpen(false);
-  };
-
-  const handleEdit = () => {
-    navigate(`/admin/portfolio-management/edit-portfolio/${id}`);
-    setIsMenuOpen(false);
-  };
-
-  const handleDeleteClick = (projectId: string | number) => {
-    setDeleteProjectId(projectId.toString());
-    setIsMenuOpen(false);
-  };
-
-  const handleConfirmDelete = () => {
-    if (deleteProjectId) {
-      onDelete?.(deleteProjectId);
-      setDeleteProjectId(null);
-      setShowSuccessToast(true);
-    }
-  };
-
-  const handleStatusConfirm = (newStatus: ProjectStatus) => {
-    if (statusDialogProjectId !== null) {
-      onStatusChange?.(statusDialogProjectId, newStatus);
-      setStatusDialogProjectId(null);
-    }
-  };
-
-  const currentProject = { id, status };
+  const {
+    localIsReacted,
+    localReactCount,
+    isMenuOpen,
+    deleteProjectId,
+    showSuccessToast,
+    showMembersPopover,
+    statusDialogProjectId,
+    menuRef,
+    popoverRef,
+    handleReactClick,
+    handleView,
+    handleEdit,
+    handleDeleteClick,
+    handleConfirmDelete,
+    handleStatusChange,
+    handleStatusConfirm,
+    toggleMembersPopover,
+    toggleMenu,
+    setDeleteProjectId,
+    setShowSuccessToast,
+    setStatusDialogProjectId,
+  } = useProjectCard({ data, onDelete, onStatusChange });
 
   return (
     <>
@@ -175,7 +83,7 @@ export const ProjectCard = ({
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <span className="text-[#9CA3AF]">Team Memembers</span>
+            <span className="text-[#9CA3AF]">Team Members</span>
             <div className="relative flex items-center">
               <div className="flex items-center -space-x-2">
                 {displayMembers.map((member, index) => (
@@ -209,7 +117,7 @@ export const ProjectCard = ({
                 <div className="relative">
                   <button
                     className="relative z-0 flex items-center justify-center text-sm font-medium ml-1 text-[#9CA3AF] hover:text-white transition-colors cursor-pointer"
-                    onClick={() => setShowMembersPopover(!showMembersPopover)}
+                    onClick={toggleMembersPopover}
                   >
                     +{remainingCount}
                   </button>
@@ -217,7 +125,7 @@ export const ProjectCard = ({
                   {showMembersPopover && (
                     <div
                       ref={popoverRef}
-                      className="absolute bottom-full right-0 mb-2 w-40 bg-[#1F2937] border border-[#374151] rounded-lg shadow-xl z-50 py-2"
+                      className="absolute bottom-full right-0 mb-2 w-56 bg-[#1F2937] border border-[#374151] rounded-lg shadow-xl z-50 py-2"
                     >
                       {members.map((member) => (
                         <Link
@@ -244,7 +152,7 @@ export const ProjectCard = ({
                               </div>
                             )}
                           </div>
-                          <span className="text-sm text-white">
+                          <span className="text-sm text-white truncate">
                             {member.name}
                           </span>
                         </Link>
@@ -293,11 +201,11 @@ export const ProjectCard = ({
               ref={menuRef}
               projectId={id}
               isOpen={isMenuOpen}
-              onToggle={() => setIsMenuOpen(!isMenuOpen)}
+              onToggle={toggleMenu}
               onView={handleView}
               onEdit={handleEdit}
               onDelete={handleDeleteClick}
-              onStatusChange={(id) => setStatusDialogProjectId(id as number)}
+              onStatusChange={handleStatusChange}
               menuPosition="top-right"
               triggerClassName="flex h-8 w-8 items-center justify-center rounded-full text-[#9CA3AF] hover:bg-white/10 hover:text-white transition-colors"
               triggerIcon={<MoreVertical className="w-5 h-5" />}
@@ -325,7 +233,7 @@ export const ProjectCard = ({
         isOpen={statusDialogProjectId !== null}
         onClose={() => setStatusDialogProjectId(null)}
         onConfirm={handleStatusConfirm}
-        currentStatus={currentProject?.status}
+        currentStatus={status}
       />
 
       {showSuccessToast && (
