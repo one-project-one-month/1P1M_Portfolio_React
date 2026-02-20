@@ -2,7 +2,7 @@ import { Button, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const ProjectPortfolioDropDown = () => {
+export const ProjectPortfolioDropDown = ({ id }: { id: number }) => {
   return (
     <>
       <DropdownMenu.Root>
@@ -30,7 +30,7 @@ export const ProjectPortfolioDropDown = () => {
               e.preventDefault();
             }}
           >
-            Edit Idea
+            <Link to={`project-portfolio-update/${id}`}> Edit Idea</Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onSelect={(e) => {

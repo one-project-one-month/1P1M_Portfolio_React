@@ -29,6 +29,7 @@ export const IdeaSchema = z.object({
   viewCount: z.number(),
   dev_id: z.number(),
   devUsername: z.string(),
+  projectName: z.string(),
 
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number().optional(),
@@ -40,9 +41,9 @@ export const IdeaSchema = z.object({
 });
 
 export const createIdeaSchema = z.object({
-  projectIdeaName: z.string().min(1, 'Project idea name is required'),
+  projectName: z.string().min(1, 'Project idea name is required'),
   description: z.string().min(1, 'Description is required'),
-  projectTypes: z.array(z.string()).min(1, 'Select at least one project type'),
+  projectType: z.array(z.string()).min(1, 'Select at least one project type'),
 });
 
 export const editIdeaSchema = createIdeaSchema.extend({
@@ -54,16 +55,59 @@ export const editIdeaSchema = createIdeaSchema.extend({
     IdeaStatus.PENDING,
     IdeaStatus.DELETED,
   ]),
+  projectIdeaName: z.string(),
+  projectName: z.string(),
+  description: z.string(),
   projectIdeaId: z.number(),
+  // projectTypes: z.array(z.string()),
   dev_id: z.number(),
+  // devId: z.number(),
   devUsername: z.string(),
   ownerProfilePicUrl: z.string().optional(),
-  leader_id: z.number(),
-  leaderProfilePicUrl: z.string().optional(),
+  // leader_id: z.number(),
+  // leaderProfilePicUrl: z.string().optional(),
 });
+export const updateProjectIdeaSchema = z.object({
+  projectName: z.string().min(1),
+  description: z.string().min(1),
+  projectType: z.array(z.string()).min(1),
+});
+
+// export const assingedLeaderSchema = z.object({
+//   projectIdeaId: z.number(),
+//   devId: z.number,
+// });
+
+export type Status =
+  | 'REJECTED'
+  | 'APPROVED'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'PENDING'
+  | 'DELETED';
+
+export type statusChangeDataProps = {
+  name: Status;
+  description: string;
+  label: string;
+};
+
+export const statusMap: Record<Status, number> = {
+  PENDING: 5,
+  APPROVED: 1,
+  IN_PROGRESS: 2,
+  COMPLETED: 3,
+  REJECTED: 0,
+  DELETED: 4,
+};
 
 export const IdeaStatusSchema = editIdeaSchema.pick({
   status: true,
+});
+
+export const assignLeaderSchem = IdeaSchema.pick({
+  projectIdeaId: true,
+  dev_id: true,
 });
 
 export const deleteIdeaSchema = IdeaSchema.pick({
@@ -81,12 +125,23 @@ export const DeveloperSchema = z.object({
   tech_stack: z.array(z.string()),
 });
 
+export type GetDeveloperParamsType = {
+  keyword?: string;
+  page?: number;
+  size?: number;
+  sortField?: string;
+  sortDirection?: 'asc' | 'desc';
+  status?: string;
+};
+
 export type DeveloperType = z.infer<typeof DeveloperSchema>;
 export type IdeaType = z.infer<typeof IdeaSchema>;
 export type CreateIdeaType = z.infer<typeof createIdeaSchema>;
 export type EditIdeaType = z.infer<typeof editIdeaSchema>;
 export type IdeaStatusType = z.infer<typeof IdeaStatusSchema>;
 export type DeleteIdeaType = z.infer<typeof deleteIdeaSchema>;
+export type AssignLeaderType = z.infer<typeof assignLeaderSchem>;
+export type UpdateProjectIdeaType = z.infer<typeof updateProjectIdeaSchema>;
 
 // ------------------------------------- //
 
@@ -156,3 +211,7 @@ export type IdeaCreateResponseType = ApiResponseType<CreateIdeaType>;
 export type IdeaEditResponseType = ApiResponseType<EditIdeaType>;
 export type IdeaStatusUpdateResponseType = ApiResponseType<IdeaStatusType>;
 export type IdeaDeleteResponseType = ApiResponseType<DeleteIdeaType>;
+export type AssignLeaderResponseType = ApiResponseType<AssignLeaderType>;
+export type DeveloperProfileResponseType = ApiResponseType<DeveloperType[]>;
+export type UpdateProjectIdeaResponseType =
+  ApiResponseType<UpdateProjectIdeaType>;
