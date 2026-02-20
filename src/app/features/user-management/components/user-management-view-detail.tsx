@@ -65,7 +65,7 @@ const UserManagementViewDetail = () => {
         <div className="flex bg-[#282E43] justify-between px-2  shadow-3xl rounded-xl pt-[17px] pr-[20px] pb-[18px] pl-[20px]">
           <div className="flex  gap-5">
             <img
-              src={sampleUserImgUrl}
+              src={user.devProfile.profilePictureUrl || sampleUserImgUrl}
               alt=""
               className="w-[163px] h-[185px] rounded-md "
             />

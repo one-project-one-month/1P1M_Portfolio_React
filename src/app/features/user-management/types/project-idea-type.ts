@@ -79,13 +79,27 @@ export const updateProjectIdeaSchema = z.object({
 // });
 
 export type Status =
-  | 'Pending'
-  | 'Approved'
-  | 'In Progress'
-  | 'Completed'
-  | 'Rejected'
-  | 'Deleted';
-export type statusChangeDataProps = { name: Status; description: string };
+  | 'REJECTED'
+  | 'APPROVED'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'PENDING'
+  | 'DELETED';
+
+export type statusChangeDataProps = {
+  name: Status;
+  description: string;
+  label: string;
+};
+
+export const statusMap: Record<Status, number> = {
+  PENDING: 5,
+  APPROVED: 1,
+  IN_PROGRESS: 2,
+  COMPLETED: 3,
+  REJECTED: 0,
+  DELETED: 4,
+};
 
 export const IdeaStatusSchema = editIdeaSchema.pick({
   status: true,

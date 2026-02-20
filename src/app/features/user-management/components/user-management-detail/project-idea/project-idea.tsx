@@ -85,19 +85,6 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                     />
                   }
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-[#99A1AF] font-normal">
-                    Leader:
-                  </span>
-                  {
-                    <img
-                      src={item.leaderProfilePicUrl || sampleUserImgUrl}
-                      alt=""
-                      className="w-[30px] h-[30px] rounded-2xl"
-                    />
-                  }
-                </div>
               </div>
 
               <div className="border border-[#D1D5DC33]"></div>
@@ -126,10 +113,6 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   <ProjectIdeaDropDown
                     projectIdea={{
                       ...item,
-                      devUsername: item.dev_Email ?? 'Unknown',
-                      ownerProfilePicUrl: item.ownerProfilePicUrl ?? undefined,
-                      leaderProfilePicUrl:
-                        item.leaderProfilePicUrl ?? undefined,
                     }}
                   />
                 </div>

@@ -1,7 +1,11 @@
 import { statusChageData } from '@/app/features/user-management/constant/status-change-data';
+
+import { statusColorList } from '@/app/features/user-management/constant/status.color';
+
 import { useDeveloperProfile } from '@/app/features/user-management/hook/use-project-idea';
 import {
   editIdeaSchema,
+  statusMap,
   type AssignLeaderResponseType,
   type EditIdeaType,
   type IdeaStatusUpdateResponseType,
@@ -69,31 +73,6 @@ export default function ProjectIdeaEditDialog({
     page: 10,
   });
   const developers = data?.data ?? [];
-  const [selectReason, setSelectedReason] = useState<Status | null>(
-    projectIdea.status as Status,
-  );
-
-  const toggleReason = (reason: Status) => {
-    setSelectedReason((pre) => (pre === reason ? null : reason));
-  };
-
-  const statusMap: Record<Status, number> = {
-    Pending: 5,
-    Approved: 1,
-    'In Progress': 2,
-    Completed: 3,
-    Rejected: 0,
-    Deleted: 4,
-  };
-
-  const statusColorList: Record<Status, string> = {
-    Pending: 'text-[#FD9A00]',
-    Approved: 'text-[#7CCF00]',
-    'In Progress': 'text-[#00B8DB]',
-    Completed: 'text-[#03fcdb]',
-    Rejected: 'text-[#9F0712]',
-    Deleted: 'text-[#6A7282]',
-  };
 
   const statusColor = (name: Status) => statusColorList[name];
 
@@ -154,7 +133,7 @@ export default function ProjectIdeaEditDialog({
 
       statusChageMutate({
         projectIdeaId: projectIdea.projectIdeaId,
-        status: statusMap[selectReason as Status],
+        status: statusMap[data.status as Status],
       });
 
       assignLeaderMutate({
@@ -408,42 +387,48 @@ export default function ProjectIdeaEditDialog({
             )}
 
             {step === 3 && (
-              <div className="w-full flex flex-col gap-10">
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-[#F9FAFB] font-medium text-xl leading-8">
-                    Change the idea status!
-                  </h2>
-                  <p className="text-[#99A1AF] text-lg leading-7">
-                    Choose a status to reflect the current progress and next
-                    step of this idea.
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-6">
-                  {statusChageData.map((item) => (
-                    <div
-                      className="flex items-center   gap-5 "
-                      onClick={() => toggleReason(item.name as Status)}
-                    >
-                      <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
-                        {selectReason === item.name && (
-                          <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
-                        )}
-                      </div>
-                      <div className="h-full flex flex-col">
-                        <p
-                          className={` text-lg font-medium leading-5 ${statusColor(item.name as Status)}`}
-                        >
-                          {item.name}
-                        </p>
-                        <p className="text-[#6A7282] text-xs leading-7">
-                          {item.description}
-                        </p>
-                      </div>
+              <Controller
+                name="status"
+                control={form.control}
+                render={({ field }) => (
+                  <div className="w-full flex flex-col gap-10">
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-[#F9FAFB] font-medium text-xl leading-8">
+                        Change the idea status!
+                      </h2>
+                      <p className="text-[#99A1AF] text-lg leading-7">
+                        Choose a status to reflect the current progress and next
+                        step of this idea.
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
+
+                    <div className="flex flex-col gap-6">
+                      {statusChageData.map((item) => (
+                        <div
+                          className="flex items-center   gap-5 "
+                          onClick={() => field.onChange(item.name)}
+                        >
+                          <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
+                            {field.value === item.name && (
+                              <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
+                            )}
+                          </div>
+                          <div className="h-full flex flex-col">
+                            <p
+                              className={` text-lg font-medium leading-5 ${statusColor(item.name as Status)}`}
+                            >
+                              {item.label}
+                            </p>
+                            <p className="text-[#6A7282] text-xs leading-7">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              />
             )}
           </div>
 
