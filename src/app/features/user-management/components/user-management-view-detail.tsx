@@ -2,7 +2,6 @@ import ProjectIdea from '@/app/features/user-management/components/user-manageme
 import ProjectPortfolio from '@/app/features/user-management/components/user-management-detail/project-portfolio/project-portfolio';
 import UserShareProfile from '@/app/features/user-management/components/user-share-profile-dialog';
 import { useGetUserProfileDetail } from '@/app/features/user-management/hook/use-user-management';
-import Behance from '@/assets/icons/behance.png';
 import Copy from '@/assets/icons/copy.png';
 import Email from '@/assets/icons/Email.png';
 import Github from '@/assets/icons/GitHub.png';
@@ -48,11 +47,11 @@ const UserManagementViewDetail = () => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col gap-[38px] font-sans">
+      <div className="flex flex-col gap-4 font-sans">
         <div className="flex flex-col">
           <Link
             to="/admin/user-management"
-            className="flex flex-row items-center justify-start "
+            className="flex flex-row items-center justify-start mt-4 mb-6"
           >
             <ChevronLeft color="#F3F4F6" size="30" />
 
@@ -65,7 +64,7 @@ const UserManagementViewDetail = () => {
           </h2>
         </div>
 
-        <div className="flex bg-slate-900 justify-between border border-[#99A1AF] rounded-xl pt-[17px] pr-[20px] pb-[18px] pl-[20px]">
+        <div className="flex bg-slate-900 justify-between rounded-xl pt-[17px] pr-[20px] pb-[18px] pl-[20px]">
           <div className="flex  gap-3">
             <img
               src={sampleUserImgUrl}
@@ -88,7 +87,7 @@ const UserManagementViewDetail = () => {
 
               <div className="flex flex-col gap-3">
                 <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center items-center gap-1">
+                  <div className="flex justify-center items-center gap-2">
                     <img
                       src={Email}
                       alt=""
@@ -107,39 +106,59 @@ const UserManagementViewDetail = () => {
                 </div>
 
                 <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center gap-1">
+                  <div className="flex justify-center gap-2">
                     <img
                       src={Phone}
                       alt=""
                       className="w-5 h-5  text-[#99A1AF]"
                     />
-                    <p className="text-[#99A1AF] text-sm leading-5">
-                      {user?.devProfile.phone}
-                    </p>
+                    {user?.devProfile.phone ? (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        {user?.devProfile.phone}
+                      </p>
+                    ) : (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        No phone provided
+                      </p>
+                    )}
                   </div>
-                  <img
-                    src={Copy}
-                    alt=""
-                    className="w-4 h-4 text-[#364153]"
-                    onClick={() => handleCopy(user?.devProfile.phone || '')}
-                  />
+                  {user?.devProfile.phone && (
+                    <img
+                      src={Copy}
+                      alt=""
+                      className="w-4 h-4 text-[#364153]"
+                      onClick={() => handleCopy(user?.devProfile.phone || '')}
+                    />
+                  )}
                 </div>
 
                 <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center gap-1">
+                  <div className="flex justify-center gap-2">
                     <img
                       src={Telegram}
                       alt=""
                       className="w-5 h-5  text-[#99A1AF]"
                     />
-                    <p className="text-[#99A1AF] text-sm leading-5">@nayGa4u</p>
+                    {user.devProfile.telegramUsername ? (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        {user.devProfile.telegramUsername}
+                      </p>
+                    ) : (
+                      <p className="text-[#99A1AF] text-sm leading-5">
+                        No telegram provided
+                      </p>
+                    )}
                   </div>
-                  <img
-                    src={Copy}
-                    alt=""
-                    className="w-4 h-4 text-[#364153]"
-                    onClick={() => handleCopy('@nayGa4u')}
-                  />
+                  {user.devProfile.telegramUsername && (
+                    <img
+                      src={Copy}
+                      alt=""
+                      className="w-4 h-4 text-[#364153]"
+                      onClick={() =>
+                        handleCopy(user.devProfile.telegramUsername || '')
+                      }
+                    />
+                  )}
                 </div>
               </div>
 
@@ -167,9 +186,6 @@ const UserManagementViewDetail = () => {
                 >
                   <img src={LinkedIn} className="w-4 h-4" alt="LinkedIn" />
                 </a>
-                <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-                  <img src={Behance} className="w-4 h-4" />
-                </div>
               </div>
             </div>
           </div>

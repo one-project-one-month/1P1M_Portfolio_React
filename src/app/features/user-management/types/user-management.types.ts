@@ -34,6 +34,7 @@ export const userProfileSchema = z.object({
   email: z.string(),
   name: z.string(),
   profilePictureUrl: z.string().nullable(),
+  telegramUsername: z.string().nullable(),
   passwordLastUpdated: z.string(),
   joinedDate: z.string(),
   phone: z.string().nullable(),
