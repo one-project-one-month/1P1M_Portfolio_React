@@ -39,7 +39,6 @@ export const userProfileSchema = z.object({
   joinedDate: z.string(),
   phone: z.string().nullable(),
   github: z.string(),
-  telegramUsername: z.string(),
   linkedIn: z.string(),
   aboutDev: z.string(),
   techStacks: z.array(z.string()),
