@@ -1,3 +1,4 @@
+import DeleteDialog from '@/components/ui/delete-dialog';
 import type { ConfigOption } from '@/types/config.type';
 import { Edit, SquareCheck, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -26,6 +27,7 @@ const OptionRow = ({
     active: optionData?.active ?? false,
     isNew: optionData?.isNew ?? false,
   }));
+  const [confirmModal, setConfirmModal] = useState(false);
 
   const handleSave = () => {
     onSave(updatedData);
@@ -35,7 +37,7 @@ const OptionRow = ({
 
   const handleInputChange = (
     field: keyof ConfigOption,
-    value: string | boolean | number,
+    value: string | boolean | number | null,
   ) => {
     setUpdatedData((prev) => ({ ...prev, [field]: value }));
   };
@@ -64,48 +66,67 @@ const OptionRow = ({
   };
 
   return (
-    <div className="grid grid-cols-[2fr_3fr_1.9fr_2fr_1fr] gap-5 items-center text-sm text-white p-3">
-      <span>Option {optionIndex}</span>
-      {isEditing || isNewRow ? (
-        <input
-          value={isNewRow ? undefined : updatedData?.name}
-          onChange={(e) => handleInputChange('name', e.target.value)}
-          placeholder="Enter Status"
-          className=" bg-[#FFFFFF17] rounded-sm border border-[#FFFFFF26] px-2 py-2"
-        />
-      ) : (
-        <p>{updatedData?.name}</p>
-      )}
-
-      <div className="flex justify-center">
+    <>
+      <div className="grid grid-cols-[2fr_3fr_1.9fr_2fr_1fr] gap-5 items-center text-sm text-white p-3">
+        <span>Option {optionIndex}</span>
         {isEditing || isNewRow ? (
           <input
-            type="number"
-            value={updatedData?.orderNo ?? ''}
-            min={1}
-            onChange={(e) =>
-              handleInputChange('orderNo', Number(e.target.value))
-            }
-            placeholder="-"
-            className="w-15 text-center rounded-sm bg-[#FFFFFF17] border border-[#FFFFFF26] px-2 py-2"
+            value={isNewRow ? undefined : updatedData?.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            placeholder="Enter Status"
+            className=" bg-[#FFFFFF17] rounded-sm border border-[#FFFFFF26] px-2 py-2"
           />
         ) : (
-          <p>{updatedData?.orderNo}</p>
+          <p>{updatedData?.name}</p>
         )}
-      </div>
-      <ConfigStatusDropdown
-        value={updatedData?.active}
-        onStatusChange={onStatusChange}
-      />
-      <div className="flex gap-3 justify-center">
-        {actionIcon}
-        <Trash2
-          size="20"
-          className="cursor-pointer"
-          onClick={() => onDelete(updatedData?.id || 0)}
+
+        <div className="flex justify-center">
+          {isEditing || isNewRow ? (
+            <input
+              type="number"
+              value={updatedData?.orderNo ?? ''}
+              min={1}
+              onChange={(e) =>
+                handleInputChange(
+                  'orderNo',
+                  e.target.value === '' ? null : Number(e.target.value),
+                )
+              }
+              placeholder="-"
+              className="w-15 text-center rounded-sm bg-[#FFFFFF17] border border-[#FFFFFF26] px-2 py-2"
+            />
+          ) : (
+            <p>{updatedData?.orderNo}</p>
+          )}
+        </div>
+        <ConfigStatusDropdown
+          value={updatedData?.active}
+          onStatusChange={onStatusChange}
         />
+        <div className="flex gap-3 justify-center">
+          {actionIcon}
+          <Trash2
+            size="20"
+            className="cursor-pointer"
+            onClick={() => setConfirmModal(true)}
+          />
+        </div>
       </div>
-    </div>
+      <DeleteDialog
+        isOpen={confirmModal}
+        onClose={() => setConfirmModal(false)}
+        onConfirm={() => onDelete(updatedData?.id || 0)}
+        overlayClassName="bg-black/30 backdrop-blur-[1px] p-10"
+        title="Delete this Option?"
+        description={
+          <>
+            Are you sure you want to delete this{' '}
+            <span className="font-semibold">(Option)</span>? This action cannot
+            be undone.
+          </>
+        }
+      />
+    </>
   );
 };
 

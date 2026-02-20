@@ -35,7 +35,7 @@ const ConfigFilter = ({ searching, onSearch }: ConfigFilterProps) => {
         <Select.Trigger
           id="status"
           radius="large"
-          className="text-white! h-10! w-100! bg-[#FFFFFF17]!"
+          className="text-white! h-10! w-100! bg-[#FFFFFF17]! backdrop-blur-xs!"
           placeholder="Select Page Screen Name"
         />
         <Select.Content position="popper">
