@@ -28,14 +28,21 @@ export const PortfolioLinkSection = ({
           <Controller
             control={form.control}
             name="repoLink"
-            render={({ field }) => (
-              <input
-                type="text"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                placeholder="https://12345github.com"
-                className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
-              />
+            render={({ field, fieldState }) => (
+              <>
+                <input
+                  type="text"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="https://github.com/123hello"
+                  className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
+                />
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
             )}
           />
         )}
@@ -54,14 +61,21 @@ export const PortfolioLinkSection = ({
           <Controller
             control={form.control}
             name="projectLink"
-            render={({ field }) => (
-              <input
-                type="text"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                placeholder="www.finkoff.com"
-                className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
-              />
+            render={({ field, fieldState }) => (
+              <>
+                <input
+                  type="text"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="https://www.finkoff.com"
+                  className="h-10 px-3 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
+                />
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
             )}
           />
         )}

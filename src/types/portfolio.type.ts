@@ -1,3 +1,5 @@
+import type { ProjectData } from '@/app/features/portfolio-management/constants/data';
+
 export type QueryType = {
   query: string | null;
 };
@@ -36,7 +38,7 @@ export type PortfolioProjectType = {
 
 export type projectSectionViewType = {
   isLoading: boolean;
-  projects: PortfolioProjectType[] | null;
+  projects: ProjectData[] | null;
   currentPage: number | 1;
   totalPages: number | 0;
   onPageChange: (page: number) => void;
