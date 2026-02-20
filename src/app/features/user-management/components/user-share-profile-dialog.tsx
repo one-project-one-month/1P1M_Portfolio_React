@@ -15,8 +15,11 @@ const UserShareProfile = ({
 }: UserManagementRestoreDialogProps) => {
   return (
     <Dialog.Root open={shareOpen} onOpenChange={setShareOpen}>
-      <Dialog.Trigger>{trigger || <>View Detail</>}</Dialog.Trigger>
-
+      <Dialog.Trigger>
+        <button type="button" className="text-white">
+          {trigger}
+        </button>
+      </Dialog.Trigger>
       <Dialog.Content
         size="4"
         maxWidth="410px"
