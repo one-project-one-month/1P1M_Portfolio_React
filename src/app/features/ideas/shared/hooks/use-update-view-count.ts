@@ -1,4 +1,3 @@
-import type { AxiosError } from 'axios';
 import { startTransition, useOptimistic } from 'react'; // 1. Import startTransition
 import { getProjectIdeaById } from '../services/project-idea.service';
 import type { IdeaType } from '../types/project-idea.types';
@@ -23,7 +22,6 @@ export const useUpdateViewCount = (initialIdea: IdeaType) => {
     try {
       await getProjectIdeaById(initialIdea?.projectIdeaId);
     } catch (error) {
-      const e = error as AxiosError;
       console.error('Error at update view count', error);
     }
   };
