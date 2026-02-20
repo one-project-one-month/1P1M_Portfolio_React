@@ -30,12 +30,12 @@ export const useCreateConfig = () => {
     }) => createConfigurations(constantValue, data),
     onSuccess: (res) => {
       if (res.code === 200 && res.success) {
-        addToast('Config option is successfully created.', 'success');
+        addToast('Created successfully', 'success');
       }
       queryClient.invalidateQueries({ queryKey: ['config'] });
     },
     onError: (error: Error) => {
-      addToast(error.message || 'Failed to create config option', 'error');
+      addToast(error.message || 'Failed to create', 'error');
     },
   });
 };
@@ -48,12 +48,12 @@ export const useUpdateOption = () => {
       updateConfigOption(id, data),
     onSuccess: (res) => {
       if (res.code === 200 && res.success) {
-        addToast('Config option is successfully updated.', 'success');
+        addToast('Updated successfully', 'success');
       }
       queryClient.invalidateQueries({ queryKey: ['config'] });
     },
     onError: (error: Error) => {
-      addToast(error.message || 'Failed to update config option', 'error');
+      addToast(error.message || 'Failed to update', 'error');
     },
   });
 };
@@ -64,11 +64,11 @@ export const useDeleteOption = () => {
   return useMutation({
     mutationFn: (id: number) => deleteConfigOption(id),
     onSuccess: () => {
-      addToast('Config option is successfully deleted.', 'success');
+      addToast('Deleted successfully', 'success');
       queryClient.invalidateQueries({ queryKey: ['config'] });
     },
     onError: (error: Error) => {
-      addToast(error.message || 'Failed to update config option', 'error');
+      addToast(error.message || 'Failed to delete', 'error');
     },
   });
 };

@@ -1,5 +1,5 @@
+import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronLeft } from 'lucide-react';
-import { Accordion } from 'radix-ui';
 import React from 'react';
 
 type ConfigAccordionProps = {
