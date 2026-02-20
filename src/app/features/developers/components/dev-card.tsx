@@ -54,7 +54,7 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
               {name}
             </h3>
 
-            <div className="mt-2 flex gap-2 mb-3 min-h-7">
+            <div className="mt-2 flex gap-2 mb-3">
               {tech_stack?.length ? (
                 tech_stack
                   .slice(0, 2)
