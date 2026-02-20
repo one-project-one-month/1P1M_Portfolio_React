@@ -1,18 +1,27 @@
+import { statusChageData } from '@/app/features/user-management/constant/status-change-data';
+import { useDeveloperProfile } from '@/app/features/user-management/hook/use-project-idea';
+import {
+  editIdeaSchema,
+  type AssignLeaderResponseType,
+  type EditIdeaType,
+  type IdeaStatusUpdateResponseType,
+  type IdeaType,
+  type Status,
+  type UpdateProjectIdeaResponseType,
+  type UpdateProjectIdeaType,
+  type statusChangeDataProps,
+} from '@/app/features/user-management/types/project-idea-type';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import FormField from '@/components/ui/form-field';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { Checkbox, Dialog } from '@radix-ui/themes';
-import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import { ArrowLeftRight, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-
-import {
-  editIdeaSchema,
-  type EditIdeaType,
-  type IdeaType,
-} from '@/app/features/user-management/types/project-idea-type';
 
 type ProjectIdeaEditDialogProps = {
   trigger?: React.ReactNode;
@@ -20,11 +29,26 @@ type ProjectIdeaEditDialogProps = {
   setEditDialogOpen: (open: boolean) => void;
 
   projectIdea: IdeaType;
-  editMutate: (data: EditIdeaType) => void;
+  editMutate: UseMutateFunction<
+    UpdateProjectIdeaResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; formData: UpdateProjectIdeaType },
+    unknown
+  >;
+  statusChageMutate: UseMutateFunction<
+    IdeaStatusUpdateResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; status: number },
+    unknown
+  >;
+  assignLeaderMutate: UseMutateFunction<
+    AssignLeaderResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; devId: number }
+  >;
+  projectIdeaId: number;
+  statusChageData: statusChangeDataProps[];
 };
-
-type Status = 'Pending' | 'Approved' | 'Archived';
-type statusChangeDataProps = { name: Status; description: string };
 
 const projectTypeOptions = ['Mobile', 'Website', 'Desktop', 'Game'];
 
@@ -34,53 +58,41 @@ export default function ProjectIdeaEditDialog({
   setEditDialogOpen,
   projectIdea,
   editMutate,
+  statusChageMutate,
+  assignLeaderMutate,
 }: ProjectIdeaEditDialogProps) {
   const [step, setStep] = useState(1);
   const [projectTypeShow, setProjectTypeShowed] = useState(false);
   const [search, setSearch] = useState('');
+  const { data } = useDeveloperProfile({
+    keyword: search,
+    page: 10,
+  });
+  const developers = data?.data ?? [];
+  const [selectReason, setSelectedReason] = useState<Status | null>(
+    projectIdea.status as Status,
+  );
 
-  const statusChageData: statusChangeDataProps[] = [
-    {
-      name: 'Pending',
-      description: 'This idea remains under consideration.',
-    },
-    {
-      name: 'Approved',
-      description: 'This idea is confirmed to proceed.',
-    },
-    {
-      name: 'Archived',
-      description: 'This idea is no longer active .',
-    },
-  ];
-
-  const developers = [
-    {
-      dev_id: 1,
-      name: 'Tina',
-      email: 'tina@gmail.com',
-      role: 'UI | UX Designer',
-      profilePictureUrl: sampleUserImgUrl,
-    },
-    {
-      dev_id: 2,
-      name: 'Bora',
-      email: 'bora@gmail.com',
-      role: 'Backend',
-      profilePictureUrl: sampleUserImgUrl,
-    },
-  ];
-
-  const [selectReason, setSelectedReason] = useState<string | null>(null);
-
-  const toggleReason = (reason: string) => {
+  const toggleReason = (reason: Status) => {
     setSelectedReason((pre) => (pre === reason ? null : reason));
+  };
+
+  const statusMap: Record<Status, number> = {
+    Pending: 5,
+    Approved: 1,
+    'In Progress': 2,
+    Completed: 3,
+    Rejected: 0,
+    Deleted: 4,
   };
 
   const statusColorList: Record<Status, string> = {
     Pending: 'text-[#FD9A00]',
     Approved: 'text-[#7CCF00]',
-    Archived: 'text-[#00B8DB]',
+    'In Progress': 'text-[#00B8DB]',
+    Completed: 'text-[#03fcdb]',
+    Rejected: 'text-[#9F0712]',
+    Deleted: 'text-[#6A7282]',
   };
 
   const statusColor = (name: Status) => statusColorList[name];
@@ -90,25 +102,23 @@ export default function ProjectIdeaEditDialog({
     defaultValues: {
       projectIdeaId: projectIdea.projectIdeaId,
       projectIdeaName: projectIdea.projectIdeaName,
+      projectName: projectIdea.projectIdeaName,
       description: projectIdea.description,
-      projectTypes: projectIdea.projectTypes,
+      projectType: projectIdea.projectTypes,
       status: projectIdea.status,
       dev_id: projectIdea.dev_id,
       devUsername: projectIdea.devUsername,
-      ownerProfilePicUrl: projectIdea.ownerProfilePicUrl,
-      leader_id: projectIdea.leader_id ?? 0,
-      leaderProfilePicUrl: projectIdea.leaderProfilePicUrl,
     },
   });
 
   const selectedTypes = useWatch({
     control: form.control,
-    name: 'projectTypes',
+    name: 'projectType',
   });
 
   const selectedLeader = useWatch({
     control: form.control,
-    name: 'leader_id',
+    name: 'dev_id',
   });
 
   const filteredOptions = projectTypeOptions.filter((opt) =>
@@ -118,12 +128,12 @@ export default function ProjectIdeaEditDialog({
     const current = selectedTypes || [];
     if (current.includes(type)) {
       form.setValue(
-        'projectTypes',
+        'projectType',
         current.filter((t) => t !== type),
         { shouldValidate: true },
       );
     } else {
-      form.setValue('projectTypes', [...current, type], {
+      form.setValue('projectType', [...current, type], {
         shouldValidate: true,
       });
     }
@@ -134,11 +144,27 @@ export default function ProjectIdeaEditDialog({
       setStep(step + 1);
     } else {
       editMutate({
-        ...data,
-        projectIdeaId: projectIdea.projectIdeaId,
+        projectIdeaId: data.projectIdeaId,
+        formData: {
+          projectName: data.projectIdeaName,
+          description: data.description,
+          projectType: data.projectType,
+        },
       });
+
+      statusChageMutate({
+        projectIdeaId: projectIdea.projectIdeaId,
+        status: statusMap[selectReason as Status],
+      });
+
+      assignLeaderMutate({
+        projectIdeaId: projectIdea.projectIdeaId,
+        devId: data.dev_id,
+      });
+
       setEditDialogOpen(false);
     }
+    form.reset();
   };
 
   const handleProjectTypeShow = () => {
@@ -159,7 +185,7 @@ export default function ProjectIdeaEditDialog({
           background: 'black',
           color: 'white',
           padding: '60px',
-          height: '773px',
+          height: '788px',
           border: '1px solid #364153',
         }}
       >
@@ -209,8 +235,8 @@ export default function ProjectIdeaEditDialog({
             </div>
 
             {step === 1 && (
-              <>
-                <div>
+              <div className="w-full flex flex-col gap-2 h-full">
+                <div className="flex flex-col gap-1">
                   <h2>Update the idea information</h2>
                   <p>
                     Modify existing idea information and save the latest
@@ -223,7 +249,7 @@ export default function ProjectIdeaEditDialog({
                   </label>
 
                   <Controller
-                    name="projectIdeaName"
+                    name="projectName"
                     control={form.control}
                     render={({ field }) => (
                       <FormField placeholder="" {...field} />
@@ -248,7 +274,7 @@ export default function ProjectIdeaEditDialog({
                   />
                 </div>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <label className="text-lg font-semibold">Project Type</label>
 
                   <div
@@ -297,7 +323,7 @@ export default function ProjectIdeaEditDialog({
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             )}
 
             {step === 2 && (
@@ -323,7 +349,9 @@ export default function ProjectIdeaEditDialog({
                           </div>
                         </div>
 
-                        <p className="text-sm text-gray-400">{dev.role}</p>
+                        <p className="text-sm text-gray-400">
+                          {dev.tech_stack}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -335,7 +363,7 @@ export default function ProjectIdeaEditDialog({
                   className="text-xs w-full focus:outline-none p-4 rounded-lg bg-[#FFFFFF17]"
                 />
 
-                <div className="flex flex-col gap-3 mt-2">
+                <div className="flex flex-col gap-3 mt-2 h-[200px] overflow-auto">
                   {developers
                     .filter((dev) =>
                       dev.name.toLowerCase().includes(search.toLowerCase()),
@@ -344,13 +372,11 @@ export default function ProjectIdeaEditDialog({
                       <div
                         key={dev.dev_id}
                         onClick={() => {
-                          form.setValue('leader_id', dev.dev_id);
-                          form.setValue(
-                            'leaderProfilePicUrl',
-                            dev.profilePictureUrl,
-                          );
+                          form.setValue('dev_id', dev.dev_id, {
+                            shouldValidate: true,
+                          });
                         }}
-                        className={`cursor-pointer border p-3 rounded-xl flex justify-between items-center
+                        className={`cursor-pointer  border p-3 rounded-xl flex justify-between items-center
               ${
                 selectedLeader === dev.dev_id
                   ? 'border-[#6F28B3] bg-[#1a0d2b]'
@@ -369,7 +395,12 @@ export default function ProjectIdeaEditDialog({
                           </div>
                         </div>
 
-                        <p className="text-sm text-gray-400">{dev.role}</p>
+                        <div>
+                          <p className="text-sm text-gray-400">
+                            {dev.tech_stack}
+                          </p>
+                          <ArrowLeftRight />
+                        </div>
                       </div>
                     ))}
                 </div>
@@ -388,11 +419,11 @@ export default function ProjectIdeaEditDialog({
                   </p>
                 </div>
 
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-6">
                   {statusChageData.map((item) => (
                     <div
                       className="flex items-center   gap-5 "
-                      onClick={() => toggleReason(item.name)}
+                      onClick={() => toggleReason(item.name as Status)}
                     >
                       <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
                         {selectReason === item.name && (
@@ -401,7 +432,7 @@ export default function ProjectIdeaEditDialog({
                       </div>
                       <div className="h-full flex flex-col">
                         <p
-                          className={` text-lg font-medium leading-5 ${statusColor(item.name)}`}
+                          className={` text-lg font-medium leading-5 ${statusColor(item.name as Status)}`}
                         >
                           {item.name}
                         </p>

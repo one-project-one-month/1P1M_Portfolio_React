@@ -10,6 +10,15 @@ interface ProjectIdeaProps {
   };
 }
 
+const statusColorList: Record<ProjectIdeaType['status'], string> = {
+  REJECTED: 'bg-[#9F0712]',
+  APPROVED: 'bg-[#008236]',
+  IN_PROGRESS: 'bg-[#00B8DB]',
+  COMPLETED: 'bg-[#03fcdb]',
+  PENDING: 'bg-[#FD9A00]',
+  DELETED: 'bg-[#6A7282]',
+};
+
 const statusLabels: Record<ProjectIdeaType['status'], string> = {
   REJECTED: 'REJECTED',
   APPROVED: 'APPROVED',
@@ -21,6 +30,8 @@ const statusLabels: Record<ProjectIdeaType['status'], string> = {
 
 const ProjectIdea = ({ user }: ProjectIdeaProps) => {
   const projectIdeas = user?.projectIdeas ?? [];
+  const truncate = (text: string, max = 250) =>
+    (text ?? '').length > max ? text.slice(0, max) + '...' : text;
   return (
     <div className="w-full">
       <div className="w-full flex flex-col gap-5">
@@ -37,21 +48,19 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                 <h2 className="text-[#F5EBFF] font-semibold text-base font-sans">
                   {item.projectIdeaName}
                 </h2>
-                <p
-                  className={` cursor-pointer py-2 pr-3 pl-4 rounded-xl text-xs text-[#F9FAFB] font-light ${
-                    item.status === 'APPROVED'
-                      ? 'bg-green-600'
-                      : item.status === 'REJECTED'
-                        ? 'bg-[#A6A09B]'
-                        : 'bg-[#E17100]'
-                  }`}
+                <button
+                  className={`w-[110px] cursor-pointer py-2 pr-3 pl-4 rounded-xl text-xs text-[#F9FAFB] font-light 
+                  ${statusColorList[item.status]}
+                  `}
                 >
                   {statusLabels[item.status]}
+                </button>
+              </div>
+              <div className="h-[30%]">
+                <p className="text-xs text-[#99A1AF] font-sans">
+                  {truncate(item.description)}
                 </p>
               </div>
-              <p className="text-xs text-[#99A1AF] font-sans">
-                {item.description}
-              </p>
               <div className="flex  gap-3">
                 {item.projectTypes.map((list, index) => (
                   <button
