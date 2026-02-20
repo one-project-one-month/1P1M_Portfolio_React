@@ -1,4 +1,5 @@
 import HomePage from '@/app/features/home/page';
+import PersonProfilePage from '@/app/features/opom-management/pages/person-details';
 import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
@@ -20,7 +21,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import AboutUsPage from '../features/about-us/page';
 import ConfigurationPage from '../features/admin-configuration/page';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
-import PersonProfilePage from '../features/opom-management/pages/person-details';
 import OpomRegisterPage from '../features/opom-register/page';
 import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';

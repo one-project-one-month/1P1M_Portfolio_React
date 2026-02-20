@@ -15,14 +15,14 @@ export const logout = () => {
 
 export const copyToClipboard = async (
   value?: string | null,
-  label: string = 'Copied',
+  // label: string = 'Copied',
 ) => {
   if (!value) return;
 
   try {
     await navigator.clipboard.writeText(value);
 
-    toast.success(`${label} copied to clipboard.`);
+    toast.success('Copied to clipboard');
   } catch {
     toast.error('Could not copy to clipboard.');
   }

@@ -35,7 +35,6 @@ function IdeaListCard({
     description = 'No description provided.',
     projectTypes = [],
     ownerProfilePicUrl,
-    leaderProfilePicUrl,
     reactionCount = 0,
     viewCount = 0,
     isAlreadyReacted,
@@ -81,7 +80,7 @@ function IdeaListCard({
       <div className="flex justify-between border-b py-4">
         {[
           { label: 'Submitter', url: ownerProfilePicUrl },
-          { label: 'Leader', url: leaderProfilePicUrl },
+          // { label: 'Leader', url: leaderProfilePicUrl },
         ].map(({ label, url }) => (
           <div key={label} className="flex text-sm items-center gap-x-2">
             <span>{label}</span>

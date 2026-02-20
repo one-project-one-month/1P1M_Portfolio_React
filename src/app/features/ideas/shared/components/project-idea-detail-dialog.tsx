@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { COLORS } from '@/constants/colors';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { Badge, Dialog } from '@radix-ui/themes';
 import { X } from 'lucide-react';
@@ -18,6 +19,7 @@ const ProjectIdeaDetailDialog = ({
   const user = useUserInfoStore((state) => state.userInfo);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const { goTo } = useAppNavigation();
 
   // Check if current user is the owner of this idea
   const userId = user?.userId ? user.userId : null;
@@ -154,11 +156,17 @@ const ProjectIdeaDetailDialog = ({
               <div className="flex flex-col gap-2">
                 <h3 className="text-xl font-semibold mb-2">Submitter</h3>
                 <div className="flex items-center gap-4">
-                  <img
-                    src={data.ownerProfilePicUrl}
-                    className="size-10 rounded-full object-cover"
-                    alt={data.devUsername}
-                  />
+                  <button
+                    onClick={() => {
+                      goTo(`/profile/${data?.dev_id}`);
+                    }}
+                  >
+                    <img
+                      src={data.ownerProfilePicUrl}
+                      className="size-10 rounded-full object-cover"
+                      alt={data.devUsername}
+                    />
+                  </button>
                   <div>
                     <h4 className="text-xl font-semibold capitalize">
                       {data.devUsername}

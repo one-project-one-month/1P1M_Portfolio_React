@@ -3,16 +3,22 @@ import Email from '@/assets/icons/Email.png';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import Phone from '@/assets/icons/Phone.png';
 import Telegram from '@/assets/icons/Telegram.png';
-import { Button } from '@/components/ui/button';
 import { copyToClipboard } from '@/lib/utils';
 import type { UserProfile } from '@/types/dev';
 import { GitBranch, LinkedinIcon } from 'lucide-react';
+import { ProfileActions } from '../../user-profile/components/profile-actions';
+import type { DevProfileType } from '../../user-profile/types/user-profile.type';
+import { truncate } from '../../user-profile/utils/string.utils';
 
 type DeveloperProfileCardProps = {
   user: UserProfile | null;
+  isMyProfile?: boolean;
 };
 
-function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
+function DeveloperProfileCard({
+  user,
+  isMyProfile = false,
+}: DeveloperProfileCardProps) {
   if (!user) return;
 
   const {
@@ -26,13 +32,8 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
     techStacks,
   } = user;
 
-  //   const copyToClipboard = async (value?: string | null) => {
-  //     if (!value) return;
-  //     await navigator.clipboard.writeText(value);
-  //   };
-
   const handleShareProfile = () => {
-    copyToClipboard(window.location.href, 'Profile link');
+    copyToClipboard(window.location.href);
   };
 
   const displayName = name || 'Anonymous Developer';
@@ -67,7 +68,7 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
               className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed"
               title="No GitHub linked"
             >
-              <GitBranch />
+              <GitBranch className="border rounded-full w-7 h-7 p-1" />
             </span>
           )}
 
@@ -86,7 +87,7 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
               className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed"
               title="No LinkedIn linked"
             >
-              <LinkedinIcon />
+              <LinkedinIcon className="border rounded-full w-7 h-7 p-1" />
             </span>
           )}
         </div>
@@ -97,9 +98,11 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
           {displayName}
         </p>
 
-        <p className="text-[#99A1AF] flex items-center leading-5 text-sm">
+        <p className="text-[#99A1AF] flex gap-2 items-center leading-5 text-sm">
           {techStacks.map((t) => (
-            <span>{t}</span>
+            <span className="bg-slate-700/80 border rounded-md border-slate-400 px-3 p-1">
+              {t}
+            </span>
           ))}
         </p>
 
@@ -131,21 +134,25 @@ function DeveloperProfileCard({ user }: DeveloperProfileCardProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-3 opacity-60">
-          <div className="flex items-center gap-1">
+        <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <img src={Telegram} alt="" className="w-5 h-5" />
             <p className="text-[#99A1AF] text-sm leading-5">Not provided</p>
           </div>
         </div>
 
-        <p className="text-white text-sm h-10 line-clamp-2">{displayAbout}</p>
+        <p className="text-white text-sm h-10 line-clamp-2 mt-2">
+          {displayAbout}
+        </p>
       </div>
-      <Button
-        onClick={handleShareProfile}
-        className=" absolute right-3 top-3 h-10"
-      >
-        Share Profile
-      </Button>
+
+      <ProfileActions
+        devProfile={user as DevProfileType}
+        onCopy={handleShareProfile}
+        truncate={truncate}
+        className="absolute right-3 top-3 h-10"
+        isMyProfile={isMyProfile}
+      />
     </div>
   );
 }
