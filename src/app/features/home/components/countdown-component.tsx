@@ -94,7 +94,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
                 border:
                   '3px solid var(--PrimaryColor-brandcolor-500, rgba(156, 57, 252, 1))',
               }}
-              className="size-fit p-5 flex items-center justify-center rounded-xl bg-transparent text-white text-6xl font-semibold border border-[#9C39FC] shadow-[1px_4px_4px_0px_rgba(156,57,252,0.3)]"
+              className="size-fit backdrop-blur-[3px] p-5 flex items-center justify-center rounded-xl bg-transparent text-white text-6xl font-semibold border border-[#9C39FC] shadow-[1px_4px_4px_0px_rgba(156,57,252,0.3)]"
             >
               00
             </div>
