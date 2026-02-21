@@ -1,16 +1,15 @@
 import projectPlaceHolderImage from '@/assets/place_holder_image.png';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
-import FormBackground from '@/components/ui/form-background';
 import { Flex } from '@radix-ui/themes';
-import { ChevronLeft, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useRef } from 'react';
 import { PortfolioBasicInfo } from '../../portfolio-management/components/form/portfolio-basic-info';
 import { PortfolioLinkSection } from '../../portfolio-management/components/form/portfolio-link-section';
-import { PortfolioTeamSection } from '../../portfolio-management/components/form/portfolio-team-section';
 import type { ProjectData } from '../../portfolio-management/constants/data';
 import { usePortfolioForm } from '../../portfolio-management/hooks/use-portfolio-form';
 import { useUploadImage } from '../../portfolio-management/hooks/use-upload-image';
+import { UserPortfolioTeamSection } from './form/user-portfolio-team-section';
 import { UserPortfolioTypeLang } from './form/user-portfolio-type-lang';
 
 export type PortfolioFormMode = 'create' | 'edit' | 'view';
@@ -35,14 +34,16 @@ const ProjectPortfolioForm = ({
     isReadOnly,
     isEdit,
     technologyFields,
-    handleAddTechnology,
+    handleSaveTechnologies,
     handleRemoveTechnology,
+    handleAddNewRow,
     isModalOpen,
     setIsModalOpen,
     setActiveTeamId,
     handleSaveForm,
     handleAddTeam,
     handleSaveTeamMembers,
+    handleRemoveTeamMembers,
     handleRemoveTeam,
     handleUpdateTeam,
     getModalTeamName,
@@ -75,26 +76,19 @@ const ProjectPortfolioForm = ({
     }
   };
 
-  const handleBack = () => {
-    if (onCancel) {
-      onCancel();
-    } else if (onClose) {
-      onClose();
-    }
-  };
-
   return (
-    <FormBackground className="w-4xl flex">
-      {/* Back Button */}
-      <Button
-        variant="black_button"
-        onClick={handleBack}
-        className="flex items-center gap-1 mb-6 w-fit hover:opacity-80 transition-opacity h-10"
-      >
-        <ChevronLeft className="w-4 h-4 text-[#F3F4F6]" strokeWidth={3} />
-        <span className="text-white">Back</span>
-      </Button>
-      <div className="grid lg:grid-cols-4 md:grid-cols-1">
+    <div className="w-4xl flex flex-col gap-3 backdrop-blur-sm">
+      <div className="flex flex-col">
+        <span className="text-[#F9FAFB] text-2xl font-medium">
+          {mode === 'create' ? 'Create' : 'Update'} the Portfolio !
+        </span>
+        <span className="text-[#6A7282]">
+          {mode === 'create'
+            ? 'Fill the information to create new portfolio.'
+            : 'Modify the existing information to update the portfolio.'}
+        </span>
+      </div>
+      <div className="grid lg:grid-cols-4 md:grid-cols-1 mt-3">
         <div className="shrink-0">
           <input
             type="file"
@@ -105,14 +99,14 @@ const ProjectPortfolioForm = ({
           />
           {isUploading ? (
             <div
-              className={`w-[153px] h-[153px] bg-[#D9D9D9] rounded-lg overflow-hidden flex items-center justify-center ${!isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className={`w-38.25 h-38.25 bg-[#D9D9D9] rounded-lg overflow-hidden flex items-center justify-center ${!isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
             >
               <Loader2 className="w-8 h-8 text-[#9C39FC] animate-spin" />
               <span className="text-sm text-gray-600">Uploading...</span>
             </div>
           ) : projectImage || initialData?.image ? (
             <div
-              className={`w-[153px] h-[153px] rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className={`w-38.25 h-38.25 mb-4 rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
               onClick={triggerFileUpload}
             >
               <img
@@ -126,14 +120,14 @@ const ProjectPortfolioForm = ({
           ) : (
             <div className="shrink-0" onClick={triggerFileUpload}>
               <div
-                className={`w-[155px] h-[153px] rounded-lg flex items-center justify-center ${!isReadOnly ? 'cursor-pointer' : ''}`}
+                className={`w-38.75 h-38.25 rounded-lg flex items-center justify-center ${!isReadOnly ? 'cursor-pointer' : ''}`}
               >
                 <FileUpload className="pointer-events-none" />
               </div>
               <Flex
                 direction="column"
                 gap="1"
-                className="w-[165px] text-center mb-3 mt-2"
+                className="w-41.25 text-center mb-3 mt-2"
               >
                 <span className="text-xl text-white">Upload Image</span>
                 <span className="text-xs text-[#6A7282]">
@@ -143,7 +137,7 @@ const ProjectPortfolioForm = ({
             </div>
           )}
         </div>
-        <span className="col-span-3 flex-1 flex flex-col gap-5 mt-4">
+        <span className="col-span-3 flex-1 flex flex-col gap-5">
           <PortfolioBasicInfo
             initialData={initialData}
             accessFrom="user-portfolio"
@@ -154,15 +148,18 @@ const ProjectPortfolioForm = ({
           <UserPortfolioTypeLang
             form={form}
             technologyFields={technologyFields}
-            onAddTechnology={handleAddTechnology}
+            onSaveTechnologies={handleSaveTechnologies}
             onRemoveTechnology={handleRemoveTechnology}
+            onAddNewRow={handleAddNewRow}
+            isEdit={isEdit}
           />
-          <PortfolioTeamSection
+          <UserPortfolioTeamSection
             form={form}
             handleAddTeam={handleAddTeam}
             handleRemoveTeam={handleRemoveTeam}
             onUpdateTeam={handleUpdateTeam}
             handleSaveTeamMembers={handleSaveTeamMembers}
+            handleRemoveTeamMembers={handleRemoveTeamMembers}
             setActiveTeamId={setActiveTeamId}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
@@ -198,7 +195,7 @@ const ProjectPortfolioForm = ({
           </div>
         </span>
       </div>
-    </FormBackground>
+    </div>
   );
 };
 

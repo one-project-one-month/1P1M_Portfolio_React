@@ -1,3 +1,5 @@
+import type { ProjectData } from '@/app/features/portfolio-management/constants/data';
+
 export type QueryType = {
   query: string | null;
 };
@@ -24,19 +26,19 @@ export type PortfolioProjectType = {
   description: string;
   projectLink: string;
   repoLink: string;
+  viewCount?: number;
   reactedCount?: number;
+  isAlreadyReacted: boolean;
   projectPortfolioStatus: string;
   teams: {
     members: DeveloperType[];
   }[];
-  view_count?: number;
-  reactedProjectPortfolios: number[];
   languageAndTools: string[];
 };
 
 export type projectSectionViewType = {
   isLoading: boolean;
-  projects: PortfolioProjectType[] | null;
+  projects: ProjectData[] | null;
   currentPage: number | 1;
   totalPages: number | 0;
   onPageChange: (page: number) => void;
@@ -49,16 +51,6 @@ export type GetPortfolioParamsType = {
   sortField?: string;
   size?: number;
   projectPortfolioStatus?: string;
-};
-
-export type ProjectCardType = {
-  image: string;
-  title: string;
-  description: string;
-  initialLikes?: number;
-  initialViews?: number;
-  onClickReact: () => void;
-  project: PortfolioProjectType;
 };
 
 export type ProjectPortfolioDetailType = {

@@ -42,7 +42,7 @@ export default function IdeaCard({
 
   const { goTo } = useAppNavigation();
 
-  const { optimisticIdea, handleViewDetail } = useUpdateViewCount(idea);
+  const { displayIdea, handleViewDetail } = useUpdateViewCount(idea);
 
   return (
     <div className="bg-white/10 flex flex-col gap-y-2 p-5 backdrop-blur-xs text-white/70 w-full rounded-xl border border-white/5">
@@ -91,7 +91,7 @@ export default function IdeaCard({
             src={ownerProfilePicUrl}
             radius="full"
             color="gray"
-            className=" bg-gray-600!"
+            className=" bg-gray-600! cursor-pointer hover:size"
             fallback={devUsername?.slice(0, 1)}
           />
         </div>
@@ -115,7 +115,7 @@ export default function IdeaCard({
 
           <div className="flex text-xs items-center gap-x-2">
             <Eye className="w-4" />
-            <span>{optimisticIdea?.viewCount}</span>
+            <span>{displayIdea?.viewCount}</span>
           </div>
         </div>
 
@@ -123,7 +123,8 @@ export default function IdeaCard({
           <ProjectIdeaDropDown type="grid" data={idea} />
         ) : (
           <ProjectIdeaDetailDialog
-            data={optimisticIdea}
+            count={displayIdea?.viewCount ?? 0}
+            data={idea}
             trigger={
               <button
                 onClick={handleViewDetail}

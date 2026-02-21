@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { OrderFilterOption } from '../components/status-filter-dropdown';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
+import { updateProjectStatus as updateProjectStatusApi } from '../services/portfolio-management-service';
 import { mapApiToProjectData } from '../utils/helpers';
+import { mapFrontendToBackendStatus } from '../utils/status-mapping';
 import { useDeleteProject, useGetAllProjects } from './use-portfolio-query';
 
 const ITEMS_PER_PAGE = 10;
@@ -75,12 +77,20 @@ export const usePortfolioManagement = () => {
 
   const updateProject = () => {};
 
-  const updateProjectStatus = (id: number, newStatus: ProjectStatus) => {
+  const updateProjectStatus = async (id: number, newStatus: ProjectStatus) => {
     setPortfolioData((prevData) =>
       prevData.map((project) =>
         project.id === id ? { ...project, status: newStatus } : project,
       ),
     );
+
+    try {
+      const backendStatus = mapFrontendToBackendStatus(newStatus);
+      await updateProjectStatusApi(id, backendStatus);
+    } catch (error) {
+      console.error('Failed to update project status:', error);
+      refetch();
+    }
   };
 
   const resetData = () => {

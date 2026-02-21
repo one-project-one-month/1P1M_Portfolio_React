@@ -1,28 +1,25 @@
 import { Button } from '@/components/ui/button';
 import DeleteDialog from '@/components/ui/delete-dialog';
-import type { TeamType } from '@/types/portfolio-management';
-import {
-  ChevronDown,
-  ChevronUp,
-  MoreVertical,
-  Pencil,
-  Plus,
-  X,
-} from 'lucide-react';
+import type { Member, TeamType } from '@/types/portfolio-management';
+import { ChevronDown, ChevronUp, Pencil, Plus, X } from 'lucide-react';
 import { useTeamCard } from '../hooks/use-team-card';
 
 interface TeamCardProps {
   team: TeamType;
   onUpdate: (updatedTeam: TeamType) => void;
   onDelete: (teamId: string) => void;
+  onDeleteMember: (teamId: string, updatedMembers: Member[]) => void;
   onAddMemberClick: (teamId: string) => void;
+  isReadOnly?: boolean;
 }
 
 const TeamCard = ({
   team,
   onUpdate,
   onDelete,
+  onDeleteMember,
   onAddMemberClick,
+  isReadOnly = false,
 }: TeamCardProps) => {
   const {
     isEditing,
@@ -30,18 +27,14 @@ const TeamCard = ({
     isExpanded,
     setIsExpanded,
     editedTeam,
-    openMemberActionId,
-    setOpenMemberActionId,
     deleteDialogOpen,
     setDeleteDialogOpen,
-    deleteContext,
     handleSave,
     initiateDeleteTeam,
-    initiateRemoveMember,
+    handleRemoveMember,
     handleConfirmDelete,
-    handleRoleChange,
     updateTeamName,
-  } = useTeamCard(team, onUpdate);
+  } = useTeamCard(team, onUpdate, onDeleteMember);
 
   return (
     <>
@@ -63,29 +56,30 @@ const TeamCard = ({
               </span>
             )}
 
-            {isEditing ? (
-              <div className="flex items-center gap-4">
+            {!isReadOnly &&
+              (isEditing ? (
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={initiateDeleteTeam}
+                    className="text-[#EF4444] hover:text-[#DC2626] text-sm font-medium"
+                  >
+                    Delete Team
+                  </button>
+                  <Button
+                    onClick={handleSave}
+                    className="bg-[#9C39FC] hover:bg-[#8B31E0] text-white h-8 px-4"
+                  >
+                    Save
+                  </Button>
+                </div>
+              ) : (
                 <button
-                  onClick={initiateDeleteTeam}
-                  className="text-[#EF4444] hover:text-[#DC2626] text-sm font-medium"
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-2 text-[#94A3B8] hover:text-white transition-colors text-sm"
                 >
-                  Delete Team
+                  Edit Team <Pencil size={14} />
                 </button>
-                <Button
-                  onClick={handleSave}
-                  className="bg-[#9C39FC] hover:bg-[#8B31E0] text-white h-8 px-4"
-                >
-                  Save
-                </Button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 text-[#94A3B8] hover:text-white transition-colors text-sm"
-              >
-                Edit Team <Pencil size={14} />
-              </button>
-            )}
+              ))}
           </div>
 
           {/* Content */}
@@ -99,7 +93,10 @@ const TeamCard = ({
                   <div className="flex items-center gap-12 flex-1">
                     <div className="flex items-center gap-3 w-[200px]">
                       <img
-                        src={member.avatarUrl}
+                        src={
+                          member.avatarUrl ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                        }
                         alt={member.name}
                         className="w-10 h-10 rounded-full border border-[#475569] object-cover"
                       />
@@ -116,64 +113,25 @@ const TeamCard = ({
                   </div>
 
                   {isEditing && (
-                    <div className="relative">
-                      <button
-                        className="text-[#94A3B8] hover:text-white p-1"
-                        onClick={() =>
-                          setOpenMemberActionId(
-                            openMemberActionId === member.id
-                              ? null
-                              : (member.id ?? null),
-                          )
-                        }
-                      >
-                        <MoreVertical size={18} />
-                      </button>
-
-                      {openMemberActionId === member.id && (
-                        <div className="absolute right-0 top-full mt-1 w-48 bg-[#0F172A] border border-[#334155] rounded-lg shadow-xl z-20 overflow-hidden py-1">
-                          {member.role === 'Team Leader' ? (
-                            <>
-                              <div className="w-full text-left px-4 py-2 text-sm text-[#9C39FC] font-medium cursor-default">
-                                Team Leader
-                              </div>
-                              <button
-                                onClick={() =>
-                                  handleRoleChange(member.id!, 'Member')
-                                }
-                                className="w-full text-left px-4 py-2 text-sm text-[#94A3B8] hover:bg-[#1E293B] hover:text-white transition-colors"
-                              >
-                                Demote to member
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button
-                                onClick={() =>
-                                  handleRoleChange(member.id!, 'Team Leader')
-                                }
-                                className="w-full text-left px-4 py-2 text-sm text-[#94A3B8] hover:bg-[#1E293B] hover:text-white transition-colors"
-                              >
-                                Promote to Team Leader
-                              </button>
-                              <div className="w-full text-left px-4 py-2 text-sm text-[#9C39FC] font-medium cursor-default">
-                                Member
-                              </div>
-                            </>
-                          )}
-
-                          <button
-                            onClick={() => initiateRemoveMember(member.id!)}
-                            className="w-full text-left px-4 py-2 text-sm text-[#EF4444] hover:bg-[#1E293B] transition-colors"
-                          >
-                            Remove from team
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    <button
+                      onClick={() => handleRemoveMember(member.id!)}
+                      className="ml-2 p-1 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-full transition-colors"
+                      title="Remove member"
+                    >
+                      <X size={16} />
+                    </button>
                   )}
                 </div>
               ))}
+
+              {isEditing && (
+                <button
+                  onClick={() => onAddMemberClick(team.id.toString())}
+                  className="flex items-center gap-2 text-[#94A3B8] hover:text-white transition-colors text-sm mt-2 px-3"
+                >
+                  <Plus size={16} /> Add Member
+                </button>
+              )}
             </div>
           ) : (
             /* Collapsed View */
@@ -182,12 +140,15 @@ const TeamCard = ({
                 <div key={member.id} className="relative group/avatar">
                   <img
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-[#334155] object-cover"
-                    src={member.avatarUrl}
+                    src={
+                      member.avatarUrl ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                    }
                     alt={member.name}
                   />
                   {isEditing && (
                     <button
-                      onClick={() => initiateRemoveMember(member.id!)}
+                      onClick={() => handleRemoveMember(member.id!)}
                       className="absolute -top-1 -right-1 bg-[#EF4444] rounded-full p-0.5 ring-2 ring-[#1e293b] text-white hover:bg-[#DC2626]"
                     >
                       <X size={10} />
@@ -196,13 +157,15 @@ const TeamCard = ({
                 </div>
               ))}
 
-              <button
-                onClick={() => onAddMemberClick(team.id.toString())}
-                className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#334155] ring-2 ring-[#1e293b] text-[#94A3B8] hover:bg-[#475569] hover:text-white transition-colors z-10"
-                title="Add member"
-              >
-                <Plus size={20} />
-              </button>
+              {isEditing && (
+                <button
+                  onClick={() => onAddMemberClick(team.id.toString())}
+                  className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#334155] ring-2 ring-[#1e293b] text-[#94A3B8] hover:bg-[#475569] hover:text-white transition-colors z-10"
+                  title="Add member"
+                >
+                  <Plus size={20} />
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -222,17 +185,9 @@ const TeamCard = ({
         isOpen={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={() => handleConfirmDelete(onDelete)}
-        title={
-          deleteContext?.type === 'TEAM'
-            ? 'Delete Entire Team?'
-            : 'Remove Member?'
-        }
-        description={
-          deleteContext?.type === 'TEAM'
-            ? 'Are you sure you want to delete this team? This action cannot be undone.'
-            : 'Are you sure you want to remove this member from the team?'
-        }
-        confirmText={deleteContext?.type === 'TEAM' ? 'Delete Team' : 'Remove'}
+        title="Delete Entire Team?"
+        description="Are you sure you want to delete this team? This action cannot be undone."
+        confirmText="Delete Team"
       />
     </>
   );

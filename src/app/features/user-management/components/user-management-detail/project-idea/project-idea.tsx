@@ -16,12 +16,12 @@ interface ProjectIdeaProps {
 }
 
 const statusColorList: Record<ProjectIdeaType['status'], string> = {
-  REJECTED: 'bg-[#9F0712]',
-  APPROVED: 'bg-[#008236]',
-  IN_PROGRESS: 'bg-[#00B8DB]',
-  COMPLETED: 'bg-[#03fcdb]',
-  PENDING: 'bg-[#FD9A00]',
-  DELETED: 'bg-[#6A7282]',
+  PENDING: 'bg-[#E17100]',
+  APPROVED: 'bg-[#00C951]',
+  IN_PROGRESS: 'bg-[#E17100]',
+  COMPLETED: 'bg-[#00C951]',
+  REJECTED: 'bg-[#FB2C36]',
+  DELETED: 'bg-[#FB2C36]',
 };
 
 const statusLabels: Record<ProjectIdeaType['status'], string> = {

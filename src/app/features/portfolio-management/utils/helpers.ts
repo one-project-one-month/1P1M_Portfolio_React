@@ -31,8 +31,11 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     ),
     members: allMembers.map((m: any) => ({
       ...m,
+      avatarUrl: m.profilePictureUrl || m.avatarUrl || null,
       role:
         m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+        m.roleInTeam?.toUpperCase() === 'TEAM LEADER' ||
+        m.roleInTeam?.toUpperCase() === 'TEAM_LEAD' ||
         m.roleInTeam?.toUpperCase() === 'LEADER'
           ? 'Team Leader'
           : 'Member',
@@ -55,6 +58,8 @@ export const mapApiToProjectData = (item: any): ProjectData => {
             ...m,
             role:
               m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+              m.roleInTeam?.toUpperCase() === 'TEAM LEADER' ||
+              m.roleInTeam?.toUpperCase() === 'TEAM_LEAD' ||
               m.roleInTeam?.toUpperCase() === 'LEADER'
                 ? 'Team Leader'
                 : 'Member',
@@ -65,6 +70,6 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     repoLink: item.repoLink || '',
     reactCount: item.reactedCount || item.reactCount || 0,
     viewCount: item.viewCount || 0,
-    isReacted: item.isReacted || false,
+    isReacted: item.isAlreadyReacted ?? item.isReacted ?? false,
   };
 };

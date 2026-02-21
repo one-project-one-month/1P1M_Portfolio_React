@@ -74,14 +74,14 @@ const AddMemberModal = ({
         <div className="p-6 space-y-2">
           <div className="flex items-center gap-4 border-b border-white/15 pb-4">
             <label className="text-xl font-semibold text-white whitespace-nowrap">
-              Team Name
+              {currentTeamName}
             </label>
-            <input
+            {/* <input
               type="text"
               value={currentTeamName}
               onChange={(e) => setCurrentTeamName(e.target.value)}
               className="bg-[#1E293B] border border-[#334155] rounded-lg py-2 px-4 focus:outline-none focus:border-[#9C39FC] w-full font-medium text-white"
-            />
+            /> */}
           </div>
 
           <div className=" space-y-2">

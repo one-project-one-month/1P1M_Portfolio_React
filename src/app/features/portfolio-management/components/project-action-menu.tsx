@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 const actionButtonClass =
   'text-xs text-[#F9FAFB] hover:text-[#9C39FC] transition-colors w-full rounded-none py-1 px-2 !bg-transparent !h-auto justify-center font-normal shadow-none border-none';
@@ -37,7 +38,6 @@ export const ProjectActionMenu = forwardRef<
       onToggle,
       onView,
       onEdit,
-      onDelete,
       onStatusChange,
       menuPosition = 'bottom-right',
       triggerClassName = 'p-1 hover:bg-white/10 rounded-full transition-colors text-white/70 hover:text-white',
@@ -45,6 +45,60 @@ export const ProjectActionMenu = forwardRef<
     },
     ref,
   ) => {
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
+
+    const calcPosition = useCallback(() => {
+      if (!triggerRef.current || !isOpen) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+
+      const style: React.CSSProperties = { position: 'fixed', zIndex: 9999 };
+
+      switch (menuPosition) {
+        case 'top-right':
+          style.right = window.innerWidth - rect.right;
+          style.bottom = window.innerHeight - rect.top + 8;
+          break;
+        case 'top-left':
+          style.left = rect.left;
+          style.bottom = window.innerHeight - rect.top + 8;
+          break;
+        case 'bottom-left':
+          style.left = rect.left;
+          style.top = rect.bottom + 8;
+          break;
+        case 'left-start':
+          style.right = window.innerWidth - rect.left + 8;
+          style.top = rect.top;
+          break;
+        case 'right-start':
+          style.left = rect.right + 8;
+          style.top = rect.top;
+          break;
+        case 'bottom-right':
+        default:
+          style.right = window.innerWidth - rect.right;
+          style.top = rect.bottom + 8;
+          break;
+      }
+
+      setMenuStyle(style);
+    }, [isOpen, menuPosition]);
+
+    useEffect(() => {
+      calcPosition();
+    }, [calcPosition]);
+
+    useEffect(() => {
+      if (!isOpen) return;
+      window.addEventListener('scroll', calcPosition, true);
+      window.addEventListener('resize', calcPosition);
+      return () => {
+        window.removeEventListener('scroll', calcPosition, true);
+        window.removeEventListener('resize', calcPosition);
+      };
+    }, [isOpen, calcPosition]);
+
     const handleView = () => {
       onView?.(projectId);
     };
@@ -53,38 +107,14 @@ export const ProjectActionMenu = forwardRef<
       onEdit?.(projectId);
     };
 
-    const handleDelete = () => {
-      onDelete?.(projectId);
-    };
-
     const handleStatusClick = (id: number | string) => {
       onStatusChange?.(id, 'In Progress');
     };
 
-    const getMenuPositionClass = (position: string) => {
-      switch (position) {
-        case 'bottom-right':
-          return 'right-0 top-full mt-2';
-        case 'bottom-left':
-          return 'left-0 top-full mt-2';
-        case 'top-right':
-          return 'right-0 bottom-full mb-2 origin-bottom-right';
-        case 'top-left':
-          return 'left-0 bottom-full mb-2 origin-bottom-left';
-        case 'left-start':
-          return 'right-full top-0 mr-2 origin-top-right';
-        case 'right-start':
-          return 'left-full top-0 ml-2 origin-top-left';
-        default:
-          return 'right-0 top-full mt-2';
-      }
-    };
-
-    const menuPositionClass = getMenuPositionClass(menuPosition);
-
     return (
       <div className="flex items-center justify-center relative">
         <button
+          ref={triggerRef}
           onClick={(e) => {
             e.stopPropagation();
             onToggle();
@@ -94,31 +124,30 @@ export const ProjectActionMenu = forwardRef<
           {triggerIcon || <MoreHorizontal className="w-5 h-5" color="white" />}
         </button>
 
-        {isOpen && (
-          <div
-            ref={ref}
-            className={`absolute ${menuPositionClass} w-40 bg-[#101828] border-[0.5px] shadow-sm border-[#6A7282] rounded-sm z-50 overflow-hidden flex flex-col p-1 text-center`}
-          >
-            <Button className={actionButtonClass} onClick={handleEdit}>
-              Edit Portfolio
-            </Button>
-            <hr className={hrClass} />
-            <Button className={actionButtonClass} onClick={handleView}>
-              View Detail
-            </Button>
-            <hr className={hrClass} />
-            <Button className={actionButtonClass} onClick={handleDelete}>
-              Delete Portfolio
-            </Button>
-            <hr className={hrClass} />
-            <Button
-              className={actionButtonClass}
-              onClick={() => handleStatusClick(projectId)}
+        {isOpen &&
+          createPortal(
+            <div
+              ref={ref}
+              style={menuStyle}
+              className="w-40 bg-[#101828] border-[0.5px] shadow-sm border-[#6A7282] rounded-sm overflow-hidden flex flex-col p-1 text-center"
             >
-              Change Status
-            </Button>
-          </div>
-        )}
+              <Button className={actionButtonClass} onClick={handleEdit}>
+                Edit Portfolio
+              </Button>
+              <hr className={hrClass} />
+              <Button className={actionButtonClass} onClick={handleView}>
+                View Detail
+              </Button>
+              <hr className={hrClass} />
+              <Button
+                className={actionButtonClass}
+                onClick={() => handleStatusClick(projectId)}
+              >
+                Change Status
+              </Button>
+            </div>,
+            document.body,
+          )}
       </div>
     );
   },

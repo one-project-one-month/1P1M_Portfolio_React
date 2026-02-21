@@ -14,11 +14,11 @@ const STATUS_LIST = [
   { value: UserManagementStatus.ACTIVE, name: 'Active' },
 ];
 
-const ORDER_LIST = [
-  { value: 'desc', name: 'Newest' },
-  { value: 'asc', name: 'Oldest' },
-  { value: 'popular', name: 'Popular' },
-];
+// const ORDER_LIST = [
+//   { value: 'desc', name: 'Newest' },
+//   { value: 'asc', name: 'Oldest' },
+//   { value: 'popular', name: 'Popular' },
+// ];
 
 export const UserManagementHeaderSection = ({
   filter,
@@ -43,10 +43,10 @@ export const UserManagementHeaderSection = ({
   }, [debouncedSearch, filter.search, handleSearch]);
 
   // Order
-  const handleOrder = (order: 'asc' | 'desc' | 'popular') => {
-    setFilter({ ...filter, order });
-    setOpen({ ...open, filter: false });
-  };
+  // const handleOrder = (order: 'asc' | 'desc' | 'popular') => {
+  //   setFilter({ ...filter, order });
+  //   setOpen({ ...open, filter: false });
+  // };
 
   // Status
   const handleStatus = (status: UserManagementStatusType) => {
@@ -80,7 +80,7 @@ export const UserManagementHeaderSection = ({
         {/* View Controls and Filter */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           {/* Filter by Order Dropdown */}
-          <div className="relative">
+          {/* <div className="relative">
             <button
               onClick={() =>
                 setOpen({ ...open, order: !open.order, filter: false })
@@ -111,7 +111,7 @@ export const UserManagementHeaderSection = ({
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Filter by Status Dropdown */}
           <div className="relative">

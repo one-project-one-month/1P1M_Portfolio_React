@@ -112,6 +112,13 @@ export const assignedDeveloperSchema = z.object({
   roleInTeam: z.string(),
 });
 
+export type ProjectPortfolioStatus =
+  | 'PENDING'
+  | 'PLANNING'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'UNQUALIFIED';
+
 export const projectPortfolioSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -119,14 +126,30 @@ export const projectPortfolioSchema = z.object({
   description: z.string(),
   projectLink: z.string(),
   repoLink: z.string(),
+
   reaction_count: z.number(),
+
   assignedDevs: z.object({
     developers: z.array(assignedDeveloperSchema),
   }),
-  reactedProjectPortfolios: z.array(z.number()),
+
+  reactedProjectPortfolios: z.array(z.any()),
+
   projectPortfolioDetails: z.any().nullable(),
+
+  status: z.enum(['PLANNING', 'IN_PROGRESS', 'COMPLETED', 'UNQUALIFIED']),
+
   languageAndTools: z.array(z.string()),
+
   owner: z.boolean(),
+  alreadyReacted: z.boolean(),
+});
+
+export const projectPortfolioStatus = projectPortfolioSchema.pick({
+  status: true,
+});
+export const projectPortfolioReactScheam = projectPortfolioSchema.pick({
+  id: true,
 });
 
 export const userProfileResponseSchema = z.object({
@@ -194,6 +217,8 @@ export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
 export type AssignedDeveloperType = z.infer<typeof assignedDeveloperSchema>;
 export type ProjectPortfolioType = z.infer<typeof projectPortfolioSchema>;
 export type UserProfileResponseType = z.infer<typeof userProfileResponseSchema>;
+export type PortfolioStatusType = z.infer<typeof projectPortfolioStatus>;
+export type PortfolioReactType = z.infer<typeof projectPortfolioReactScheam>;
 
 export type UserManagementResponseType = ApiResponseType<UserManagementType[]>;
 export type UserManagementByIdResponseType =
@@ -206,3 +231,5 @@ export type UserManagementDetailResponseType =
   ApiResponseType<UserManagementDetailType>;
 export type UserProfileDetailResponseType =
   ApiResponseType<UserProfileResponseType>;
+export type PortfolioStatusResponseType = ApiResponseType<PortfolioStatusType>;
+export type PortfolioReactResponseType = ApiResponseType<PortfolioReactType>;
