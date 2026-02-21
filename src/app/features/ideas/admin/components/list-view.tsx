@@ -14,7 +14,6 @@ const TABLE_HEADERS = [
   'Idea Name',
   'Submitter',
   'React Count',
-  'Leader',
   'Status',
   'Action',
 ] as const;
@@ -53,7 +52,7 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
                 </td>
 
                 {/* Developer */}
-                <td className="py-4">
+                <td className="p-4">
                   <div className="flex justify-start items-center gap-3">
                     <Avatar
                       src={idea.ownerProfilePicUrl}
@@ -75,28 +74,6 @@ const IdeaManagementTable = ({ data }: { data: IdeaType[] }) => {
                 {/* React Count */}
                 <td className="py-4 text-center text-slate-400">
                   {idea.reactionCount}
-                </td>
-
-                {/* Leader */}
-                <td className="py-4 text-sm text-slate-300">
-                  {idea.leader_id !== 0 ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <Link
-                        to={`/profile/${idea.leader_id}`}
-                        state={{ userId: idea.leader_id }}
-                        className="text-slate-300 text-sm capitalize font-semibold hover:text-[#6F28B3]"
-                      >
-                        <img
-                          src={idea.leaderProfilePicUrl}
-                          className="size-10 rounded-full object-cover"
-                        />{' '}
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center gap-3">
-                      ---
-                    </div>
-                  )}
                 </td>
 
                 {/* Status */}

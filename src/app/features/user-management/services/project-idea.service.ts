@@ -1,9 +1,13 @@
 import apiClient from '@/api/axios';
 import type {
-  EditIdeaType,
+  AssignLeaderResponseType,
+  DeveloperProfileResponseType,
+  GetDeveloperParamsType,
   IdeaDeleteResponseType,
   IdeaEditResponseType,
   IdeaStatusUpdateResponseType,
+  UpdateProjectIdeaResponseType,
+  UpdateProjectIdeaType,
 } from '@/app/features/user-management/types/project-idea-type';
 import { API_ENDPOINTS } from '@/config/api';
 import type { AxiosError } from 'axios';
@@ -25,12 +29,47 @@ export const getProjectIdeaDetail = async (id: number) => {
   }
 };
 
+export const getDeveloperProfile = async ({
+  keyword,
+  page,
+  size,
+  sortField,
+  sortDirection,
+  status,
+}: GetDeveloperParamsType) => {
+  try {
+    const response = await apiClient.get<DeveloperProfileResponseType>(
+      API_ENDPOINTS.GET_PROFILE,
+      {
+        params: {
+          keyword,
+          page,
+          size,
+          status,
+          sortField,
+          sortDirection,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError<{ message?: string }>;
+    const backendMessage = e.response?.data?.message || e.message;
+    console.error('Error fetching user:', backendMessage);
+    // throw {
+    //   success: false,
+    //   message: backendMessage,
+    // };
+    throw new Error(backendMessage);
+  }
+};
+
 export const editProjectIdeaService = async (
   projectIdeaId: number,
-  formData: EditIdeaType,
+  formData: UpdateProjectIdeaType,
 ) => {
   try {
-    const response = await apiClient.patch<IdeaEditResponseType>(
+    const response = await apiClient.patch<UpdateProjectIdeaResponseType>(
       `${API_ENDPOINTS.UPDATE_PROJECT_IDEA}/${projectIdeaId}`,
       formData,
     );
@@ -70,6 +109,22 @@ export const ideaStatusChangeService = async (
   } catch (error) {
     const e = error as AxiosError;
     console.error('Error idea status change error:', e);
+    throw e;
+  }
+};
+
+export const assignLeaderService = async (
+  projectIdeaId: number,
+  devId: number,
+) => {
+  try {
+    const response = await apiClient.patch<AssignLeaderResponseType>(
+      `${API_ENDPOINTS.ASSIGN_LEADER}?projectIdeaId=${projectIdeaId}&devId=${devId}`,
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Assign leader error:', e);
     throw e;
   }
 };

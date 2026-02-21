@@ -3,37 +3,36 @@ import Title from '@/components/ui/title';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { DevProfile } from '@/types/dev';
 import { Users } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FILTER_OPTIONS } from '../../ideas/shared/constants';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ORDER_OPTIONS } from '../../ideas/shared/constants';
 import DevCard from '../components/dev-card';
 import DevCardSkeleton from '../components/dev-skeleton-card';
 import { useDevProfileQuery } from '../hooks/use-dev-profile';
 
 const Developer = () => {
-  const [curPage, setCurPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('Popular');
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const curPage = Number(searchParams.get('page') ?? 0);
+  const searchTerm = searchParams.get('search') ?? '';
+  const filter = searchParams.get('order') ?? 'Popular';
 
   const debounceValue = useDebounce(searchTerm);
 
-  // Reset page when filter/search changes
-  useEffect(() => {
-    setCurPage(0);
-  }, [debounceValue, filter]);
+  const updateQuery = (updates: Record<string, string | number | null>) => {
+    const params = new URLSearchParams(searchParams);
 
-  // Determine sorting field and direction
-  const { sortField, direction } = useMemo((): {
-    sortField: string;
-    direction: 'asc' | 'desc';
-  } => {
-    if (filter === 'Popular') return { sortField: '', direction: 'desc' };
-    if (filter === 'Newest') return { sortField: '', direction: 'desc' };
-    return { sortField: '', direction: 'asc' };
-  }, [filter]);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === '') {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
+    });
 
-  // Fetch developer profiles
+    setSearchParams(params);
+  };
+
   const {
     data,
     isLoading: devsLoading,
@@ -42,8 +41,9 @@ const Developer = () => {
     keyword: debounceValue,
     page: curPage,
     size: 6,
-    sortField,
-    sortDirection: direction,
+    sortField: '',
+    sortDirection:
+      filter === 'newest' ? 'asc' : filter === 'popular' ? 'desc' : 'desc',
   });
 
   const DevProfileDatas = (data?.data ?? []) as DevProfile[];
@@ -58,11 +58,23 @@ const Developer = () => {
       <Title
         title="Developer Profiles"
         showSearch
-        showFilter
+        showOrder
+        showFilter={false}
         searchPlaceholder="Search by developer name or skill"
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
-        filterOptions={FILTER_OPTIONS}
-        onFilterChange={setFilter}
+        orderOptions={ORDER_OPTIONS}
+        selectedOrder={filter}
+        onSearchChange={(e) =>
+          updateQuery({
+            search: e.target.value,
+            page: 0, // reset page when searching
+          })
+        }
+        onOrderChange={(value) =>
+          updateQuery({
+            order: value,
+            page: 0, // reset page when sorting
+          })
+        }
       />
 
       <div className="grow">
@@ -99,7 +111,7 @@ const Developer = () => {
         <Pagination
           currentPage={curPage}
           totalPages={totalPages}
-          onPageChange={setCurPage}
+          onPageChange={(page) => updateQuery({ page })}
         />
       </div>
     </div>

@@ -3,6 +3,7 @@ import PorjectIdeaViewDetailDialog from '@/app/features/user-management/componen
 import ProjectIdeaEditDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-edit-dialog';
 import UserProjectIdeaStatusChangeDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
 import {
+  useAssignLeader,
   useDeleteProjectIdea,
   useEditProjectIdea,
   useProjectIdeaStatusChage,
@@ -26,6 +27,7 @@ export const ProjectIdeaDropDown = ({
   const { mutate: editMutate } = useEditProjectIdea();
   const { mutate: deleteMutate } = useDeleteProjectIdea();
   const { mutate: statusChageMutate } = useProjectIdeaStatusChage();
+  const { mutate: assignLeaderMutate } = useAssignLeader();
 
   const handleItemClick = (callback: () => void) => {
     setDropdownOpen(false);
@@ -71,7 +73,7 @@ export const ProjectIdeaDropDown = ({
             onSelect={(e) => {
               e.preventDefault();
               handleItemClick(() => setDeleteOpen(true));
-              setDeleteOpen(true);
+              // setDeleteOpen(true);
             }}
           >
             Delete Idea
@@ -108,6 +110,9 @@ export const ProjectIdeaDropDown = ({
         setEditDialogOpen={setEditDialogOpen}
         editMutate={editMutate}
         projectIdea={projectIdea}
+        assignLeaderMutate={assignLeaderMutate}
+        statusChageMutate={statusChageMutate}
+        statusChageData={[]}
       />
 
       <UserProjectIdeaDeleteDialog

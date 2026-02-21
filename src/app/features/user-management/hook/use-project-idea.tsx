@@ -1,12 +1,16 @@
 import {
+  assignLeaderService,
   deleteProjectIdeaService,
   editProjectIdeaService,
+  getDeveloperProfile,
   getProjectIdeaDetail,
   ideaStatusChangeService,
 } from '@/app/features/user-management/services/project-idea.service';
 import type {
-  EditIdeaType,
+  GetDeveloperParamsType,
   IdeaEditResponseType,
+  UpdateProjectIdeaResponseType,
+  UpdateProjectIdeaType,
 } from '@/app/features/user-management/types/project-idea-type';
 import { useToast } from '@/components/ui/toast-provider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -17,15 +21,15 @@ export const useEditProjectIdea = () => {
   const queryClient = useQueryClient();
 
   return useMutation<
-    IdeaEditResponseType,
+    UpdateProjectIdeaResponseType,
     AxiosError<{ message: string }>,
-    // { projectIdeaId: number; formData: EditIdeaType }
-    EditIdeaType
+    { projectIdeaId: number; formData: UpdateProjectIdeaType }
+    // UpdateProjectIdeaType
   >({
     // mutationFn: ({ projectIdeaId, formData }) =>
     //   editProjectIdeaService(projectIdeaId, formData),
-    mutationFn: (formData) =>
-      editProjectIdeaService(formData.projectIdeaId, formData),
+    mutationFn: ({ projectIdeaId, formData }) =>
+      editProjectIdeaService(projectIdeaId, formData),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['project-idea'] });
       addToast(
@@ -95,5 +99,72 @@ export const useProjectIdeaStatusChage = () => {
         'error',
       );
     },
+  });
+};
+
+export const useAssignLeader = () => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+
+  return useMutation({
+    mutationFn: ({
+      projectIdeaId,
+      devId,
+    }: {
+      projectIdeaId: number;
+      devId: number;
+    }) => assignLeaderService(projectIdeaId, devId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project-idea'] });
+      addToast('Project Idea assign Leader successfully', 'success');
+    },
+
+    onError: (error: AxiosError<{ message: string }>) => {
+      addToast(
+        error.response?.data?.message || 'Failed to assign leader',
+        'error',
+      );
+    },
+  });
+};
+
+// export const useDeveloperProfile = (params: GetDeveloperParamsType) => {
+//   return useQuery({
+//     queryKey: ['developer', params],
+//     queryFn: () => getDeveloperProfile(params),
+
+//   });
+// };
+
+export const useDeveloperProfile = ({
+  keyword,
+  page,
+  size,
+  sortField,
+  sortDirection,
+  status,
+}: GetDeveloperParamsType) => {
+  return useQuery({
+    queryKey: [
+      'developer',
+      keyword,
+      page,
+      size,
+      sortField,
+      sortDirection,
+      status,
+    ],
+    queryFn: () =>
+      getDeveloperProfile({
+        keyword,
+        page,
+        size,
+        sortField,
+        sortDirection,
+        status,
+      }),
+
+    staleTime: 5 * 60 * 1000,
   });
 };

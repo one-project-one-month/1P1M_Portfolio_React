@@ -29,11 +29,13 @@ const PortfolioHeader = ({
 
   return (
     <>
-      <Title
-        showSearch={false}
-        showFilter={false}
-        title="Project Portfolio Management"
-      />
+      <div className="flex flex-col gap-y-6 mb-6">
+        <Title
+          showSearch={false}
+          showFilter={false}
+          title="Project Portfolio Management"
+        />
+      </div>
 
       <ManagementControlBar
         title="Project Portfolio Management"

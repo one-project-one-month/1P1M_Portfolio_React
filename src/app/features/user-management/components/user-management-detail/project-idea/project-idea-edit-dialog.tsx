@@ -1,18 +1,31 @@
+import { statusChageData } from '@/app/features/user-management/constant/status-change-data';
+
+import { statusColorList } from '@/app/features/user-management/constant/status.color';
+
+import { useDeveloperProfile } from '@/app/features/user-management/hook/use-project-idea';
+import {
+  editIdeaSchema,
+  statusMap,
+  type AssignLeaderResponseType,
+  type EditIdeaType,
+  type IdeaStatusUpdateResponseType,
+  type IdeaType,
+  type Status,
+  type UpdateProjectIdeaResponseType,
+  type UpdateProjectIdeaType,
+  type statusChangeDataProps,
+} from '@/app/features/user-management/types/project-idea-type';
 import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 import { Button } from '@/components/ui/button';
 import FormField from '@/components/ui/form-field';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { Checkbox, Dialog } from '@radix-ui/themes';
-import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import { ArrowLeftRight, Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-
-import {
-  editIdeaSchema,
-  type EditIdeaType,
-  type IdeaType,
-} from '@/app/features/user-management/types/project-idea-type';
 
 type ProjectIdeaEditDialogProps = {
   trigger?: React.ReactNode;
@@ -20,11 +33,26 @@ type ProjectIdeaEditDialogProps = {
   setEditDialogOpen: (open: boolean) => void;
 
   projectIdea: IdeaType;
-  editMutate: (data: EditIdeaType) => void;
-};
+  editMutate: UseMutateFunction<
+    UpdateProjectIdeaResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; formData: UpdateProjectIdeaType },
+    unknown
+  >;
+  statusChageMutate: UseMutateFunction<
+    IdeaStatusUpdateResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; status: number },
+    unknown
+  >;
+  assignLeaderMutate: UseMutateFunction<
+    AssignLeaderResponseType,
+    AxiosError<{ message: string }>,
+    { projectIdeaId: number; devId: number }
+  >;
 
-type Status = 'Pending' | 'Approved' | 'Archived';
-type statusChangeDataProps = { name: Status; description: string };
+  statusChageData: statusChangeDataProps[];
+};
 
 const projectTypeOptions = ['Mobile', 'Website', 'Desktop', 'Game'];
 
@@ -34,54 +62,17 @@ export default function ProjectIdeaEditDialog({
   setEditDialogOpen,
   projectIdea,
   editMutate,
+  statusChageMutate,
+  assignLeaderMutate,
 }: ProjectIdeaEditDialogProps) {
   const [step, setStep] = useState(1);
   const [projectTypeShow, setProjectTypeShowed] = useState(false);
   const [search, setSearch] = useState('');
-
-  const statusChageData: statusChangeDataProps[] = [
-    {
-      name: 'Pending',
-      description: 'This idea remains under consideration.',
-    },
-    {
-      name: 'Approved',
-      description: 'This idea is confirmed to proceed.',
-    },
-    {
-      name: 'Archived',
-      description: 'This idea is no longer active .',
-    },
-  ];
-
-  const developers = [
-    {
-      dev_id: 1,
-      name: 'Tina',
-      email: 'tina@gmail.com',
-      role: 'UI | UX Designer',
-      profilePictureUrl: sampleUserImgUrl,
-    },
-    {
-      dev_id: 2,
-      name: 'Bora',
-      email: 'bora@gmail.com',
-      role: 'Backend',
-      profilePictureUrl: sampleUserImgUrl,
-    },
-  ];
-
-  const [selectReason, setSelectedReason] = useState<string | null>(null);
-
-  const toggleReason = (reason: string) => {
-    setSelectedReason((pre) => (pre === reason ? null : reason));
-  };
-
-  const statusColorList: Record<Status, string> = {
-    Pending: 'text-[#FD9A00]',
-    Approved: 'text-[#7CCF00]',
-    Archived: 'text-[#00B8DB]',
-  };
+  const { data } = useDeveloperProfile({
+    keyword: search,
+    page: 10,
+  });
+  const developers = data?.data ?? [];
 
   const statusColor = (name: Status) => statusColorList[name];
 
@@ -90,25 +81,23 @@ export default function ProjectIdeaEditDialog({
     defaultValues: {
       projectIdeaId: projectIdea.projectIdeaId,
       projectIdeaName: projectIdea.projectIdeaName,
+      projectName: projectIdea.projectIdeaName,
       description: projectIdea.description,
-      projectTypes: projectIdea.projectTypes,
+      projectType: projectIdea.projectTypes,
       status: projectIdea.status,
       dev_id: projectIdea.dev_id,
       devUsername: projectIdea.devUsername,
-      ownerProfilePicUrl: projectIdea.ownerProfilePicUrl,
-      leader_id: projectIdea.leader_id ?? 0,
-      leaderProfilePicUrl: projectIdea.leaderProfilePicUrl,
     },
   });
 
   const selectedTypes = useWatch({
     control: form.control,
-    name: 'projectTypes',
+    name: 'projectType',
   });
 
   const selectedLeader = useWatch({
     control: form.control,
-    name: 'leader_id',
+    name: 'dev_id',
   });
 
   const filteredOptions = projectTypeOptions.filter((opt) =>
@@ -118,12 +107,12 @@ export default function ProjectIdeaEditDialog({
     const current = selectedTypes || [];
     if (current.includes(type)) {
       form.setValue(
-        'projectTypes',
+        'projectType',
         current.filter((t) => t !== type),
         { shouldValidate: true },
       );
     } else {
-      form.setValue('projectTypes', [...current, type], {
+      form.setValue('projectType', [...current, type], {
         shouldValidate: true,
       });
     }
@@ -134,11 +123,27 @@ export default function ProjectIdeaEditDialog({
       setStep(step + 1);
     } else {
       editMutate({
-        ...data,
-        projectIdeaId: projectIdea.projectIdeaId,
+        projectIdeaId: data.projectIdeaId,
+        formData: {
+          projectName: data.projectIdeaName,
+          description: data.description,
+          projectType: data.projectType,
+        },
       });
+
+      statusChageMutate({
+        projectIdeaId: projectIdea.projectIdeaId,
+        status: statusMap[data.status as Status],
+      });
+
+      assignLeaderMutate({
+        projectIdeaId: projectIdea.projectIdeaId,
+        devId: data.dev_id,
+      });
+
       setEditDialogOpen(false);
     }
+    form.reset();
   };
 
   const handleProjectTypeShow = () => {
@@ -159,7 +164,7 @@ export default function ProjectIdeaEditDialog({
           background: 'black',
           color: 'white',
           padding: '60px',
-          height: '773px',
+          height: '800px',
           border: '1px solid #364153',
         }}
       >
@@ -167,7 +172,7 @@ export default function ProjectIdeaEditDialog({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full h-full flex flex-col justify-between"
         >
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-6">
             <div className="relative flex items-center justify-between w-full">
               <div className="absolute top-4 left-7 right-7 flex justify-between w-[400px] mx-auto z-0">
                 <div
@@ -193,10 +198,14 @@ export default function ProjectIdeaEditDialog({
           ${
             step >= s
               ? 'bg-[#6F28B3] border-[#6F28B3] text-white'
-              : 'border-[#364153] bg-white'
+              : 'border-[#364153] '
           }`}
                   >
-                    {s}
+                    {step >= s ? (
+                      <Check className="w-4 h-4" />
+                    ) : (
+                      s.toString().padStart(2, '0')
+                    )}
                   </div>
 
                   <p className="text-sm mt-2">
@@ -209,10 +218,12 @@ export default function ProjectIdeaEditDialog({
             </div>
 
             {step === 1 && (
-              <>
-                <div>
-                  <h2>Update the idea information</h2>
-                  <p>
+              <div className="w-full flex flex-col gap-4 h-full">
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-[#F9FAFB] font-medium font-sans text-2xl">
+                    Update the idea information
+                  </h2>
+                  <p className="text-[#6A7282] leading-7 text-lg">
                     Modify existing idea information and save the latest
                     updates.
                   </p>
@@ -223,7 +234,7 @@ export default function ProjectIdeaEditDialog({
                   </label>
 
                   <Controller
-                    name="projectIdeaName"
+                    name="projectName"
                     control={form.control}
                     render={({ field }) => (
                       <FormField placeholder="" {...field} />
@@ -242,13 +253,13 @@ export default function ProjectIdeaEditDialog({
                         {...field}
                         rows={4}
                         placeholder="Enter description"
-                        className="w-full border border-[#FFFFFF26] bg-[#FFFFFF17] rounded-lg px-4 py-3 text-white focus:outline-none resize-y"
+                        className="w-full text-sm border border-[#FFFFFF26] bg-[#FFFFFF17] rounded-lg px-4 py-3 text-white focus:outline-none resize-y"
                       />
                     )}
                   />
                 </div>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <label className="text-lg font-semibold">Project Type</label>
 
                   <div
@@ -297,7 +308,7 @@ export default function ProjectIdeaEditDialog({
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             )}
 
             {step === 2 && (
@@ -307,23 +318,29 @@ export default function ProjectIdeaEditDialog({
                 {developers
                   .filter((dev) => dev.dev_id === selectedLeader)
                   .map((dev) => (
-                    <div
-                      key={dev.dev_id}
-                      className="h-[100px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-4"
-                    >
-                      <div className="flex gap-3 items-center w-full justify-between">
-                        <div className="flex gap-3 items-center">
-                          <img
-                            src={dev.profilePictureUrl ?? sampleUserImgUrl}
-                            className="w-12 h-12 rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="text-white">{dev.name}</p>
-                            <p className="text-xs text-gray-400">{dev.email}</p>
+                    <div>
+                      <div
+                        key={dev.dev_id}
+                        className="h-[100px] flex items-center border border-[#314158] bg-[#020618] rounded-2xl p-4"
+                      >
+                        <div className="flex gap-3 items-center w-full justify-between">
+                          <div className="flex gap-3 items-center">
+                            <img
+                              src={dev.profilePictureUrl ?? sampleUserImgUrl}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="text-white">{dev.name}</p>
+                              <p className="text-xs text-gray-400">
+                                {dev.email}
+                              </p>
+                            </div>
                           </div>
-                        </div>
 
-                        <p className="text-sm text-gray-400">{dev.role}</p>
+                          <p className="text-sm text-gray-400">
+                            {dev.tech_stack}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -335,7 +352,7 @@ export default function ProjectIdeaEditDialog({
                   className="text-xs w-full focus:outline-none p-4 rounded-lg bg-[#FFFFFF17]"
                 />
 
-                <div className="flex flex-col gap-3 mt-2">
+                <div className="flex flex-col gap-3 mt-2 h-[200px] overflow-auto">
                   {developers
                     .filter((dev) =>
                       dev.name.toLowerCase().includes(search.toLowerCase()),
@@ -344,13 +361,11 @@ export default function ProjectIdeaEditDialog({
                       <div
                         key={dev.dev_id}
                         onClick={() => {
-                          form.setValue('leader_id', dev.dev_id);
-                          form.setValue(
-                            'leaderProfilePicUrl',
-                            dev.profilePictureUrl,
-                          );
+                          form.setValue('dev_id', dev.dev_id, {
+                            shouldValidate: true,
+                          });
                         }}
-                        className={`cursor-pointer border p-3 rounded-xl flex justify-between items-center
+                        className={`cursor-pointer  border p-3 rounded-xl flex justify-between items-center
               ${
                 selectedLeader === dev.dev_id
                   ? 'border-[#6F28B3] bg-[#1a0d2b]'
@@ -369,7 +384,21 @@ export default function ProjectIdeaEditDialog({
                           </div>
                         </div>
 
-                        <p className="text-sm text-gray-400">{dev.role}</p>
+                        <div>
+                          <div className="flex gap-2 flex-wrap">
+                            {Array.isArray(dev.tech_stack) &&
+                              dev.tech_stack.map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="text-xs text-gray-400"
+                                >
+                                  {item}
+                                </p>
+                              ))}
+                          </div>
+
+                          <ArrowLeftRight color="#6F28B3" />
+                        </div>
                       </div>
                     ))}
                 </div>
@@ -377,42 +406,48 @@ export default function ProjectIdeaEditDialog({
             )}
 
             {step === 3 && (
-              <div className="w-full flex flex-col gap-10">
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-[#F9FAFB] font-medium text-xl leading-8">
-                    Change the idea status!
-                  </h2>
-                  <p className="text-[#99A1AF] text-lg leading-7">
-                    Choose a status to reflect the current progress and next
-                    step of this idea.
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-10">
-                  {statusChageData.map((item) => (
-                    <div
-                      className="flex items-center   gap-5 "
-                      onClick={() => toggleReason(item.name)}
-                    >
-                      <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
-                        {selectReason === item.name && (
-                          <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
-                        )}
-                      </div>
-                      <div className="h-full flex flex-col">
-                        <p
-                          className={` text-lg font-medium leading-5 ${statusColor(item.name)}`}
-                        >
-                          {item.name}
-                        </p>
-                        <p className="text-[#6A7282] text-xs leading-7">
-                          {item.description}
-                        </p>
-                      </div>
+              <Controller
+                name="status"
+                control={form.control}
+                render={({ field }) => (
+                  <div className="w-full flex flex-col gap-10">
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-[#F9FAFB] font-medium text-xl leading-8">
+                        Change the idea status!
+                      </h2>
+                      <p className="text-[#99A1AF] text-lg leading-7">
+                        Choose a status to reflect the current progress and next
+                        step of this idea.
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
+
+                    <div className="flex flex-col gap-6">
+                      {statusChageData.map((item) => (
+                        <div
+                          className="flex items-center   gap-5 "
+                          onClick={() => field.onChange(item.name)}
+                        >
+                          <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
+                            {field.value === item.name && (
+                              <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
+                            )}
+                          </div>
+                          <div className="h-full flex flex-col">
+                            <p
+                              className={` text-lg font-medium leading-5 ${statusColor(item.name as Status)}`}
+                            >
+                              {item.label}
+                            </p>
+                            <p className="text-[#6A7282] text-xs leading-7">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              />
             )}
           </div>
 
