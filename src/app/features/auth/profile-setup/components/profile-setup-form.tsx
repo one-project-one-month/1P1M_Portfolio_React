@@ -1,19 +1,17 @@
-import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-
+import TermsAndConditions from '@/components/term-conditions';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-bg';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
 import FormTextArea from '@/components/ui/form-textarea';
-
 import { TechStacks } from '@/constants';
-
 import { useUserInfoStore } from '@/store/user-info-store';
 import type { Profile } from '@/types/common';
 import { useEffect, useState } from 'react';
+import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import uploadDevImage, {
   getProfile,
   setupDevProfile,
@@ -40,23 +38,23 @@ interface FormValues {
 
 export default function ProfileSetupFrom(props: DevProfileFormProps) {
   const user = useUserInfoStore.getState().userInfo;
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isTermsError, setIsTermsError] = useState(false);
 
-  console.log(user);
+  const isEditMode = props.isEditMode ?? false;
+  const existingProfileData = props.existingProfileData ?? null;
 
-  var isEditMode = props.isEditMode ?? false;
-  var existingProfileData = props.existingProfileData ?? null;
+  const navigate = useNavigate();
 
-  var navigate = useNavigate();
-
-  var [img, setImg] = useState<File | null>(null);
-  var [profileData, setProfileData] = useState<Profile | null>(
+  const [img, setImg] = useState<File | null>(null);
+  const [profileData, setProfileData] = useState<Profile | null>(
     existingProfileData,
   );
-  var [loading, setLoading] = useState<boolean>(
+  const [loading, setLoading] = useState<boolean>(
     isEditMode && !existingProfileData,
   );
 
-  var {
+  const {
     register,
     handleSubmit,
     control,
@@ -80,17 +78,17 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
       }
 
       async function loadProfileData(): Promise<void> {
-        var timeoutId = setTimeout(function () {
+        const timeoutId = setTimeout(function () {
           setLoading(false);
         }, 10000);
 
-        var user = JSON.parse(localStorage.getItem('user') || '{}');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (!user?.id) {
           setLoading(false);
           return;
         }
 
-        var response = await getProfile(user.id);
+        const response = await getProfile(user.id);
         if (response.success) {
           const data = response.data as Profile;
           setProfileData(data);
@@ -109,10 +107,10 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
     function () {
       if (!profileData || !isEditMode) return;
 
-      var techStackOption: TechStackOption | null = null;
+      let techStackOption: TechStackOption | null = null;
 
       if (profileData.techStacks?.length) {
-        var value = profileData.techStacks[0];
+        const value = profileData.techStacks[0];
         techStackOption =
           TechStacks.find(function (s) {
             return s.name === value;
@@ -140,10 +138,8 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
     }
   }
 
-  var onSubmit: SubmitHandler<FormValues> = async function (data) {
+  const onSubmit: SubmitHandler<FormValues> = async function (data) {
     if (!user?.userId) {
-      console.log('NO user id');
-
       return;
     }
 
@@ -152,7 +148,14 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
       return;
     }
 
-    var payload = {
+    if (!isTermsAccepted) {
+      setIsTermsError(true);
+      return;
+    }
+
+    setIsTermsError(false);
+
+    const payload = {
       name: data.name,
       techStacks: [data.techStacks.name],
       github: data.github,
@@ -160,13 +163,13 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
       aboutDev: data.aboutDev,
     };
 
-    var loadingToast = toast.loading(
+    const loadingToast = toast.loading(
       isEditMode ? 'Updating profile...' : 'Creating profile...',
     );
 
     try {
       if (isEditMode && profileData) {
-        var updateRes = await updateProfile(profileData.dev_id, payload);
+        const updateRes = await updateProfile(profileData.dev_id, payload);
 
         if (updateRes.success) {
           if (img) {
@@ -179,7 +182,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           toast.error('Failed to update profile');
         }
       } else {
-        var createRes = await setupDevProfile(payload, user?.userId);
+        const createRes = await setupDevProfile(payload, user?.userId);
 
         if (!createRes.success) {
           throw new Error('Failed to create profile');
@@ -196,6 +199,12 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
       toast.error(error?.message || 'Something went wrong');
     } finally {
       toast.dismiss(loadingToast);
+    }
+  };
+
+  const handleFormError = () => {
+    if (!isTermsAccepted) {
+      setIsTermsError(true);
     }
   };
 
@@ -217,8 +226,8 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
       </h2>
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center mt-2 gap-y-6"
+        onSubmit={handleSubmit(onSubmit, handleFormError)}
+        className="flex flex-col items-start mt-2 gap-y-6"
       >
         <FileUpload
           onFileSelect={handleImageSelect}
@@ -280,6 +289,17 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           {...register('aboutDev', {
             required: 'Please write something about yourself',
           })}
+        />
+
+        <TermsAndConditions
+          isTermsAccepted={isTermsAccepted}
+          isTermsError={isTermsError}
+          onCheckedChange={(checked) => {
+            setIsTermsAccepted(checked);
+            if (checked) {
+              setIsTermsError(false);
+            }
+          }}
         />
 
         <div className="flex w-full justify-end gap-2">

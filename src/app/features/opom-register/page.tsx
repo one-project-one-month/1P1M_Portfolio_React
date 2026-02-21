@@ -1,15 +1,23 @@
 import TrashIcon from '@/assets/icons/trash-icon';
+import TermsAndConditions from '@/components/term-conditions';
 import { Button } from '@/components/ui/button';
 import FormBackground from '@/components/ui/form-bg';
 import FormDropdown from '@/components/ui/form-dropdown';
 import FormField from '@/components/ui/form-field';
 import { Platforms, TechStacks } from '@/constants';
-import { Controller } from 'react-hook-form';
+import { useState } from 'react';
+import { Controller, type SubmitHandler } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { useOpomRegister } from './hooks/use-opom-register'; // Adjust import path
+import {
+  useOpomRegister,
+  type OpomFormValues,
+} from './hooks/use-opom-register';
 
 export default function OpomRegisterPage() {
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isTermsError, setIsTermsError] = useState(false);
+
   const {
     isLoading,
     platformLinks,
@@ -23,16 +31,38 @@ export default function OpomRegisterPage() {
     handleRegister,
   } = useOpomRegister();
 
+  const handleFormSubmit: SubmitHandler<OpomFormValues> = async (
+    data,
+    event,
+  ) => {
+    if (!isTermsAccepted) {
+      setIsTermsError(true);
+      return;
+    }
+
+    setIsTermsError(false);
+    await handleRegister(data, event);
+  };
+
+  const handleFormError = () => {
+    if (!isTermsAccepted) {
+      setIsTermsError(true);
+    }
+  };
+
   return (
-    <div className="h-screen flex items-center ">
+    <div className="flex items-center py-6">
       <div className="w-full h-full flex justify-center p-5 md:p-0 items-center">
         <FormBackground className="w-full md:w-[532px]  flex mx-auto items-center h-auto  flex-col  p-8">
           <h3 className="text-4xl text-center p-2 text-white mb-5 font-bold">
             OPOM REGISTER
           </h3>
 
-          <form onSubmit={handleSubmit(handleRegister)} className="w-full">
-            <div className="space-y-4 max-w-2xl mx-auto">
+          <form
+            onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
+            className="w-full"
+          >
+            <div className="space-y-4 max-w-2xl mx-auto mb-5">
               <FormField
                 placeholder="Name"
                 className="w-full "
@@ -155,11 +185,30 @@ export default function OpomRegisterPage() {
               </button>
             </div>
 
+            <TermsAndConditions
+              isTermsAccepted={isTermsAccepted}
+              isTermsError={isTermsError}
+              onCheckedChange={(checked) => {
+                setIsTermsAccepted(checked);
+                if (checked) {
+                  setIsTermsError(false);
+                }
+              }}
+            />
+
             <div className="flex justify-end gap-4 mt-8">
-              <Button type="button" onClick={() => reset()}>
+              <Button
+                type="button"
+                variant="black_button"
+                onClick={() => {
+                  reset();
+                  setIsTermsAccepted(false);
+                  setIsTermsError(false);
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button variant="primary" type="submit" disabled={isLoading}>
                 {isLoading ? 'Registering...' : 'Register'}
               </Button>
             </div>
