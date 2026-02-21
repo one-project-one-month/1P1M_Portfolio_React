@@ -46,12 +46,28 @@ export const useGetAllProjects = (
   size = 10,
   sortDirection = 'desc',
   keyword = '',
-  orderBy = '',
+  sortField = 'name',
+  projectPortfolioStatus?: string,
 ) => {
   return useQuery({
-    queryKey: ['projectPortfolio', page, size, sortDirection, keyword, orderBy],
+    queryKey: [
+      'projectPortfolio',
+      page,
+      size,
+      sortDirection,
+      keyword,
+      sortField,
+      projectPortfolioStatus,
+    ],
     queryFn: () =>
-      getAllProjectPortfolios(page, size, sortDirection, keyword, orderBy),
+      getAllProjectPortfolios(
+        page,
+        size,
+        sortDirection,
+        keyword,
+        sortField,
+        projectPortfolioStatus,
+      ),
   });
 };
 

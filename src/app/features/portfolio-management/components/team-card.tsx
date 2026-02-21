@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import DeleteDialog from '@/components/ui/delete-dialog';
 import type { Member, TeamType } from '@/types/portfolio-management';
 import { ChevronDown, ChevronUp, Pencil, Plus, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTeamCard } from '../hooks/use-team-card';
 
 interface TeamCardProps {
@@ -91,7 +92,10 @@ const TeamCard = ({
                   className="flex items-center justify-between px-3 py-1 bg-[#1E293B]"
                 >
                   <div className="flex items-center gap-12 flex-1">
-                    <div className="flex items-center gap-3 w-[200px]">
+                    <Link
+                      to={`/profile/${member.id}`}
+                      className="flex items-center gap-3 w-[200px] hover:opacity-80 transition-opacity"
+                    >
                       <img
                         src={
                           member.avatarUrl ||
@@ -100,10 +104,10 @@ const TeamCard = ({
                         alt={member.name}
                         className="w-10 h-10 rounded-full border border-[#475569] object-cover"
                       />
-                      <span className="text-white font-medium text-sm">
+                      <span className="text-white font-medium text-sm hover:text-[#9C39FC] transition-colors">
                         {member.name}
                       </span>
-                    </div>
+                    </Link>
                     <span className="text-[#94A3B8] text-sm flex-1">
                       {member.email}
                     </span>

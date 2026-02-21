@@ -1,8 +1,19 @@
+import { getUser } from '../../opom-register/services/ulits';
 import type { ProjectData } from '../constants/data';
 import {
   getTeamLeaderFromMembers,
   mapBackendToFrontendStatus,
 } from './status-mapping';
+
+const isLeaderRole = (roleInTeam?: string): boolean => {
+  const upper = roleInTeam?.toUpperCase();
+  return (
+    upper === 'TEAM_LEADER' ||
+    upper === 'TEAM LEADER' ||
+    upper === 'TEAM_LEAD' ||
+    upper === 'LEADER'
+  );
+};
 
 export const getMemberCount = (members: any[]): number => members.length;
 
@@ -21,6 +32,15 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     ? item.teams.flatMap((t: any) => t.members)
     : [];
 
+  const user = getUser();
+  const userEmail = user?.email?.toLowerCase();
+  const isCurrentUserLeader = userEmail
+    ? allMembers.some(
+        (m: any) =>
+          m.email?.toLowerCase() === userEmail && isLeaderRole(m.roleInTeam),
+      )
+    : false;
+
   return {
     id: item.id,
     leader: getTeamLeaderFromMembers(allMembers),
@@ -32,13 +52,7 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     members: allMembers.map((m: any) => ({
       ...m,
       avatarUrl: m.profilePictureUrl || m.avatarUrl || null,
-      role:
-        m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
-        m.roleInTeam?.toUpperCase() === 'TEAM LEADER' ||
-        m.roleInTeam?.toUpperCase() === 'TEAM_LEAD' ||
-        m.roleInTeam?.toUpperCase() === 'LEADER'
-          ? 'Team Leader'
-          : 'Member',
+      role: isLeaderRole(m.roleInTeam) ? 'Team Leader' : 'Member',
     })),
     image: item.projectPicUrl || '',
     startDate: item.startDate || '2024-01-01',
@@ -56,13 +70,8 @@ export const mapApiToProjectData = (item: any): ProjectData => {
         members:
           t.members?.map((m: any) => ({
             ...m,
-            role:
-              m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
-              m.roleInTeam?.toUpperCase() === 'TEAM LEADER' ||
-              m.roleInTeam?.toUpperCase() === 'TEAM_LEAD' ||
-              m.roleInTeam?.toUpperCase() === 'LEADER'
-                ? 'Team Leader'
-                : 'Member',
+            avatarUrl: m.profilePictureUrl || m.avatarUrl || null,
+            role: isLeaderRole(m.roleInTeam) ? 'Team Leader' : 'Member',
           })) || [],
       })) || [],
     description: item.description || '',
@@ -71,5 +80,6 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     reactCount: item.reactedCount || item.reactCount || 0,
     viewCount: item.viewCount || 0,
     isReacted: item.isAlreadyReacted ?? item.isReacted ?? false,
+    isCurrentUserLeader,
   };
 };
