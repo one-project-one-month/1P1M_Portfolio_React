@@ -1,7 +1,7 @@
 import UserProjectIdeaDeleteDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-delete-dialog';
 import PorjectIdeaViewDetailDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-detail-dialog';
 import ProjectIdeaEditDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-edit-dialog';
-import UserProjectIdeaStatusChangeDialog from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
+import { UserProjectIdeaStatusChangeDialog } from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-status-change-dialog';
 import {
   useAssignLeader,
   useDeleteProjectIdea,
@@ -103,6 +103,7 @@ export const ProjectIdeaDropDown = ({
       <PorjectIdeaViewDetailDialog
         viewDetailOpen={viewDetailOpen}
         setViewDetailOpend={setViewDetailOpend}
+        projectIdeaId={projectIdea.projectIdeaId}
       />
 
       <ProjectIdeaEditDialog
@@ -127,6 +128,7 @@ export const ProjectIdeaDropDown = ({
         setStatusChangeOpen={setStatusChangeOpen}
         statusChageMutate={statusChageMutate}
         projectIdeaId={projectIdea.projectIdeaId}
+        currentStatus={projectIdea.status}
       />
     </>
   );
