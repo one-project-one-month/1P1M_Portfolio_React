@@ -13,7 +13,6 @@ import {
   type EditUserManagementType,
   type UserManagementEditFormPropsType,
 } from '../types/user-management.types';
-
 const UserManagementEditDialog = ({
   trigger,
   data,
@@ -23,36 +22,14 @@ const UserManagementEditDialog = ({
   editDialogOpen: boolean;
   setEditDialogOpen: (open: boolean) => void;
 }) => {
-  // const queryClient = useQueryClient();
-  // const { addToast } = useToast();
-
   const { mutate, isPending } = useEditUserManagement();
-
-  // const form = useForm<Partial<EditUserManagementType>>({
-  //   resolver: zodResolver(editUserSchema.partial()) as Resolver<
-  //     Partial<EditUserManagementType>
-  //   >,
-  //   defaultValues: {
-  //     name: data.name,
-  //     phone: data.phone,
-  //     role: data.role,
-  //     profilePictureUrl: data.profilePictureUrl,
-  //     telegramUsername: data.telegramUsername,
-  //     githubUrl: data.githubUrl,
-  //     linkedUrl: data.linkedUrl,
-  //     description: data.description,
-  //     status: data.status || 'ACTIVE',
-  //   },
-  //   mode: 'onSubmit',
-  // });
-
   const form = useForm<Partial<EditUserManagementType>>({
     resolver: zodResolver(editUserSchema.partial()),
     defaultValues: {
       username: data.name || '',
       phone: data.phone || '',
       role: data.role || '',
-      // profilePictureUrl: data.profilePictureUrl || '',
+      profilePictureUrl: data.profilePictureUrl || '',
       telegramUsername: data.telegramUsername || '',
       github_url: data.githubUrl || '',
       linkedIn_url: data.linkedUrl || '',
@@ -61,32 +38,8 @@ const UserManagementEditDialog = ({
     },
     mode: 'onSubmit',
   });
-
-  // const { mutate, isPending } = useMutation<
-  //   UserManagementEditResponseType,
-  //   AxiosError<{ message: string }>,
-  //   { id: number; formData: EditUserManagementType }
-  // >({
-  //   mutationFn: ({
-  //     id,
-  //     formData,
-  //   }: {
-  //     id: number;
-  //     formData: EditUserManagementType;
-  //   }) => editUserManagementService(id, formData),
-  //   onSuccess: (success) => {
-  //     queryClient.invalidateQueries({ queryKey: ['user-management'] });
-  //     addToast(success.message, 'success');
-  //     form.reset();
-  //   },
-  //   onError: (error) => {
-  //     addToast(error.message, 'error');
-  //   },
-  // });
-
   const handleEdit = (formData: Partial<EditUserManagementType>) => {
     if (!data.userId) {
-      // addToast('Project idea ID is missing', 'error');
       return;
     }
     mutate(
@@ -109,28 +62,39 @@ const UserManagementEditDialog = ({
         <button type="button" className="text-white">
           {trigger}
         </button>
-        {/* {trigger || <div>View Detail</div>} */}
       </Dialog.Trigger>
-
       <Dialog.Content
         size="4"
         maxWidth="1003px"
         style={{ background: 'black', color: 'white', padding: '60px' }}
       >
-        <div className="flex gap-2 flex-col">
-          <h1 className="text-[#F9FAFB] font-medium text-2xl leading-9">
-            Update the user information!
-          </h1>
-          <p className="text-[#6A7282] text-lg leading-7">
-            Modify existing user information and save the latest updates
-          </p>
+        <div className="flex gap-7 flex-col">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-[#F9FAFB] font-medium text-2xl leading-8">
+              Update the user information!
+            </h1>
+            <p className="text-[#6A7282] text-lg leading-7">
+              Modify existing user information and save the latest updates
+            </p>
+          </div>
+
           <div className="w-full flex ">
             <form onSubmit={form.handleSubmit(handleEdit)} className="w-full">
               <div className="space-y-4 w-full flex flex-row gap-6">
-                <img
-                  src={sampleUserImgUrl}
-                  className="w-[232px] h-[232px]  rounded-3xl"
+                <Controller
+                  name="profilePictureUrl"
+                  control={form.control}
+                  render={({ field }) => (
+                    <div className="w-[300px]">
+                      <img
+                        src={field.value || sampleUserImgUrl}
+                        className="w-[232px] h-[232px] rounded-3xl"
+                        alt="Profile picture"
+                      />
+                    </div>
+                  )}
                 />
+
                 <div className="w-full flex flex-col gap-[24px]">
                   <Controller
                     name="username"
