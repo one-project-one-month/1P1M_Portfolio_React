@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/ui/input-field';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { DropdownItem } from '@/types/portfolio-management';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import {
@@ -25,6 +26,7 @@ interface PortfolioTypeLangProps {
   onRemoveTechnology: (index: number) => void;
   onAddNewRow: () => void;
   isEdit: boolean;
+  ownerId?: number;
 }
 
 export const UserPortfolioTypeLang = ({
@@ -34,7 +36,13 @@ export const UserPortfolioTypeLang = ({
   onRemoveTechnology,
   onAddNewRow,
   isEdit,
+  ownerId,
 }: PortfolioTypeLangProps) => {
+  const user = useUserInfoStore((state) => state.userInfo);
+
+  console.log('userId', user?.userId);
+  console.log('id', ownerId);
+
   return (
     <div className="space-y-6 text-white flex-1">
       <span className="text-[15px]">Type and Languages</span>
@@ -72,6 +80,7 @@ export const UserPortfolioTypeLang = ({
                 />
                 {technologyFields.length > 1 && (
                   <button
+                    disabled={user?.userId != ownerId}
                     onClick={() => onRemoveTechnology(index)}
                     className="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-md transition-colors"
                   >

@@ -69,6 +69,12 @@ const ProjectPortfolioForm = ({
       });
     }
   };
+  const leader = initialData?.leader;
+
+  const owner: any = initialData?.members?.filter((dev) =>
+    dev.name.includes(leader ?? ''),
+  );
+  console.log('owner', owner);
 
   const triggerFileUpload = () => {
     if (!isReadOnly) {
@@ -80,7 +86,7 @@ const ProjectPortfolioForm = ({
     <div className="w-4xl flex flex-col gap-3 backdrop-blur-sm">
       <div className="flex flex-col">
         <span className="text-[#F9FAFB] text-2xl font-medium">
-          {mode === 'create' ? 'Create' : 'Update'} the Portfolio !
+          {mode === 'create' ? 'Create' : 'Update'} the Portfolio
         </span>
         <span className="text-[#6A7282]">
           {mode === 'create'
@@ -146,6 +152,7 @@ const ProjectPortfolioForm = ({
           />
           <PortfolioLinkSection form={form} isReadOnly={false} />
           <UserPortfolioTypeLang
+            ownerId={owner[0]?.id}
             form={form}
             technologyFields={technologyFields}
             onSaveTechnologies={handleSaveTechnologies}

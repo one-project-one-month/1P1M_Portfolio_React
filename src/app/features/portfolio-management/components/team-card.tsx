@@ -94,7 +94,7 @@ const TeamCard = ({
                     <div className="flex items-center gap-3 w-[200px]">
                       <img
                         src={
-                          member.avatarUrl ||
+                          member?.profilePictureUrl ||
                           `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
                         }
                         alt={member.name}
@@ -141,7 +141,7 @@ const TeamCard = ({
                   <img
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-[#334155] object-cover"
                     src={
-                      member.avatarUrl ||
+                      member?.profilePictureUrl ||
                       `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
                     }
                     alt={member.name}
