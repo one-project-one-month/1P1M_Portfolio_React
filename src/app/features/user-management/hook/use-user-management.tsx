@@ -78,7 +78,7 @@ export const useEditUserManagement = () => {
 
 export const useGetUserProfileDetail = (userId: number) => {
   return useQuery<UserProfileDetailResponseType, AxiosError>({
-    queryKey: ['user-management-detail', userId],
+    queryKey: ['user-detail-idea-and-portfolio', userId],
     queryFn: () => getUserProfileDetail(userId),
     enabled: userId !== undefined && !isNaN(userId),
   });

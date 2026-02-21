@@ -21,6 +21,7 @@ import {
 } from '@/constants/lazyload';
 import { createBrowserRouter } from 'react-router-dom';
 import AboutUsPage from '../features/about-us/page';
+import ConfigurationPage from '../features/admin-configuration/page';
 import OpomRegisteredPeopleList from '../features/opom-management/pages';
 import OpomRegisterPage from '../features/opom-register/page';
 import PortfolioErrorBoundary from '../features/portfolio-management/components/portfolio-error-boundary';
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
           {
             path: 'opom-registered-people-list/user-profile/:id',
             element: <PersonProfilePage />,
+          },
+          {
+            path: 'configuration',
+            element: <ConfigurationPage />,
           },
         ],
       },

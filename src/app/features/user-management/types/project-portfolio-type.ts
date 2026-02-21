@@ -23,14 +23,18 @@ export type LanguageTool = {
   name: string;
   type: 'Frontend' | 'Backend' | string;
 };
-
 export type ProjectPortfolioStatus =
   | 'PENDING'
-  | 'APPROVED'
-  | 'REJECTED'
+  | 'PLANNING'
   | 'IN_PROGRESS'
   | 'COMPLETED'
-  | 'DELETED';
+  | 'UNQUALIFIED';
+
+export type statusChangeDataProps = {
+  name: ProjectPortfolioStatus;
+  description: string;
+  label: string;
+};
 
 export type ProjectPortfolio = {
   id: number;
