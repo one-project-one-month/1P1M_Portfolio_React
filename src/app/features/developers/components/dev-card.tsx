@@ -19,6 +19,9 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
                 src={profilePictureUrl || sampleUserImgUrl}
                 alt={name || 'Developer'}
                 className="size-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = sampleUserImgUrl;
+                }}
               />
             </div>
 
