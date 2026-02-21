@@ -16,7 +16,7 @@ const AboutUsPage = () => {
       {/* Banner Section */}
       <section className="flex flex-col items-center justify-center pt-20">
         <div className="mb-8 text-4xl lg:text-8xl font-bold">
-          <h1>
+          <h1 className="text-center text-nowrap">
             <span className="text-[#BD7AFD]">One Project</span>
             <span className="text-white">,</span>
             <span className="text-[#FFBA00]"> One Month</span>

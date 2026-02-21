@@ -30,7 +30,7 @@ const AboutUsCard = ({
       >
         <h1 className="text-2xl font-semibold text-white mb-2">{title}</h1>
 
-        <p className="text-white/90 leading-relaxed text-justify mb-4">
+        <p className="text-white/90 h-28 leading-relaxed text-justify mb-4">
           {description}
         </p>
 
