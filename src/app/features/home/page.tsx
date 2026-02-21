@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <div className=" max-w-6xl mx-auto  w-full">
       {/* Start Welcome Page Content */}
-      <section className="flex relative  flex-col items-center justify-center  text-center text-white  my-14">
+      <section className="flex relative flex-col items-center justify-center  text-center text-white  my-14">
         <div className="absolute -z-10 h-100 overflow-hidden left-1/2  top-1/2 overflow-y-hidden -translate-x-1/2 w-screen">
           <Curve className="w-full pointer-events-none" />
         </div>
@@ -38,14 +38,14 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="mt-8 flex-col items-center">
+        <div className="flex-col items-center">
           <div className="text-lg lg:text-xl text-[#B4BCD0] mb-8">
             <p>Meet the new standard of modern software development</p>
             <p>Team Work, sprints, and product roadmaps.</p>
           </div>
           <button
             type="button"
-            className="border border-white rounded-full text-sm lg:text-lg cursor-pointer py-4 px-10"
+            className="border border-white rounded-md text-sm lg:text-lg cursor-pointer py-4 px-10"
             onClick={() => navigate('/opom-register')}
           >
             Register Now

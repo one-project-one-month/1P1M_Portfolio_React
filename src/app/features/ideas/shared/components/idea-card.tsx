@@ -32,7 +32,6 @@ export default function IdeaCard({
     ownerProfilePicUrl,
     devUsername,
     reactionCount = 0,
-
     isAlreadyReacted,
   } = idea;
 
@@ -91,7 +90,7 @@ export default function IdeaCard({
             src={ownerProfilePicUrl}
             radius="full"
             color="gray"
-            className=" bg-gray-600! cursor-pointer hover:size"
+            className=" bg-gray-600! cursor-pointer"
             fallback={devUsername?.slice(0, 1)}
           />
         </div>
