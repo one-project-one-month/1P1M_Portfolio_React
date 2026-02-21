@@ -9,7 +9,7 @@ interface TeamCardProps {
   team: TeamType;
   onUpdate: (updatedTeam: TeamType) => void;
   onDelete: (teamId: string) => void;
-  onDeleteMember: (teamId: string, updatedMembers: Member[]) => void;
+  onDeleteMember?: (teamId: string, updatedMembers: Member[]) => void;
   onAddMemberClick: (teamId: string) => void;
   isReadOnly?: boolean;
 }

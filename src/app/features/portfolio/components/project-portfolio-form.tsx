@@ -35,7 +35,6 @@ const ProjectPortfolioForm = ({
     isReadOnly,
     isEdit,
     technologyFields,
-    handleAddTechnology,
     handleRemoveTechnology,
     handleAddNewRow,
     isModalOpen,
@@ -158,7 +157,7 @@ const ProjectPortfolioForm = ({
               <UserPortfolioTypeLang
                 form={form}
                 technologyFields={technologyFields}
-                onAddTechnology={handleAddTechnology}
+                onAddTechnology={handleAddNewRow}
                 onRemoveTechnology={handleRemoveTechnology}
                 onAddNewRow={handleAddNewRow}
               />

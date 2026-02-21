@@ -1,4 +1,3 @@
-import PjImage from '@/assets/project-image.png';
 import { useUserInfoStore } from '@/store/user-info-store';
 import { IdeaCard } from '../ideas/shared/components';
 import type { IdeaType } from '../ideas/shared/types/project-idea.types';
@@ -90,19 +89,13 @@ const UserProfile = () => {
         {projectPortfolios?.map((project) => (
           <ProjectCard
             key={project.id}
-            image={project.projectPicUrl || PjImage}
-            title={project.name}
-            description={project.description || ''}
-            initialLikes={project.reactedCount || 0}
-            initialViews={project.viewCount || 0}
-            onClickReact={() => {}}
             project={{
               ...project,
               description: project.description || '',
               projectLink: project.projectLink || '',
               repoLink: project.repoLink || '',
               projectPortfolioStatus: 'ACTIVE',
-              reactedProjectPortfolios: [],
+              isAlreadyReacted: false,
               languageAndTools: project.projectTypes || [],
               teams: project.teams.map((team) => ({
                 members: team.members.map((member) => ({
