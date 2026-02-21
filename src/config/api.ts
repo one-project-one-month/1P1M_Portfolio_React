@@ -60,6 +60,8 @@ export const API_ENDPOINTS = {
   UPDATE_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
   GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
+  GET_CONFIGURATIONS: '/portfolio/api/v1/configurations',
+  CONFIGURATIONS_DETAIL: '/portfolio/api/v1/configurations/details',
   RESTORE_USER: '/portfolio/api/v1/admin/userManagement/restore',
 
   //Admin Project Idea
