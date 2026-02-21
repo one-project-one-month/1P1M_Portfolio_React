@@ -16,7 +16,7 @@ const ProjectIdeaDetailDialog = ({
 }: {
   trigger?: ReactNode;
   data: IdeaType;
-  count: number;
+  count?: number;
 }) => {
   const user = useUserInfoStore((state) => state.userInfo);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
