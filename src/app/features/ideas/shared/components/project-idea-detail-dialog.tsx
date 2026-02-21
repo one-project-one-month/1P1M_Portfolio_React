@@ -12,9 +12,11 @@ import type { IdeaType } from '../types/project-idea.types';
 const ProjectIdeaDetailDialog = ({
   trigger,
   data,
+  count,
 }: {
   trigger?: ReactNode;
   data: IdeaType;
+  count?: number;
 }) => {
   const user = useUserInfoStore((state) => state.userInfo);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -72,14 +74,14 @@ const ProjectIdeaDetailDialog = ({
             <div>
               <div className="flex items-center gap-4 font-semibold mb-2">
                 <h3 className="text-xl">Project Idea Name</h3>
-                {data.status === 'APPROVED' && (
+                {data?.status === 'APPROVED' && (
                   <Badge
                     variant="outline"
                     size="3"
                     radius="full"
                     className="px-4! py-2! border border-[#7CCF00]! text-[#7CCF00]!"
                   >
-                    {data.status}
+                    {data?.status}
                   </Badge>
                 )}
                 {data.status === 'PENDING' && (
@@ -103,14 +105,14 @@ const ProjectIdeaDetailDialog = ({
                   </Badge>
                 )}
               </div>
-              <p className="text-gray-400">{data.projectIdeaName}</p>
+              <p className="text-gray-400">{data?.projectIdeaName}</p>
             </div>
 
             {/* Project type */}
             <div>
               <h3 className="text-xl font-semibold mb-2">Project Type</h3>
               <div className="flex items-center gap-4">
-                {data.projectTypes.map((projectType) => (
+                {data.projectTypes?.map((projectType) => (
                   <Badge
                     key={projectType}
                     variant="soft"
@@ -140,7 +142,7 @@ const ProjectIdeaDetailDialog = ({
                 <p className="text-gray-400">
                   {data.viewCount > 999
                     ? `${(data.viewCount / 1000).toFixed(1)}K`
-                    : data.viewCount}
+                    : count}
                 </p>
               </div>
             </div>

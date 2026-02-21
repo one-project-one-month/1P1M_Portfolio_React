@@ -64,7 +64,7 @@ const FeaturedDevelopersSection = ({
       .map((devProfile) => (
         <DevCard
           devProfile={devProfile}
-          key={devProfile.dev_id}
+          key={devProfile.user_id}
           viewProfile={() => handleProfileView(devProfile)}
         />
       ));
