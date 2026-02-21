@@ -10,6 +10,8 @@ import {
   IdeaPage,
   MyProfilePage,
   NotFoundPage,
+  PortfolioEditview,
+  PortfolioFormview,
   PortfolioManagementPage,
   PortfolioPage,
   TimelineManagementPage,
@@ -25,8 +27,6 @@ import PortfolioErrorBoundary from '../features/portfolio-management/components/
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
-import PortfolioEditview from '../features/portfolio/components/portfolio-edit-view';
-import PortfolioFormview from '../features/portfolio/components/portfolio-form-view';
 import { authRoutes } from './auth';
 import ProtectedGuard from './guards/protected-guard';
 

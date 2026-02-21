@@ -2,6 +2,7 @@ import { useToast } from '@/components/ui/toast-provider';
 import type { TeamType } from '@/types/portfolio-management';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  addLanguageAndTool,
   addTeamMember,
   createProjectPortfolio,
   createTeam,
@@ -10,12 +11,15 @@ import {
   getAllProjectPortfolios,
   getProjectPortfolioDetailsV2,
   reactProject,
+  removeLanguageAndTool,
   removeTeamMember,
   unreactProject,
   updateProjectPortfolio,
   updateProjectStatus,
+  updateTeam,
   type CreateProjectPortfolioRequest,
   type CreateTeamResponse,
+  type TechnologyRequest,
 } from '../services/portfolio-management-service';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
@@ -62,13 +66,18 @@ export const useGetProjectDetails = (projectPortfolioId: string) => {
 // --- Mutations ---
 
 export const useCreateTeam = (
-  options?: UseMutationOptions<CreateTeamResponse, Error, TeamType, unknown>,
+  options?: UseMutationOptions<
+    CreateTeamResponse,
+    Error,
+    { projectId: number; team: TeamType },
+    unknown
+  >,
 ) => {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
   return useMutation({
-    mutationFn: (team: TeamType) => createTeam(team),
+    mutationFn: ({ projectId, team }) => createTeam(projectId, team),
     ...options,
     onSuccess: (res, variables, context) => {
       if (res && res.code === 200) {
@@ -85,6 +94,29 @@ export const useCreateTeam = (
       if (options?.onError) {
         (options.onError as any)(error, variables, context);
       }
+    },
+  });
+};
+
+export const useUpdateTeam = () => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+
+  return useMutation({
+    mutationFn: ({
+      teamId,
+      teamName,
+    }: {
+      teamId: number | string;
+      teamName: string;
+    }) => updateTeam(teamId, teamName),
+    onSuccess: () => {
+      addToast('Team name updated successfully.', 'success');
+      queryClient.invalidateQueries({ queryKey: ['teams'] });
+    },
+    onError: (error: Error) => {
+      console.error('Error Updating Team:', error);
+      addToast(error.message || 'Failed to update team', 'error');
     },
   });
 };
@@ -239,7 +271,7 @@ export const useReactProject = () => {
                 ? {
                     ...project,
                     reactedCount: (project.reactedCount || 0) + 1,
-                    isReacted: true,
+                    isReacted: project.isAlreadyReacted,
                   }
                 : project,
             ),
@@ -281,7 +313,7 @@ export const useUnreactProject = () => {
                 ? {
                     ...project,
                     reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
-                    isReacted: false,
+                    isReacted: project.isAlreadyReacted,
                   }
                 : project,
             ),
@@ -298,6 +330,56 @@ export const useUnreactProject = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
+    },
+  });
+};
+
+//Language and Tools
+
+export const useAddLanguageAndTools = () => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+
+  return useMutation({
+    mutationFn: ({
+      projectPortfolioId,
+      payload,
+    }: {
+      projectPortfolioId: number | string;
+      payload: TechnologyRequest;
+    }) => addLanguageAndTool({ projectPortfolioId, payload }),
+    onSuccess: () => {
+      addToast('Language and Tools added successfully.', 'success');
+      queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
+    },
+    onError: (error: Error) => {
+      console.error('Error Adding Language and Tools:', error);
+      addToast(error.message || 'Failed to add Language and Tools', 'error');
+    },
+  });
+};
+
+export const useDeleteLanguageAndTools = () => {
+  const queryClient = useQueryClient();
+  const { addToast } = useToast();
+
+  return useMutation({
+    mutationFn: ({
+      pjId,
+      languageAndToolId,
+    }: {
+      pjId: number | string;
+      languageAndToolId: number | string;
+    }) => removeLanguageAndTool(pjId, languageAndToolId),
+    onSuccess: (res: any) => {
+      if (res && res.code === 200) {
+        addToast('Language and Tool are successfully deleted.', 'success');
+      }
+      queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
+    },
+    onError: (error: Error) => {
+      console.error('Error Deleting Language and Tools:', error);
+      addToast(error.message || 'Failed to delete Language and Tools', 'error');
     },
   });
 };

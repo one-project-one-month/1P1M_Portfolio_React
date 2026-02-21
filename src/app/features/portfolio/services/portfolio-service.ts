@@ -9,7 +9,8 @@ import type {
 
 export async function reactToProject(projectId: number) {
   const url = `${API_ENDPOINTS.REACT_PROJECT}?projectPortfolioId=${projectId}`;
-  const response = await apiClient.post(url); //Get method not allowed for this endpoint
+  const response = await apiClient.post(url);
+  console.log(response);
 
   return response.data;
 }

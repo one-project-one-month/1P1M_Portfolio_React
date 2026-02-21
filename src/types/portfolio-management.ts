@@ -16,7 +16,7 @@ export type ProjectStatus =
   | 'Unqualified';
 
 export interface Member {
-  id?: string | number;
+  id: string | number;
   dev_id?: string | number;
   userId?: string | number;
   name: string;

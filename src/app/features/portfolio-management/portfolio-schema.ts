@@ -6,6 +6,7 @@ const dropdownItemSchema = z.object({
 });
 
 const technologySchema = z.object({
+  id: z.number().optional(),
   projectType: z.string(),
   languages: z.string(),
 });
@@ -27,14 +28,22 @@ const teamSchema = z.object({
 
 export const portfolioFormSchema = z.object({
   projectName: z.string().min(1, 'Project name is required'),
-  description: z.string(),
-  startDate: z.string().min(1, 'Start date is required'),
+  description: z.string().min(1, 'Description is required'),
+  startDate: z.string(),
   completedDate: z.string(),
   status: dropdownItemSchema.nullable(),
   technologies: z.array(technologySchema),
   teams: z.array(teamSchema),
-  projectLink: z.string(),
-  repoLink: z.string(),
+  projectLink: z
+    .string()
+    .min(1, 'Project link is required')
+    .url('Invalid URL format')
+    .startsWith('https://www.', 'Project link must start with https://www.'),
+  repoLink: z
+    .string()
+    .min(1, 'Repository link is required')
+    .url('Invalid URL format')
+    .startsWith('https://github.com', 'Repo link must be a GitHub HTTPS link'),
   projectImage: z.string(),
 });
 

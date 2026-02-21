@@ -45,6 +45,8 @@ export const getTeamLeaderFromMembers = (
   const leader = members.find(
     (m) =>
       m.roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+      m.roleInTeam?.toUpperCase() === 'TEAM LEADER' ||
+      m.roleInTeam?.toUpperCase() === 'TEAM_LEAD' ||
       m.roleInTeam?.toUpperCase() === 'LEADER' ||
       m.role === 'Team Leader',
   );

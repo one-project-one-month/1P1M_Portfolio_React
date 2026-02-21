@@ -9,11 +9,10 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': {
+      '/portfolio/api': {
         target: 'https://api.one-project-one-month.com',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
         cookieDomainRewrite: 'localhost',
       },
     },

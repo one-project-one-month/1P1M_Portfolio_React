@@ -101,14 +101,21 @@ export const PortfolioBasicInfo = ({
           <Controller
             control={form.control}
             name="description"
-            render={({ field }) => (
-              <textarea
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Provide details about your project"
-                rows={5}
-                className="px-3 py-2 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal resize-none focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
-              />
+            render={({ field, fieldState }) => (
+              <>
+                <textarea
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Provide details about your project"
+                  rows={5}
+                  className="px-3 py-2 bg-white/[0.09] border border-white/15 rounded-md text-[#F3F4F6] text-sm font-normal resize-none focus:outline-none focus:ring-2 focus:ring-[#9C39FC]"
+                />
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
             )}
           />
         )}

@@ -1,9 +1,8 @@
 import { useDebounce } from '@/hooks/use-debounce';
-import type {
-  PortfolioProjectType,
-  PortfolioSectionContainerProps,
-} from '@/types/portfolio.type';
+import type { PortfolioSectionContainerProps } from '@/types/portfolio.type';
 import { useState } from 'react';
+import type { ProjectData } from '../../portfolio-management/constants/data';
+import { mapApiToProjectData } from '../../portfolio-management/utils/helpers';
 import ProjectSectionView from '../components/portfolio-section-view';
 import { useGetProjectPortfolio } from '../hooks/use-get-portfolio';
 const SORT_FIELD = 'name';
@@ -16,7 +15,7 @@ const PortfolioSectionContainer = ({
   const debounceValue = useDebounce(query ?? '', 700);
   const [page, setPage] = useState<number>(0);
 
-  const { data, isLoading } = useGetProjectPortfolio({
+  const { data: response, isLoading } = useGetProjectPortfolio({
     keyword: debounceValue,
     page,
     sortDirection,
@@ -25,9 +24,12 @@ const PortfolioSectionContainer = ({
     size: 6,
   });
 
-  const totalPages = data?.meta?.totalPages ?? 0;
+  const totalPages = response?.meta?.totalPages ?? 0;
 
-  const projects: PortfolioProjectType[] = data?.data || [];
+  const mappedData = response?.data.map((item: any) =>
+    mapApiToProjectData(item),
+  );
+  const projects: ProjectData[] = mappedData || [];
 
   return (
     <ProjectSectionView
