@@ -1,7 +1,7 @@
-import type { PortfolioProjectType } from '@/types/portfolio.type';
 import { List } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import type { ProjectData } from '../../portfolio-management/constants/data';
 import PortfolioCardSkeleton from './portfolio-card-skeleton';
 import ProjectCard from './project-card';
 
@@ -9,7 +9,7 @@ const ProjectList = ({
   projects,
   isLoading,
 }: {
-  projects: PortfolioProjectType[];
+  projects: ProjectData[];
   isLoading: boolean;
 }) => {
   return (

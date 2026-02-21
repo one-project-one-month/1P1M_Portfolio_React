@@ -1,20 +1,21 @@
 import BackButton from '@/components/common/back-button';
 import type { UserProfile } from '@/types/dev';
-import { LightbulbOff } from 'lucide-react';
+import type { ProjectPortfolio } from '@/types/portfolio.type';
+import { LightbulbOff, List } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import IdeaListCard from '../../home/components/idea-list/idea-list-card';
 import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
+import { IdeaCard } from '../../ideas/shared/components';
 import {
   useReactProjectIdea,
   useUnReactProjectIdea,
 } from '../../ideas/shared/hooks/project-idea.query';
 import type { IdeaType } from '../../ideas/shared/types/project-idea.types';
 import PortfolioCardSkeleton from '../../portfolio/components/portfolio-card-skeleton';
-import ProjectList from '../../portfolio/components/project-list';
 import { useGetUserProfile } from '../../user-profile/hooks/use-user-profile';
 import DeveloperProfileCard from '../components/developer-profile-card';
 import DeveloperProfileCardSkeleton from '../components/developer-profile-skeleton-card';
+import ProjectCard from '../components/project-card';
 
 function UserProfilePage() {
   const navigate = useNavigate();
@@ -39,7 +40,9 @@ function UserProfilePage() {
   const ideaLists = (data?.data.projectIdeas ?? []) as (IdeaType & {
     isAlreadyReacted: boolean;
   })[];
-  const projectLists = data?.data.projectPortfolios ?? [];
+  const projectLists = (data?.data.projectPortfolios ?? []) as
+    | ProjectPortfolio[]
+    | [];
 
   if (isError) navigate('/not-found');
 
@@ -66,19 +69,17 @@ function UserProfilePage() {
             <DeveloperProfileCard user={user} />
             <div>
               <h1 className="text-white text-xl mb-6 font-semibold">
-                Project Idea
+                Project Ideas
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ideaLists.length > 0 ? (
-                  ideaLists
-                    .slice(0, 3)
-                    .map((idea) => (
-                      <IdeaListCard
-                        key={idea.projectIdeaId}
-                        idea={idea}
-                        onReact={handleReactIdea}
-                      />
-                    ))
+                  ideaLists.map((idea) => (
+                    <IdeaCard
+                      key={idea.projectIdeaId}
+                      idea={idea}
+                      onReact={handleReactIdea}
+                    />
+                  ))
                 ) : (
                   <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
                     <LightbulbOff size={48} className="mb-4 opacity-60" />
@@ -94,10 +95,30 @@ function UserProfilePage() {
               <h1 className="text-white text-xl mb-6 font-semibold">
                 Project Portfolios
               </h1>
-              <ProjectList
-                isLoading={isLoading}
-                projects={projectLists as any}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projectLists.length > 0 ? (
+                  projectLists.map((pro) => (
+                    <ProjectCard
+                      views={0}
+                      react={pro.reaction_count}
+                      title={pro.name}
+                      developers={pro.assignedDevs.developers}
+                      id={pro.id}
+                      status={pro.status}
+                      image={pro.projectPicUrl}
+                      isReacted={pro.alreadyReacted}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+                    <List size={48} className="mb-4 opacity-60" />
+                    <p className="text-lg font-medium">No Portfolios yet</p>
+                    <p className="text-sm mt-2 text-white/30">
+                      Create a project portfolio.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -28,7 +28,7 @@ export const changeProjectIdeaStatus = (status: ProjectIdeaStatus): string => {
     PENDING: 'Pending',
     APPROVED: 'Approved',
     REJECTED: 'Rejected',
-    IN_PROGRESS: 'In-progress',
+    IN_PROGRESS: 'In Progress',
     COMPLETED: 'Completed',
     DELETED: 'Deleted',
   };

@@ -1,3 +1,5 @@
+import type { ProjectData } from '@/app/features/portfolio-management/constants/data';
+
 export type QueryType = {
   query: string | null;
 };
@@ -36,7 +38,7 @@ export type PortfolioProjectType = {
 
 export type projectSectionViewType = {
   isLoading: boolean;
-  projects: PortfolioProjectType[] | null;
+  projects: ProjectData[] | null;
   currentPage: number | 1;
   totalPages: number | 0;
   onPageChange: (page: number) => void;
@@ -68,4 +70,40 @@ export interface ProjectRequestBody {
   projectLink: string;
   repoLink: string;
   image: string;
+}
+
+export interface Developer {
+  id: number;
+  name: string;
+  profilePictureUrl: string | null;
+  github: string;
+  linkedIn: string;
+  aboutDev: string;
+  roleInTeam: string;
+}
+
+export interface AssignedDevs {
+  developers: Developer[];
+}
+
+export interface ProjectPortfolio {
+  id: number;
+  name: string;
+  projectPicUrl: string;
+  description: string;
+  projectLink: string;
+  repoLink: string;
+  reaction_count: number;
+
+  assignedDevs: AssignedDevs;
+
+  reactedProjectPortfolios: unknown[]; // change later if API returns structure
+  projectPortfolioDetails: unknown | null;
+
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | string;
+
+  languageAndTools: string[];
+
+  owner: boolean;
+  alreadyReacted: boolean;
 }

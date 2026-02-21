@@ -1,11 +1,21 @@
+import { UserProjectPortfolioStatusChangeDialog } from '@/app/features/user-management/components/user-management-detail/project-portfolio/project-portfolio-change-status';
+import { useProjectPortfolioStatusChage } from '@/app/features/user-management/hook/use-portfolio';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { EllipsisVertical } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export const ProjectPortfolioDropDown = () => {
+export const ProjectPortfolioDropDown = ({ id }: { id: number }) => {
+  const [statusChangeOpen, setStatusChangeOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { mutate: portfolioStatusChange } = useProjectPortfolioStatusChage();
+  const handleItemClick = (callback: () => void) => {
+    setDropdownOpen(false);
+    callback();
+  };
   return (
     <>
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenu.Trigger>
           <Button
             variant="ghost"
@@ -23,32 +33,41 @@ export const ProjectPortfolioDropDown = () => {
 
         <DropdownMenu.Content color="gray" variant="soft">
           <DropdownMenu.Item asChild>
-            <Link to="">View Details</Link>
+            <Link
+              to={`/admin/portfolio-management/view-project-portfolio/${id}`}
+            >
+              View Details
+            </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
             }}
           >
-            Edit Idea
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
-            onSelect={(e) => {
-              e.preventDefault();
-            }}
-          >
-            Delete Idea
+            <Link to={`/admin/portfolio-management/edit-portfolio/${id}`}>
+              {' '}
+              Edit Portfolio
+            </Link>
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
+
+              handleItemClick(() => setStatusChangeOpen(true));
             }}
           >
             Change Status
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
+
+      <UserProjectPortfolioStatusChangeDialog
+        statusChangeOpen={statusChangeOpen}
+        setStatusChangeOpen={setStatusChangeOpen}
+        projectPortfolioId={id}
+        portfolioStatusChange={portfolioStatusChange}
+      />
     </>
   );
 };

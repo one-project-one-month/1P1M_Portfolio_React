@@ -1,7 +1,13 @@
 import { ProjectIdeaDropDown } from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea-drop-down';
+import {
+  useProjectIdeaReact,
+  useProjectIdeaUnReact,
+} from '@/app/features/user-management/hook/use-project-idea';
 import { type ProjectIdeaType } from '@/app/features/user-management/types/user-management.types';
+import HeartFill from '@/assets/icons/ActiveHeart.png';
 import Eye from '@/assets/icons/eye.png';
 import Heart from '@/assets/icons/Heart.png';
+import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
 
 interface ProjectIdeaProps {
   user: {
@@ -9,45 +15,59 @@ interface ProjectIdeaProps {
   };
 }
 
+const statusColorList: Record<ProjectIdeaType['status'], string> = {
+  PENDING: 'bg-[#E17100]',
+  APPROVED: 'bg-[#00C951]',
+  IN_PROGRESS: 'bg-[#E17100]',
+  COMPLETED: 'bg-[#00C951]',
+  REJECTED: 'bg-[#FB2C36]',
+  DELETED: 'bg-[#FB2C36]',
+};
+
 const statusLabels: Record<ProjectIdeaType['status'], string> = {
-  PENDING: 'Pending',
-  APPROVED: 'Approved',
-  REJECTED: 'Rejected',
+  REJECTED: 'REJECTED',
+  APPROVED: 'APPROVED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  PENDING: 'PENDING',
+  DELETED: 'DELETED',
 };
 
 const ProjectIdea = ({ user }: ProjectIdeaProps) => {
+  const { mutate: reactProject } = useProjectIdeaReact();
+  const { mutate: unReactProject } = useProjectIdeaUnReact();
   const projectIdeas = user?.projectIdeas ?? [];
+  const truncate = (text: string, max = 250) =>
+    (text ?? '').length > max ? text.slice(0, max) + '...' : text;
   return (
     <div className="w-full">
       <div className="w-full flex flex-col gap-5">
         <h1 className="text-[#FFFFFF] font-semibold text-2xl leading-9">
           Projects Ideas
         </h1>
-        <div className="w-full gap-10 grid grid-cols-2 lg:grid-cols-3">
+        <div className="w-full h-full gap-10 grid grid-cols-2 lg:grid-cols-3">
           {projectIdeas.map((item, index) => (
             <div
               key={index}
-              className="w-[100%] h-[320px] mx-auto  bg-white/10 border border-white/20 rounded-lg backdrop-blur-[64px] p-7 flex flex-col gap-5"
+              className="w-[100%]  mx-auto  bg-white/10 border border-white/20 rounded-lg backdrop-blur-[64px] p-7 flex flex-col gap-5"
             >
               <div className="flex text-white justify-between items-center">
                 <h2 className="text-[#F5EBFF] font-semibold text-base font-sans">
                   {item.projectIdeaName}
                 </h2>
-                <p
-                  className={` cursor-pointer py-2 pr-3 pl-4 rounded-xl text-xs text-[#F9FAFB] font-light ${
-                    item.status === 'APPROVED'
-                      ? 'bg-green-600'
-                      : item.status === 'REJECTED'
-                        ? 'bg-[#A6A09B]'
-                        : 'bg-[#E17100]'
-                  }`}
+                <button
+                  className={`w-[110px] cursor-pointer py-2 pr-3 pl-4 rounded-xl text-xs text-[#F9FAFB] font-light 
+                  ${statusColorList[item.status]}
+                  `}
                 >
                   {statusLabels[item.status]}
+                </button>
+              </div>
+              <div className="h-[30%]">
+                <p className="text-xs text-[#99A1AF] font-sans">
+                  {truncate(item.description)}
                 </p>
               </div>
-              <p className="text-xs text-[#99A1AF] font-sans">
-                {item.description}
-              </p>
               <div className="flex  gap-3">
                 {item.projectTypes.map((list, index) => (
                   <button
@@ -64,26 +84,13 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   <span className="text-sm text-[#99A1AF] font-normal">
                     Submitter:
                   </span>
-                  {item.ownerProfilePicUrl && (
+                  {
                     <img
-                      src={item.ownerProfilePicUrl}
+                      src={item.ownerProfilePicUrl || sampleUserImgUrl}
                       alt=""
                       className="w-[30px] h-[30px] rounded-2xl"
                     />
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-[#99A1AF] font-normal">
-                    Leader:
-                  </span>
-                  {item.leaderProfilePicUrl && (
-                    <img
-                      src={item.leaderProfilePicUrl}
-                      alt=""
-                      className="w-[30px] h-[30px] rounded-2xl"
-                    />
-                  )}
+                  }
                 </div>
               </div>
 
@@ -93,9 +100,16 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                   <div className="flex justify-center items-center gap-2">
                     {' '}
                     <img
-                      src={Heart}
+                      src={item.isAlreadyReacted ? HeartFill : Heart}
                       alt=""
-                      className="w-[18px] text-[#D1D5DC]"
+                      className="w-[18px] text-[#D1D5DC] cursor-pointer"
+                      onClick={() => {
+                        if (item.isAlreadyReacted) {
+                          unReactProject({ projectIdeaId: item.projectIdeaId });
+                        } else {
+                          reactProject({ projectIdeaId: item.projectIdeaId });
+                        }
+                      }}
                     />
                     <span className="text-[#D1D5DC] font-sans text-sm font-medium ">
                       {item.reactionCount}
@@ -109,8 +123,8 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
                     </span>
                   </div>
                 </div>
-                <div>
-                  <ProjectIdeaDropDown />
+                <div className="flex ">
+                  <ProjectIdeaDropDown projectIdea={item} />
                 </div>
               </div>
             </div>

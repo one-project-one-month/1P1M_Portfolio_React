@@ -25,8 +25,7 @@ export const useProfile = (userId: number | null) => {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
       phoneNumber: '',
       role: 'Admin',

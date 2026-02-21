@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/ui/input-field';
 import type { DropdownItem } from '@/types/portfolio-management';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Save, Trash2 } from 'lucide-react';
 import {
   Controller,
   type FieldArrayWithId,
@@ -21,29 +21,23 @@ interface PortfolioTypeLangProps {
     'technologies',
     'id'
   >[];
-  onAddTechnology: () => void;
+  onSaveTechnologies: () => void;
   onRemoveTechnology: (index: number) => void;
   onAddNewRow: () => void;
+  isEdit: boolean;
 }
 
 export const UserPortfolioTypeLang = ({
   form,
   technologyFields,
-  onAddTechnology,
+  onSaveTechnologies,
   onRemoveTechnology,
   onAddNewRow,
+  isEdit,
 }: PortfolioTypeLangProps) => {
   return (
-    <div className="space-y-6 text-white mt-4 flex-1">
-      <div className="flex justify-between items-center">
-        <span className="font-medium text-white">Type and Languages</span>
-        <button
-          onClick={onAddNewRow}
-          className="bg-amber-300 text-sm py-2 px-5 rounded-md text-black"
-        >
-          Add New Row
-        </button>
-      </div>
+    <div className="space-y-6 text-white flex-1">
+      <span className="text-[15px]">Type and Languages</span>
 
       <div className="space-y-2 mt-2">
         {technologyFields.map((field, index) => (
@@ -57,7 +51,7 @@ export const UserPortfolioTypeLang = ({
                     value={controllerField.value ?? ''}
                     onChange={(e) => controllerField.onChange(e.target.value)}
                     placeholder="Type (e.g., Fullstack)"
-                    className="px-4 py-2 bg-[#9C39FC]! rounded-md text-white font-medium w-full focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
+                    className="px-4 py-2 h-10! bg-[#9C39FC]! rounded-md text-white font-medium w-full focus:outline-none focus:ring-2 focus:ring-[#9C39FC] placeholder:text-white/70"
                   />
                 )}
               />
@@ -71,7 +65,7 @@ export const UserPortfolioTypeLang = ({
                     <InputField
                       value={controllerField.value ?? ''}
                       onChange={(e) => controllerField.onChange(e.target.value)}
-                      className="w-full sm:placeholder:text-sm"
+                      className="w-full sm:placeholder:text-sm h-10!"
                       placeholder="Enter your languages or tools"
                     />
                   )}
@@ -89,14 +83,27 @@ export const UserPortfolioTypeLang = ({
           </div>
         ))}
       </div>
-      <Button
-        variant="white_button"
-        onClick={onAddTechnology}
-        className="gap-2 w-full md:w-55"
-      >
-        <Plus size={18} />
-        Add
-      </Button>
+      <div className="flex gap-3 mt-3 text-sm">
+        <Button
+          variant="primary"
+          onClick={onAddNewRow}
+          className={`gap-2 h-10 ${isEdit ? 'w-fit' : 'w-full'}`}
+        >
+          {isEdit ? 'Add Row' : 'Add'}
+          <Plus size={15} />
+        </Button>
+
+        {isEdit && (
+          <Button
+            variant="white_button"
+            onClick={onSaveTechnologies}
+            className="gap-2 w-full md:w-55 h-10"
+          >
+            Save
+            <Save size={15} />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

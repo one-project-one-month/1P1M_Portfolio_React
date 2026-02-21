@@ -10,7 +10,11 @@ export const useReactProjectIdea = () => {
   return useMutation({
     mutationFn: (id: number) => reactProjectIdea(id),
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ['ideas'] });
+      await queryClient.cancelQueries({ queryKey: ['ideas'], exact: false });
+      await queryClient.cancelQueries({
+        queryKey: ['user-profile'],
+        exact: false,
+      });
 
       const previousData = queryClient.getQueriesData({
         queryKey: ['ideas'],
@@ -36,6 +40,28 @@ export const useReactProjectIdea = () => {
         },
       );
 
+      queryClient.setQueriesData(
+        { queryKey: ['user-profile'], exact: false },
+        (oldData: any) => {
+          if (!oldData?.data) return oldData;
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              projectIdeas: oldData.data.projectIdeas.map((idea: any) =>
+                idea.projectIdeaId === id
+                  ? {
+                      ...idea,
+                      isAlreadyReacted: true,
+                      reactionCount: idea.reactionCount + 1,
+                    }
+                  : idea,
+              ),
+            },
+          };
+        },
+      );
+
       return { previousData };
     },
     onError: (_err, _id, context) => {
@@ -55,6 +81,10 @@ export const useUnReactProjectIdea = () => {
     mutationFn: (id: number) => unreactProjectIdea(id),
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ['ideas'], exact: false });
+      await queryClient.cancelQueries({
+        queryKey: ['user-profile'],
+        exact: false,
+      });
 
       const previousData = queryClient.getQueriesData({
         queryKey: ['ideas'],
@@ -76,6 +106,28 @@ export const useUnReactProjectIdea = () => {
                   }
                 : idea,
             ),
+          };
+        },
+      );
+
+      queryClient.setQueriesData(
+        { queryKey: ['user-profile'], exact: false },
+        (oldData: any) => {
+          if (!oldData?.data) return oldData;
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              projectIdeas: oldData.data.projectIdeas.map((idea: any) =>
+                idea.projectIdeaId === id
+                  ? {
+                      ...idea,
+                      isAlreadyReacted: false,
+                      reactionCount: idea.reactionCount - 1,
+                    }
+                  : idea,
+              ),
+            },
           };
         },
       );

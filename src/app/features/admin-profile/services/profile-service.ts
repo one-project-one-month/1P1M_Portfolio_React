@@ -11,11 +11,13 @@ export const profileService = {
     const dev = response.data.data.devProfile;
 
     return {
-      firstName: dev.name.split(' ')[0] || '',
-      lastName: dev.name.split(' ').slice(1).join(' ') || '',
+      name: dev.name || 'Admin User',
       email: dev.email,
       avatarUrl: dev.profilePictureUrl || 'https://i.pravatar.cc/300',
       socialAccounts: [
+        ...(dev.telegramUsername
+          ? [{ platform: 'Telegram', url: dev.telegramUsername }]
+          : []),
         ...(dev.github ? [{ platform: 'GitHub', url: dev.github }] : []),
         ...(dev.linkedIn ? [{ platform: 'LinkedIn', url: dev.linkedIn }] : []),
       ],
@@ -47,7 +49,7 @@ export const profileService = {
     }
 
     const payload = {
-      name: `${data.firstName} ${data.lastName}`.trim(),
+      name: data.name.trim(),
       github:
         data.socialAccounts.find((s) => s.platform === 'GitHub')?.url || '',
       linkedIn:
@@ -60,7 +62,7 @@ export const profileService = {
     };
 
     const response = await apiClient.patch(
-      `${API_ENDPOINTS.UPDATE_PROFILE}?id=${userId}`,
+      `${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`,
       payload,
     );
 

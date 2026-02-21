@@ -53,13 +53,20 @@ export const API_ENDPOINTS = {
   UPDATE_PROJECT_IDEA: '/portfolio/api/v1/project-idea/updateProjectIdea',
   ASSIGN_LEADER: '/portfolio/api/v1/project-idea/assignLeader',
   TIMELINES: 'portfolio/api/v1/timelines',
+  GET_PROJECT_IDEA_BY_ID: '/portfolio/api/v1/project-idea',
 
   // Admin
   GET_ALL_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
   UPDATE_USER_MANAGEMENT: '/portfolio/api/v1/admin/userManagement',
   GET_USER_MANAGEMENT_DETAIL: '/portfolio/api/v1/admin/userManagement',
   BAN_USER: '/portfolio/api/v1/admin/userManagement/ban',
+  GET_CONFIGURATIONS: '/portfolio/api/v1/configurations',
+  CONFIGURATIONS_DETAIL: '/portfolio/api/v1/configurations/details',
   RESTORE_USER: '/portfolio/api/v1/admin/userManagement/restore',
+
+  //Admin Project Idea
+  DELETE_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
+  APPROVED_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

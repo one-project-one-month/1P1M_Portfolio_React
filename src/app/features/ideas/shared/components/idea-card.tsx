@@ -1,8 +1,10 @@
 import IconActiveHeart from '@/assets/icons/IconActiveHeart';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { cn } from '@/lib/utils';
 import { Avatar, Tooltip } from '@radix-ui/themes';
 import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
 import { ProjectIdeaDropDown } from '../../admin/components/project-idea-drop-down';
+import { useUpdateViewCount } from '../hooks/use-update-view-count';
 import { changeProjectIdeaStatus } from '../lib';
 import { changeProjectIdeaStatusBgColor } from '../lib/idea-utils';
 import type { IdeaType } from '../types/project-idea.types';
@@ -24,18 +26,22 @@ export default function IdeaCard({
   const {
     projectIdeaName = 'Untitled Project',
     status = 'PENDING',
+    dev_id,
     description = 'No description provided.',
     projectTypes = [],
     ownerProfilePicUrl,
     devUsername,
     reactionCount = 0,
-    viewCount = 0,
     isAlreadyReacted,
   } = idea;
 
   const sortedProjectTypes = [...projectTypes].sort((a, b) =>
     a.localeCompare(b),
   );
+
+  const { goTo } = useAppNavigation();
+
+  const { displayIdea, handleViewDetail } = useUpdateViewCount(idea);
 
   return (
     <div className="bg-white/10 flex flex-col gap-y-2 p-5 backdrop-blur-xs text-white/70 w-full rounded-xl border border-white/5">
@@ -78,10 +84,13 @@ export default function IdeaCard({
         <div className="flex text-sm items-center gap-x-2">
           <span>Submitter</span>
           <Avatar
+            onClick={() => {
+              goTo(`/profile/${dev_id}`);
+            }}
             src={ownerProfilePicUrl}
             radius="full"
             color="gray"
-            className=" bg-gray-600!"
+            className=" bg-gray-600! cursor-pointer"
             fallback={devUsername?.slice(0, 1)}
           />
         </div>
@@ -105,7 +114,7 @@ export default function IdeaCard({
 
           <div className="flex text-xs items-center gap-x-2">
             <Eye className="w-4" />
-            <span>{viewCount}</span>
+            <span>{displayIdea?.viewCount}</span>
           </div>
         </div>
 
@@ -113,9 +122,11 @@ export default function IdeaCard({
           <ProjectIdeaDropDown type="grid" data={idea} />
         ) : (
           <ProjectIdeaDetailDialog
+            count={displayIdea?.viewCount ?? 0}
             data={idea}
             trigger={
               <button
+                onClick={handleViewDetail}
                 type="button"
                 className="text-white hover:text-[#A855F7] transition-colors"
               >

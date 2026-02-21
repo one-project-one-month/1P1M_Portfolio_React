@@ -34,6 +34,7 @@ export const userProfileSchema = z.object({
   email: z.string(),
   name: z.string(),
   profilePictureUrl: z.string().nullable(),
+  telegramUsername: z.string().nullable(),
   passwordLastUpdated: z.string(),
   joinedDate: z.string(),
   phone: z.string().nullable(),
@@ -64,16 +65,40 @@ export const userDetailShema = z.object({
 export const projectIdeaSchema = z.object({
   projectIdeaId: z.number(),
   projectIdeaName: z.string(),
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED']),
+  status: z.enum([
+    'REJECTED',
+    'APPROVED',
+    'IN_PROGRESS',
+    'COMPLETED',
+    'DELETED',
+    'PENDING',
+  ]),
+  // projectName: z.string(),
+  // description: z.string(),
+  // devUsername: z.string(),
+  // reactionCount: z.number(),
+  // viewCount: z.number(),
+  // dev_id: z.number(),
+  // dev_Email: z.string().nullable(),
+  // ownerProfilePicUrl: z.string().nullable().optional(),
+  // leader_id: z.number(),
+  // leaderProfilePicUrl: z.string().nullable(),
+  // projectTypes: z.array(z.string()),
+  // isAlreadyReacted: z.boolean(),
+
   description: z.string(),
   reactionCount: z.number(),
   viewCount: z.number(),
   dev_id: z.number(),
-  dev_Email: z.string().nullable(),
-  ownerProfilePicUrl: z.string().nullable(),
-  leader_id: z.number(),
-  leaderProfilePicUrl: z.string().nullable(),
+  devUsername: z.string(),
+  projectName: z.string(),
+
+  ownerProfilePicUrl: z.string().optional(),
+  leader_id: z.number().optional(),
+  leaderEmail: z.email().optional(),
+  leaderProfilePicUrl: z.string().optional(),
   projectTypes: z.array(z.string()),
+  dev_Email: z.string().nullable(),
   isAlreadyReacted: z.boolean(),
 });
 
@@ -87,6 +112,13 @@ export const assignedDeveloperSchema = z.object({
   roleInTeam: z.string(),
 });
 
+export type ProjectPortfolioStatus =
+  | 'PENDING'
+  | 'PLANNING'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'UNQUALIFIED';
+
 export const projectPortfolioSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -94,14 +126,30 @@ export const projectPortfolioSchema = z.object({
   description: z.string(),
   projectLink: z.string(),
   repoLink: z.string(),
+
   reaction_count: z.number(),
+
   assignedDevs: z.object({
     developers: z.array(assignedDeveloperSchema),
   }),
-  reactedProjectPortfolios: z.array(z.number()),
+
+  reactedProjectPortfolios: z.array(z.any()),
+
   projectPortfolioDetails: z.any().nullable(),
+
+  status: z.enum(['PLANNING', 'IN_PROGRESS', 'COMPLETED', 'UNQUALIFIED']),
+
   languageAndTools: z.array(z.string()),
+
   owner: z.boolean(),
+  alreadyReacted: z.boolean(),
+});
+
+export const projectPortfolioStatus = projectPortfolioSchema.pick({
+  status: true,
+});
+export const projectPortfolioReactScheam = projectPortfolioSchema.pick({
+  id: true,
 });
 
 export const userProfileResponseSchema = z.object({
@@ -169,6 +217,8 @@ export type ProjectIdeaType = z.infer<typeof projectIdeaSchema>;
 export type AssignedDeveloperType = z.infer<typeof assignedDeveloperSchema>;
 export type ProjectPortfolioType = z.infer<typeof projectPortfolioSchema>;
 export type UserProfileResponseType = z.infer<typeof userProfileResponseSchema>;
+export type PortfolioStatusType = z.infer<typeof projectPortfolioStatus>;
+export type PortfolioReactType = z.infer<typeof projectPortfolioReactScheam>;
 
 export type UserManagementResponseType = ApiResponseType<UserManagementType[]>;
 export type UserManagementByIdResponseType =
@@ -181,3 +231,5 @@ export type UserManagementDetailResponseType =
   ApiResponseType<UserManagementDetailType>;
 export type UserProfileDetailResponseType =
   ApiResponseType<UserProfileResponseType>;
+export type PortfolioStatusResponseType = ApiResponseType<PortfolioStatusType>;
+export type PortfolioReactResponseType = ApiResponseType<PortfolioReactType>;
