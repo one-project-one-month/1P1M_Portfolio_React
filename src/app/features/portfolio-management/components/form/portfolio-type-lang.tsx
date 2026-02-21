@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Plus, Save, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import {
   Controller,
   type FieldArrayWithId,
@@ -20,7 +20,6 @@ interface PortfolioTypeLangProps {
     'id'
   >[];
   onAddNewRow: () => void;
-  onSaveTechnologies: () => void;
   onRemoveTechnology: (index: number) => void;
   isReadOnly: boolean;
   isEdit: boolean;
@@ -30,7 +29,6 @@ export const PortfolioTypeLang = ({
   form,
   technologyFields,
   onAddNewRow,
-  onSaveTechnologies,
   onRemoveTechnology,
   isReadOnly,
   isEdit,
@@ -105,17 +103,6 @@ export const PortfolioTypeLang = ({
             <Plus size={18} />
             {isEdit ? 'Add Row' : 'Add'}
           </Button>
-
-          {isEdit && (
-            <Button
-              variant="primary"
-              onClick={onSaveTechnologies}
-              className="gap-2 w-fit bg-[#9C39FC] hover:bg-[#9C39FC]"
-            >
-              <Save size={18} />
-              Save
-            </Button>
-          )}
         </div>
       )}
     </div>

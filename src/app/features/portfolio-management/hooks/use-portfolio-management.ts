@@ -1,3 +1,4 @@
+import { useDebounce } from '@/hooks/use-debounce';
 import { useEffect, useState } from 'react';
 import type { OrderFilterOption } from '../components/status-filter-dropdown';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
@@ -8,6 +9,25 @@ import { useDeleteProject, useGetAllProjects } from './use-portfolio-query';
 
 const ITEMS_PER_PAGE = 10;
 
+const getOrderParams = (
+  order: OrderFilterOption,
+): { sortField?: string; sortDirection: string } => {
+  switch (order) {
+    case 'Newest':
+      return { sortDirection: 'desc' };
+    case 'Oldest':
+      return { sortDirection: 'asc' };
+    case 'Popular':
+    default:
+      return { sortDirection: 'desc' };
+  }
+};
+
+const getBackendStatus = (status: ProjectStatus | null): string | undefined => {
+  if (!status) return undefined;
+  return mapFrontendToBackendStatus(status);
+};
+
 export const usePortfolioManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | null>(null);
@@ -17,6 +37,10 @@ export const usePortfolioManagement = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  const debouncedSearch = useDebounce(searchQuery, 400);
+  const { sortField, sortDirection } = getOrderParams(orderFilter);
+  const backendStatus = getBackendStatus(statusFilter);
+
   const {
     data: response,
     isLoading,
@@ -24,9 +48,10 @@ export const usePortfolioManagement = () => {
   } = useGetAllProjects(
     currentPage,
     ITEMS_PER_PAGE,
-    'desc',
-    searchQuery,
-    orderFilter,
+    sortDirection,
+    debouncedSearch,
+    sortField,
+    backendStatus,
   );
 
   const deleteProjectMutation = useDeleteProject();
@@ -85,8 +110,8 @@ export const usePortfolioManagement = () => {
     );
 
     try {
-      const backendStatus = mapFrontendToBackendStatus(newStatus);
-      await updateProjectStatusApi(id, backendStatus);
+      const backendSt = mapFrontendToBackendStatus(newStatus);
+      await updateProjectStatusApi(id, backendSt);
     } catch (error) {
       console.error('Failed to update project status:', error);
       refetch();
@@ -102,12 +127,15 @@ export const usePortfolioManagement = () => {
     refetch();
   };
 
-  const filteredData = statusFilter
-    ? portfolioData.filter((project) => project.status === statusFilter)
-    : portfolioData;
+  const sortedData =
+    orderFilter === 'Popular'
+      ? [...portfolioData].sort(
+          (a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0),
+        )
+      : portfolioData;
 
   return {
-    paginatedData: filteredData,
+    paginatedData: sortedData,
     totalCount,
     totalPages,
     currentPage,

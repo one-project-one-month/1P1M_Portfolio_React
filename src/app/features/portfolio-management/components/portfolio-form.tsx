@@ -5,7 +5,6 @@ import React, { useRef } from 'react';
 import type { ProjectData } from '../constants/data';
 import { usePortfolioForm } from '../hooks/use-portfolio-form';
 import { useUploadImage } from '../hooks/use-upload-image';
-import { ActivityRecordsSection } from './form/activity-records-section';
 import { PortfolioBasicInfo } from './form/portfolio-basic-info';
 import { PortfolioLinkSection } from './form/portfolio-link-section';
 import { PortfolioTeamSection } from './form/portfolio-team-section';
@@ -35,7 +34,7 @@ const PortfolioForm = ({
     isReadOnly,
     isEdit,
     technologyFields,
-    handleSaveTechnologies,
+
     handleRemoveTechnology,
     handleAddNewRow,
     isModalOpen,
@@ -140,7 +139,6 @@ const PortfolioForm = ({
             form={form}
             technologyFields={technologyFields}
             onAddNewRow={handleAddNewRow}
-            onSaveTechnologies={handleSaveTechnologies}
             onRemoveTechnology={handleRemoveTechnology}
             isReadOnly={isReadOnly}
             isEdit={isEdit}
@@ -161,7 +159,7 @@ const PortfolioForm = ({
           />
           {/* <ActivityRecordsEmptyState projectId={""} /> */}
 
-          {isReadOnly && <ActivityRecordsSection projectId={initialData?.id} />}
+          {/* {isReadOnly && <ActivityRecordsSection projectId={initialData?.id} />} */}
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-4 pb-4">

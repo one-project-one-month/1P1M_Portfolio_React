@@ -186,7 +186,8 @@ export const getAllProjectPortfolios = async (
   size = 10,
   sortDirection = 'desc',
   keyword = '',
-  orderFilter?: string,
+  sortField?: string,
+  projectPortfolioStatus?: string,
 ) => {
   const params: Record<string, any> = {
     page,
@@ -195,8 +196,12 @@ export const getAllProjectPortfolios = async (
     keyword,
   };
 
-  if (orderFilter && orderFilter !== 'All') {
-    params.orderFilter = orderFilter.toLowerCase();
+  if (sortField) {
+    params.sortField = sortField;
+  }
+
+  if (projectPortfolioStatus) {
+    params.projectPortfolioStatus = projectPortfolioStatus;
   }
 
   const response = await apiClient.get(API_ENDPOINTS.GET_PROJECT_V2, {

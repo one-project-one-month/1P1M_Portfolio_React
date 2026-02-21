@@ -50,6 +50,7 @@ export interface ProjectData {
   reactCount?: number;
   viewCount?: number;
   isReacted?: boolean;
+  isCurrentUserLeader?: boolean;
 }
 
 // Project Types available in the form
