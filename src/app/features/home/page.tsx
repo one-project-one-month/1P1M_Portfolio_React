@@ -4,6 +4,7 @@ import type { CountdownItem } from './components/countdown-component';
 import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
 import IdeaListSection from './components/idea-list/idea-list-section';
+import { useGetLatestTimeline } from './hooks/timeline.query';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -14,28 +15,73 @@ export default function HomePage() {
     { value: '30', label: 'Seconds' },
   ];
 
+  //TODO: need to clean up here, I did some messy cause it is near deadline, need to refactor later
+
+  const { data } = useGetLatestTimeline();
+
+  const now = new Date();
+
+  const getRegisterStatus = (deadline: Date) => {
+    const diff = deadline.getTime() - now.getTime();
+
+    if (diff <= 0) return 'closed';
+
+    const hoursLeft = diff / (10000 * 60 * 60);
+
+    if (hoursLeft <= 24) return 'closingSoon';
+
+    return 'open';
+  };
+
+  const registerButtonStyle = {
+    open: 'border-white text-white',
+    closingSoon: 'border-yellow-400 text-yellow-400',
+    closed: 'border-red-500 text-red-500 cursor-not-allowed',
+  };
+
+  const startTime = data?.data?.startDate
+    ? new Date(data.data.startDate)
+    : new Date();
+
+  const registerStatus = getRegisterStatus(startTime);
+
   return (
     <div className=" max-w-6xl mx-auto  w-full">
       {/* Start Welcome Page Content */}
       <section className="flex relative flex-col items-center justify-center  text-center text-white  my-14">
-        <div className="absolute -z-10 h-100 overflow-hidden left-1/2  top-1/2 overflow-y-hidden -translate-x-1/2 w-screen">
-          <Curve className="w-full pointer-events-none" />
-        </div>
-
         <div className="text-4xl lg:text-8xl">
-          <h1>An Open Space For</h1>
-          <h1>
-            <span className="text-[#BD7AFD]">Tech,</span>{' '}
-            <span className="text-[#FFBA00]">Creativity</span> & Beyond
-          </h1>
+          {registerStatus === 'closingSoon' && (
+            <h1>
+              Register <span className="text-[#FFBA00]">closing</span> soon!
+            </h1>
+          )}
+
+          {registerStatus === 'closed' && (
+            <h1>
+              Register is <span className="text-[#FFBA00]">closed</span>!
+            </h1>
+          )}
+
+          {registerStatus === 'open' && (
+            <>
+              <h1>An Open Space For</h1>
+              <h1>
+                <span className="text-[#BD7AFD]">Tech,</span>{' '}
+                <span className="text-[#FFBA00]">Creativity</span> & Beyond
+              </h1>
+            </>
+          )}
         </div>
 
-        <div className="p-4 mt-2.5">
+        <div className="p-4 relative mt-2.5">
           <CountdownTimer
-            deadline={'2026-2-9'}
+            deadline={startTime}
             items={countdownItems}
             onTimeEnd={() => {}}
           />
+          <div className="absolute -z-10 h-100 overflow-hidden left-1/2  top-25 overflow-y-hidden -translate-x-1/2 w-screen">
+            <Curve className="w-full pointer-events-none" />
+          </div>
         </div>
 
         <div className="flex-col items-center">
@@ -45,8 +91,14 @@ export default function HomePage() {
           </div>
           <button
             type="button"
-            className="border border-white rounded-md text-sm lg:text-lg cursor-pointer py-4 px-10"
-            onClick={() => navigate('/opom-register')}
+            className={`border rounded-md text-sm lg:text-lg py-4 px-10 
+    ${registerButtonStyle[registerStatus]}`}
+            onClick={() => {
+              if (registerStatus !== 'closed') {
+                navigate('/opom-register');
+              }
+            }}
+            disabled={registerStatus === 'closed'}
           >
             Register Now
           </button>
