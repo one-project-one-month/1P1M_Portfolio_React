@@ -4,8 +4,8 @@ import type { ProjectPortfolio } from '@/types/portfolio.type';
 import { LightbulbOff, List } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import IdeaListCard from '../../home/components/idea-list/idea-list-card';
 import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
+import { IdeaCard } from '../../ideas/shared/components';
 import {
   useReactProjectIdea,
   useUnReactProjectIdea,
@@ -69,12 +69,12 @@ function UserProfilePage() {
             <DeveloperProfileCard user={user} />
             <div>
               <h1 className="text-white text-xl mb-6 font-semibold">
-                Project Idea
+                Project Ideas
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ideaLists.length > 0 ? (
                   ideaLists.map((idea) => (
-                    <IdeaListCard
+                    <IdeaCard
                       key={idea.projectIdeaId}
                       idea={idea}
                       onReact={handleReactIdea}
