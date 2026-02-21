@@ -1,5 +1,5 @@
 import TrashIcon from '@/assets/icons/trash-icon';
-import TermsAndConditions from '@/components/term-conditions';
+import TermsConditionsContainer from '@/components/terms-conditions';
 import { Button } from '@/components/ui/button';
 import FormBackground from '@/components/ui/form-bg';
 import FormDropdown from '@/components/ui/form-dropdown';
@@ -185,7 +185,7 @@ export default function OpomRegisterPage() {
               </button>
             </div>
 
-            <TermsAndConditions
+            <TermsConditionsContainer
               isTermsAccepted={isTermsAccepted}
               isTermsError={isTermsError}
               onCheckedChange={(checked) => {
@@ -194,7 +194,10 @@ export default function OpomRegisterPage() {
                   setIsTermsError(false);
                 }
               }}
-            />
+              title="Terms and Conditions"
+            >
+              <TermsCondition />
+            </TermsConditionsContainer>
 
             <div className="flex justify-end gap-4 mt-8">
               <Button
@@ -218,3 +221,37 @@ export default function OpomRegisterPage() {
     </div>
   );
 }
+
+const TermsCondition = () => {
+  return (
+    <>
+      <p className="text-xl font-semibold">
+        Hackathon Registration (Next OPOM)
+      </p>
+      <p className="text-gray-400 text-lg">
+        To participate in an OPOM Hackathon, additional information is required
+        for coordination and team formation. By registering, you agree to
+        provide:
+      </p>
+
+      <div className="px-6">
+        <ul className="text-gray-400 list-disc text-lg">
+          <li>Contact Details</li>
+          <li>Gmail address</li>
+          <li>Telegram username</li>
+          <li>Phone Number</li>
+          <li>
+            Technical Role: Your primary discipline (e.g., Frontend, Backend,
+            UIUX etc.)
+          </li>
+          <li>Data Usage for Events</li>
+        </ul>
+      </div>
+      <p className="text-lg">
+        This specific data is collected solely to manage the hackathon,
+        facilitate communication between organizers and participants, and assist
+        in team matching. We will not sell this data to third parties.
+      </p>
+    </>
+  );
+};

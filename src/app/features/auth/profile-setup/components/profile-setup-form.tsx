@@ -1,4 +1,4 @@
-import TermsAndConditions from '@/components/term-conditions';
+import TermsConditionsContainer from '@/components/terms-conditions';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/ui/file-upload';
 import FormBackground from '@/components/ui/form-bg';
@@ -291,7 +291,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           })}
         />
 
-        <TermsAndConditions
+        <TermsConditionsContainer
           isTermsAccepted={isTermsAccepted}
           isTermsError={isTermsError}
           onCheckedChange={(checked) => {
@@ -300,7 +300,10 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
               setIsTermsError(false);
             }
           }}
-        />
+          title="Terms and Conditions & Privacy Policy"
+        >
+          <TermsCondition />
+        </TermsConditionsContainer>
 
         <div className="flex w-full justify-end gap-2">
           <Button
@@ -339,3 +342,46 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
     </FormBackground>
   );
 }
+
+const TermsCondition = () => {
+  return (
+    <>
+      <div className="space-y-2">
+        <h3 className="text-xl font-semibold">1. Acceptance of Terms</h3>
+        <p className="text-gray-400 text-lg">
+          By creating a profile on the One Project One Month (Opom) portal or
+          registering for an Opom hackathon, you agree to be bound by these
+          Terms and Conditions and our data usage practices. If you do not
+          agree, you will not be able to create a profile or participate in our
+          events.
+        </p>
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-xl font-semibold">
+          2. User Profiles & Public Visibility
+        </h3>
+        <p className="text-gray-400 text-lg">
+          When you create a profile on the Opom portal, you acknowledge that
+          certain information will be visible to the public and other registered
+          users to facilitate networking and collaboration. This includes:
+        </p>
+        <div className="p-6">
+          <ul className="text-gray-400 list-disc text-lg">
+            <li>Full Name and Profile Picture</li>
+            <li>Professional descriptions and bios</li>
+            <li>
+              Links to external social/professional accounts (GitHub, LinkedIn,
+              etc.)
+            </li>
+
+            <li>Your registered email address.</li>
+          </ul>
+        </div>
+      </div>
+      <p className="text-lg">
+        By creating a profile, you allow OPOM permission to display this data
+        publicly on our platform.
+      </p>
+    </>
+  );
+};
