@@ -1,6 +1,7 @@
 import { useToast } from '@/components/ui/toast-provider';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useUserInfoStore, type UserInfo } from '@/store/user-info-store';
+import type { AxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { exchangeGitHub, exchangeGoogleCode } from '../services/api';
@@ -52,8 +53,20 @@ export const useOAuthHandler = () => {
         throw new Error('Login failed');
       }
     } catch (error) {
-      console.error(error);
-      addToast('Social login failed. Please try again.', 'error', 2000);
+      const err = error as AxiosError;
+
+      addToast((err?.response?.data as any)?.message, 'error', 6000);
+
+      if (err.response) {
+        return {
+          success: false,
+          code: err.response.status,
+          message: (err.response?.data as any)?.message || 'Error',
+        };
+      }
+
+      console.log('MESA', err.message);
+      addToast(err?.message, 'error', 6000);
 
       goTo('/auth/sign-up');
     } finally {

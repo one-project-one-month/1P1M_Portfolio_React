@@ -1,5 +1,5 @@
 const statusColorMap: Record<string, string> = {
-  Complete: 'bg-[#00A63E]',
+  Completed: 'bg-[#00A63E]',
   'In Progress': 'bg-[#FF8904]',
   Planning: 'bg-[#155DFC]',
   Unqualified: 'bg-[#79716B]',

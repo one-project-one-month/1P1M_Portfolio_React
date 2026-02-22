@@ -31,7 +31,7 @@ export default function IdeaPage() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
       <Title
-        title="Project Idea Lists"
+        title="Project Ideas"
         searchPlaceholder="Search By Ideas"
         onCreate={() => setIsCreateDialogOpen(true)}
         showSearch

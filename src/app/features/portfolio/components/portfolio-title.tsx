@@ -31,9 +31,19 @@ const PortfolioTitle = ({
   searchPlaceholder = 'Search...',
   onSearchChange,
   filterConfig = [],
+  initSelectedFilter = 'all',
   onFilterChange,
 }: PortfolioTitleProps) => {
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [selectedFilters, setSelectedFilters] = useState<
+    Record<string, string>
+  >(() =>
+    filterConfig.reduce<Record<string, string>>((acc, filter, index) => {
+      const defaultValue =
+        index === 0 ? initSelectedFilter : (filter.options[0]?.value ?? '');
+      acc[filter.key] = defaultValue;
+      return acc;
+    }, {}),
+  );
   const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
   const [showMobileSearch, setShowMobileSearch] = useState<boolean>(false);
 
@@ -44,7 +54,7 @@ const PortfolioTitle = ({
   };
 
   const handleSelect = (filterKey: string, option: string) => {
-    setSelectedFilter(option);
+    setSelectedFilters((prev) => ({ ...prev, [filterKey]: option }));
     if (onFilterChange) onFilterChange(filterKey, option);
     setOpenFilterIndex(null);
   };
@@ -120,6 +130,7 @@ const PortfolioTitle = ({
           <Flex gap="4" className="flex">
             {filterConfig.map((filter, index) => (
               <div
+                key={filter.key}
                 ref={(el) => {
                   menuRef.current[index] = el;
                 }}
@@ -137,10 +148,16 @@ const PortfolioTitle = ({
                     {filter.options.map((option) => (
                       <div
                         key={option.value}
-                        className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${option.value === selectedFilter ? 'text-[#FFBA00]' : ''}`}
+                        className={`relative flex items-center gap-2 ps-10 px-4 py-2 hover:bg-white/10 transition-colors ${
+                          option.value === selectedFilters[filter.key]
+                            ? 'text-[#FFBA00]'
+                            : ''
+                        }`}
                         onClick={() => handleSelect(filter.key, option.value)}
                       >
-                        {option.value === selectedFilter && <CheckIcon />}
+                        {option.value === selectedFilters[filter.key] && (
+                          <CheckIcon />
+                        )}
                         {option.label}
                       </div>
                     ))}

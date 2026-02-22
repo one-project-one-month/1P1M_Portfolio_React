@@ -61,7 +61,7 @@ const Portfolio = () => {
         onCreate={() => navigate('/portfolios/create-portfolio')}
         showSearch
         initSelectedFilter={selectedFilter}
-        title="Project Portfolio"
+        title="Project Portfolios"
         searchPlaceholder="Search By Projects"
         onSearchChange={(e) => handleSearch(e.target.value)}
         filterConfig={filterConfig}

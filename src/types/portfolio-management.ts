@@ -22,7 +22,7 @@ export interface Member {
   name: string;
   email?: string;
   profilePictureUrl?: string;
-  avatarUrl?: string; // Added avatarUrl for compatibility with ProjectCard
+  avatarUrl?: string | null; // Added avatarUrl for compatibility with ProjectCard
   role?: 'Team Leader' | 'Member';
 }
 

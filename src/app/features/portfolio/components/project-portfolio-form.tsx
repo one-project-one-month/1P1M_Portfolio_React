@@ -77,10 +77,10 @@ const ProjectPortfolioForm = ({
   };
 
   return (
-    <div className="w-4xl flex flex-col gap-3 backdrop-blur-sm">
+    <div className="w-5xl flex flex-col gap-6">
       <div className="flex flex-col">
         <span className="text-[#F9FAFB] text-2xl font-medium">
-          {mode === 'create' ? 'Create' : 'Update'} the Portfolio !
+          {mode === 'create' ? 'Create' : 'Update'} the Portfolio
         </span>
         <span className="text-[#6A7282]">
           {mode === 'create'
@@ -99,14 +99,14 @@ const ProjectPortfolioForm = ({
           />
           {isUploading ? (
             <div
-              className={`w-38.25 h-38.25 bg-[#D9D9D9] rounded-lg overflow-hidden flex items-center justify-center ${!isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className={`h-50 w-50 bg-[#D9D9D9] rounded-lg overflow-hidden flex items-center justify-center ${!isUploading ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
             >
               <Loader2 className="w-8 h-8 text-[#9C39FC] animate-spin" />
               <span className="text-sm text-gray-600">Uploading...</span>
             </div>
           ) : projectImage || initialData?.image ? (
             <div
-              className={`w-38.25 h-38.25 mb-4 rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className={`h-50 w-50 mb-4 rounded-lg overflow-hidden border border-[#FFFFFF]/15 ${mode === 'create' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
               onClick={triggerFileUpload}
             >
               <img
@@ -120,14 +120,14 @@ const ProjectPortfolioForm = ({
           ) : (
             <div className="shrink-0" onClick={triggerFileUpload}>
               <div
-                className={`w-38.75 h-38.25 rounded-lg flex items-center justify-center ${!isReadOnly ? 'cursor-pointer' : ''}`}
+                className={`h-48 w-48 rounded-lg flex items-center justify-center ${!isReadOnly ? 'cursor-pointer' : ''}`}
               >
                 <FileUpload className="pointer-events-none" />
               </div>
               <Flex
                 direction="column"
                 gap="1"
-                className="w-41.25 text-center mb-3 mt-2"
+                className="w-48 text-center mb-3 mt-2"
               >
                 <span className="text-xl text-white">Upload Image</span>
                 <span className="text-xs text-[#6A7282]">
