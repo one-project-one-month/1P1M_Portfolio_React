@@ -48,7 +48,7 @@ const UserManagementViewDetail = () => {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-4 font-sans">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-3">
           <Link to="/admin/user-management" className="flex items-center ">
             <ChevronLeft className="w-8 h-8 text-[#F3F4F6]" strokeWidth={3} />
             <span className="text-[#FFFFFF] font-semibold text-2xl leading-7 ml-2">

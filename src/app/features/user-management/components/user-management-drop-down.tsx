@@ -19,13 +19,18 @@ export const UserManagementDropDown = ({
   const [banOpen, setBanOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [restoreOpen, setRestoreOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const { mutate: banMutate } = useBanUser();
   const { mutate: restoreMutate } = useRestoreUser();
 
+  const handleItemClick = (callback: () => void) => {
+    setDropdownOpen(false);
+    callback();
+  };
   return (
     <>
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenu.Trigger>
           <Button
             variant="ghost"
@@ -42,7 +47,7 @@ export const UserManagementDropDown = ({
           <DropdownMenu.Item
             onSelect={(e) => {
               e.preventDefault();
-              setEditDialogOpen(true);
+              handleItemClick(() => setEditDialogOpen(true));
             }}
           >
             Edit User
