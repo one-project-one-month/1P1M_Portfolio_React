@@ -18,6 +18,7 @@ function DashboardContainer() {
     projectStatus,
     projectDeadlines,
     roleDistribution,
+    popularData,
   } = useDashboard();
 
   return (
@@ -52,7 +53,7 @@ function DashboardContainer() {
       </div>
       <div className="grid grid-cols-6 gap-4">
         <div className="col-span-4">
-          <DashboardPopularSection />
+          <DashboardPopularSection data={popularData} />
         </div>
         <div className="col-span-2">
           <DashboardTechStack data={roleDistribution} />
