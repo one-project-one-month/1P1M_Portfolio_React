@@ -85,6 +85,7 @@ export interface CreateProjectPortfolioRequest {
     name: string;
     type: string;
   }[];
+  projectPortfolioStatus?: string;
 }
 
 export const createProjectPortfolio = async (
