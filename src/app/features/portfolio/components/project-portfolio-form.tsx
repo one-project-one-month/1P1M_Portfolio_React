@@ -80,7 +80,7 @@ const ProjectPortfolioForm = ({
     <div className="w-4xl flex flex-col gap-3 backdrop-blur-sm">
       <div className="flex flex-col">
         <span className="text-[#F9FAFB] text-2xl font-medium">
-          {mode === 'create' ? 'Create' : 'Update'} the Portfolio !
+          {mode === 'create' ? 'Create' : 'Update'} the Portfolio
         </span>
         <span className="text-[#6A7282]">
           {mode === 'create'
