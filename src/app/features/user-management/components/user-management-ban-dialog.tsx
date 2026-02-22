@@ -102,7 +102,10 @@ const UserManagementBanDialog = ({
           </div>
 
           <div className="flex justify-between">
-            <Button className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]">
+            <Button
+              onClick={() => setBanOpen(false)}
+              className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]"
+            >
               Cancel
             </Button>
             <Button
