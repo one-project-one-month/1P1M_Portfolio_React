@@ -3,8 +3,9 @@ import type {
   Member as ModalMember,
 } from '@/types/portfolio-management';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { getUser } from '../../opom-register/services/ulits';
 import type { PortfolioFormMode } from '../components/portfolio-form';
 import {
   statusOptions,
@@ -82,43 +83,7 @@ export const usePortfolioForm = ({
   const addTechnologiesMutation = useAddLanguageAndTools();
   const deleteTechnologiesMutation = useDeleteLanguageAndTools();
 
-  const handleSaveTechnologies = () => {
-    if (!isEdit || !initialData?.id) return;
-
-    const currentTechnologies = form.getValues('technologies');
-    const newTechnologies = currentTechnologies.filter(
-      (tech) =>
-        !tech.id &&
-        (tech.projectType.trim() !== '' || tech.languages.trim() !== ''),
-    );
-
-    if (newTechnologies.length === 0) return;
-
-    const payload = {
-      languageAndTools: newTechnologies.flatMap((tech) =>
-        tech.languages.split(',').map((lang) => ({
-          name: lang.trim(),
-          type: tech.projectType,
-        })),
-      ),
-    };
-
-    addTechnologiesMutation.mutate({
-      projectPortfolioId: initialData.id,
-      payload,
-    });
-  };
-
-  const handleRemoveTechnology = async (index: number) => {
-    const techs = form.getValues('technologies');
-    const tech = techs[index];
-
-    if (isEdit && initialData?.id && tech.id) {
-      deleteTechnologiesMutation.mutate({
-        pjId: initialData.id,
-        languageAndToolId: tech.id,
-      });
-    }
+  const handleRemoveTechnology = (index: number) => {
     removeTechnology(index);
   };
 
@@ -133,6 +98,49 @@ export const usePortfolioForm = ({
   ) => {
     const currentTech = form.getValues(`technologies.${index}`);
     updateTechnology(index, { ...currentTech, [field]: value });
+  };
+
+  const handleSaveTechnologies = async () => {
+    if (!initialData?.id) return;
+
+    const currentTechs = form
+      .getValues('technologies')
+      .filter((t) => t.projectType.trim() !== '' || t.languages.trim() !== '');
+    const originalTechs = initialData.technologies || [];
+
+    const deletedTechs = originalTechs.filter(
+      (orig) =>
+        !currentTechs.some(
+          (cur) => cur.id !== undefined && cur.id === orig.projectType.id,
+        ),
+    );
+
+    const addedTechs = currentTechs.filter((cur) => !cur.id);
+
+    for (const tech of deletedTechs) {
+      if (tech.projectType.id) {
+        await deleteTechnologiesMutation.mutateAsync({
+          pjId: initialData.id,
+          languageAndToolId: tech.projectType.id,
+        });
+      }
+    }
+
+    if (addedTechs.length > 0) {
+      const addPayload = {
+        languageAndTools: addedTechs.flatMap((tech) =>
+          tech.languages.split(',').map((lang) => ({
+            name: lang.trim(),
+            type: tech.projectType,
+          })),
+        ),
+      };
+
+      await addTechnologiesMutation.mutateAsync({
+        projectPortfolioId: initialData.id,
+        payload: addPayload,
+      });
+    }
   };
 
   const createProjectMutation = useCreateProject();
@@ -223,8 +231,52 @@ export const usePortfolioForm = ({
               data: updatePayload,
             });
           }
+
+          // --- Sync language and tools ---
+          const currentTechs = data.technologies.filter(
+            (t) => t.projectType.trim() !== '' || t.languages.trim() !== '',
+          );
+          const originalTechs = initialData.technologies || [];
+
+          // Find deleted: items in original but not in current
+          const deletedTechs = originalTechs.filter(
+            (orig) =>
+              !currentTechs.some(
+                (cur) => cur.id !== undefined && cur.id === orig.projectType.id,
+              ),
+          );
+
+          // Find added: items in current without an id (new rows)
+          const addedTechs = currentTechs.filter((cur) => !cur.id);
+
+          // Delete removed items one at a time
+          for (const tech of deletedTechs) {
+            if (tech.projectType.id) {
+              await deleteTechnologiesMutation.mutateAsync({
+                pjId: initialData.id,
+                languageAndToolId: tech.projectType.id,
+              });
+            }
+          }
+
+          // Add new items
+          if (addedTechs.length > 0) {
+            const addPayload = {
+              languageAndTools: addedTechs.flatMap((tech) =>
+                tech.languages.split(',').map((lang) => ({
+                  name: lang.trim(),
+                  type: tech.projectType,
+                })),
+              ),
+            };
+
+            await addTechnologiesMutation.mutateAsync({
+              projectPortfolioId: initialData.id,
+              payload: addPayload,
+            });
+          }
         } else {
-          // --- CREATE MODE: build inline teams + lang/tools ---
+          // build inline teams + lang/tools ---
           const teams = data.teams.map((team) => ({
             teamName: team.name,
             description: 'Team for project portfolio',
@@ -439,14 +491,29 @@ export const usePortfolioForm = ({
     );
   };
 
+  const isTeamLeader = useMemo(() => {
+    const user = getUser();
+    if (!user?.email || !initialData?.teams) return false;
+    return initialData.teams.some((team: TeamData) =>
+      team.members?.some(
+        (m) =>
+          m.email?.toLowerCase() === user.email.toLowerCase() &&
+          (m.role === 'Team Leader' ||
+            (m as any).roleInTeam?.toUpperCase() === 'TEAM_LEADER' ||
+            (m as any).roleInTeam?.toUpperCase() === 'TEAM LEADER'),
+      ),
+    );
+  }, [initialData?.teams]);
+
   return {
     form,
     isReadOnly,
     isEdit,
+    isTeamLeader,
     technologyFields,
-    handleSaveTechnologies,
     handleRemoveTechnology,
     handleUpdateTechnology,
+    handleSaveTechnologies,
     handleAddNewRow,
     isModalOpen,
     setIsModalOpen,

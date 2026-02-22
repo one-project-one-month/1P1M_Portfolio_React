@@ -89,7 +89,7 @@ export const ProjectCard = ({
                 {displayMembers.map((member, index) => (
                   <Link
                     key={member.id}
-                    to={`/profile/${member.name}`}
+                    to={`/profile/${member.id}`}
                     state={{
                       devData: {
                         ...member,
@@ -130,7 +130,7 @@ export const ProjectCard = ({
                       {members.map((member) => (
                         <Link
                           key={member.id}
-                          to={`/profile/${member.name}`}
+                          to={`/profile/${member.id}`}
                           state={{
                             devData: {
                               ...member,

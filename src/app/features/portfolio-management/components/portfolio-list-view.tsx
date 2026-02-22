@@ -1,7 +1,7 @@
 import DeleteDialog from '@/components/ui/delete-dialog';
 import Tooltip from '@/components/ui/tooltip';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { type ProjectData, type ProjectStatus } from '../constants/data';
 import { usePortfolioActions } from '../hooks/use-portfolio-actions';
 import { updateProjectStatus as updateProjectStatusApi } from '../services/portfolio-management-service';
@@ -131,15 +131,13 @@ const PortfolioListView = ({
               <TableHeader width="w-[223px]">Title</TableHeader>
               <TableHeader width="w-[82px]">Member</TableHeader>
               <TableHeader width="w-[122px]">Status</TableHeader>
-              <TableHeader width="w-[116px]">Start Date</TableHeader>
-              <TableHeader width="w-[203px]">Completed Date</TableHeader>
               <TableHeader width="w-[81px]">Action</TableHeader>
             </tr>
           </thead>
           <tbody className="bg-transparent">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-12">
+                <td colSpan={5} className="text-center py-12">
                   <p className="text-white/50 text-lg">No projects found</p>
                 </td>
               </tr>
@@ -154,7 +152,10 @@ const PortfolioListView = ({
                     className="border-b border-[#99A1AF] h-[76px] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
                     <TableCell>
-                      <div className="group flex items-center gap-3 cursor-pointer">
+                      <Link
+                        to={`/profile/${project.members.find((m) => m.role === 'Team Leader')?.id || project.members[0]?.id}`}
+                        className="group flex items-center gap-3 cursor-pointer"
+                      >
                         <img
                           src={project.image}
                           alt={project.leader}
@@ -163,7 +164,7 @@ const PortfolioListView = ({
                         <span className="text-white text-base font-medium group-hover:text-[#9C39FC] transition-colors line-clamp-1">
                           {project.leader}
                         </span>
-                      </div>
+                      </Link>
                     </TableCell>
 
                     <TableCell centered>
@@ -193,18 +194,6 @@ const PortfolioListView = ({
                         >
                           {project.status}
                         </span>
-                      </CellText>
-                    </TableCell>
-
-                    <TableCell centered>
-                      <CellText size="sm" bold>
-                        {project.startDate}
-                      </CellText>
-                    </TableCell>
-
-                    <TableCell centered>
-                      <CellText size="sm" bold>
-                        {project.completedDate || '-'}
                       </CellText>
                     </TableCell>
 
