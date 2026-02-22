@@ -10,6 +10,7 @@ import type { PortfolioFormMode } from '../components/portfolio-form';
 import {
   statusOptions,
   type ProjectData,
+  type ProjectStatus,
   type TeamData,
 } from '../constants/data';
 import {
@@ -17,6 +18,7 @@ import {
   type PortfolioFormValues,
 } from '../portfolio-schema';
 import { type CreateProjectPortfolioRequest } from '../services/portfolio-management-service';
+import { mapFrontendToBackendStatus } from '../utils/status-mapping';
 import {
   useAddLanguageAndTools,
   useAddTeamMember,
@@ -223,6 +225,11 @@ export const usePortfolioForm = ({
           }
           if (data.repoLink !== initialData.repoLink) {
             updatePayload.repoLink = data.repoLink;
+          }
+          if (data.status?.name && data.status.name !== initialData.status) {
+            updatePayload.projectPortfolioStatus = mapFrontendToBackendStatus(
+              data.status.name as ProjectStatus,
+            );
           }
 
           if (Object.keys(updatePayload).length > 0) {
