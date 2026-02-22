@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import MonthDropdown from '../common/month-dropdown';
+// import MonthDropdown from '../common/month-dropdown';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -83,7 +83,8 @@ export default function ActiveUserChart({
       {/* Center text */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
         {label && <p className="text-xs font-medium text-gray-400">{label}</p>}
-        <MonthDropdown value={month} onChange={() => {}} />
+        {/* <MonthDropdown value={month} onChange={() => {}} /> */}
+        <span className="text-white text-sm">{month}</span>
       </div>
     </div>
   );

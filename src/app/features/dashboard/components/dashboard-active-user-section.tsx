@@ -1,5 +1,5 @@
 import type { InactiveUsersResponse } from '@/types/dashboard.type';
-import { ChevronRight } from 'lucide-react';
+// import { ChevronRight } from 'lucide-react';
 import ActiveUserChart from './charts/active-user-chart';
 
 type DashboardActiveUserSectionProps = {
@@ -17,7 +17,7 @@ function DashboardActiveUserSection({ data }: DashboardActiveUserSectionProps) {
       <div className="mb-4">
         <div className="flex items-center text-white justify-between">
           <h1>Inactive Users (Active Projects)</h1>
-          <ChevronRight className="bg-slate-700 w-6 h-6 rounded-full" />
+          {/* <ChevronRight className="bg-slate-700 w-6 h-6 rounded-full" /> */}
         </div>
         <p className="text-sm text-slate-400">
           Users with no recent activity in ongoing projects
