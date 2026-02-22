@@ -36,6 +36,8 @@ export const useOAuthHandler = () => {
         response = await exchangeGitHub(code);
       }
 
+      console.log('Oauth', response);
+
       if (response?.success) {
         const user: UserInfo = {
           role: response.data?.user.role.name,
@@ -44,6 +46,8 @@ export const useOAuthHandler = () => {
           username: response.data?.user.username,
           profile: response.data?.profile_picture,
         };
+
+        handleRoute(response?.data?.user.role.name, response?.data?.isNewUser);
 
         setUserInfo(user);
         addToast(`Welcome back! Logged in with ${provider}`, 'success', 2000);
@@ -65,7 +69,6 @@ export const useOAuthHandler = () => {
         };
       }
 
-      console.log('MESA', err.message);
       addToast(err?.message, 'error', 6000);
 
       goTo('/auth/sign-up');
