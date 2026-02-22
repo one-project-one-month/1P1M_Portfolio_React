@@ -7,6 +7,8 @@ import type { LoginResponse } from '@/types/auth';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import AuthFormHeading from '../../auth-form-heading';
+import GithubBtn from '../../signup/components/github-btn';
+import GoogleBtn from '../../signup/components/google-btn';
 import { loginWithEmailPassword } from '../services/api';
 import PasswordField from './password-field';
 import TextField from './text-field';
@@ -145,6 +147,12 @@ export default function LoginForm() {
         >
           {loading ? 'Logging in...' : 'Login'}
         </Button>
+      </div>
+
+      <div className="flex gap-y-5  mt-8 flex-col w-full">
+        <GoogleBtn />
+
+        <GithubBtn />
       </div>
 
       {/* Forgot password */}
