@@ -15,7 +15,7 @@ const memberSchema = z.object({
   id: z.union([z.string(), z.number()]),
   name: z.string(),
   email: z.string().optional(),
-  avatarUrl: z.string().optional(),
+  avatarUrl: z.string().nullable().optional(),
   role: z.enum(['Team Leader', 'Member']).optional(),
 });
 

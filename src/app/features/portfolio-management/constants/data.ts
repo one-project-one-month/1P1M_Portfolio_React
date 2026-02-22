@@ -11,7 +11,7 @@ export interface Member {
   id: string | number;
   name: string;
   email?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   role?: 'Team Leader' | 'Member';
 }
 
