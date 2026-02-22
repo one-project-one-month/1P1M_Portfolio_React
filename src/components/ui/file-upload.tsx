@@ -10,14 +10,14 @@ interface Props {
 }
 
 function FileUpload(props: Props) {
-  var onFileSelect = props.onFileSelect;
-  var accept = props.accept ?? 'image/*';
-  var className = props.className ?? '';
-  var maxSize = props.maxSize ?? 1 * 1024 * 1024;
-  var existingImageUrl = props.existingImageUrl ?? null;
+  const onFileSelect = props.onFileSelect;
+  const accept = props.accept ?? 'image/*';
+  const className = props.className ?? '';
+  const maxSize = props.maxSize ?? 1 * 1024 * 1024;
+  const existingImageUrl = props.existingImageUrl ?? null;
 
-  var fileInputRef = useRef<HTMLInputElement | null>(null);
-  var [preview, setPreview] = useState<string | null>(existingImageUrl);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [preview, setPreview] = useState<string | null>(existingImageUrl);
 
   useEffect(
     function () {
@@ -33,7 +33,7 @@ function FileUpload(props: Props) {
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    var file = event.target.files?.[0];
+    const file = event.target.files?.[0];
 
     if (!file) {
       return;
@@ -45,7 +45,7 @@ function FileUpload(props: Props) {
     }
 
     if (file.type.startsWith('image/')) {
-      var reader = new FileReader();
+      const reader = new FileReader();
 
       reader.onload = function (e: ProgressEvent<FileReader>) {
         if (typeof e.target?.result === 'string') {
