@@ -65,16 +65,18 @@ export const UserPortfolioTeamSection = ({
 
   return (
     <div className="space-y-6 text-white">
-      <span className="text-[15px]">Team Management</span>
-      <div className="flex gap-3 relative mt-2">
-        <Button
-          className="w-full h-10 text-sm bg-[#9C39FC] hover:bg-[#9333ea] font-medium rounded-lg px-3 py-1.5 text-[#F9FAFB] gap-1 relative"
-          onClick={handleAddTeam}
-        >
-          Add Team
-          <Plus size={15} />
-        </Button>
-      </div>
+      <div className="text-[15px] mb-2">Team Management</div>
+      {!isReadOnly && (
+        <div className="flex gap-3 relative">
+          <Button
+            className="w-full h-10 text-sm bg-[#9C39FC] hover:bg-[#9333ea] font-medium rounded-lg px-3 py-1.5 text-[#F9FAFB] gap-1 relative"
+            onClick={handleAddTeam}
+          >
+            Add Team
+            <Plus size={15} />
+          </Button>
+        </div>
+      )}
       {teams.length > 0 && (
         <div className="flex flex-col gap-4">
           {teams.map((team) => (

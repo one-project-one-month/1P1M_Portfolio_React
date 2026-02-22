@@ -13,7 +13,7 @@ const Sidebar = () => {
     <div className="bg-slate-900 h-full relative text-white w-full flex flex-col justify-between py-6">
       <div className="space-y-10">
         {/* logo */}
-        <div className="text-center flex justify-start items-center px-4">
+        <div className="text-center flex justify-start items-center px-4 mb-3">
           <Link to="/">
             <img
               src={opomIconUrl}

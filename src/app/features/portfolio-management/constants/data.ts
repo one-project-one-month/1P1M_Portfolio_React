@@ -9,6 +9,7 @@ export type ProjectStatus =
 
 export interface Member {
   id: string | number;
+  userId?: string | number;
   name: string;
   email?: string;
   avatarUrl?: string | null;
@@ -51,6 +52,8 @@ export interface ProjectData {
   viewCount?: number;
   isReacted?: boolean;
   isCurrentUserLeader?: boolean;
+  isAccessUser?: boolean;
+  portfolioLeaderId?: number;
 }
 
 // Project Types available in the form

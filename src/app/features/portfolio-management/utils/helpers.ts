@@ -1,4 +1,4 @@
-import { getUser } from '../../opom-register/services/ulits';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { ProjectData } from '../constants/data';
 import {
   getTeamLeaderFromMembers,
@@ -32,7 +32,8 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     ? item.teams.flatMap((t: any) => t.members)
     : [];
 
-  const user = getUser();
+  const user = useUserInfoStore.getState().userInfo;
+
   const userEmail = user?.email?.toLowerCase();
   const isCurrentUserLeader = userEmail
     ? allMembers.some(
@@ -40,6 +41,7 @@ export const mapApiToProjectData = (item: any): ProjectData => {
           m.email?.toLowerCase() === userEmail && isLeaderRole(m.roleInTeam),
       )
     : false;
+  const isAccessUser = item.portfolioLeaderId === user?.userId ? true : false;
 
   return {
     id: item.id,
@@ -81,5 +83,6 @@ export const mapApiToProjectData = (item: any): ProjectData => {
     viewCount: item.viewCount || 0,
     isReacted: item.isAlreadyReacted ?? item.isReacted ?? false,
     isCurrentUserLeader,
+    isAccessUser,
   };
 };

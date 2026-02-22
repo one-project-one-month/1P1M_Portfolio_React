@@ -41,7 +41,7 @@ export const portfolioFormSchema = z.object({
     .startsWith('https://www.', 'Project link must start with https://www.'),
   repoLink: z
     .string()
-    .min(1, 'Repository link is required')
+    .min(1, 'Github link is required')
     .url('Invalid URL format')
     .startsWith('https://github.com', 'Repo link must be a GitHub HTTPS link'),
   projectImage: z.string(),

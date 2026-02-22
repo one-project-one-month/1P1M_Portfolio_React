@@ -14,7 +14,7 @@ const PortfolioFormview = () => {
 
   return (
     <div className="relative left-1/2 w-screen -translate-x-1/2">
-      <div className="absolute inset-0 bg-[#080D22]/50 backdrop-blur-xs" />
+      <div className="absolute inset-0 backdrop-blur-xs" />
       <div className="relative z-10 flex min-h-[calc(100dvh-7rem)] w-full items-center justify-center overflow-y-auto p-4">
         <ProjectPortfolioForm
           mode="create"
