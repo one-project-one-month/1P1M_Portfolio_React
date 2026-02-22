@@ -100,6 +100,49 @@ export const usePortfolioForm = ({
     updateTechnology(index, { ...currentTech, [field]: value });
   };
 
+  const handleSaveTechnologies = async () => {
+    if (!initialData?.id) return;
+
+    const currentTechs = form
+      .getValues('technologies')
+      .filter((t) => t.projectType.trim() !== '' || t.languages.trim() !== '');
+    const originalTechs = initialData.technologies || [];
+
+    const deletedTechs = originalTechs.filter(
+      (orig) =>
+        !currentTechs.some(
+          (cur) => cur.id !== undefined && cur.id === orig.projectType.id,
+        ),
+    );
+
+    const addedTechs = currentTechs.filter((cur) => !cur.id);
+
+    for (const tech of deletedTechs) {
+      if (tech.projectType.id) {
+        await deleteTechnologiesMutation.mutateAsync({
+          pjId: initialData.id,
+          languageAndToolId: tech.projectType.id,
+        });
+      }
+    }
+
+    if (addedTechs.length > 0) {
+      const addPayload = {
+        languageAndTools: addedTechs.flatMap((tech) =>
+          tech.languages.split(',').map((lang) => ({
+            name: lang.trim(),
+            type: tech.projectType,
+          })),
+        ),
+      };
+
+      await addTechnologiesMutation.mutateAsync({
+        projectPortfolioId: initialData.id,
+        payload: addPayload,
+      });
+    }
+  };
+
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
   const createTeamMutation = useCreateTeam({
@@ -470,6 +513,7 @@ export const usePortfolioForm = ({
     technologyFields,
     handleRemoveTechnology,
     handleUpdateTechnology,
+    handleSaveTechnologies,
     handleAddNewRow,
     isModalOpen,
     setIsModalOpen,

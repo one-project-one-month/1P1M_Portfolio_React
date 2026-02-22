@@ -9,7 +9,7 @@ import {
 export const useTeamCard = (
   team: TeamType,
   onUpdate: (updatedTeam: TeamType) => void,
-  onDeleteMember: (teamId: string, updatedMembers: Member[]) => void,
+  onDeleteMember?: (teamId: string, updatedMembers: Member[]) => void,
 ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -50,7 +50,7 @@ export const useTeamCard = (
       members: updatedMembers,
     });
 
-    onDeleteMember(team.id, updatedMembers);
+    onDeleteMember?.(team.id, updatedMembers);
 
     if (!team.id.toString().startsWith('team-') && memberId) {
       try {

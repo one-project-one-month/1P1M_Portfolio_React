@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog } from '@radix-ui/themes';
 import type { UseMutateFunction } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 type UserProjectPortfolioStatusChangeDialogProps = {
   trigger?: ReactNode;
@@ -19,6 +20,11 @@ type UserProjectPortfolioStatusChangeDialogProps = {
     unknown
   >;
   projectPortfolioId: number;
+  currentStatus: ProjectPortfolioStatus;
+};
+
+type FormValues = {
+  status: ProjectPortfolioStatus | null;
 };
 
 export const UserProjectPortfolioStatusChangeDialog = ({
@@ -27,14 +33,23 @@ export const UserProjectPortfolioStatusChangeDialog = ({
   setStatusChangeOpen,
   projectPortfolioId,
   portfolioStatusChange,
+  currentStatus,
 }: UserProjectPortfolioStatusChangeDialogProps) => {
-  const [selectReason, setSelectedReason] = useState<string | null>(null);
+  const { control, handleSubmit, watch } = useForm<FormValues>({
+    defaultValues: { status: currentStatus },
+  });
 
-  const toggleReason = (reason: string) => {
-    setSelectedReason((pre) => (pre === reason ? null : reason));
+  const onSubmit = (data: FormValues) => {
+    if (data.status) {
+      portfolioStatusChange({
+        projectPortfolioId,
+        status: data.status,
+      });
+      setStatusChangeOpen(false);
+    }
   };
-
   const statusColor = (name: ProjectPortfolioStatus) => statusColorList[name];
+
   return (
     <Dialog.Root open={statusChangeOpen} onOpenChange={setStatusChangeOpen}>
       <Dialog.Trigger>
@@ -54,7 +69,7 @@ export const UserProjectPortfolioStatusChangeDialog = ({
           border: '1px solid #364153',
         }}
       >
-        <div className="w-full h-full flex flex-col gap-6 ">
+        <div className="w-full h-full flex flex-col gap-6">
           <div>
             <Dialog.Title className="text-[#F9FAFB] font-medium text-xl leading-8">
               Change the portfolio status!
@@ -65,30 +80,40 @@ export const UserProjectPortfolioStatusChangeDialog = ({
             </Dialog.Description>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {portfolioStatusOptions.map((item) => (
-              <div
-                className="flex items-center   gap-5 "
-                onClick={() => toggleReason(item.value)}
-              >
-                <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
-                  {selectReason === item.value && (
-                    <div className="bg-[#F3F4F6] w-full h-full rounded-full cursor-pointer"></div>
-                  )}
-                </div>
-                <div className="h-full flex flex-col">
-                  <p
-                    className={` text-lg font-medium leading-5 ${statusColor(item.value)}`}
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <div className="flex flex-col gap-4">
+                {portfolioStatusOptions.map((item) => (
+                  <div
+                    key={item.value}
+                    className="flex items-center gap-5 cursor-pointer"
+                    onClick={() => field.onChange(item.value)}
                   >
-                    {item.label}
-                  </p>
-                  <p className="text-[#6A7282] text-xs leading-7">
-                    {item.description}
-                  </p>
-                </div>
+                    <div className="w-5 flex rounded-full border border-white h-5">
+                      {watch('status') === item.value && (
+                        <div className="bg-[#F3F4F6] w-full h-full rounded-full" />
+                      )}
+                    </div>
+
+                    <div className="h-full flex flex-col">
+                      <p
+                        className={`text-lg font-medium leading-5 ${statusColor(
+                          item.value,
+                        )}`}
+                      >
+                        {item.label}
+                      </p>
+                      <p className="text-[#6A7282] text-xs leading-7">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          />
 
           <div className="flex justify-between">
             <Button
@@ -98,14 +123,7 @@ export const UserProjectPortfolioStatusChangeDialog = ({
               Cancel
             </Button>
             <Button
-              onClick={() => {
-                if (selectReason) {
-                  portfolioStatusChange({
-                    projectPortfolioId,
-                    status: selectReason,
-                  });
-                }
-              }}
+              onClick={handleSubmit(onSubmit)}
               className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
             >
               Confirm
