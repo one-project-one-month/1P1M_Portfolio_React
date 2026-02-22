@@ -1,6 +1,8 @@
 import IconActiveHeart from '@/assets/icons/IconActiveHeart';
+import { useToast } from '@/components/ui/toast-provider';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { cn } from '@/lib/utils';
+import { useUserInfoStore } from '@/store/user-info-store';
 import { Avatar, Tooltip } from '@radix-ui/themes';
 import { ExternalLink, Eye, HeartIcon } from 'lucide-react';
 import { ProjectIdeaDropDown } from '../../admin/components/project-idea-drop-down';
@@ -34,6 +36,9 @@ export default function IdeaCard({
     reactionCount = 0,
     isAlreadyReacted,
   } = idea;
+
+  const userInfo = useUserInfoStore((state) => state.userInfo);
+  const { addToast } = useToast();
 
   const sortedProjectTypes = [...projectTypes].sort((a, b) =>
     a.localeCompare(b),
@@ -83,16 +88,36 @@ export default function IdeaCard({
       <div className="flex justify-between border-b py-4">
         <div className="flex text-sm items-center gap-x-2">
           <span>Submitter</span>
-          <Avatar
-            onClick={() => {
-              goTo(`/profile/${dev_id}`);
-            }}
-            src={ownerProfilePicUrl}
+          {/* <Avatar
+            onClick={dev_id ? () => goTo(`/profile/${dev_id}`) : undefined}
+            src={ownerProfilePicUrl || devUsername?.slice(0, 1)}
             radius="full"
             color="gray"
             className=" bg-gray-600! cursor-pointer"
             fallback={devUsername?.slice(0, 1)}
-          />
+          /> */}
+
+          <div
+            onClick={() => {
+              if (!userInfo) {
+                addToast(
+                  'You must Login to see the Profile Details',
+                  'warning',
+                );
+                return;
+              }
+              goTo(`/profile/${dev_id}`);
+            }}
+            className="cursor-pointer ]"
+          >
+            <Avatar
+              src={ownerProfilePicUrl}
+              radius="full"
+              color="gray"
+              className=" bg-gray-600! cursor-pointer"
+              fallback={devUsername?.[0]}
+            />
+          </div>
         </div>
       </div>
 
