@@ -48,3 +48,33 @@ export async function loginWithEmailPassword(
     };
   }
 }
+export const LogoutUser = async () => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.LOGOUT);
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+
+    if (err.response) {
+      return {
+        success: false,
+        code: err.response.status,
+        message: (err.response?.data as any)?.message || 'Error',
+      };
+    }
+
+    if (err.request) {
+      return {
+        success: false,
+        code: 0,
+        message: 'Network error. Server not reachable.',
+      };
+    }
+
+    return {
+      success: false,
+      code: 0,
+      message: err.message || 'Unexpected error',
+    };
+  }
+};
