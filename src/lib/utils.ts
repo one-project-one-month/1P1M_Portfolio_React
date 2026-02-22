@@ -16,10 +16,7 @@ export const logout = async () => {
   }
 };
 
-export const copyToClipboard = async (
-  value?: string | null,
-  // label: string = 'Copied',
-) => {
+export const copyToClipboard = async (value?: string | null) => {
   if (!value) return;
 
   try {
