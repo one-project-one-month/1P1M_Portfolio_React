@@ -50,6 +50,7 @@ export const editUserSchema = z.object({
   role: z.string(),
   phone: z.string(),
   telegramUsername: z.string(),
+  profilePictureUrl: z.string().nullable(),
   github_url: z.string(),
   linkedIn_url: z.string(),
   description: z.string(),

@@ -82,6 +82,7 @@ export default function ProjectIdeaEditDialog({
       projectName: projectIdea.projectIdeaName,
       description: projectIdea.description,
       projectType: projectIdea.projectTypes,
+
       status: projectIdea.status,
       dev_id: projectIdea.dev_id,
       devUsername: projectIdea.devUsername,
@@ -332,7 +333,7 @@ export default function ProjectIdeaEditDialog({
                       {' '}
                       {selectedTypes?.map((type) => (
                         <div key={type} className="flex bg-gray-500 p-2 ">
-                          <p className="text-xs">{type}</p>
+                          <p className="text-xs ">{type}</p>
                           <X
                             size="15"
                             className="cursor-pointer"

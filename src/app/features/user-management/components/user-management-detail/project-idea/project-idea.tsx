@@ -43,7 +43,7 @@ const ProjectIdea = ({ user }: ProjectIdeaProps) => {
     <div className="w-full">
       <div className="w-full flex flex-col gap-5">
         <h1 className="text-[#FFFFFF] font-semibold text-2xl leading-9">
-          Projects Ideas
+          Project Ideas
         </h1>
         <div className="w-full h-full gap-10 grid grid-cols-2 lg:grid-cols-3">
           {projectIdeas.map((item, index) => (

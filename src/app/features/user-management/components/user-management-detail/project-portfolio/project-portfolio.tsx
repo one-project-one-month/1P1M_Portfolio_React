@@ -25,7 +25,7 @@ const ProjectPortfolio = ({ user }: ProjectPortfolioProps) => {
     <div className="w-full h-full">
       <div className="w-full flex flex-col gap-5">
         <h1 className="text-[#FFFFFF] font-semibold text-2xl leading-9">
-          Projects Portfolios
+          Project Portfolios
         </h1>
         <div className=" gap-10 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
           {portfolios.map((item) => {
@@ -119,7 +119,10 @@ const ProjectPortfolio = ({ user }: ProjectPortfolioProps) => {
                         </div>
                       </div>
                       <div>
-                        <ProjectPortfolioDropDown id={item.id} />
+                        <ProjectPortfolioDropDown
+                          id={item.id}
+                          projectPortfolioStatus={item.status}
+                        />
                       </div>
                     </div>
                   </div>
