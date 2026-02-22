@@ -54,7 +54,7 @@ export const useOAuthHandler = () => {
       }
     } catch (error) {
       const err = error as AxiosError;
-      console.log('MESA', err.message);
+
       addToast((err?.response?.data as any)?.message, 'error', 6000);
 
       if (err.response) {
