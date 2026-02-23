@@ -535,5 +535,7 @@ export const usePortfolioForm = ({
     getTitle,
     getModalTeamName,
     getModalInitialMembers,
+    isSaving: createProjectMutation.isPending,
+    isUpdating: updateProjectMutation.isPending,
   };
 };

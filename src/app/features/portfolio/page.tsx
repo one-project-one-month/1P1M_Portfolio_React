@@ -12,7 +12,7 @@ const filterConfig: FilterConfig[] = [
     label: 'Order',
     options: [
       { label: 'All', value: 'all' },
-      { label: 'Popular', value: 'popular' },
+      // { label: 'Popular', value: 'popular' },
       { label: 'Newest', value: 'Newest' },
       { label: 'Oldest', value: 'Oldest' },
     ],

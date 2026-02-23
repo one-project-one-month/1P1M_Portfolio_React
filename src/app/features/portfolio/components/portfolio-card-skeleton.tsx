@@ -10,6 +10,14 @@ const PortfolioCardSkeleton = () => {
         <Flex
           align="center"
           justify="between"
+          className="text-[#D1D5DC] font-light leading-5 text-sm font-sans mt-3"
+        >
+          <div className="h-3 w-2/6 rounded bg-white/15" />
+          <div className="h-3 w-2/6 rounded bg-white/15" />
+        </Flex>
+        <Flex
+          align="center"
+          justify="between"
           className="text-[#D1D5DC] font-light leading-5 text-sm font-sans"
         >
           <div className="h-3 w-2/6 rounded bg-white/15" />

@@ -48,6 +48,8 @@ const ProjectPortfolioForm = ({
     handleUpdateTeam,
     getModalTeamName,
     getModalInitialMembers,
+    isSaving,
+    isUpdating,
   } = usePortfolioForm({ mode, initialData, onSave });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -144,7 +146,7 @@ const ProjectPortfolioForm = ({
             form={form}
             isReadOnly={isReadOnly}
           />
-          <PortfolioLinkSection form={form} isReadOnly={false} />
+          <PortfolioLinkSection form={form} isReadOnly={isReadOnly} />
           <UserPortfolioTypeLang
             form={form}
             technologyFields={technologyFields}
@@ -152,6 +154,7 @@ const ProjectPortfolioForm = ({
             onRemoveTechnology={handleRemoveTechnology}
             onAddNewRow={handleAddNewRow}
             isEdit={isEdit}
+            isReadOnly={isReadOnly}
           />
           <UserPortfolioTeamSection
             form={form}
@@ -188,7 +191,13 @@ const ProjectPortfolioForm = ({
                   onClick={handleSaveForm}
                   className="bg-[#9C39FC] hover:bg-[#9333ea] text-lg font-medium rounded-lg px-8 text-[#F9FAFB]"
                 >
-                  {isEdit ? 'Update' : 'Save'}
+                  {isSaving
+                    ? 'Saving...'
+                    : isUpdating
+                      ? 'Updating...'
+                      : isEdit
+                        ? 'Update'
+                        : 'Save'}
                 </Button>
               </>
             )}

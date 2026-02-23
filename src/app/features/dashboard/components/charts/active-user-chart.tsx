@@ -84,7 +84,7 @@ export default function ActiveUserChart({
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
         {label && <p className="text-xs font-medium text-gray-400">{label}</p>}
         {/* <MonthDropdown value={month} onChange={() => {}} /> */}
-        <span className="text-white text-sm">{month}</span>
+        {month && <span className="text-white text-sm">{month}</span>}
       </div>
     </div>
   );

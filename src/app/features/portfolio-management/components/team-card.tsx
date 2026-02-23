@@ -93,7 +93,7 @@ const TeamCard = ({
                 >
                   <div className="flex items-center gap-12 flex-1">
                     <Link
-                      to={`/profile/${member.id}`}
+                      to={`/profile/${member.userId}`}
                       className="flex items-center gap-3 w-[200px] hover:opacity-80 transition-opacity"
                     >
                       <img
