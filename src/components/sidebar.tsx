@@ -2,7 +2,7 @@ import { opomIconUrl } from '@/assets/icons/iconUrls';
 import { ADMIN_NAVS } from '@/constants';
 import { logout } from '@/lib/utils.ts';
 import { useUserInfoStore } from '@/store/user-info-store';
-import { Tooltip } from '@radix-ui/themes';
+import { Avatar, Tooltip } from '@radix-ui/themes';
 import { LogOut } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ const Sidebar = () => {
     <div className="bg-slate-900 h-full relative text-white w-full flex flex-col justify-between py-6">
       <div className="space-y-10">
         {/* logo */}
-        <div className="text-center flex justify-start items-center px-4 mb-3">
+        <div className="text-center flex justify-start items-center px-4">
           <Link to="/">
             <img
               src={opomIconUrl}
@@ -25,10 +25,13 @@ const Sidebar = () => {
 
         <nav className="text-sm">
           <div className="flex items-center gap-x-4 px-4">
-            <img
+            <Avatar
               src={user?.profile || ''}
-              className="size-12 rounded-full"
-              alt={user?.username}
+              color="gray"
+              size="4"
+              radius="full"
+              className="bg-gray-600!"
+              fallback={user?.username.slice(0, 1) || 'U'}
             />
             <Tooltip content={user?.username ?? 'User'}>
               <span className="font-medium text-base">

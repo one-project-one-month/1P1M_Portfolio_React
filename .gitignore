@@ -13,7 +13,6 @@ dist
 dist-ssr
 *.local
 .env*.local
-.env
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +25,4 @@ dist-ssr
 *.sln
 *.sw?
 .gitgnore*
+config.bat
