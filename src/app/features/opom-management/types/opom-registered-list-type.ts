@@ -5,6 +5,7 @@ export type OpomUserType = {
   phone: string;
   telegram_username: string;
   role: string;
+  userId: number;
 };
 export type GetAllOpomRegisterParams = {
   keyword?: string;

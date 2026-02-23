@@ -13,11 +13,13 @@ import { truncate } from '../../user-profile/utils/string.utils';
 type DeveloperProfileCardProps = {
   user: UserProfile | null;
   isMyProfile?: boolean;
+  withUsername?: boolean;
 };
 
 function DeveloperProfileCard({
   user,
   isMyProfile = false,
+  withUsername = false,
 }: DeveloperProfileCardProps) {
   if (!user) return;
 
@@ -32,8 +34,10 @@ function DeveloperProfileCard({
     techStacks,
   } = user;
 
+  const shareUrl = `${window.location.origin}/profile/${name}`;
+
   const handleShareProfile = () => {
-    copyToClipboard(window.location.href);
+    copyToClipboard(shareUrl);
   };
 
   const displayName = name || 'Anonymous Developer';
@@ -118,20 +122,22 @@ function DeveloperProfileCard({
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        {!withUsername && (
           <div className="flex items-center gap-2">
-            <img src={Phone} alt="" className="w-5 h-5" />
-            <p className="text-[#99A1AF] text-sm leading-5">
-              {phone || 'No phone number'}
-            </p>
-          </div>
+            <div className="flex items-center gap-2">
+              <img src={Phone} alt="" className="w-5 h-5" />
+              <p className="text-[#99A1AF] text-sm leading-5">
+                {phone || 'No phone number'}
+              </p>
+            </div>
 
-          {phone && (
-            <button onClick={() => copyToClipboard(phone)}>
-              <img src={Copy} alt="copy" className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+            {phone && (
+              <button onClick={() => copyToClipboard(phone)}>
+                <img src={Copy} alt="copy" className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
@@ -151,6 +157,7 @@ function DeveloperProfileCard({
         truncate={truncate}
         className="absolute right-3 top-3 h-10"
         isMyProfile={isMyProfile}
+        shareUrl={shareUrl}
       />
     </div>
   );

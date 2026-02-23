@@ -23,6 +23,9 @@ export function useProjectIdeaMutations() {
     onError: (error: AxiosError<{ message: string }>) => {
       addToast(error.message || 'Failed to update information', 'error');
     },
+    onSuccess: () => {
+      invalidateIdeas();
+    },
   });
 
   const updateStatusMutation = useMutation({

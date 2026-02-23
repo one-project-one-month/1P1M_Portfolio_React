@@ -47,14 +47,14 @@ export default function UserEditDialog({
     defaultValues: {
       name: data.name,
       phone: data.phone || '',
-      profilePictureUrl: data.profilePictureUrl || '',
+      profilePictureUrl: data.profilePictureUrl ?? '',
       telegramUsername: data.telegramUsername || '',
       github: data.github || '',
       linkedIn: data.linkedIn || '',
       aboutDev: data.aboutDev || '',
       techStacks: (data.techStacks || []).map(normalizeTechStack),
     },
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
   const { mutate, isPending } = useMutation<
@@ -221,7 +221,12 @@ export default function UserEditDialog({
                   name="name"
                   control={form.control}
                   render={({ field }) => (
-                    <FormField placeholder="Enter your name" {...field} />
+                    <FormField
+                      placeholder="Enter your name"
+                      errorMessage={form.formState.errors.name?.message}
+                      {...field}
+                      className="w-full"
+                    />
                   )}
                 />
 
@@ -370,6 +375,7 @@ export default function UserEditDialog({
                     <FormField
                       placeholder="Enter your telegram username"
                       {...field}
+                      className="w-full"
                     />
                   )}
                 />
@@ -413,7 +419,9 @@ export default function UserEditDialog({
 
                   <Button
                     type="submit"
-                    disabled={isPending || isUploadingImage}
+                    disabled={
+                      isPending || isUploadingImage || !form.formState.isValid
+                    }
                     className="w-1/2"
                   >
                     {isPending || isUploadingImage ? 'Updating...' : 'Update'}

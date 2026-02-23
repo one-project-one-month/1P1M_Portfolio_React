@@ -22,7 +22,11 @@ function UserProfilePage() {
   const { userId } = useParams();
   if (!userId) navigate('/not-found');
 
-  const { data, isLoading, isError } = useGetUserProfile(Number(userId));
+  const withUserName = isNaN(Number(userId));
+
+  const { data, isLoading, isError } = useGetUserProfile(
+    withUserName ? userId : Number(userId),
+  );
 
   const { mutate: react } = useReactProjectIdea();
   const { mutate: unreact } = useUnReactProjectIdea();

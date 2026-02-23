@@ -106,7 +106,7 @@ export default function HomePage() {
       </section>
       <section className="flex flex-col w-full items-center justify-center text-center text-[#E5E7EB] mb-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="h-auto lg:col-span-2 bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-6">
+          <div className="h-auto lg:col-span-2 bg-white/10  backdrop-blur-xs rounded-4xl border border-white/5 text-white/70 p-6">
             <h1 className="text-3xl text-start font-semibold lg:text-4xl mb-10">
               What is <span className="text-[#BD7AFD]">OPOM</span>?
             </h1>
@@ -126,7 +126,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex w-full flex-col justify-between items-center gap-4">
-            <div className="w-full bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-4">
+            <div className="w-full bg-white/10  backdrop-blur-xs rounded-4xl border border-white/5 text-white/70 p-4">
               <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
                 Who <span className="text-[#BD7AFD]">We </span>are?
               </h3>
@@ -137,7 +137,7 @@ export default function HomePage() {
                 days.
               </p>
             </div>
-            <div className="w-full bg-[#050612]/80 backdrop-blur-xs rounded-4xl border border-white/20 p-4">
+            <div className="w-full bg-white/10  backdrop-blur-xs rounded-4xl border border-white/5 text-white/70 p-4">
               <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
                 What you have to <span className="text-[#BD7AFD]">Do </span>?
               </h3>

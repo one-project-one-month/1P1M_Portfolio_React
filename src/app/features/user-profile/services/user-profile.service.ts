@@ -7,11 +7,19 @@ import type {
   UserProfileResponseType,
 } from '../types/user-profile.type';
 
-export const getUserProfileService = async ({ userId }: { userId: number }) => {
+export const getUserProfileService = async ({
+  userId,
+}: {
+  userId: number | string;
+}) => {
+  const withUserName = isNaN(Number(userId));
+
+  const params = withUserName ? null : { userId: Number(userId) };
+
   try {
     const response = await apiClient.get<UserProfileResponseType>(
-      API_ENDPOINTS.GET_PROFILE_DATA,
-      { params: { userId } },
+      API_ENDPOINTS.GET_PROFILE_DATA + (withUserName ? `/${userId}` : ''),
+      { params: params },
     );
     return response.data;
   } catch (error) {
@@ -28,11 +36,20 @@ export const editUserProfileService = async (
   id: number,
   formData: EditUserProfileType,
 ) => {
+  const payload = {
+    name: formData.name,
+    github: formData.github,
+    linkedIn: formData.linkedIn,
+    aboutDev: formData.aboutDev,
+    techStacks: formData.techStacks,
+    phone: formData.phone,
+    telegramUsername: formData.telegramUsername,
+  };
+
   try {
     const response = await apiClient.patch<UserProfileEditResponseType>(
-      API_ENDPOINTS.GET_PROFILE,
-      formData,
-      { params: { id } },
+      API_ENDPOINTS.GET_PROFILE + `/${id}`,
+      payload,
     );
     return response.data;
   } catch (error) {

@@ -5,14 +5,14 @@ import { Copy, X } from 'lucide-react';
 interface ShareProfileDialogProps {
   onCopy: (text: string) => void;
   truncate: (text: string, max?: number) => string;
+  shareUrl?: string;
 }
 
 export const ShareProfileDialog = ({
   onCopy,
   truncate,
+  shareUrl,
 }: ShareProfileDialogProps) => {
-  const shareUrl = window.location.href;
-
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -44,12 +44,12 @@ export const ShareProfileDialog = ({
 
         <div className="flex items-center justify-between py-2 px-4 bg-slate-900 rounded-md border border-[#364153] truncate">
           <Tooltip content={shareUrl}>
-            <p>{truncate(shareUrl)}</p>
+            <p>{truncate(shareUrl ?? '')}</p>
           </Tooltip>
           <IconButton
             variant="ghost"
             className="text-gray-600!"
-            onClick={() => onCopy(shareUrl)}
+            onClick={() => onCopy(shareUrl ?? '')}
           >
             <Copy size={18} />
           </IconButton>

@@ -57,15 +57,56 @@ export const userProfileSchema = z.object({
 });
 
 export const editUserProfileSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  profilePictureUrl: z.string().optional(),
-  phone: z.string().optional().optional(),
-  github: z.string().optional(),
-  linkedIn: z.string().optional(),
-  aboutDev: z.string().optional(),
-  techStacks: z.array(z.string()).optional(),
   dev_id: z.number(),
-  telegramUsername: z.string().optional(),
+
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .regex(/^[a-z0-9]+$/, {
+      message:
+        'Only lowercase letters and numbers allowed (no spaces or special characters)',
+    }),
+
+  profilePictureUrl: z.string().url().optional().or(z.literal('')),
+
+  phone: z.string().optional().or(z.literal('')),
+
+  github: z
+    .string()
+    .url('Must be a valid URL')
+    .refine((val) => !val || val.includes('github.com'), 'Must be a GitHub URL')
+    .optional()
+    .or(z.literal('')),
+
+  linkedIn: z
+    .string()
+    .url('Must be a valid URL')
+    .refine(
+      (val) => !val || val.includes('linkedin.com'),
+      'Must be a LinkedIn URL',
+    )
+    .optional()
+    .or(z.literal('')),
+
+  telegramUsername: z
+    .string()
+    .regex(/^[a-zA-Z0-9_]*$/, {
+      message:
+        'Telegram username can only contain letters, numbers, and underscores',
+    })
+    .optional()
+    .or(z.literal('')),
+
+  aboutDev: z
+    .string()
+    .max(500, 'Description too long')
+    .optional()
+    .or(z.literal('')),
+
+  techStacks: z
+    .array(z.string())
+    .min(1, 'Select at least one tech stack')
+    .optional(),
 });
 
 export type DevProfileType = z.infer<typeof devProfileSchema>;
