@@ -72,7 +72,7 @@ const UserProfile = ({ username, email, img, role }: UserProfileProps) => {
             <button
               onClick={() => {
                 setIsOpen(false);
-                goTo('/me');
+                goTo(`/profile/${email.split('@')[0]}`);
               }}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm 
                          hover:bg-white/5 transition text-gray-200"

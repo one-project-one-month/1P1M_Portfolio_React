@@ -1,4 +1,5 @@
 import BackButton from '@/components/common/back-button';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { UserProfile } from '@/types/dev';
 import type { ProjectPortfolio } from '@/types/portfolio.type';
 import { LightbulbOff, List } from 'lucide-react';
@@ -22,7 +23,11 @@ function UserProfilePage() {
   const { userId } = useParams();
   if (!userId) navigate('/not-found');
 
-  const withUserName = isNaN(Number(userId));
+  const withUserName = Boolean(isNaN(Number(userId)));
+  const isMyProfile = withUserName
+    ? useUserInfoStore((state) => state.userInfo?.email)?.split('@')[0] ===
+      userId
+    : useUserInfoStore((state) => state.userInfo?.userId) == userId;
 
   const { data, isLoading, isError } = useGetUserProfile(
     withUserName ? userId : Number(userId),
@@ -48,7 +53,11 @@ function UserProfilePage() {
     | ProjectPortfolio[]
     | [];
 
-  if (isError) navigate('/not-found');
+  if (isError) {
+    if (isMyProfile) return navigate('/auth/setup-profile');
+
+    navigate('/not-found');
+  }
 
   return (
     <div className="w-full">
@@ -70,7 +79,7 @@ function UserProfilePage() {
           </div>
         ) : (
           <div className="flex flex-col gap-6">
-            <DeveloperProfileCard user={user} />
+            <DeveloperProfileCard isMyProfile={isMyProfile} user={user} />
             <div>
               <h1 className="text-white text-xl mb-6 font-semibold">
                 Project Ideas

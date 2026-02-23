@@ -31,6 +31,7 @@ function DeveloperProfileCard({
     linkedIn,
     aboutDev,
     profilePictureUrl,
+    telegramUsername,
     techStacks,
   } = user;
 
@@ -122,7 +123,7 @@ function DeveloperProfileCard({
           )}
         </div>
 
-        {!withUsername && (
+        {(withUsername || isMyProfile) && (
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <img src={Phone} alt="" className="w-5 h-5" />
@@ -139,12 +140,16 @@ function DeveloperProfileCard({
           </div>
         )}
 
-        <div className="flex items-center gap-2">
+        {(withUsername || isMyProfile) && (
           <div className="flex items-center gap-2">
-            <img src={Telegram} alt="" className="w-5 h-5" />
-            <p className="text-[#99A1AF] text-sm leading-5">Not provided</p>
+            <div className="flex items-center gap-2">
+              <img src={Telegram} alt="" className="w-5 h-5" />
+              <p className="text-[#99A1AF] text-sm leading-5">
+                {telegramUsername || 'No Telegram username'}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         <p className="text-white text-sm h-10 line-clamp-2 mt-2">
           {displayAbout}
