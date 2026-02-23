@@ -42,7 +42,7 @@ export const useOAuthHandler = () => {
         const user: UserInfo = {
           role: response.data?.user.role,
           email: response.data?.user.email,
-          userId: response.data?.user.email,
+          userId: response.data?.user.id,
           username: response.data?.user.username,
           profile: response.data?.profile_picture,
         };
