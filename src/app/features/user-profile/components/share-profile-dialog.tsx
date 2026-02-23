@@ -5,14 +5,14 @@ import { Copy, X } from 'lucide-react';
 interface ShareProfileDialogProps {
   onCopy: (text: string) => void;
   truncate: (text: string, max?: number) => string;
+  shareUrl?: string;
 }
 
 export const ShareProfileDialog = ({
   onCopy,
   truncate,
+  shareUrl,
 }: ShareProfileDialogProps) => {
-  const shareUrl = window.location.href;
-
   return (
     <Dialog.Root>
       <Dialog.Trigger>

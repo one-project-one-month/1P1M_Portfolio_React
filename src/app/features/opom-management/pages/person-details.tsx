@@ -1,170 +1,130 @@
-import ProjectIdea from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea';
-import ProjectPortfolio from '@/app/features/user-management/components/user-management-detail/project-portfolio/project-portfolio';
-import UserShareProfile from '@/app/features/user-management/components/user-share-profile-dialog';
-import { useGetUserProfileDetail } from '@/app/features/user-management/hook/use-user-management';
-import Behance from '@/assets/icons/behance.png';
-import Copy from '@/assets/icons/copy.png';
-import Email from '@/assets/icons/Email.png';
-import Github from '@/assets/icons/GitHub.png';
-import { sampleUserImgUrl } from '@/assets/icons/iconUrls';
-import Phone from '@/assets/icons/Phone.png';
-import Telegram from '@/assets/icons/Telegram.png';
-import { ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
+import { LightbulbOff, List } from 'lucide-react';
+import { useCallback } from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import BackButton from '@/components/common/back-button';
+import type { UserProfile } from '@/types/dev';
+import type { ProjectPortfolio } from '@/types/portfolio.type';
+import { useNavigate, useParams } from 'react-router-dom';
+import DeveloperProfileCard from '../../developers/components/developer-profile-card';
+import DeveloperProfileCardSkeleton from '../../developers/components/developer-profile-skeleton-card';
+import ProjectCard from '../../developers/components/project-card';
+import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
+import { IdeaCard } from '../../ideas/shared/components';
+import {
+  useReactProjectIdea,
+  useUnReactProjectIdea,
+} from '../../ideas/shared/hooks/project-idea.query';
+import type { IdeaType } from '../../ideas/shared/types/project-idea.types';
+import PortfolioCardSkeleton from '../../portfolio/components/portfolio-card-skeleton';
+import { useGetUserProfile } from '../../user-profile/hooks/use-user-profile';
 
 const PersonProfilePage = () => {
-  const { id } = useParams();
+  const navigate = useNavigate();
+  const { id: userId } = useParams();
+  if (!userId) navigate('/not-found');
 
-  const user_id = Number(id);
+  const { data, isLoading, isError } = useGetUserProfile(Number(userId));
 
-  const { data, isLoading, isError } = useGetUserProfileDetail(user_id);
-  const [shareOpen, setShareOpen] = useState(false);
+  const { mutate: react } = useReactProjectIdea();
+  const { mutate: unreact } = useUnReactProjectIdea();
 
-  if (isLoading) return <div className="text-white">Loading....</div>;
-  if (isError) return <div className="text-white">Error....</div>;
+  const handleReactIdea = useCallback(
+    (id: number, isReacted: boolean) => {
+      if (isReacted) {
+        unreact(id);
+      } else react(id);
+    },
+    [react, unreact],
+  );
 
-  if (!data?.data) return null;
+  const user = (data?.data.devProfile ?? null) as UserProfile | null;
+  const ideaLists = (data?.data.projectIdeas ?? []) as (IdeaType & {
+    isAlreadyReacted: boolean;
+  })[];
+  const projectLists = (data?.data.projectPortfolios ?? []) as
+    | ProjectPortfolio[]
+    | [];
 
-  const user = data.data;
+  if (isError) navigate('/not-found');
 
   return (
     <div className="w-full">
-      <div className="flex flex-col gap-[38px] font-sans">
-        <div className="flex flex-col">
-          <Link
-            to="/admin/opom-registered-people-list"
-            className="flex flex-row items-center justify-start "
-          >
-            <ChevronLeft color="#F3F4F6" size="30" />
-
-            <h2 className="text-[#FFFFFF]  font-semibold text-2xl leading-7">
-              Back
-            </h2>
-          </Link>
-          <h2 className="font-semibold  text-3xl font-sans text-[#FFFFFF]">
-            User Profile
-          </h2>
-        </div>
-
-        <div className="flex bg-slate-900 justify-between border border-[#99A1AF] rounded-xl pt-[17px] pr-[20px] pb-[18px] pl-[20px]">
-          <div className="flex  gap-3">
-            <img
-              src={sampleUserImgUrl}
-              alt=""
-              className="w-[163px] h-[185px] rounded-md "
-            />
-            <div className="flex flex-col gap-3">
-              <div>
-                <p className="text-[#FFFFFF] font-semibold text-base leading-7">
-                  {user?.devProfile.name}
-                </p>
-                <div className="text-[#99A1AF]  flex gap-3 leading-5 text-sm">
-                  {user?.devProfile.techStacks?.map((stack, index) => (
-                    <p key={index} className="bg-[#1E2132] px-2 p-1 rounded-sm">
-                      {stack}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center items-center gap-1">
-                    <img
-                      src={Email}
-                      alt=""
-                      className="w-5 h-5  text-[#99A1AF]"
+      <BackButton onClick={() => navigate(-1)} />
+      <h1 className="text-white text-2xl">User Profile</h1>
+      <div className="my-3">
+        {isLoading ? (
+          <div className="flex flex-col gap-6">
+            <DeveloperProfileCardSkeleton />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <IdeaListCardSkeleton key={i} />
+              ))}
+            </div>
+            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map(() => {
+                return <PortfolioCardSkeleton />;
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <DeveloperProfileCard user={user} />
+            <div>
+              <h1 className="text-white text-xl mb-6 font-semibold">
+                Project Ideas
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {ideaLists.length > 0 ? (
+                  ideaLists.map((idea) => (
+                    <IdeaCard
+                      key={idea.projectIdeaId}
+                      idea={idea}
+                      onReact={handleReactIdea}
                     />
-                    <p className="text-[#99A1AF] text-sm leading-5">
-                      {user?.devProfile.email}
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+                    <LightbulbOff size={48} className="mb-4 opacity-60" />
+                    <p className="text-lg font-medium">No ideas yet</p>
+                    <p className="text-sm mt-2 text-white/30">
+                      Submit a project idea.
                     </p>
                   </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
-                </div>
-
-                <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center gap-1">
-                    <img
-                      src={Phone}
-                      alt=""
-                      className="w-5 h-5  text-[#99A1AF]"
-                    />
-                    <p className="text-[#99A1AF] text-sm leading-5">
-                      {user?.devProfile.phone}
-                    </p>
-                  </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
-                </div>
-
-                <div className="flex  items-center  gap-3">
-                  <div className="flex justify-center gap-1">
-                    <img
-                      src={Telegram}
-                      alt=""
-                      className="w-5 h-5  text-[#99A1AF]"
-                    />
-                    <p className="text-[#99A1AF] text-sm leading-5">@nayGa4u</p>
-                  </div>
-                  <img src={Copy} alt="" className="w-4 h-4 text-[#364153]" />
-                </div>
-              </div>
-
-              <div className="flex  gap-3">
-                {user?.devProfile?.github && (
-                  <a
-                    href={
-                      user.devProfile.github.startsWith('http')
-                        ? user.devProfile.github
-                        : `https://${user.devProfile.github}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] rounded-full"
-                  >
-                    <img src={Github} className="w-4 h-4" alt="github" />
-                  </a>
                 )}
-
-                {user?.devProfile?.linkedIn && (
-                  <a
-                    href={
-                      user.devProfile.github.startsWith('http')
-                        ? user.devProfile.linkedIn
-                        : `https://${user.devProfile.linkedIn}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] rounded-full"
-                  >
-                    <img src={Github} className="w-4 h-4" alt="github" />
-                  </a>
+              </div>
+            </div>
+            <div>
+              <h1 className="text-white text-xl mb-6 font-semibold">
+                Project Portfolios
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projectLists.length > 0 ? (
+                  projectLists.map((pro) => (
+                    <ProjectCard
+                      views={0}
+                      react={pro.reaction_count}
+                      title={pro.name}
+                      developers={pro.assignedDevs.developers}
+                      id={pro.id}
+                      status={pro.status}
+                      image={pro.projectPicUrl}
+                      isReacted={pro.alreadyReacted}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-white/40">
+                    <List size={48} className="mb-4 opacity-60" />
+                    <p className="text-lg font-medium">No Portfolios yet</p>
+                    <p className="text-sm mt-2 text-white/30">
+                      Create a project portfolio.
+                    </p>
+                  </div>
                 )}
-
-                <div className="w-[32px] h-[32px] flex items-center justify-center border border-[#F3F4F6] text-[#F3F4F6] rounded-full">
-                  <img src={Behance} className="w-4 h-4" />
-                </div>
               </div>
             </div>
           </div>
-          <div>
-            <button
-              onClick={() => setShareOpen(true)}
-              className="w-[108px] h-10 bg-[#9C39FC] p-2 rounded-lg font-medium text-[#F9FAFB] text-sm"
-            >
-              Share Profile
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <ProjectIdea user={user} />
-          <ProjectPortfolio user={user} />
-        </div>
+        )}
       </div>
-
-      <UserShareProfile shareOpen={shareOpen} setShareOpen={setShareOpen} />
     </div>
   );
 };

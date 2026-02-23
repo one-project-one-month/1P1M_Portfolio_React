@@ -59,7 +59,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
     handleSubmit,
     control,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormValues>({
     mode: 'onSubmit',
   });
@@ -220,14 +220,14 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
   }
 
   return (
-    <FormBackground className="w-[532px]">
+    <FormBackground className="w-[532px] ">
       <h2 className="text-2xl text-white text-center">
         {isEditMode ? 'Edit Profile' : 'Set up Profile'}
       </h2>
 
       <form
         onSubmit={handleSubmit(onSubmit, handleFormError)}
-        className="flex flex-col items-start mt-2 gap-y-6"
+        className="flex flex-col items-center mt-2 gap-y-6"
       >
         <FileUpload
           onFileSelect={handleImageSelect}
@@ -235,75 +235,86 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           maxSize={1 * 1024 * 1024}
           existingImageUrl={isEditMode ? profileData?.profilePictureUrl : null}
         />
+        <div className="h-[50vh] overflow-y-auto w-full flex flex-col items-center gap-y-6">
+          <FormField
+            placeholder="Enter your name"
+            errorMessage={errors.name?.message}
+            className="w-full"
+            {...register('name', {
+              required: 'Name is required',
+              pattern: {
+                value: /^[a-z0-9]+$/,
+                message:
+                  'Only lowercase letters and numbers allowed (no spaces or special characters)',
+              },
+            })}
+          />
 
-        <FormField
-          placeholder="Enter your name"
-          className="w-full"
-          {...register('name', { required: 'Name is required' })}
-        />
+          <Controller
+            name="techStacks"
+            control={control}
+            rules={{ required: 'Tech stack is required' }}
+            render={function ({ field }) {
+              return (
+                <FormDropdown
+                  placeholder="Tech Stack"
+                  menuList={TechStacks}
+                  className="w-full"
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
 
-        <Controller
-          name="techStacks"
-          control={control}
-          rules={{ required: 'Tech stack is required' }}
-          render={function ({ field }) {
-            return (
-              <FormDropdown
-                placeholder="Tech Stack"
-                menuList={TechStacks}
-                className="w-full"
-                selectedValue={field.value}
-                onChange={field.onChange}
-              />
-            );
-          }}
-        />
+          <FormField
+            placeholder="Github"
+            className="w-full"
+            {...register('github', {
+              required: 'GitHub link is required',
+              pattern: {
+                value: /^https:\/\/github\.com\/.+$/,
+                message: 'Must be a valid GitHub URL',
+              },
+            })}
+            errorMessage={errors.github?.message}
+          />
 
-        <FormField
-          placeholder="Github"
-          className="w-full"
-          {...register('github', {
-            required: 'GitHub link is required',
-            pattern: {
-              value: /^https:\/\/github\.com\/.+$/,
-              message: 'Must be a valid GitHub URL',
-            },
-          })}
-        />
+          <FormField
+            placeholder="LinkedIn"
+            className="w-full"
+            {...register('linkedIn', {
+              required: 'LinkedIn link is required',
+              pattern: {
+                value: /^https:\/\/(www\.)?linkedin\.com\/.+$/,
+                message: 'Must be a valid LinkedIn URL',
+              },
+            })}
+            errorMessage={errors.linkedIn?.message}
+          />
 
-        <FormField
-          placeholder="LinkedIn"
-          className="w-full"
-          {...register('linkedIn', {
-            required: 'LinkedIn link is required',
-            pattern: {
-              value: /^https:\/\/(www\.)?linkedin\.com\/.+$/,
-              message: 'Must be a valid LinkedIn URL',
-            },
-          })}
-        />
+          <FormTextArea
+            placeholder="About yourself"
+            className="h-28 w-full"
+            {...register('aboutDev', {
+              required: 'Please write something about yourself',
+            })}
+          />
 
-        <FormTextArea
-          placeholder="About yourself"
-          className="h-28 w-full"
-          {...register('aboutDev', {
-            required: 'Please write something about yourself',
-          })}
-        />
-
-        <TermsConditionsContainer
-          isTermsAccepted={isTermsAccepted}
-          isTermsError={isTermsError}
-          onCheckedChange={(checked) => {
-            setIsTermsAccepted(checked);
-            if (checked) {
-              setIsTermsError(false);
-            }
-          }}
-          title="Terms and Conditions & Privacy Policy"
-        >
-          <TermsCondition />
-        </TermsConditionsContainer>
+          <TermsConditionsContainer
+            isTermsAccepted={isTermsAccepted}
+            isTermsError={isTermsError}
+            onCheckedChange={(checked) => {
+              setIsTermsAccepted(checked);
+              if (checked) {
+                setIsTermsError(false);
+              }
+            }}
+            title="Terms and Conditions & Privacy Policy"
+          >
+            <TermsCondition />
+          </TermsConditionsContainer>
+        </div>
 
         <div className="flex w-full justify-end gap-2">
           <Button

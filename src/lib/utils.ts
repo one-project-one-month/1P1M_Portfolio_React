@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const logout = () => {
   useUserInfoStore.getState().clearUserInfo();
-  window.location.href = '/';
+  window.location.href = '/auth/log-in';
 };
 
 export const copyToClipboard = async (

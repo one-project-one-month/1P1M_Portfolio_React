@@ -12,6 +12,7 @@ interface ProfileActionsProps {
   truncate: (text: string, max?: number) => string;
   className?: string;
   isMyProfile?: boolean;
+  shareUrl?: string;
 }
 
 export const ProfileActions = ({
@@ -20,6 +21,7 @@ export const ProfileActions = ({
   truncate,
   className,
   isMyProfile = false,
+  shareUrl,
 }: ProfileActionsProps) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
@@ -47,7 +49,11 @@ export const ProfileActions = ({
         </Dialog.Root>
       )}
 
-      <ShareProfileDialog onCopy={onCopy} truncate={truncate} />
+      <ShareProfileDialog
+        shareUrl={shareUrl}
+        onCopy={onCopy}
+        truncate={truncate}
+      />
     </div>
   );
 };

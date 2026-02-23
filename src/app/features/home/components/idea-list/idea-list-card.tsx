@@ -88,6 +88,7 @@ function IdeaListCard({
               className="aspect-square w-6 object-cover rounded-full"
               src={url || sampleImg}
               alt={label}
+              onError={(e) => (e.currentTarget.src = sampleImg)}
             />
           </div>
         ))}

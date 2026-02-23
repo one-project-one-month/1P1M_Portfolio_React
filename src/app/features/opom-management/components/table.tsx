@@ -65,7 +65,7 @@ export const OpomRegisteredListTable = ({
 
                 <td className="py-4 text-center text-slate-400"></td>
                 <td className="py-4 flex justify-center   items-center ">
-                  <Link to={`user-profile/${person.id}`}>
+                  <Link to={`user-profile/${person.userId}`}>
                     <Eye
                       className="w-4 h-4  cursor-pointer text-slate-400 hover:text-white transition"
                       // onClick={() => handleViewDetail(person.id)}

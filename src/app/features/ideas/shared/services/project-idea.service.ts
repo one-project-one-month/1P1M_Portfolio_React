@@ -144,9 +144,12 @@ export const updateProjectIdeaInformation = async (
 ) => {
   try {
     const response = await apiClient.patch(
-      API_ENDPOINTS.UPDATE_PROJECT_IDEA,
-      formData,
-      { params: { projectIdeaId } },
+      API_ENDPOINTS.UPDATE_PROJECT_IDEA + `/${projectIdeaId}`,
+      {
+        projectName: formData.projectIdeaName,
+        description: formData.description,
+        projectType: formData.projectTypes || [],
+      },
     );
     return response.data;
   } catch (error) {
