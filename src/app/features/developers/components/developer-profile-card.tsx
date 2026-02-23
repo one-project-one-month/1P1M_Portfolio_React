@@ -34,7 +34,7 @@ function DeveloperProfileCard({
     techStacks,
   } = user;
 
-  const shareUrl = `${window.location.origin}/profile/${name}`;
+  const shareUrl = `${window.location.origin}/profile/${email.split('@')[0]}`;
 
   const handleShareProfile = () => {
     copyToClipboard(shareUrl);
