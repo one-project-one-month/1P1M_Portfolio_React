@@ -88,15 +88,6 @@ export default function IdeaCard({
       <div className="flex justify-between border-b py-4">
         <div className="flex text-sm items-center gap-x-2">
           <span>Submitter</span>
-          {/* <Avatar
-            onClick={dev_id ? () => goTo(`/profile/${dev_id}`) : undefined}
-            src={ownerProfilePicUrl || devUsername?.slice(0, 1)}
-            radius="full"
-            color="gray"
-            className=" bg-gray-600! cursor-pointer"
-            fallback={devUsername?.slice(0, 1)}
-          /> */}
-
           <div
             onClick={() => {
               if (!userInfo) {
