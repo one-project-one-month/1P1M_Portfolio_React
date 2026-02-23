@@ -67,6 +67,9 @@ export const API_ENDPOINTS = {
   //Admin Project Idea
   DELETE_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
   APPROVED_PROJECT_IDEA: 'portfolio/api/v1/approved-ideas',
+
+  //AUTH
+  LOGOUT: '/portfolio/api/v1/auth/users/logout',
 };
 
 export const getApiEndpoint = (endpoint: keyof typeof API_ENDPOINTS) => {

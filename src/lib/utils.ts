@@ -1,4 +1,4 @@
-import { useUserInfoStore } from '@/store/user-info-store';
+import { LogoutUser } from '@/app/features/auth/login/services/api';
 
 import { clsx, type ClassValue } from 'clsx';
 import toast from 'react-hot-toast';
@@ -8,15 +8,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const logout = () => {
-  useUserInfoStore.getState().clearUserInfo();
-  window.location.href = '/auth/log-in';
+
+export const logout = async () => {
+  try {
+    await LogoutUser();
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const copyToClipboard = async (
-  value?: string | null,
-  // label: string = 'Copied',
-) => {
+export const copyToClipboard = async (value?: string | null) => {
   if (!value) return;
 
   try {

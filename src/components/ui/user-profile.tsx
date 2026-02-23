@@ -1,9 +1,12 @@
+import { LogoutUser } from '@/app/features/auth/login/services/api';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useClickOutside } from '@/hooks/use-click-outside';
-import { logout } from '@/lib/utils';
+import { useUserInfoStore } from '@/store/user-info-store';
 import { Avatar } from '@radix-ui/themes';
+import type { AxiosError } from 'axios';
 import { LogOut, Shield, User } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useToast } from './toast-provider';
 
 type UserProfileProps = {
   username: string;
@@ -14,8 +17,29 @@ type UserProfileProps = {
 
 const UserProfile = ({ username, email, img, role }: UserProfileProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { addToast } = useToast();
   const profileRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
   const { goTo } = useAppNavigation();
+
+  const hanldeLogout = async () => {
+    setLoading(true);
+    if (loading) {
+      addToast('Logging out', 'info');
+    }
+
+    try {
+      await LogoutUser();
+
+      useUserInfoStore.getState().clearUserInfo();
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+    goTo('/');
+  };
 
   return (
     <div ref={profileRef} className="relative">
@@ -73,7 +97,7 @@ const UserProfile = ({ username, email, img, role }: UserProfileProps) => {
             <div className="h-px bg-white/5 my-2" />
 
             <button
-              onClick={logout}
+              onClick={hanldeLogout}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-red-500/10 hover:text-red-400 transition text-gray-300"
             >
               <LogOut size={16} />
