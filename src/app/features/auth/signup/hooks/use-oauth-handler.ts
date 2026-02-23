@@ -47,12 +47,12 @@ export const useOAuthHandler = () => {
           profile: response.data?.profile_picture,
         };
 
-        handleRoute(response?.data?.user.role.name, response?.data?.isNewUser);
+        handleRoute(response?.data?.user.role.name, response?.data?.newUser);
 
         setUserInfo(user);
         addToast(`Welcome back! Logged in with ${provider}`, 'success', 2000);
 
-        handleRoute(user?.role ?? 'USER', response.data?.newUser);
+        // handleRoute(user?.role ?? 'USER', response?.data?.newUser);
       } else {
         throw new Error('Login failed');
       }
