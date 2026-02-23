@@ -36,18 +36,18 @@ export const useOAuthHandler = () => {
         response = await exchangeGitHub(code);
       }
 
-      console.log('Oauth', response);
+      // console.log('Oauth', response);
 
       if (response?.success) {
         const user: UserInfo = {
-          role: response.data?.user.role.name,
+          role: response.data?.user.role,
           email: response.data?.user.email,
           userId: response.data?.user.email,
           username: response.data?.user.username,
           profile: response.data?.profile_picture,
         };
 
-        handleRoute(response?.data?.user.role.name, response?.data?.newUser);
+        handleRoute(response?.data?.user.role, response?.data?.newUser);
 
         setUserInfo(user);
         addToast(`Welcome back! Logged in with ${provider}`, 'success', 2000);
