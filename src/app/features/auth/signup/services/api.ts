@@ -8,7 +8,7 @@ export const exchangeGitHub = async (code: string) => {
         code,
       },
     );
-    console.log('exchange code', response.data);
+    // console.log('exchange code', response.data);
 
     return response.data;
   } catch (error) {
@@ -22,7 +22,7 @@ export const exchangeGoogleCode = async (code: string) => {
       '/portfolio/api/v1/auth/users/exchangeGoogle',
       { code },
     );
-    console.log('Google exchange response:', response);
+    // console.log('Google exchange response:', response);
     return response.data;
   } catch (error) {
     throw error;
