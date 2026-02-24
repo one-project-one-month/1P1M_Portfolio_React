@@ -4,7 +4,7 @@ import type { UserProfile } from '@/types/dev';
 import type { ProjectPortfolio } from '@/types/portfolio.type';
 import { LightbulbOff, List } from 'lucide-react';
 import { useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
 import { IdeaCard } from '../../ideas/shared/components';
 import {
@@ -18,16 +18,18 @@ import DeveloperProfileCard from '../components/developer-profile-card';
 import DeveloperProfileCardSkeleton from '../components/developer-profile-skeleton-card';
 import ProjectCard from '../components/project-card';
 
-function UserProfilePage() {
+const UserProfilePage = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
-  if (!userId) navigate('/not-found');
+  if (!userId) {
+    return <Navigate to="/not-found" replace />;
+  }
 
   const withUserName = Boolean(isNaN(Number(userId)));
   const isMyProfile = withUserName
     ? useUserInfoStore((state) => state.userInfo?.email)?.split('@')[0] ===
       userId
-    : useUserInfoStore((state) => state.userInfo?.userId) == userId;
+    : useUserInfoStore((state) => state.userInfo?.userId) === Number(userId);
 
   const { data, isLoading, isError } = useGetUserProfile(
     withUserName ? userId : Number(userId),
@@ -54,11 +56,12 @@ function UserProfilePage() {
     | [];
 
   if (isError) {
-    if (isMyProfile) return navigate('/auth/setup-profile');
+    if (isMyProfile) {
+      return <Navigate to="/auth/setup-profile" replace />;
+    }
 
-    navigate('/not-found');
+    return <Navigate to="/not-found" replace />;
   }
-
   return (
     <div className="w-full">
       <BackButton onClick={() => navigate(-1)} />
@@ -138,6 +141,6 @@ function UserProfilePage() {
       </div>
     </div>
   );
-}
+};
 
 export default UserProfilePage;

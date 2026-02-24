@@ -70,7 +70,7 @@ export default function UserEditDialog({
       id: number;
       formData: EditUserProfileType;
     }) => editUserProfileService(id, formData),
-    onSuccess: (success, variables) => {
+    onSuccess: (success) => {
       queryClient.invalidateQueries({
         queryKey: ['user-profile'],
         exact: false,
