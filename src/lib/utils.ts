@@ -11,6 +11,7 @@ export function cn(...inputs: ClassValue[]) {
 export const logout = async () => {
   try {
     await LogoutUser();
+    window.location.href = '/auth/log-in';
   } catch (error) {
     throw error;
   }

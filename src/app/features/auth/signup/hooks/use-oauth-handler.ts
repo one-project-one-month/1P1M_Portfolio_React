@@ -47,7 +47,8 @@ export const useOAuthHandler = () => {
           profile: response.data?.profile_picture,
         };
 
-        handleRoute(response?.data?.user.role, response?.data?.newUser);
+        //TODO: OAuth မှာ profile set up redirect ကို ခန ဖြုတ်ထားမယ်
+        handleRoute(response?.data?.user.role, false);
 
         setUserInfo(user);
         addToast(`Welcome back! Logged in with ${provider}`, 'success', 2000);
