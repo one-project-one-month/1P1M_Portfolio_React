@@ -54,6 +54,7 @@ export type UserProfile = {
   github: string;
   linkedIn: string;
   aboutDev: string;
+  telegramUsername: string | null;
   techStacks: string[];
   dev_id: number;
 };

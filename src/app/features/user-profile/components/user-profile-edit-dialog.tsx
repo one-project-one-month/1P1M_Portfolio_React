@@ -5,6 +5,7 @@ import {
 } from '@/app/features/user-profile/types/user-profile.type';
 import { Button } from '@/components/ui/button';
 import { TechStacks } from '@/constants';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { Avatar, Dialog } from '@radix-ui/themes';
@@ -69,9 +70,10 @@ export default function UserEditDialog({
       id: number;
       formData: EditUserProfileType;
     }) => editUserProfileService(id, formData),
-    onSuccess: (success, variables) => {
+    onSuccess: (success) => {
       queryClient.invalidateQueries({
-        queryKey: ['user-profile', variables.id],
+        queryKey: ['user-profile'],
+        exact: false,
       });
       addToast(success.message, 'success');
       setEditDialogOpen(false);
@@ -419,10 +421,12 @@ export default function UserEditDialog({
 
                   <Button
                     type="submit"
-                    disabled={
-                      isPending || isUploadingImage || !form.formState.isValid
-                    }
-                    className="w-1/2"
+                    disabled={isPending || isUploadingImage}
+                    className={cn(
+                      'w-1/2',
+                      (isPending || isUploadingImage) &&
+                        'cursor-not-allowed opacity-50',
+                    )}
                   >
                     {isPending || isUploadingImage ? 'Updating...' : 'Update'}
                   </Button>

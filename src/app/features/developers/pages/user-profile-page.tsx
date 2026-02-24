@@ -1,9 +1,10 @@
 import BackButton from '@/components/common/back-button';
+import { useUserInfoStore } from '@/store/user-info-store';
 import type { UserProfile } from '@/types/dev';
 import type { ProjectPortfolio } from '@/types/portfolio.type';
 import { LightbulbOff, List } from 'lucide-react';
 import { useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import IdeaListCardSkeleton from '../../home/components/idea-list/idea-list-card-skeleton';
 import { IdeaCard } from '../../ideas/shared/components';
 import {
@@ -17,12 +18,18 @@ import DeveloperProfileCard from '../components/developer-profile-card';
 import DeveloperProfileCardSkeleton from '../components/developer-profile-skeleton-card';
 import ProjectCard from '../components/project-card';
 
-function UserProfilePage() {
+const UserProfilePage = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
-  if (!userId) navigate('/not-found');
+  if (!userId) {
+    return <Navigate to="/not-found" replace />;
+  }
 
-  const withUserName = isNaN(Number(userId));
+  const withUserName = Boolean(isNaN(Number(userId)));
+  const isMyProfile = withUserName
+    ? useUserInfoStore((state) => state.userInfo?.email)?.split('@')[0] ===
+      userId
+    : useUserInfoStore((state) => state.userInfo?.userId) === Number(userId);
 
   const { data, isLoading, isError } = useGetUserProfile(
     withUserName ? userId : Number(userId),
@@ -48,8 +55,13 @@ function UserProfilePage() {
     | ProjectPortfolio[]
     | [];
 
-  if (isError) navigate('/not-found');
+  if (isError) {
+    if (isMyProfile) {
+      return <Navigate to="/auth/setup-profile" replace />;
+    }
 
+    return <Navigate to="/not-found" replace />;
+  }
   return (
     <div className="w-full">
       <BackButton onClick={() => navigate(-1)} />
@@ -70,7 +82,7 @@ function UserProfilePage() {
           </div>
         ) : (
           <div className="flex flex-col gap-6">
-            <DeveloperProfileCard user={user} />
+            <DeveloperProfileCard isMyProfile={isMyProfile} user={user} />
             <div>
               <h1 className="text-white text-xl mb-6 font-semibold">
                 Project Ideas
@@ -129,6 +141,6 @@ function UserProfilePage() {
       </div>
     </div>
   );
-}
+};
 
 export default UserProfilePage;
