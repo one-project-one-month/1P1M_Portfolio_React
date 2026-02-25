@@ -56,7 +56,7 @@ const Developer = () => {
   return (
     <div className="flex flex-col">
       <Title
-        title="Developer Profiles"
+        title="Profiles"
         showSearch
         showOrder
         showFilter={false}

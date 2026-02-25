@@ -243,7 +243,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
             {...register('name', {
               required: 'Name is required',
               pattern: {
-                value: /^[A-Za-z0-9]+$/,
+                value: /^[A-Za-z0-9 ]+$/,
                 message:
                   'Only letters and numbers allowed (no special characters)',
               },
