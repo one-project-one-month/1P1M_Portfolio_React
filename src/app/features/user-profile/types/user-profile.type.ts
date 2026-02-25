@@ -62,7 +62,7 @@ export const editUserProfileSchema = z.object({
   name: z
     .string()
     .min(1, 'Name is required')
-    .regex(/^[A-Za-z0-9]+$/, {
+    .regex(/^[A-Za-z0-9 ]+$/, {
       message: 'Only letters and numbers allowed (no special characters)',
     }),
 
@@ -87,7 +87,7 @@ export const editUserProfileSchema = z.object({
     .optional()
     .or(z.literal('')),
 
-  telegramUsername: z.string(),
+  telegramUsername: z.string().optional().or(z.literal('')),
 
   aboutDev: z
     .string()
