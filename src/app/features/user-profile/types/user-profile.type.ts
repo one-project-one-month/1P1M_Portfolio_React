@@ -62,9 +62,8 @@ export const editUserProfileSchema = z.object({
   name: z
     .string()
     .min(1, 'Name is required')
-    .regex(/^[a-z0-9]+$/, {
-      message:
-        'Only lowercase letters and numbers allowed (no spaces or special characters)',
+    .regex(/^[A-Za-z0-9 ]+$/, {
+      message: 'Only letters and numbers allowed (no special characters)',
     }),
 
   profilePictureUrl: z.string().url().optional().or(z.literal('')),
@@ -88,14 +87,7 @@ export const editUserProfileSchema = z.object({
     .optional()
     .or(z.literal('')),
 
-  telegramUsername: z
-    .string()
-    .regex(/^[a-zA-Z0-9_]*$/, {
-      message:
-        'Telegram username can only contain letters, numbers, and underscores',
-    })
-    .optional()
-    .or(z.literal('')),
+  telegramUsername: z.string().optional().or(z.literal('')),
 
   aboutDev: z
     .string()

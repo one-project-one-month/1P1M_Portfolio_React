@@ -11,7 +11,24 @@ export function cn(...inputs: ClassValue[]) {
 export const logout = async () => {
   try {
     await LogoutUser();
-    window.location.href = '/auth/log-in';
+
+    const authRoutes = [
+      '/auth/log-in',
+      '/auth/register',
+      '/auth/otp-verify',
+      '/auth/setup-profile',
+      '/auth/sign-up',
+      '/auth/forgot-password',
+      '/auth/check-password-otp',
+      '/auth/reset-password',
+    ];
+
+    const currentPath = window.location.pathname;
+
+    // Redirect only if NOT already on auth pages
+    if (!authRoutes.includes(currentPath)) {
+      window.location.href = '/auth/log-in';
+    }
   } catch (error) {
     throw error;
   }
