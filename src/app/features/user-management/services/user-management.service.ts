@@ -150,7 +150,7 @@ export const uploadDevImageService = async (
   }
 };
 
-export const shareProfile = async () => {
+export const shareProfile = async (userId: number) => {
   try {
     const response = await apiClient.patch<UserRestoreResponseType>(
       `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}/${userId}`,

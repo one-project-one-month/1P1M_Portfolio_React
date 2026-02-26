@@ -169,12 +169,14 @@ export type GetUserManagementParamsType = {
   size?: number;
   sortField?: string;
   sortDirection?: 'asc' | 'desc';
+  isBan?: boolean;
 };
 
 export type FilterType = {
   order: 'asc' | 'desc' | 'popular';
   status: UserManagementStatusType;
   search?: string;
+  isBan?: boolean;
 };
 
 export type UserManagementHeaderType = {

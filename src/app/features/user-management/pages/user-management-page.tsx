@@ -8,8 +8,9 @@ const DEFAULT_PAGE_SIZE = 5;
 const UserManagement = () => {
   const [filter, setFilter] = useState<FilterType>({
     order: 'desc',
-    isBan: undefined,
     search: '',
+    isBan: undefined,
+    status: 'ALL',
   });
   const [pagination, setPagination] = useState({
     currentPage: 0,
