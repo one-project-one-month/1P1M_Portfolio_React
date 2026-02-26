@@ -14,12 +14,6 @@ const STATUS_LIST = [
   { value: UserManagementStatus.ACTIVE, name: 'Active' },
 ];
 
-// const ORDER_LIST = [
-//   { value: 'desc', name: 'Newest' },
-//   { value: 'asc', name: 'Oldest' },
-//   { value: 'popular', name: 'Popular' },
-// ];
-
 export const UserManagementHeaderSection = ({
   filter,
   setFilter,
@@ -41,12 +35,6 @@ export const UserManagementHeaderSection = ({
       handleSearch();
     }
   }, [debouncedSearch, filter.search, handleSearch]);
-
-  // Order
-  // const handleOrder = (order: 'asc' | 'desc' | 'popular') => {
-  //   setFilter({ ...filter, order });
-  //   setOpen({ ...open, filter: false });
-  // };
 
   // Status
   const handleStatus = (status: UserManagementStatusType) => {
@@ -79,40 +67,6 @@ export const UserManagementHeaderSection = ({
 
         {/* View Controls and Filter */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          {/* Filter by Order Dropdown */}
-          {/* <div className="relative">
-            <button
-              onClick={() =>
-                setOpen({ ...open, order: !open.order, filter: false })
-              }
-              className="flex items-center gap-2 px-6 py-2 bg-transparent hover:bg-slate-700/40 text-white rounded-4xl border"
-            >
-              <ListFilter />
-              <span>Order</span>
-            </button>
-
-            {open.order && (
-              <div className="absolute right-0 mt-1 w-full min-w-40 flex flex-col gap-1 z-10">
-                {ORDER_LIST.map((order) => (
-                  <button
-                    key={order.value}
-                    onClick={() =>
-                      handleOrder(order.value as 'asc' | 'desc' | 'popular')
-                    }
-                    className="w-full text-left px-4 py-2 text-white bg-[#0f172a] transition-colors flex items-center gap-3 border border-white/60 rounded-lg"
-                  >
-                    <div className="w-4 h-4 flex items-center justify-center">
-                      {filter.order === order.value && (
-                        <Check className="w-4 h-4 text-white" />
-                      )}
-                    </div>
-                    <span className="text-sm font-medium">{order.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div> */}
-
           {/* Filter by Status Dropdown */}
           <div className="relative">
             <button

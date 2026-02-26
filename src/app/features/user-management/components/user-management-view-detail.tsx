@@ -1,5 +1,6 @@
 import ProjectIdea from '@/app/features/user-management/components/user-management-detail/project-idea/project-idea';
 import ProjectPortfolio from '@/app/features/user-management/components/user-management-detail/project-portfolio/project-portfolio';
+import UserManagementEditDialog from '@/app/features/user-management/components/user-management-edit-dialog';
 import UserShareProfile from '@/app/features/user-management/components/user-share-profile-dialog';
 import { useGetUserProfileDetail } from '@/app/features/user-management/hook/use-user-management';
 import Copy from '@/assets/icons/copy.png';
@@ -23,6 +24,7 @@ const UserManagementViewDetail = () => {
 
   const { data, isLoading, isError } = useGetUserProfileDetail(id);
   const [shareOpen, setShareOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   if (isLoading) return <div className="text-white">Loading....</div>;
   if (isError) return <div className="text-white">Error....</div>;
@@ -186,7 +188,13 @@ const UserManagementViewDetail = () => {
               </div>
             </div>
           </div>
-          <div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setEditDialogOpen(true)}
+              className="w-[108px] border h-10 border-[#9C39FC] p-2 rounded-lg font-medium text-[#F9FAFB] text-sm"
+            >
+              Edit Profile
+            </button>
             <button
               onClick={() => setShareOpen(true)}
               className="w-[108px] h-10 bg-[#9C39FC] p-2 rounded-lg font-medium text-[#F9FAFB] text-sm"
@@ -202,7 +210,31 @@ const UserManagementViewDetail = () => {
         </div>
       </div>
 
-      <UserShareProfile shareOpen={shareOpen} setShareOpen={setShareOpen} />
+      <UserShareProfile
+        shareOpen={shareOpen}
+        setShareOpen={setShareOpen}
+        userName={user.devProfile.name}
+      />
+      <UserManagementEditDialog
+        data={{
+          userId: user.devProfile.userId,
+          devId: user.devProfile.dev_id,
+          name: user.devProfile.name,
+          email: user.devProfile.email,
+          phone: user.devProfile.phone || null,
+          role: 'ACTIVE',
+          profilePictureUrl: user.devProfile.profilePictureUrl,
+          aboutDev: user.devProfile.aboutDev || '',
+          telegramUsername: user.devProfile.telegramUsername || null,
+          githubUrl: user.devProfile.github || '',
+          linkedUrl: user.devProfile.linkedIn || '',
+          description: user.devProfile.description || '',
+          techStack: user.devProfile.techStacks || [],
+          status: 'ACTIVE',
+        }}
+        editDialogOpen={editDialogOpen}
+        setEditDialogOpen={setEditDialogOpen}
+      />
     </div>
   );
 };

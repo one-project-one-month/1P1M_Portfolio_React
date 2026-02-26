@@ -13,21 +13,17 @@ export const userManagementSchema = z.object({
   devId: z.number(),
   name: z.string(),
   email: z.string(),
-  phone: z.string(),
+  phone: z.string().nullable(),
   role: z.string(),
-  profilePictureUrl: z.string(),
+  profilePictureUrl: z.string().nullable(),
   aboutDev: z.string(),
-  telegramUsername: z.string(),
+  telegramUsername: z.string().nullable(),
   githubUrl: z.string(),
   linkedUrl: z.string(),
   description: z.string(),
+  techStack: z.array(z.string()),
   status: z.enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED]),
 });
-
-// export const editUserSchema = userManagementSchema.omit({
-//   userId: true,
-//   email: true,
-// });
 
 export const userProfileSchema = z.object({
   userId: z.number(),
@@ -38,6 +34,7 @@ export const userProfileSchema = z.object({
   passwordLastUpdated: z.string(),
   joinedDate: z.string(),
   phone: z.string().nullable(),
+  description: z.string(),
   github: z.string(),
   linkedIn: z.string(),
   aboutDev: z.string(),
@@ -54,6 +51,7 @@ export const editUserSchema = z.object({
   github_url: z.string(),
   linkedIn_url: z.string(),
   description: z.string(),
+  techStack: z.array(z.string()),
   status: z.enum([UserManagementStatus.ACTIVE, UserManagementStatus.BANNED]),
 });
 
@@ -74,18 +72,6 @@ export const projectIdeaSchema = z.object({
     'DELETED',
     'PENDING',
   ]),
-  // projectName: z.string(),
-  // description: z.string(),
-  // devUsername: z.string(),
-  // reactionCount: z.number(),
-  // viewCount: z.number(),
-  // dev_id: z.number(),
-  // dev_Email: z.string().nullable(),
-  // ownerProfilePicUrl: z.string().nullable().optional(),
-  // leader_id: z.number(),
-  // leaderProfilePicUrl: z.string().nullable(),
-  // projectTypes: z.array(z.string()),
-  // isAlreadyReacted: z.boolean(),
 
   description: z.string(),
   reactionCount: z.number(),

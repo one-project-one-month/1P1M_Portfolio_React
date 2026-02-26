@@ -23,6 +23,7 @@ export const useGetUserManagement = ({
   sortField,
   sortDirection,
   status,
+  isBan,
 }: GetUserManagementParamsType) => {
   return useQuery<UserManagementResponseType>({
     queryKey: [
@@ -33,6 +34,7 @@ export const useGetUserManagement = ({
       sortField,
       sortDirection,
       status,
+      isBan,
     ],
     queryFn: () =>
       getUserManagementService({
@@ -41,6 +43,8 @@ export const useGetUserManagement = ({
         size,
         sortField,
         sortDirection,
+        status,
+        isBan,
       }),
   });
 };
@@ -117,5 +121,19 @@ export const useRestoreUser = () => {
     onError: (error: AxiosError<{ message: string }>) => {
       addToast(error.response?.data?.message || 'Failed to ban user', 'error');
     },
+  });
+};
+
+import { uploadDevImageService } from '../services/user-management.service';
+
+export const useUploadImage = () => {
+  return useMutation({
+    mutationFn: ({
+      devProfileId,
+      file,
+    }: {
+      devProfileId: number;
+      file: File;
+    }) => uploadDevImageService(devProfileId, file),
   });
 };

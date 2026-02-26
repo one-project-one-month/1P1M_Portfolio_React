@@ -1,5 +1,6 @@
 import UserManagementBanDialog from '@/app/features/user-management/components/user-management-ban-dialog';
-import { default as UserManagementEditDialog } from '@/app/features/user-management/components/user-management-edit-dialog';
+// import { default as UserManagementEditDialog } from '@/app/features/user-management/components/user-management-edit-dialog';
+import UserManagementEditDialog from '@/app/features/user-management/components/user-management-edit-dialog';
 import UserManagementRestoreDialog from '@/app/features/user-management/components/user-management-restore-dialog';
 import {
   useBanUser,

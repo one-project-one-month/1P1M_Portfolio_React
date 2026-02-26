@@ -16,34 +16,28 @@ export const getUserManagementService = async ({
   keyword,
   page,
   size,
-  sortField,
-  sortDirection,
-  status,
+  isBan,
 }: GetUserManagementParamsType) => {
   try {
+    const params: any = {
+      keyword,
+      page,
+      size,
+    };
+
+    if (typeof isBan === 'boolean') {
+      params.isBan = isBan;
+    }
+
     const response = await apiClient.get<UserManagementResponseType>(
       API_ENDPOINTS.GET_ALL_USER_MANAGEMENT,
-      {
-        params: {
-          keyword,
-          page,
-          size,
-          status,
-          sortField,
-          sortDirection,
-        },
-      },
+      { params },
     );
+
     return response.data;
   } catch (error) {
     const e = error as AxiosError<{ message?: string }>;
-    const backendMessage = e.response?.data?.message || e.message;
-    console.error('Error fetching user:', backendMessage);
-    // throw {
-    //   success: false,
-    //   message: backendMessage,
-    // };
-    throw new Error(backendMessage);
+    throw new Error(e.response?.data?.message || e.message);
   }
 };
 
@@ -105,14 +99,6 @@ export const getUserProfileDetail = async (userId: number) => {
 // DELETE
 export const banUserService = async (userId: number, desc: string) => {
   try {
-    // const response = await apiClient.patch<UserBanResponseType>(
-    //   `${API_ENDPOINTS.BAN_USER}/${userId}`,
-    //   {},
-    //   {
-    //     params: { desc },
-    //   },
-    // );
-
     const response = await apiClient.patch<UserBanResponseType>(
       `${API_ENDPOINTS.BAN_USER}/${userId}?desc=${encodeURIComponent(desc)}`,
     );
@@ -128,12 +114,51 @@ export const banUserService = async (userId: number, desc: string) => {
 export const restoreUserService = async (userId: number) => {
   try {
     const response = await apiClient.patch<UserRestoreResponseType>(
-      `${API_ENDPOINTS.RESTORE_USER}/${userId}`,
+      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}/${userId}`,
     );
     return response.data;
   } catch (error) {
     const e = error as AxiosError;
     console.error('Error banning user:', e);
+    throw e;
+  }
+};
+
+export const uploadDevImageService = async (
+  devProfileId: number,
+  file: File,
+) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}?devProfileId=${devProfileId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error uploading image:', e);
+    throw e;
+  }
+};
+
+export const shareProfile = async () => {
+  try {
+    const response = await apiClient.patch<UserRestoreResponseType>(
+      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}/${userId}`,
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    console.error('Error share profile:', e);
     throw e;
   }
 };
