@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/toast-provider';
 import { useAppNavigation } from '@/hooks/use-app-navigate';
 import { useUserInfoStore, type UserInfo } from '@/store/user-info-store';
 import type { LoginResponse } from '@/types/auth';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import AuthFormHeading from '../../auth-form-heading';
 import GithubBtn from '../../signup/components/github-btn';
@@ -22,11 +22,8 @@ export default function LoginForm() {
 
   const { handleRoute } = useAppNavigation();
 
-  const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const { addToast } = useToast();
-  const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-  const [showEmailError, setShowEmailError] = useState(false);
-  const [showPasswordError, setShowPasswordError] = useState(false);
+
 
   //validation
   const validateEmail = (email: string) => {
@@ -49,17 +46,29 @@ export default function LoginForm() {
     return '';
   };
 
-  const handleLogin = async () => {
+
+
+
+
+
+  const handleLogin = async (e: React.SubmitEvent) => {
+
+    e.preventDefault();
     // Run validation only when login button is clicked
     const emailErr = validateEmail(email);
+
     const passwordErr = validatePassword(password);
 
-    // Set error messages
-    setEmailErrorMsg(emailErr);
-    setPasswordErrorMsg(passwordErr);
 
-    setShowEmailError(!!emailErr);
-    setShowPasswordError(!!passwordErr);
+
+    if (emailErr && passwordErr) {
+      addToast("Please enter both your email and password.", 'error', 3000);
+    } else if (emailErr && !passwordErr) {
+      addToast(emailErr, 'error', 2000)
+    } else if (!emailErr && passwordErr) {
+      addToast(passwordErr, 'error', 2000)
+    }
+
 
     // Stop if any validation fails
     if (emailErr || passwordErr) return;
@@ -104,49 +113,50 @@ export default function LoginForm() {
       {/* Form Fields */}
       <div className="w-[404px] h-[260px] flex flex-col gap-6 justify-around">
         {/* Email */}
-        <div className="-mb-8 relative">
-          <TextField
-            label="Email"
-            id="email"
-            name="email"
-            placeholder="Enter your email here"
-            value={email}
-            onChange={(value) => setEmail(value)}
-            className="relative w-full text-white font-sans text-sm font-semibold leading-8"
-          />
-          {showEmailError && (
-            <p className="text-red-500 text-xs absolute bottom-[15px]">
-              {emailErrorMsg}
-            </p>
-          )}
-        </div>
+        <form className='' onSubmit={handleLogin}>
+          <div className="-mb-8 relative">
+            <TextField
 
-        {/* Password */}
-        <div className="-mb-8 relative">
-          <PasswordField
-            label="Password"
-            id="password"
-            name="password"
-            placeholder="Enter your password here"
-            value={password}
-            onChange={(value) => setPassword(value)}
-          />
-          {showPasswordError && (
-            <p className="text-red-500 text-xs absolute bottom-[15px]">
-              {passwordErrorMsg}
-            </p>
-          )}
-        </div>
+              label="Email"
+              id="email"
+              name="email"
+              placeholder="Enter your email here"
+              value={email}
+              onChange={(value) => setEmail(value)}
+              className="relative w-full text-white font-sans text-sm font-semibold leading-8"
+            />
 
-        {/* Login Button */}
-        <Button
-          variant="primary"
-          size="primary"
-          className="w-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl mt-3"
-          onClick={handleLogin}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </Button>
+          </div>
+
+          {/* Password */}
+          <div className="-mb-8 relative">
+            <PasswordField
+
+              label="Password"
+              id="password"
+              name="password"
+              placeholder="Enter your password here"
+              value={password}
+              onChange={(value) => setPassword(value)}
+
+            />
+
+          </div>
+
+          {/* Login Button */}
+          <Button
+
+            variant="primary"
+            size="primary"
+            className="w-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl mt-3"
+          // onClick={handleLogin}
+
+
+
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
       </div>
 
       <div className="flex gap-y-5  mt-8 flex-col w-full">
