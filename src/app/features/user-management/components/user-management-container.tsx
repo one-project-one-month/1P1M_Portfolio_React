@@ -1,8 +1,23 @@
 import UserManagementTable from '@/app/features/user-management/components/user-management-table';
-import type { UserManagementContainerPropsType } from '@/app/features/user-management/types/user-management.types';
+import {
+  UserManagementStatus,
+  type UserManagementContainerPropsType,
+  type UserManagementStatusType,
+} from '@/app/features/user-management/types/user-management.types';
 import Pagination from '@/components/ui/pagination';
 import { COLORS } from '@/constants/colors';
 import { useGetUserManagement } from '../hook/use-user-management';
+
+const mapStatusToIsBan = (status?: UserManagementStatusType) => {
+  switch (status) {
+    case UserManagementStatus.BANNED:
+      return true;
+    case UserManagementStatus.ACTIVE:
+      return false;
+    default:
+      return undefined;
+  }
+};
 
 const UserManagementContainer = ({
   filter,
@@ -14,7 +29,8 @@ const UserManagementContainer = ({
     page: currentPage,
     size: pageSize,
     keyword: filter?.search,
-    sortField: filter?.status,
+    // sortField: filter?.status,
+    isBan: mapStatusToIsBan(filter?.status),
     // status: filter?.status,
     // sortDirection:
     //   filter?.order === 'asc'
