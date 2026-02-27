@@ -22,7 +22,8 @@ function IdeaListSection() {
 
   const handleReactIdea = useCallback(
     (id: number, isReacted: boolean) => {
-      isReacted ? unreact(id) : react(id);
+      if (isReacted) unreact(id);
+      else react(id);
     },
     [react, unreact],
   );
@@ -31,7 +32,7 @@ function IdeaListSection() {
     <section>
       <div className="w-full flex text-white justify-between items-end my-8 px-2">
         <div>
-          <h2 className="text-3xl md:text-5xl mb-2 font-bold">Idea Lists</h2>
+          <h2 className="text-3xl md:text-5xl mb-2 font-bold">Project Ideas</h2>
           <div className="w-1/2 h-2 rounded-full bg-primary-custom"></div>
         </div>
 
