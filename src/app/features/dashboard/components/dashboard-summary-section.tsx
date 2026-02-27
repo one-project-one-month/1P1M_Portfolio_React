@@ -15,9 +15,9 @@ function DashboardSummarySection({
 }: DashboardSummarySectionProps) {
   const summary = data?.data ?? null;
 
-  const endtime = summary?.nextRegister
-    ? new Date(summary?.nextRegister)
-    : new Date('2026-06-25');
+  const nextRegisterDate = summary?.nextRegister;
+  const endtime = nextRegisterDate ? new Date(nextRegisterDate) : null;
+
 
   const dayRef = useRef<HTMLDivElement>(null);
   const hourRef = useRef<HTMLDivElement>(null);
@@ -27,6 +27,17 @@ function DashboardSummarySection({
     let interval: number;
 
     const updateClock = () => {
+
+      if (!endtime || isNaN(endtime.getTime())) {
+        if (dayRef.current) dayRef.current.textContent = '00';
+        if (hourRef.current) hourRef.current.textContent = '00';
+        if (minRef.current) minRef.current.textContent = '00';
+        return;
+      }
+
+
+
+
       const total = endtime.getTime() - Date.now();
 
       if (total <= 0) {
