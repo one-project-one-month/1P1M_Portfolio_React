@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# OPOM Portfolio Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend repository for **One Project One Month (OPOM)**.  
+Built with React + TypeScript + Vite for public users and admin workflows (portfolio, ideas, user management, timeline, dashboard, and configuration).
 
-Currently, two official plugins are available:
+## Core Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Public pages: home, portfolios, developers, ideas, about us, user profile.
+- Auth flows: login, register, profile setup, forgot/reset password, OTP.
+- OAuth integration: GitHub and Google.
+- User workflows: create/edit portfolio, OPOM registration, personal profile management.
+- Admin panel: dashboard, portfolio management, idea management, user management, timeline management, admin profile, configuration.
+- Role-based route guard (`USER` / `ADMIN`) with protected routing.
+- API integration with refresh-token retry handling via Axios interceptor.
+- Zustand persisted auth/user store with encrypted local storage.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript
+- Vite 7
+- React Router 6
+- TanStack Query
+- Zustand
+- Tailwind CSS v4 + Radix UI
+- React Hook Form + Zod
+- Axios
+- Chart.js
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```txt
+src/
+  app/
+    features/                 # Feature modules (auth, portfolio, admin, etc.)
+    routes/                   # Route definitions and guards
+  api/                        # Axios client
+  assets/                     # Images, svg, icons
+  components/                 # Shared UI/layout components
+  config/                     # App/API config (env-driven)
+  constants/                  # Shared constants and lazy-load exports
+  hooks/                      # Shared hooks
+  lib/                        # Utilities, secure storage helpers
+  store/                      # Zustand stores
+  styles/                     # Global and feature styles
+  types/                      # Shared type definitions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+Create `.env.local` in project root:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+VITE_APP_NAME=OPOM Portfolio
+VITE_BASE_URL=http://localhost:5173
+VITE_API_URL=https://api.one-project-one-month.com/swagger-ui/index.html
+
+VITE_GITHUB_CLIENT_ID=your_github_client_id
+VITE_GITHUB_REDIRECT_URI=your_github_redirect_uri
+
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_GOOGLE_REDIRECT_URI=your_google_redirect_uri
+
+VITE_STORAGE_SECRET=your_storage_secret
 ```
+
+## Local Development
+
+```bash
+pnpm install
+npm run dev
+```
+
+App runs at `http://localhost:5173`.
+
+## Available Scripts
+
+- `npm run dev` - start Vite dev server
+- `npm run build` - type-check and build for production
+
+## API and Proxy Notes
+
+- API base URL is controlled by `VITE_API_URL`.
+
+## Deployment
+
+- `vercel.json` is configured for SPA rewrites to `index.html`.
+- `Dockerfile` includes a basic Node setup with dependency install and source copy.
+
+## License
+
+This project is licensed under **GNU GPL v3**. See `LICENSE`.
