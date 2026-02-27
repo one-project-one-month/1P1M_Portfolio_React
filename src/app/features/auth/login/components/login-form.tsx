@@ -24,7 +24,6 @@ export default function LoginForm() {
 
   const { addToast } = useToast();
 
-
   //validation
   const validateEmail = (email: string) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -46,29 +45,20 @@ export default function LoginForm() {
     return '';
   };
 
-
-
-
-
-
   const handleLogin = async (e: React.SubmitEvent) => {
-
     e.preventDefault();
     // Run validation only when login button is clicked
     const emailErr = validateEmail(email);
 
     const passwordErr = validatePassword(password);
 
-
-
     if (emailErr && passwordErr) {
-      addToast("Please enter both your email and password.", 'error', 3000);
+      addToast('Please enter both your email and password.', 'error', 3000);
     } else if (emailErr && !passwordErr) {
-      addToast(emailErr, 'error', 2000)
+      addToast(emailErr, 'error', 2000);
     } else if (!emailErr && passwordErr) {
-      addToast(passwordErr, 'error', 2000)
+      addToast(passwordErr, 'error', 2000);
     }
-
 
     // Stop if any validation fails
     if (emailErr || passwordErr) return;
@@ -113,10 +103,9 @@ export default function LoginForm() {
       {/* Form Fields */}
       <div className="w-[404px] h-[260px] flex flex-col gap-6 justify-around">
         {/* Email */}
-        <form className='' onSubmit={handleLogin}>
+        <form className="" onSubmit={handleLogin}>
           <div className="-mb-8 relative">
             <TextField
-
               label="Email"
               id="email"
               name="email"
@@ -125,34 +114,26 @@ export default function LoginForm() {
               onChange={(value) => setEmail(value)}
               className="relative w-full text-white font-sans text-sm font-semibold leading-8"
             />
-
           </div>
 
           {/* Password */}
           <div className="-mb-8 relative">
             <PasswordField
-
               label="Password"
               id="password"
               name="password"
               placeholder="Enter your password here"
               value={password}
               onChange={(value) => setPassword(value)}
-
             />
-
           </div>
 
           {/* Login Button */}
           <Button
-
             variant="primary"
             size="primary"
             className="w-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl mt-3"
-          // onClick={handleLogin}
-
-
-
+            // onClick={handleLogin}
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>

@@ -53,7 +53,7 @@ const UserManagementTable = ({ data }: { data: UserManagementType[] }) => {
                       to={`view-details/${user.userId}`}
                       className=" text-slate-400 text-sm capitalize hover:text-[#9C39FC] font-semibold"
                     >
-                      {truncate(user.name, 5)}
+                      {user.name}
                     </Link>
                   </div>
                 </td>
