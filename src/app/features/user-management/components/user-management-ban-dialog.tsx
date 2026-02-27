@@ -45,12 +45,11 @@ const UserManagementBanDialog = ({
       description: 'Reason not covered by the options above.',
     },
   ];
-  const [selectReason, setSelectedReason] = useState<string[]>([]);
+  const [selectReason, setSelectedReason] = useState<string | null>(null);
+  const [customReason, setCustomReason] = useState('');
 
   const toggleReason = (reason: string) => {
-    setSelectedReason((pre) =>
-      pre.includes(reason) ? pre.filter((r) => r !== reason) : [...pre, reason],
-    );
+    setSelectedReason(reason);
   };
   return (
     <Dialog.Root open={banOpen} onOpenChange={setBanOpen}>
@@ -63,7 +62,7 @@ const UserManagementBanDialog = ({
           background: 'black',
           color: 'white',
           padding: '60px',
-          height: '588px',
+          height: '750px',
           border: '1px solid #9F0712',
         }}
       >
@@ -81,27 +80,44 @@ const UserManagementBanDialog = ({
           <div className="flex flex-col gap-8">
             {banData.map((item) => (
               <div
-                className="flex items-center   gap-5 "
+                className="flex flex-col    gap-5 "
                 onClick={() => toggleReason(item.name)}
               >
-                <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
-                  {selectReason.includes(item.name) && (
-                    <div className="bg-[#9F0712] w-full h-full rounded-full cursor-pointer"></div>
-                  )}
+                <div className="flex items-center gap-5">
+                  <div className="w-5  cursor-pointer flex  rounded-full border border-white  h-5 ">
+                    {selectReason === item.name && (
+                      <div className="bg-[#9F0712] w-full h-full rounded-full cursor-pointer"></div>
+                    )}
+                  </div>
+                  <div className="h-full flex flex-col">
+                    <p className="text-slate-400 text-lg font-medium leading-5">
+                      {item.name}
+                    </p>
+                    <p className="text-[#6A7282] text-xs leading-7">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="h-full flex flex-col">
-                  <p className="text-slate-400 text-lg font-medium leading-5">
-                    {item.name}
-                  </p>
-                  <p className="text-[#6A7282] text-xs leading-7">
-                    {item.description}
-                  </p>
+                <div>
+                  {selectReason === 'Others' && item.name === 'Others' ? (
+                    <div>
+                      <textarea
+                        rows={4}
+                        value={customReason}
+                        onChange={(e) => setCustomReason(e.target.value)}
+                        placeholder="Write the reason why you want to ban this user"
+                        className="w-full text-[#6A7282] font-sans text-sm bg-[#FFFFFF17] border border-[#FFFFFF17] focus:outline-none rounded-lg p-3 resize-none"
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-5">
             <Button
               onClick={() => setBanOpen(false)}
               className="w-[45%] bg-[#000000] hover:bg-[#000000] focus:bg-[#000000] border border-[#6A7282]"
@@ -110,8 +126,11 @@ const UserManagementBanDialog = ({
             </Button>
             <Button
               onClick={() => {
-                const reasonDescription = selectReason.join(', ');
-                banMutate({ userId, desc: reasonDescription });
+                if (!selectReason) return;
+
+                const finalReason =
+                  selectReason === 'Others' ? customReason : selectReason;
+                banMutate({ userId, desc: finalReason });
               }}
               className="w-[45%] bg-[#9F0712] hover:bg-[#9F0712] focus:bg-[#9F0712]"
             >

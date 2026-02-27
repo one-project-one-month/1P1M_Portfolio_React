@@ -79,7 +79,6 @@ export const projectIdeaSchema = z.object({
   dev_id: z.number(),
   devUsername: z.string(),
   projectName: z.string(),
-
   ownerProfilePicUrl: z.string().optional(),
   leader_id: z.number().optional(),
   leaderEmail: z.email().optional(),
