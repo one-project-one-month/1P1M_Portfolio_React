@@ -114,7 +114,7 @@ export const banUserService = async (userId: number, desc: string) => {
 export const restoreUserService = async (userId: number) => {
   try {
     const response = await apiClient.patch<UserRestoreResponseType>(
-      `${API_ENDPOINTS.UPLOAD_DEV_IMAGE}/${userId}`,
+      '/portfolio/api/v1/admin/userManagement/restore/' + `${userId}`,
     );
     return response.data;
   } catch (error) {
