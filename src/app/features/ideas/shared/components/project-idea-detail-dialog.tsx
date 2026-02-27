@@ -142,7 +142,7 @@ const ProjectIdeaDetailDialog = ({
                 <p className="text-gray-400">
                   {data.viewCount > 999
                     ? `${(data.viewCount / 1000).toFixed(1)}K`
-                    : count}
+                    : count ?? 0}
                 </p>
               </div>
             </div>
