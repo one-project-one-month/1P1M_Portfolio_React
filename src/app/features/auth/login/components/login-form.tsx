@@ -45,7 +45,7 @@ export default function LoginForm() {
     return '';
   };
 
-  const handleLogin = async (e: React.SubmitEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     // Run validation only when login button is clicked
     const emailErr = validateEmail(email);
