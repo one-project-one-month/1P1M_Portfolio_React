@@ -336,8 +336,11 @@ export default function UserEditDialog({
                       onChange={(value) =>
                         field.onChange(value ? `+${value}` : '')
                       }
-                      containerClass="!w-full"
-                      inputClass="!w-full !h-12 !pl-14 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26]"
+                      containerClass="!w-full user-management-phone-input"
+                      inputClass="!w-full !h-12 !pl-16 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26] !text-white"
+                      buttonClass="!bg-[#FFFFFF17] hover:!bg-[#FFFFFF17] focus:!bg-[#FFFFFF17] active:!bg-[#FFFFFF17] !border !border-[#FFFFFF26] !rounded-l-lg !p-2"
+                      dropdownClass="!bg-[#111827] !text-white !border !border-[#374151]"
+                      searchClass="!bg-[#1F2937] !text-white !border !border-[#374151]"
                     />
                   );
                 }}

@@ -16,6 +16,7 @@ import { Camera, Check, ChevronDown, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 import {
   editUserSchema,
@@ -248,13 +249,27 @@ const UserManagementEditDialog = ({
                     name="phone"
                     control={form.control}
                     rules={{ required: 'Phone number is required' }}
-                    render={({ field }) => (
-                      <PhoneInput
-                        {...field}
-                        country="mm"
-                        inputClass="!bg-[#374151] !w-full !h-12 !text-white"
-                      />
-                    )}
+                    render={({ field }) => {
+                      const phoneValue =
+                        typeof field.value === 'string'
+                          ? field.value.replace(/\D/g, '')
+                          : '';
+
+                      return (
+                        <PhoneInput
+                          country="mm"
+                          value={phoneValue}
+                          onChange={(value) =>
+                            field.onChange(value ? `+${value}` : '')
+                          }
+                          containerClass="!w-full user-management-phone-input"
+                          inputClass="!w-full !h-12 !pl-16 !rounded-lg !bg-[#FFFFFF17] !border !border-[#FFFFFF26] !text-white"
+                          buttonClass="!bg-[#FFFFFF17] hover:!bg-[#FFFFFF17] focus:!bg-[#FFFFFF17] active:!bg-[#FFFFFF17] !border !border-[#FFFFFF26] !rounded-l-lg !p-2"
+                          dropdownClass="!bg-[#111827] !text-white !border !border-[#374151]"
+                          searchClass="!bg-[#1F2937] !text-white !border !border-[#374151]"
+                        />
+                      );
+                    }}
                   />
 
                   <Controller
