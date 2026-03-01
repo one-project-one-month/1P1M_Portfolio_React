@@ -7,9 +7,12 @@ import IconGrowSlots from '@/assets/icons/IconGrowSlots';
 import missionImg from '@/assets/mission.png';
 import valueImg from '@/assets/value.png';
 import vissionImg from '@/assets/vission.png';
+import useLatestTimeline from '../home/hooks/useLatestTimeline';
 
 const AboutUsPage = () => {
   const navigate = useNavigate();
+
+  const { registerStatus, registerButtonStyle } = useLatestTimeline();
 
   return (
     <>
@@ -29,8 +32,14 @@ const AboutUsPage = () => {
         </div>
         <button
           type="button"
-          className="text-white border border-white rounded-full text-sm lg:text-lg cursor-pointer py-4 px-10"
-          onClick={() => navigate('/opom-register')}
+          className={`border rounded-md text-sm lg:text-lg py-4 px-10 
+    ${registerButtonStyle[registerStatus]}`}
+          onClick={() => {
+            if (registerStatus !== 'closed') {
+              navigate('/opom-register');
+            }
+          }}
+          disabled={registerStatus === 'closed'}
         >
           Register Now
         </button>

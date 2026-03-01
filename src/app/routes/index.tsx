@@ -4,6 +4,7 @@ import MainLayout from '@/components/layouts/main-layout';
 import {
   AdminLayout,
   AdminProfilePage,
+  BannedPage,
   DashboardPage,
   DeveloperPage,
   IdeaManagementPage,
@@ -127,6 +128,10 @@ const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFoundPage />,
+  },
+  {
+    path: 'banned/:userId',
+    element: <BannedPage />,
   },
 
   ...authRoutes,

@@ -4,7 +4,7 @@ import type { CountdownItem } from './components/countdown-component';
 import CountdownTimer from './components/countdown-component';
 import FeaturedDevelopersSectionContainer from './components/dev-register-container';
 import IdeaListSection from './components/idea-list/idea-list-section';
-import { useGetLatestTimeline } from './hooks/timeline.query';
+import useLatestTimeline from './hooks/useLatestTimeline';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -15,35 +15,8 @@ export default function HomePage() {
     { value: '30', label: 'Seconds' },
   ];
 
-  //TODO: need to clean up here, I did some messy cause it is near deadline, need to refactor later
-
-  const { data } = useGetLatestTimeline();
-
-  const now = new Date();
-
-  const getRegisterStatus = (deadline: Date) => {
-    const diff = deadline.getTime() - now.getTime();
-
-    if (diff <= 0) return 'closed';
-
-    const hoursLeft = diff / (10000 * 60 * 60);
-
-    if (hoursLeft <= 24) return 'closingSoon';
-
-    return 'open';
-  };
-
-  const registerButtonStyle = {
-    open: 'border-white text-white',
-    closingSoon: 'border-yellow-400 text-yellow-400',
-    closed: 'border-red-500 text-red-500 cursor-not-allowed',
-  };
-
-  const startTime = data?.data?.startDate
-    ? new Date(data.data.startDate)
-    : new Date();
-
-  const registerStatus = getRegisterStatus(startTime);
+  const { registerStatus, registerButtonStyle, startTime } =
+    useLatestTimeline();
 
   return (
     <div className="mx-auto w-full">

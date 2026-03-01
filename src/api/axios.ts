@@ -38,7 +38,20 @@ apiClient.interceptors.response.use(
 
     const status = error.response?.status;
 
-    if (status !== 401 && status !== 400) {
+    if (status !== 401 && status !== 400 && status !== 451) {
+      return Promise.reject(error);
+    }
+
+    if (status === 451) {
+      const bannedResponse = String(error.response?.data ?? '');
+
+      const match = bannedResponse.match(/\d+/);
+      const id = match?.[0];
+
+      if (id) {
+        window.location.href = `/banned/${id}`;
+      }
+
       return Promise.reject(error);
     }
 
