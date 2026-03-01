@@ -62,6 +62,7 @@ const EditPortfolioPage = () => {
   return (
     <div className="p-6 w-full h-full">
       <PortfolioForm
+        isImport={false}
         mode="edit"
         initialData={projectData}
         onSave={handleSave}
