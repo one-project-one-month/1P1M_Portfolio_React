@@ -23,6 +23,7 @@ import {
 } from '../services/portfolio-management-service';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
+import { useIdeaToPortfolioStore } from '@/store/idea-to-portfolio';
 
 // --- Queries ---
 
@@ -89,6 +90,7 @@ export const useCreateTeam = (
     unknown
   >,
 ) => {
+
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
@@ -203,6 +205,7 @@ export const useDeleteTeam = () => {
 };
 
 export const useCreateProject = () => {
+  const clearPortfolio = useIdeaToPortfolioStore((state) => state.clearPortfolio)
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
@@ -212,13 +215,17 @@ export const useCreateProject = () => {
     onSuccess: (res) => {
       if (res.code === 200 && res.success) {
         addToast('Project is successfully created.', 'success');
+        clearPortfolio()
       }
       queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
     },
+
     onError: (error: Error) => {
       console.error('Error Creating Project:', error);
       addToast(error.message || 'Failed to create project', 'error');
     },
+
+
   });
 };
 
@@ -285,10 +292,10 @@ export const useReactProject = () => {
             data: oldData.data.map((project: any) =>
               project.id === projectId
                 ? {
-                    ...project,
-                    reactedCount: (project.reactedCount || 0) + 1,
-                    isReacted: project.isAlreadyReacted,
-                  }
+                  ...project,
+                  reactedCount: (project.reactedCount || 0) + 1,
+                  isReacted: project.isAlreadyReacted,
+                }
                 : project,
             ),
           };
@@ -327,10 +334,10 @@ export const useUnreactProject = () => {
             data: oldData.data.map((project: any) =>
               project.id === projectId
                 ? {
-                    ...project,
-                    reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
-                    isReacted: project.isAlreadyReacted,
-                  }
+                  ...project,
+                  reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
+                  isReacted: project.isAlreadyReacted,
+                }
                 : project,
             ),
           };

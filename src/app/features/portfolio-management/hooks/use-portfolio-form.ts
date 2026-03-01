@@ -27,6 +27,7 @@ import {
   useDeleteLanguageAndTools,
   useUpdateProject,
 } from './use-portfolio-query';
+import { useIdeaToPortfolioStore } from '@/store/idea-to-portfolio';
 
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
@@ -207,6 +208,7 @@ export const usePortfolioForm = ({
   });
 
   const addTeamMemberMutation = useAddTeamMember();
+  const clearPortfolio = useIdeaToPortfolioStore((state) => state.clearPortfolio);
 
   const handleSaveForm = form.handleSubmit(
     async (data) => {
@@ -346,6 +348,8 @@ export const usePortfolioForm = ({
         onSave?.(formData);
       } catch (error) {
         console.error('Failed to save project portfolio:', error);
+      } finally {
+        clearPortfolio();
       }
     },
     (error) => {
