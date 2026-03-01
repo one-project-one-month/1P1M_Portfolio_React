@@ -57,6 +57,7 @@ const ViewPortfolioPage = () => {
   return (
     <div className="p-6 w-full h-full">
       <PortfolioForm
+        isImport={false}
         mode="view"
         initialData={projectData}
         onClose={handleClose}
