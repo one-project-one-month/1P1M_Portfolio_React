@@ -108,3 +108,7 @@ export const PortfolioEditview = PageLoader(
 export const PortfolioFormview = PageLoader(
   lazy(() => import('@/app/features/portfolio/components/portfolio-form-view')),
 );
+
+export const BannedPage = PageLoader(
+  lazy(() => import('@/app/features/banned/pages/page')),
+);
