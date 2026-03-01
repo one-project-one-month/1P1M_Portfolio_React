@@ -7,6 +7,7 @@ import StatusDropdown from '../status-dropdown';
 
 interface PortfolioBasicInfoProps {
   initialData?: ProjectData | null;
+  importData?: Partial<ProjectData> | null;
   form: UseFormReturn<PortfolioFormValues>;
   isReadOnly: boolean;
   accessFrom?: string;
@@ -43,9 +44,8 @@ export const PortfolioBasicInfo = ({
                   value={field.value}
                   onChange={field.onChange}
                   placeholder="Enter your project name"
-                  className={`h-10 px-3 w-full bg-white/[0.09] border rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC] ${
-                    fieldState.error ? 'border-red-500' : 'border-white/15'
-                  }`}
+                  className={`h-10 px-3 w-full bg-white/[0.09] border rounded-md text-[#F3F4F6] text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#9C39FC] ${fieldState.error ? 'border-red-500' : 'border-white/15'
+                    }`}
                 />
                 {fieldState.error && (
                   <p className="text-red-500 text-sm mt-1">

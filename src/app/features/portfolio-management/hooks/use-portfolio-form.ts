@@ -31,6 +31,8 @@ import {
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
   initialData?: ProjectData | null;
+  importData?: Partial<ProjectData> | null;
+  isImport: boolean
   onSave?: (data: Partial<ProjectData>) => void;
 }
 
@@ -42,6 +44,8 @@ export interface TechnologyEntry {
 export const usePortfolioForm = ({
   mode,
   initialData,
+  isImport,
+  importData,
   onSave,
 }: UsePortfolioFormProps) => {
   const isReadOnly = mode === 'view';
@@ -50,12 +54,12 @@ export const usePortfolioForm = ({
   const form = useForm<PortfolioFormValues>({
     resolver: zodResolver(portfolioFormSchema),
     defaultValues: {
-      projectName: initialData?.projectName || '',
-      description: initialData?.description || '',
+      projectName: isImport ? importData?.projectName : initialData?.projectName || '',
+      description: isImport ? importData?.description : initialData?.description || '',
       startDate: initialData?.startDate || '',
       completedDate: initialData?.completedDate ?? '',
-      status: initialData?.status
-        ? statusOptions.find((s) => s.name === initialData.status) || null
+      status: (isImport ? importData?.status : initialData?.status)
+        ? statusOptions.find((s) => s.name === (isImport ? importData?.status : initialData?.status)) ?? null
         : null,
       technologies: initialData?.technologies?.map((t) => ({
         id: t.projectType.id,

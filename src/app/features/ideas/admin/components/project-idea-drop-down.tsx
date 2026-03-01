@@ -14,12 +14,25 @@ import type {
 } from '../../shared/types/project-idea.types';
 import ProjectIdeaEditDialog from './project-idea-edit-dialog';
 import ProjectIdeaStatusDialog from './project-idea-status-dialog';
+import { useAppNavigation } from '@/hooks/use-app-navigate';
+
+import { useIdeaToPortfolioStore, type IdeaToPortfolio } from '@/store/idea-to-portfolio';
 
 export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const { goTo } = useAppNavigation();
+  const setPortfolio = useIdeaToPortfolioStore((state) => state.setPortfolio);
+
+  const handleImport = (portfolio: IdeaToPortfolio) => {
+
+    setPortfolio(portfolio);
+    goTo('/admin/portfolio-management/create-portfolio');
+  }
+
+
 
   // DELETE
   const { mutate: deleteMutate } = useMutation<
@@ -105,12 +118,26 @@ export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
             data={data}
           />
 
-          <DropdownMenu.Item asChild>
-            <NavLink to="/admin/portfolio-management/create-portfolio">
-              Import Portfolio
-            </NavLink>
-          </DropdownMenu.Item>
+
+          <ProjectIdeaDetailDialog
+            data={data}
+            trigger={
+              <DropdownMenu.Item onClick={() => handleImport({
+                name: data?.projectIdeaName,
+                desc: data?.description,
+                status: 'Planning'
+              })} >
+
+                Import Portfolio
+              </DropdownMenu.Item>
+
+            }
+          >
+
+          </ProjectIdeaDetailDialog>
+
         </DropdownMenu.Content>
+
       </DropdownMenu.Root>
 
       <ConfirmationModal

@@ -14,6 +14,8 @@ export type PortfolioFormMode = 'create' | 'edit' | 'view';
 
 interface PortfolioFormProps {
   mode: PortfolioFormMode;
+  isImport: boolean,
+  importData?: Partial<ProjectData>;
   initialData?: ProjectData | null;
   onSave?: (data: Partial<ProjectData>) => void;
   onCancel?: () => void;
@@ -22,8 +24,10 @@ interface PortfolioFormProps {
 
 const PortfolioForm = ({
   mode,
+  importData,
   initialData,
   onSave,
+  isImport,
   onCancel,
   onClose,
 }: PortfolioFormProps) => {
@@ -48,7 +52,7 @@ const PortfolioForm = ({
 
     getModalTeamName,
     getModalInitialMembers,
-  } = usePortfolioForm({ mode, initialData, onSave });
+  } = usePortfolioForm({ mode, initialData, onSave, importData, isImport });
 
   const projectImage = form.watch('projectImage');
 
@@ -128,6 +132,7 @@ const PortfolioForm = ({
         {/* Form Section */}
         <div className="flex-1 flex flex-col gap-10 max-w-[836px]">
           <PortfolioBasicInfo
+            importData={importData}
             initialData={initialData}
             form={form}
             isReadOnly={isReadOnly}
