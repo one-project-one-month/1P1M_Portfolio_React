@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+
 import ProjectIdeaDetailDialog from '../../shared/components/project-idea-detail-dialog';
 import { deleteProjectIdea } from '../../shared/services/project-idea.service';
 import type {

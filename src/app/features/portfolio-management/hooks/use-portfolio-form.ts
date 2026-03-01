@@ -33,7 +33,7 @@ interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
   initialData?: ProjectData | null;
   importData?: Partial<ProjectData> | null;
-  isImport: boolean
+  isImport?: boolean
   onSave?: (data: Partial<ProjectData>) => void;
 }
 
