@@ -7,7 +7,11 @@ import PjImage from '@/assets/project-image.png';
 import type { Developer } from '@/types/portfolio.type';
 import { Flex } from '@radix-ui/themes';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  useReactProject,
+  useUnreactProject,
+} from '../../portfolio-management/hooks/use-portfolio-query';
 import StatusTag from '../../portfolio/components/status-tag';
 
 type ProjectCardProps = {
@@ -15,7 +19,6 @@ type ProjectCardProps = {
   title: string;
   views?: number;
   react?: number;
-  onReact?: (id: number) => void;
   developers: Developer[];
   status: string;
   id: number;
@@ -27,22 +30,44 @@ export default function ProjectCard({
   title,
   react = 0,
   views = 0,
-  onReact,
   developers,
   status,
   id,
-  isReacted,
+  isReacted: initialIsReacted,
 }: ProjectCardProps) {
-  const [liked, setLiked] = useState(react || false);
+  // Logic from Card 2: Local state for immediate UI feedback (Optimistic UI)
+  const [isReacted, setIsReacted] = useState(initialIsReacted || false);
+  const [reactCount, setReactCount] = useState(react || 0);
+
   const navigate = useNavigate();
 
+  const reactMutation = useReactProject();
+  const unreactMutation = useUnreactProject();
+
   const handleLikeClick = () => {
-    // Only trigger if not already liked locally
-    if (!liked) {
-      setLiked(true);
-      onReact?.(0);
+    if (isReacted) {
+      setIsReacted(false);
+      setReactCount((prev) => Math.max(0, prev - 1));
+      unreactMutation.mutate(id, {
+        onError: () => {
+          setIsReacted(true);
+          setReactCount((prev) => prev + 1);
+        },
+      });
+    } else {
+      setIsReacted(true);
+      setReactCount((prev) => prev + 1);
+      reactMutation.mutate(id, {
+        onError: () => {
+          setIsReacted(false);
+          setReactCount((prev) => Math.max(0, prev - 1));
+        },
+      });
     }
   };
+
+  const displayMembers = developers?.slice(0, 3) || [];
+  const remainingCount = Math.max(0, (developers?.length || 0) - 3);
 
   return (
     <div className="flex justify-center items-center">
@@ -62,6 +87,7 @@ export default function ProjectCard({
           <h1 className="font-semibold leading-5 mb-2 text-white font-sans">
             {title}
           </h1>
+
           {developers.length > 0 && (
             <Flex
               align="center"
@@ -70,17 +96,24 @@ export default function ProjectCard({
             >
               <span>Team Members</span>
               <div className="flex -space-x-2">
-                {developers?.slice(0, 3).map((member, index: number) => (
-                  <img
+                {displayMembers.map((member, index) => (
+                  <Link
                     key={`${member.id}-${index}`}
-                    src={member.profilePictureUrl || sampleUserImgUrl}
-                    alt={member.name}
-                    className="h-8   w-8 rounded-full border-2 border-[#111827] object-cover"
-                  />
+                    to={`/profile/${member.id}`}
+                    state={{ devData: member }}
+                    className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-[#111827] block hover:z-50 hover:-translate-y-1 hover:scale-125 transition-all duration-200 ease-out cursor-pointer"
+                    style={{ zIndex: displayMembers.length - index }}
+                  >
+                    <img
+                      src={member.profilePictureUrl || sampleUserImgUrl}
+                      alt={member.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </Link>
                 ))}
-                {developers && developers.length > 3 && (
+                {remainingCount > 0 && (
                   <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#111827] bg-gray-800 text-xs font-bold text-white">
-                    +{developers.length - 3}
+                    +{remainingCount}
                   </div>
                 )}
               </div>
@@ -91,7 +124,7 @@ export default function ProjectCard({
         <div className="flex items-center justify-between">
           <StatusTag status={status} />
           <Flex gap="4">
-            {/* Reaction Button */}
+            {/* Reaction Button with Card 2 Logic */}
             <button
               onClick={handleLikeClick}
               className="flex items-center gap-2 hover:scale-105 transition-transform"
@@ -102,8 +135,7 @@ export default function ProjectCard({
                 className="w-5 h-5"
               />
               <span className="text-[#99A1AF] text-sm font-sans">
-                {/* DISPLAY PROP DIRECTLY */}
-                {react}
+                {reactCount}
               </span>
             </button>
 
