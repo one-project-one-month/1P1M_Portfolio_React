@@ -115,7 +115,7 @@ const UserProfilePage = () => {
                 {projectLists.length > 0 ? (
                   projectLists.map((pro) => (
                     <ProjectCard
-                      views={0}
+                      views={pro.view_count}
                       react={pro.reaction_count}
                       title={pro.name}
                       developers={pro.assignedDevs.developers}

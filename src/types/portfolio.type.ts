@@ -94,7 +94,7 @@ export interface ProjectPortfolio {
   projectLink: string;
   repoLink: string;
   reaction_count: number;
-
+  view_count: number;
   assignedDevs: AssignedDevs;
 
   reactedProjectPortfolios: unknown[]; // change later if API returns structure

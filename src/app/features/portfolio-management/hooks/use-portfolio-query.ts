@@ -22,8 +22,8 @@ import {
   type TechnologyRequest,
 } from '../services/portfolio-management-service';
 
-import type { UseMutationOptions } from '@tanstack/react-query';
 import { useIdeaToPortfolioStore } from '@/store/idea-to-portfolio';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
 // --- Queries ---
 
@@ -90,7 +90,6 @@ export const useCreateTeam = (
     unknown
   >,
 ) => {
-
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
@@ -205,7 +204,9 @@ export const useDeleteTeam = () => {
 };
 
 export const useCreateProject = () => {
-  const clearPortfolio = useIdeaToPortfolioStore((state) => state.clearPortfolio)
+  const clearPortfolio = useIdeaToPortfolioStore(
+    (state) => state.clearPortfolio,
+  );
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
@@ -215,7 +216,7 @@ export const useCreateProject = () => {
     onSuccess: (res) => {
       if (res.code === 200 && res.success) {
         addToast('Project is successfully created.', 'success');
-        clearPortfolio()
+        clearPortfolio();
       }
       queryClient.invalidateQueries({ queryKey: ['projectPortfolio'] });
     },
@@ -224,8 +225,6 @@ export const useCreateProject = () => {
       console.error('Error Creating Project:', error);
       addToast(error.message || 'Failed to create project', 'error');
     },
-
-
   });
 };
 
@@ -280,6 +279,10 @@ export const useReactProject = () => {
     mutationFn: (projectId: number | string) => reactProject(projectId),
     onMutate: async (projectId) => {
       await queryClient.cancelQueries({ queryKey: ['projectPortfolio'] });
+      await queryClient.cancelQueries({
+        queryKey: ['user-profile'],
+        exact: false,
+      });
 
       const previousData = queryClient.getQueryData(['projectPortfolio']);
 
@@ -292,10 +295,10 @@ export const useReactProject = () => {
             data: oldData.data.map((project: any) =>
               project.id === projectId
                 ? {
-                  ...project,
-                  reactedCount: (project.reactedCount || 0) + 1,
-                  isReacted: project.isAlreadyReacted,
-                }
+                    ...project,
+                    reactedCount: (project.reactedCount || 0) + 1,
+                    isReacted: project.isAlreadyReacted,
+                  }
                 : project,
             ),
           };
@@ -322,6 +325,10 @@ export const useUnreactProject = () => {
     mutationFn: (projectId: number | string) => unreactProject(projectId),
     onMutate: async (projectId) => {
       await queryClient.cancelQueries({ queryKey: ['projectPortfolio'] });
+      await queryClient.cancelQueries({
+        queryKey: ['user-profile'],
+        exact: false,
+      });
 
       const previousData = queryClient.getQueryData(['projectPortfolio']);
 
@@ -334,10 +341,10 @@ export const useUnreactProject = () => {
             data: oldData.data.map((project: any) =>
               project.id === projectId
                 ? {
-                  ...project,
-                  reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
-                  isReacted: project.isAlreadyReacted,
-                }
+                    ...project,
+                    reactedCount: Math.max(0, (project.reactedCount || 0) - 1),
+                    isReacted: project.isAlreadyReacted,
+                  }
                 : project,
             ),
           };
