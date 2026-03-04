@@ -1,3 +1,4 @@
+import { useIdeaToPortfolioStore } from '@/store/idea-to-portfolio';
 import type {
   Member,
   Member as ModalMember,
@@ -27,13 +28,12 @@ import {
   useDeleteLanguageAndTools,
   useUpdateProject,
 } from './use-portfolio-query';
-import { useIdeaToPortfolioStore } from '@/store/idea-to-portfolio';
 
 interface UsePortfolioFormProps {
   mode: PortfolioFormMode;
   initialData?: ProjectData | null;
   importData?: Partial<ProjectData> | null;
-  isImport?: boolean
+  isImport?: boolean;
   onSave?: (data: Partial<ProjectData>) => void;
 }
 
@@ -55,12 +55,19 @@ export const usePortfolioForm = ({
   const form = useForm<PortfolioFormValues>({
     resolver: zodResolver(portfolioFormSchema),
     defaultValues: {
-      projectName: isImport ? importData?.projectName : initialData?.projectName || '',
-      description: isImport ? importData?.description : initialData?.description || '',
+      projectName: isImport
+        ? importData?.projectName
+        : initialData?.projectName || '',
+      description: isImport
+        ? importData?.description
+        : initialData?.description || '',
       startDate: initialData?.startDate || '',
       completedDate: initialData?.completedDate ?? '',
       status: (isImport ? importData?.status : initialData?.status)
-        ? statusOptions.find((s) => s.name === (isImport ? importData?.status : initialData?.status)) ?? null
+        ? (statusOptions.find(
+            (s) =>
+              s.name === (isImport ? importData?.status : initialData?.status),
+          ) ?? null)
         : null,
       technologies: initialData?.technologies?.map((t) => ({
         id: t.projectType.id,
@@ -208,7 +215,9 @@ export const usePortfolioForm = ({
   });
 
   const addTeamMemberMutation = useAddTeamMember();
-  const clearPortfolio = useIdeaToPortfolioStore((state) => state.clearPortfolio);
+  const clearPortfolio = useIdeaToPortfolioStore(
+    (state) => state.clearPortfolio,
+  );
 
   const handleSaveForm = form.handleSubmit(
     async (data) => {

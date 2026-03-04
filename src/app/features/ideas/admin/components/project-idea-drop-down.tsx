@@ -6,6 +6,7 @@ import type { AxiosError } from 'axios';
 import { Ellipsis, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
 
+import { useAppNavigation } from '@/hooks/use-app-navigate';
 import ProjectIdeaDetailDialog from '../../shared/components/project-idea-detail-dialog';
 import { deleteProjectIdea } from '../../shared/services/project-idea.service';
 import type {
@@ -14,9 +15,11 @@ import type {
 } from '../../shared/types/project-idea.types';
 import ProjectIdeaEditDialog from './project-idea-edit-dialog';
 import ProjectIdeaStatusDialog from './project-idea-status-dialog';
-import { useAppNavigation } from '@/hooks/use-app-navigate';
 
-import { useIdeaToPortfolioStore, type IdeaToPortfolio } from '@/store/idea-to-portfolio';
+import {
+  useIdeaToPortfolioStore,
+  type IdeaToPortfolio,
+} from '@/store/idea-to-portfolio';
 
 export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
   const queryClient = useQueryClient();
@@ -27,12 +30,9 @@ export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
   const setPortfolio = useIdeaToPortfolioStore((state) => state.setPortfolio);
 
   const handleImport = (portfolio: IdeaToPortfolio) => {
-
     setPortfolio(portfolio);
     goTo('/admin/portfolio-management/create-portfolio');
-  }
-
-
+  };
 
   // DELETE
   const { mutate: deleteMutate } = useMutation<
@@ -118,26 +118,23 @@ export const ProjectIdeaDropDown = ({ type, data }: IdeaDropDownPropsType) => {
             data={data}
           />
 
-
           <ProjectIdeaDetailDialog
             data={data}
             trigger={
-              <DropdownMenu.Item onClick={() => handleImport({
-                name: data?.projectIdeaName,
-                desc: data?.description,
-                status: 'Planning'
-              })} >
-
+              <DropdownMenu.Item
+                onClick={() =>
+                  handleImport({
+                    name: data?.projectIdeaName,
+                    desc: data?.description,
+                    status: 'Planning',
+                  })
+                }
+              >
                 Import Portfolio
               </DropdownMenu.Item>
-
             }
-          >
-
-          </ProjectIdeaDetailDialog>
-
+          ></ProjectIdeaDetailDialog>
         </DropdownMenu.Content>
-
       </DropdownMenu.Root>
 
       <ConfirmationModal

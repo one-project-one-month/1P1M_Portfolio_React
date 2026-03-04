@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
+import FormTextArea from '@/components/ui/form-textarea';
 import { Dialog } from '@radix-ui/themes';
 import type { UseMutateFunction } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { useState, type ReactNode } from 'react';
 import type { UserBanResponseType } from '../types/user-management.types';
-import FormTextArea from '@/components/ui/form-textarea';
 
 type UserManagementBanDialogProps = {
   trigger?: ReactNode;
@@ -59,7 +59,8 @@ const UserManagementBanDialog = ({
   const handleConfirm = () => {
     // 2. Map the reasons and replace "Others" with the specific remark
     const finalReasons = selectReason.map((r) => {
-      if (r === 'Others') return `${otherRemark || 'No specific reason provided'}`;
+      if (r === 'Others')
+        return `${otherRemark || 'No specific reason provided'}`;
       return r;
     });
 
@@ -88,7 +89,8 @@ const UserManagementBanDialog = ({
               Are you sure to ban this user?
             </Dialog.Title>
             <Dialog.Description className="text-[#6A7282] text-lg leading-7">
-              The user will no longer be able to participate in community activities
+              The user will no longer be able to participate in community
+              activities
             </Dialog.Description>
           </div>
 
@@ -118,7 +120,6 @@ const UserManagementBanDialog = ({
                 {item.name === 'Others' && selectReason.includes('Others') && (
                   <div className="m mt-2" aria-disabled={item.name != 'Others'}>
                     <FormTextArea
-
                       className="w-full bg-zinc-900 border 
                       border-[#9F0712]-700 rounded-md p-2 text-sm 
                       text-white focus:outline-none focus:border-[#9F0712]-700 transition-colors"

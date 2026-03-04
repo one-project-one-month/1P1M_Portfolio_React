@@ -50,7 +50,7 @@ const ProjectPortfolioForm = ({
     getModalInitialMembers,
     isSaving,
     isUpdating,
-  } = usePortfolioForm({ mode, initialData, onSave, });
+  } = usePortfolioForm({ mode, initialData, onSave });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const projectImage = form.watch('projectImage');
