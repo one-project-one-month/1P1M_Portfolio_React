@@ -23,7 +23,7 @@ const StatsGrid = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-x-12 gap-y-10">
+    <div className="grid grid-cols-2 gap-x-6 sm:gap-x-12 gap-y-8 sm:gap-y-10">
       {stats.map((stat, index) => (
         <div key={index} className="flex flex-col items-center">
           <span className="text-[#BD7AFD] text-4xl font-bold mb-2">

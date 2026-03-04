@@ -12,9 +12,9 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
   return (
     <div className="w-full mt-12">
       <div className="h-full bg-white/10 rounded-lg p-6 relative flex flex-col backdrop-blur-xs overflow-visible border border-white/5">
-        <div className="flex gap-6">
-          <div className="flex flex-col items-center shrink-0 w-30">
-            <div className="size-[120px] -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          <div className="flex flex-col items-center shrink-0 w-20 sm:w-30">
+            <div className="size-20 sm:size-30 -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
               <img
                 src={profilePictureUrl || sampleUserImgUrl}
                 alt={name || 'Developer'}
