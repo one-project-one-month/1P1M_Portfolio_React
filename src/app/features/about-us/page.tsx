@@ -74,13 +74,13 @@ const AboutUsPage = () => {
             image={missionImg}
           />
           <AboutUsCard
-            title="Vission"
-            description='To eliminate the "no experience" paradox and establish Myanmar’s tech talent as a global force of innovation'
+            title="Vision"
+            description='To eliminate the "no experience" paradox and establish Myanmar’s tech talent as a global force of innovation.'
             image={vissionImg}
           />
           <AboutUsCard
             title="Value"
-            description="To provide a structured, fast-paced environment where designers and devs level up by shipping actual products, not just earning certificates."
+            description="To foster collaboration, consistency, inclusivity, and learning by growing together through real projects and shared experiences.f"
             image={valueImg}
           />
         </div>
@@ -129,10 +129,10 @@ const AboutUsPage = () => {
           </h2>
 
           <p className="text-[#B4BCD0] text-center text-md font-light">
-            Teams come together each month to turn ideas into real
+            A collective of builders learning, creating,
           </p>
           <p className="text-[#B4BCD0] text-center text-md font-light">
-            products—fast, collaborative, and hands-on.
+            and growing together through real work.
           </p>
         </div>
         <div>
