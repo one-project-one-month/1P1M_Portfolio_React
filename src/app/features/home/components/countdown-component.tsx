@@ -83,22 +83,17 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-4.75">
+    <div className="flex items-start gap-1 sm:gap-2 lg:gap-4.75">
       {items.map((item, index) => (
         <React.Fragment key={item.label}>
           <div className="flex flex-col w-fit items-center">
             <div
               ref={getRef(item.label)}
-              style={{
-                boxShadow: '3px 4px 5px 0px rgba(156, 57, 252, 1)',
-                border:
-                  '3px solid var(--PrimaryColor-brandcolor-500, rgba(156, 57, 252, 1))',
-              }}
-              className="size-fit backdrop-blur-[3px] p-5 flex items-center justify-center rounded-xl bg-transparent text-white text-6xl font-semibold border border-[#9C39FC] shadow-[1px_4px_4px_0px_rgba(156,57,252,0.3)]"
+              className="size-fit backdrop-blur-[3px] p-1.5 sm:p-2.5 lg:p-5 flex items-center justify-center rounded-lg lg:rounded-xl bg-transparent text-white text-2xl sm:text-3xl lg:text-6xl font-semibold border-2 lg:border-3 border-[#9C39FC] shadow-[1px_2px_3px_0px_rgba(156,57,252,0.8)] lg:shadow-[3px_4px_5px_0px_rgba(156,57,252,1)]"
             >
               00
             </div>
-            <span className="mt-4 font-[Actor] text-xl h-8 text-[#B4BCD0]">
+            <span className="mt-4 font-[Actor] text-sm lg:text-xl h-8 text-[#B4BCD0]">
               {item.label}
             </span>
           </div>

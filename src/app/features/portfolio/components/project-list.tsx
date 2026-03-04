@@ -14,13 +14,13 @@ const ProjectList = ({
   return (
     <div className="w-full mb-4">
       {isLoading ? (
-        <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map(() => {
-            return <PortfolioCardSkeleton />;
-          })}
+        <div className="grid gap-4 md:gap-7 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <PortfolioCardSkeleton key={i} />
+          ))}
         </div>
       ) : (
-        <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mb-5">
+        <div className="grid gap-4 md:gap-7 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mb-5">
           {projects.length > 0 ? (
             projects.map((project) => (
               <React.Fragment

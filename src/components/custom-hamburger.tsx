@@ -15,7 +15,7 @@ const CustomHamburger: React.FC<HamburgerProps> = ({
       onClick={onToggle}
       aria-expanded={isOpen}
       aria-label="Toggle Menu"
-      className="flex flex-col text-white gap-1.5 transition-all ease-in-out md:hidden "
+      className="flex flex-col text-white gap-1.5 transition-all ease-in-out xl:hidden "
     >
       {/* <div
         className={`w-6 bg-white h-0.5 rounded-md transition-all duration-300 ${

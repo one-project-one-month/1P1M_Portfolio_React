@@ -48,13 +48,13 @@ function Navbar({ auth }: NavbarProps) {
       />
 
       {/* Desktop Navigation Links */}
-      <div className="hidden md:flex gap-x-10 xl:gap-x-20 font-medium">
+      <div className="hidden xl:flex gap-x-6 2xl:gap-x-12 font-medium">
         {navLinks.map((link) => (
           <NavLink
             key={link.id}
             to={link.path}
             className={({ isActive }) =>
-              `relative transition-colors duration-300 py-1 ${
+              `relative whitespace-nowrap transition-colors duration-300 py-1 ${
                 isActive
                   ? 'text-white  after:bg-white'
                   : 'text-white/60 hover:text-white'
@@ -67,7 +67,7 @@ function Navbar({ auth }: NavbarProps) {
       </div>
 
       {/* Desktop Auth Section */}
-      <div className="hidden md:flex items-center gap-3 ">
+      <div className="hidden xl:flex items-center gap-3 shrink-0">
         {auth ? (
           <UserProfile
             email={auth?.email}
@@ -92,7 +92,7 @@ function Navbar({ auth }: NavbarProps) {
 
       {/* Mobile Navigation Overlay */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[85vw] bg-gray-900 flex flex-col gap-y-4 transition-transform duration-500 ease-in-out md:hidden z-[100] border-l border-white/10 ${
+        className={`fixed top-0 right-0 h-screen w-[85vw] sm:w-[50svw] bg-gray-900 flex flex-col gap-y-4 transition-transform duration-500 ease-in-out xl:hidden z-100 border-l border-white/10 ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full '
         }`}
       >
@@ -163,7 +163,7 @@ function Navbar({ auth }: NavbarProps) {
       </div>
 
       {/* Hamburger Trigger - Visible only on Mobile */}
-      <div className="md:hidden">
+      <div className="xl:hidden">
         <CustomHamburger isOpen={isMenuOpen} onToggle={toggleMenu} />
       </div>
     </nav>
