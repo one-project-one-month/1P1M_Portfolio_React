@@ -52,7 +52,7 @@ Create `.env.local` in project root:
 ```bash
 VITE_APP_NAME=OPOM Portfolio
 VITE_BASE_URL=http://localhost:5173
-VITE_API_URL=https://api.one-project-one-month.com/swagger-ui/index.html
+VITE_API_URL=https://api-opom.one-project-one-month.com/swagger-ui/index.html
 
 VITE_GITHUB_CLIENT_ID=your_github_client_id
 VITE_GITHUB_REDIRECT_URI=your_github_redirect_uri
