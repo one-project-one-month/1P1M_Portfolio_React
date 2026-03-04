@@ -101,7 +101,8 @@ export default function HomePage() {
           <div className="flex w-full flex-col justify-between items-center gap-4">
             <div className="w-full bg-white/10  backdrop-blur-xs rounded-4xl border border-white/5 text-white/70 p-4">
               <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
-                Who <span className="text-[#BD7AFD]">are </span>We?
+                Who are
+                <span className="text-[#BD7AFD]"> We</span>?
               </h3>
               <p className=" text-start">
                 We are a rapid development organization dedicated to delivering
@@ -112,7 +113,7 @@ export default function HomePage() {
             </div>
             <div className="w-full bg-white/10  backdrop-blur-xs rounded-4xl border border-white/5 text-white/70 p-4">
               <h3 className="text-lg font-bold text-start md:text-2xl mb-4">
-                What do you have to <span className="text-[#BD7AFD]">Do </span>?
+                What do you have to <span className="text-[#BD7AFD]">Do</span>?
               </h3>
               <p className=" text-start">
                 You can share the ideas you have in mind. From those, the most
