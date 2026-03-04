@@ -80,7 +80,7 @@ const AboutUsPage = () => {
           />
           <AboutUsCard
             title="Value"
-            description="To foster collaboration, consistency, inclusivity, and learning by growing together through real projects and shared experiences.f"
+            description="To foster collaboration, consistency, inclusivity, and learning by growing together through real projects and shared experiences."
             image={valueImg}
           />
         </div>
