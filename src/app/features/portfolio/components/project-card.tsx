@@ -64,8 +64,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const allMembers = project.teams?.map((team) => team.members).flat() || [];
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="w-full flex flex-col bg-[#FFFFFF17] backdrop-blur-md rounded-2xl p-[24px] border border-[#FFFFFF33] box-border shadow-sm gap-4">
+    <div className="flex justify-center items-stretch h-full">
+      <div className="w-full flex flex-col bg-[#FFFFFF17] backdrop-blur-md rounded-2xl p-4 md:p-6 border border-[#FFFFFF33] box-border shadow-sm gap-4">
         <div className="h-36.25 rounded-xl overflow-hidden">
           <img
             src={image}
@@ -131,7 +131,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           <StatusTag status={status} />
           <Flex gap="4">
             {/* Reaction Button */}

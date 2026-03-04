@@ -85,7 +85,7 @@ export default function IdeaCard({
           <span className="text-xs text-white/40">No project type</span>
         )}
       </div>
-      <div className="flex justify-between border-b py-4">
+      <div className="flex justify-between border-b py-4 mt-auto">
         <div className="flex text-sm items-center gap-x-2">
           <span>Submitter</span>
           <div

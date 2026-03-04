@@ -16,7 +16,7 @@ const AboutUsCard = ({
   rotateOnHover = true,
 }: AboutUsCardProps) => {
   return (
-    <div className="relative group w-full max-w-100">
+    <div className="relative group w-full max-w-sm lg:max-w-100 mx-auto">
       {/* Background Accent */}
       <div
         className="absolute inset-0 rounded-lg transition-transform duration-300"
