@@ -14,7 +14,7 @@ export type PortfolioFormMode = 'create' | 'edit' | 'view';
 
 interface PortfolioFormProps {
   mode: PortfolioFormMode;
-  isImport: boolean,
+  isImport: boolean;
   importData?: Partial<ProjectData>;
   initialData?: ProjectData | null;
   onSave?: (data: Partial<ProjectData>) => void;
