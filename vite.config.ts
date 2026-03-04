@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/portfolio/api': {
-        target: 'https://api.one-project-one-month.com',
+        target: 'https://api-opom.one-project-one-month.com',
         changeOrigin: true,
         secure: false,
         cookieDomainRewrite: 'localhost',
