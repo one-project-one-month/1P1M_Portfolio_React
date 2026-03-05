@@ -101,7 +101,7 @@ export default function LoginForm() {
       />
 
       {/* Form Fields */}
-      <div className="w-full md:w-101 md:h-[260px] flex flex-col gap-6 justify-around">
+      <div className="w-full md:w-101 md:h-65 flex flex-col gap-6 justify-around">
         {/* Email */}
         <form className="" onSubmit={handleLogin}>
           <div className="-mb-8 relative">
@@ -132,7 +132,7 @@ export default function LoginForm() {
           <Button
             variant="primary"
             size="primary"
-            className="w-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl mt-3"
+            className="w-full transition-all duration-300 hover:shadow-xl mt-7"
           // onClick={handleLogin}
           >
             {loading ? 'Logging in...' : 'Login'}
