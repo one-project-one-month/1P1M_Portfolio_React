@@ -40,7 +40,7 @@ export default function ProfileSetupPage() {
             </div>
           </div>
         </div>
-        <div className="flex  mx-auto h-screen gap-6 md:gap-1.5  justify-center items-center ">
+        <div className="flex  mx-auto h-screen  justify-center items-center ">
           <ProfileSetupForm />
         </div>
       </div>

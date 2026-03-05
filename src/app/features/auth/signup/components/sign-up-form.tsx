@@ -19,7 +19,7 @@ const SignUpForm = ({
   isLoading,
 }: SignUpFormProps) => {
   return (
-    <FormBackground className="w-full max-w-[532px] h-fit flex flex-col gap-6 mx-auto">
+    <FormBackground className="w-full max-w-133 h-fit flex flex-col gap-6 mx-4">
       <AuthFormHeading
         title="Welcome to OPOM"
         desc="Join thousands of others building the future together"
