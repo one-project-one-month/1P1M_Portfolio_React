@@ -210,7 +210,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
 
   if (loading) {
     return (
-      <FormBackground className="w-[532px]">
+      <FormBackground className="w-fit md:w-133">
         <div className="flex flex-col items-center justify-center h-96">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4" />
           <p className="text-white">Loading profile data...</p>
@@ -220,14 +220,14 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
   }
 
   return (
-    <FormBackground className="w-[532px] ">
-      <h2 className="text-2xl text-white text-center">
+    <FormBackground className="w-fit md:w-133">
+      <h2 className="text-xl md:text-2xl text-white text-center">
         {isEditMode ? 'Edit Profile' : 'Set up Profile'}
       </h2>
 
       <form
         onSubmit={handleSubmit(onSubmit, handleFormError)}
-        className="flex flex-col items-center mt-2 gap-y-6"
+        className="flex flex-col items-center mt-2 gap-y-4 md:gap-y-6"
       >
         <FileUpload
           onFileSelect={handleImageSelect}
@@ -235,7 +235,7 @@ export default function ProfileSetupFrom(props: DevProfileFormProps) {
           maxSize={1 * 1024 * 1024}
           existingImageUrl={isEditMode ? profileData?.profilePictureUrl : null}
         />
-        <div className="h-[50vh] overflow-y-auto w-full flex flex-col items-center gap-y-6">
+        <div className="h-[50vh] overflow-y-auto w-full flex flex-col items-center gap-y-3.5 md:gap-y-6">
           <FormField
             placeholder="Enter your name"
             errorMessage={errors.name?.message}

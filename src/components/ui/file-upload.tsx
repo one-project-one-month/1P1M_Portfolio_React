@@ -63,7 +63,7 @@ function FileUpload(props: Props) {
 
   return (
     <div
-      className={`bg-[#D9D9D9] w-[139px] h-[139px] flex justify-center items-center rounded-3xl cursor-pointer hover:bg-[#C5C5C5] transition-colors ${className}`}
+      className={`bg-[#D9D9D9] size-20 md:size-34 flex justify-center items-center rounded-3xl cursor-pointer hover:bg-[#C5C5C5] transition-colors ${className}`}
       onClick={handleClick}
     >
       {preview ? (
