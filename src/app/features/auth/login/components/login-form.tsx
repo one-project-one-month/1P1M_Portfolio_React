@@ -94,14 +94,14 @@ export default function LoginForm() {
   };
 
   return (
-    <FormBackground className="flex items-center justify-around flex-col w-fit h-fit ">
+    <FormBackground className="flex gap-x-2.5  flex-col w-11/12 sm:w-9/12 md:w-fit h-fit ">
       <AuthFormHeading
         title="Sign In To Your Account"
         desc="Join thousands of others building the future together"
       />
 
       {/* Form Fields */}
-      <div className="w-[404px] h-[260px] flex flex-col gap-6 justify-around">
+      <div className="w-full md:w-101 md:h-65 flex flex-col gap-6 justify-around">
         {/* Email */}
         <form className="" onSubmit={handleLogin}>
           <div className="-mb-8 relative">
@@ -132,8 +132,8 @@ export default function LoginForm() {
           <Button
             variant="primary"
             size="primary"
-            className="w-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl mt-3"
-            // onClick={handleLogin}
+            className="w-full transition-all duration-300 hover:shadow-xl mt-7"
+          // onClick={handleLogin}
           >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
