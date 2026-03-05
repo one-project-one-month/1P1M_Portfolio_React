@@ -13,10 +13,10 @@ export default function MainLayout() {
         className="h-dvh w-dvw overflow-y-auto overflow-x-hidden"
         style={{ scrollbarGutter: 'stable both-edges' }}
       >
-        <div className="w-full px-4 md:px-8 lg:px-16 mx-auto xl:max-w-[70%]">
+        <div className="w-full px-4 md:px-8 lg:px-16 xl:px-28 mx-auto 2xl:max-w-[70%]">
           <Navbar auth={user ?? null} />
         </div>
-        <div className="w-full px-4 md:px-8 lg:px-16 mx-auto xl:max-w-[70%]">
+        <div className="w-full px-4 md:px-8 lg:px-16 xl:px-28 mx-auto 2xl:max-w-[70%]">
           <Outlet />
           <Footer />
         </div>
