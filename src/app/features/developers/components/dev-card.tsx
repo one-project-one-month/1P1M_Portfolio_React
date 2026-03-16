@@ -10,11 +10,11 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
   const hasLinkedIn = linkedIn?.trim();
 
   return (
-    <div className="w-full mt-12">
-      <div className="h-full bg-white/10 rounded-lg p-6 relative flex flex-col backdrop-blur-xs overflow-visible border border-white/5">
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-          <div className="flex flex-col items-center shrink-0 w-20 sm:w-30">
-            <div className="size-20 sm:size-30 -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
+    <div className="w-full max-w-md mx-auto mt-12">
+      <div className="h-full bg-white/10 rounded-lg p-5 lg:p-5 relative flex flex-col backdrop-blur-xs overflow-visible border border-white/5">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+          <div className="flex flex-col items-center shrink-0 w-20 sm:w-24">
+            <div className="size-20 sm:size-24 -mt-16 relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
               <img
                 src={profilePictureUrl || sampleUserImgUrl}
                 alt={name || 'Developer'}
@@ -53,7 +53,7 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
           </div>
 
           <div className="flex flex-col pt-1 w-full text-start overflow-hidden">
-            <h3 className="text-2xl font-bold text-white truncate leading-tight">
+            <h3 className="text-lg font-bold text-white truncate leading-tight">
               {name}
             </h3>
 
@@ -79,10 +79,10 @@ const DevCard = ({ devProfile, viewProfile }: DevProfileCardProps) => {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-4">
           <button
             onClick={viewProfile}
-            className="w-full py-3 rounded-md border border-[#7C3AED] text-white font-semibold text-sm hover:bg-[#7C3AED]/10 transition-all active:scale-[0.98]"
+            className="w-full py-2.5 rounded-md border border-[#7C3AED] text-white font-semibold text-sm hover:bg-[#7C3AED]/10 transition-all active:scale-[0.98]"
           >
             View Profile
           </button>
