@@ -1,10 +1,10 @@
 const DevCardSkeleton = () => {
   return (
-    <div className="w-full mt-12">
-      <div className="h-full bg-white/10 rounded-lg p-6 relative flex flex-col backdrop-blur-xs border border-white/5 animate-pulse">
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-          <div className="flex flex-col items-center shrink-0 w-20 sm:w-30">
-            <div className="size-20 sm:size-30 -mt-16 rounded-xl bg-white/10" />
+    <div className="w-full max-w-md mx-auto mt-12">
+      <div className="h-full bg-white/10 rounded-lg p-5 relative flex flex-col backdrop-blur-xs border border-white/5 animate-pulse">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+          <div className="flex flex-col items-center shrink-0 w-20 sm:w-24">
+            <div className="size-20 sm:size-24 -mt-16 rounded-xl bg-white/10" />
 
             <div className="flex gap-3 mt-6">
               <div className="size-5 rounded bg-white/10" />
@@ -22,8 +22,8 @@ const DevCardSkeleton = () => {
           </div>
         </div>
 
-        <div className="mt-6">
-          <div className="h-11 w-full bg-white/10 rounded-md" />
+        <div className="mt-4">
+          <div className="h-10 w-full bg-white/10 rounded-md" />
         </div>
       </div>
     </div>
