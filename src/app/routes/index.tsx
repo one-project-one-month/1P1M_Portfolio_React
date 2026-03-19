@@ -29,6 +29,7 @@ import PortfolioErrorBoundary from '../features/portfolio-management/components/
 import CreatePortfolioPage from '../features/portfolio-management/pages/create-portfolio';
 import EditPortfolioPage from '../features/portfolio-management/pages/edit-portfolio';
 import ViewPortfolioPage from '../features/portfolio-management/pages/view-portfolio';
+import WebSocketPage from '../features/websocket/page';
 import { authRoutes } from './auth';
 import ProtectedGuard from './guards/protected-guard';
 
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: '/developers', element: <DeveloperPage /> },
       { path: 'profile/:userId', element: <UserProfilePage /> },
       { path: '/about-us', element: <AboutUsPage /> },
+      { path: '/websocket', element: <WebSocketPage /> },
       { path: '/me', element: <MyProfilePage /> },
       { path: '/ideas', element: <IdeaPage /> },
       { path: 'opom-register', element: <OpomRegisterPage /> },
