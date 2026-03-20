@@ -78,7 +78,7 @@ const Developer = () => {
       />
 
       <div className="grow">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {devsLoading || devsFetching ? (
             Array.from({ length: 6 }).map((_, i) => <DevCardSkeleton key={i} />)
           ) : DevProfileDatas.length === 0 ? (

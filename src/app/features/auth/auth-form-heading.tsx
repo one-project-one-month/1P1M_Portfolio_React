@@ -18,7 +18,9 @@ export default function AuthFormHeading({ title, desc }: Props) {
         onClick={() => goTo('/')}
       />
       <div className="space-y-2">
-        <h1 className="font-sans font-bold text-xl sm:text-2xl leading-tight">{title}</h1>
+        <h1 className="font-sans font-bold text-xl sm:text-2xl leading-tight">
+          {title}
+        </h1>
         <p className="font-sans text-[12px] sm:text-sm md:text-base text-gray-400 max-w-md mx-auto leading-relaxed">
           {desc}
         </p>
