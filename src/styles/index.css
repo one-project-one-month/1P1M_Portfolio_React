@@ -48,6 +48,9 @@
 
   --color-primary-custom: #9c39fc;
   --color-secondary-custom: #00c951;
+
+  --font-outfit: 'Outfit', sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
 }
 
 :root {

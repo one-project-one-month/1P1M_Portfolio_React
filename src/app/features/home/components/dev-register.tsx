@@ -86,7 +86,7 @@ const FeaturedDevelopersSection = ({
         </a>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4 text-left">
         {error ? renderError() : loading ? renderSkeletons() : renderDevs()}
       </div>
     </section>
