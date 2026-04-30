@@ -29,7 +29,7 @@ function IdeaListSection() {
   );
 
   return (
-    <section>
+    <section className='mb-24 pb-6 '>
       <div className="w-full flex text-white justify-between items-end my-8 px-2">
         <div>
           <h2 className="text-3xl md:text-5xl mb-2 font-bold">Project Ideas</h2>
