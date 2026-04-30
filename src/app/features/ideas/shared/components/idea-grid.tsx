@@ -52,7 +52,7 @@ const IdeaGrid = ({ site, data, isLoading = false }: Props) => {
   }
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12 py-4">
+    <div className="w-full mb-24  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-y-8 gap-x-4 md:gap-x-8 lg:gap-x-12 py-4">
       {data.map((idea) => (
         <IdeaCard
           key={idea.projectIdeaId}

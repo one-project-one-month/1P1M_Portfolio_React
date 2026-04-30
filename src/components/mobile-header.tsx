@@ -4,7 +4,7 @@ import type { NavbarProps } from './navbar';
 import UserProfile from './ui/user-profile';
 
 const MobileHeader = ({auth}:NavbarProps) => {
-  const { goTo } = useAppNavigation();
+  const { goTo,handleHomeNav } = useAppNavigation();
 
   return (
     <nav className="w-full flex items-center justify-between   p-2 mt-3">
@@ -12,7 +12,8 @@ const MobileHeader = ({auth}:NavbarProps) => {
       <img
         src={opomIconUrl}
         alt="Company Logo"
-        className="cursor-pointer h-8 transition-transform active:scale-95 hover:scale-105"
+        className="cursor-pointer h-8 "
+        onClick={()=>handleHomeNav(auth?.role)}
       />
 
       <div className="flex items-center gap-2.5">
