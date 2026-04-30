@@ -10,7 +10,7 @@ import CustomHamburger from './custom-hamburger';
 import { Button } from './ui/button';
 import UserProfile from './ui/user-profile';
 
-interface NavbarProps {
+export interface NavbarProps {
   auth: UserInfo | null;
 }
 

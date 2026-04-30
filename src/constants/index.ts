@@ -8,6 +8,7 @@ import {
   HardDrive,
   User,
   Users,
+  Briefcase,  Info, Lightbulb,
 } from 'lucide-react';
 
 export const Platforms = [
@@ -64,3 +65,33 @@ export const ADMIN_NAVS: AdminNavLink[] = [
 export const PROJECT_TYPE_OPTIONS = ['mobile', 'website', 'desktop', 'game'];
 
 export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
+
+export const MOBILE_NAVS: NavLink[] = [
+  { 
+    id: 1, 
+    name: 'Portfolios', 
+    path: '/portfolios', 
+    icon: Briefcase 
+  },
+  { 
+    id: 2, 
+    name: 'Profiles', 
+    path: '/developers', 
+    icon: Users 
+  },
+
+  {
+    id: 4,
+    name: 'Ideas',
+    path: '/ideas',
+    icon: Lightbulb
+  },
+  {
+    id: 5,
+    name: 'About Us',
+    path: '/about-us',
+    icon: Info
+
+  },
+];
