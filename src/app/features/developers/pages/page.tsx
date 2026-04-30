@@ -78,7 +78,7 @@ const Developer = () => {
       />
 
       <div className="grow">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 mb-6  gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {devsLoading || devsFetching ? (
             Array.from({ length: 6 }).map((_, i) => <DevCardSkeleton key={i} />)
           ) : DevProfileDatas.length === 0 ? (
@@ -107,7 +107,7 @@ const Developer = () => {
         </div>
       </div>
 
-      <div className="w-full mt-4 flex justify-center">
+      <div className="w-full  mb-28 flex justify-center">
         <Pagination
           currentPage={curPage}
           totalPages={totalPages}

@@ -14,11 +14,13 @@ const ProjectSectionView = ({
       <ProjectList projects={projects ?? []} isLoading={isLoading} />
 
       {totalPages > 1 && (
-        <Pagination
+        <div className='mb-24'>
+          <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
+        </div>
       )}
     </>
   );
