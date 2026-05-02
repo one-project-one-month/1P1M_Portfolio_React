@@ -21,7 +21,7 @@ function DeveloperProfileCard({
   isMyProfile = false,
   withUsername = false,
 }: DeveloperProfileCardProps) {
-  if (!user) return;
+  if (!user) return null;
 
   const {
     name,
@@ -47,123 +47,185 @@ function DeveloperProfileCard({
     aboutDev?.trim() || 'This developer hasn’t added a bio yet.';
 
   return (
-    <div className="w-full relative flex gap-x-6 items-center p-5 rounded-xl bg-white/10 backdrop-blur-xs border border-white/5">
-      <div className="flex flex-col gap-2 items-center shrink-0">
-        <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gray-800">
-          <Avatar
-            src={profilePictureUrl}
-            fallback={displayName.slice(0, 1)}
-            alt={displayName}
-            size="9"
-            color="gray"
-            className="bg-gray-600!"
+    <div className="w-full relative rounded-[2rem] bg-slate-900/60 backdrop-blur-2xl border border-slate-700/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300">
+      {/* Frosted Gray Banner */}
+      <div className="h-28 md:h-36 w-full bg-slate-800/40 border-b border-slate-700/50 relative">
+        {/* Decorative subtle texture/gradient for the banner */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-50" />
+
+        {/* Absolute Actions - Positioned inside the banner */}
+        <div className="absolute right-4 top-4 md:right-6 md:top-6 z-20">
+          <ProfileActions
+            devProfile={user as DevProfileType}
+            onCopy={handleShareProfile}
+            truncate={truncate}
+            className="h-9 [&_button]:bg-slate-800/60 [&_button]:border-slate-600/50 [&_button]:backdrop-blur-md [&_button]:text-slate-200 hover:[&_button]:bg-slate-700/80 hover:[&_button]:text-white transition-all"
+            isMyProfile={isMyProfile}
+            shareUrl={shareUrl}
           />
         </div>
-
-        <div className="flex items-center gap-3 text-white/70">
-          {github ? (
-            <a
-              href={github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-              title="GitHub"
-            >
-              <GitBranch className="rounded-full border w-7 h-7 p-1" />
-            </a>
-          ) : (
-            <GitBranch className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed" />
-          )}
-
-          {linkedIn ? (
-            <a
-              href={linkedIn}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-              title="LinkedIn"
-            >
-              <LinkedinIcon className="border rounded-full w-7 h-7 p-1" />
-            </a>
-          ) : (
-            <LinkedinIcon className="border rounded-full w-7 h-7 p-1 opacity-30 cursor-not-allowed" />
-          )}
-        </div>
       </div>
 
-      <div className="flex flex-col gap-y-3 max-w-80 justify-between">
-        <p className="text-white font-semibold text-base leading-7">
-          {displayName}
-        </p>
-
-        <p className="text-[#99A1AF] flex gap-2 items-center leading-5 text-sm">
-          {techStacks.length > 0 ? (
-            techStacks.map((t) => (
-              <span className="bg-slate-700/80 border rounded-md border-slate-400 px-3 py-1 capitalize">
-                {t}
-              </span>
-            ))
-          ) : (
-            <span className="bg-slate-700/80 border rounded-md border-slate-400 px-3 py-1">
-              No tech stacks provided
-            </span>
-          )}
-        </p>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <img src={Email} alt="" className="w-5 h-5" />
-            <p className="text-[#99A1AF] text-sm leading-5">{displayEmail}</p>
+      <div className="px-6 pb-8 md:px-10 md:pb-10 relative">
+        {/* Avatar & Socials Row */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-12 md:-mt-16 mb-6">
+          {/* Overlapping Gray Glass Avatar */}
+          <div className="relative inline-block w-max shrink-0 self-start md:self-auto rounded-[1.5rem] p-1.5 bg-slate-800/60 backdrop-blur-xl border border-slate-600/50 shadow-xl z-10">
+            <Avatar
+              src={profilePictureUrl}
+              fallback={displayName.slice(0, 1)}
+              alt={displayName}
+              size="8"
+              color="gray"
+              className="rounded-xl overflow-hidden bg-slate-900 w-24 h-24 md:w-32 md:h-32 object-cover"
+            />
           </div>
 
-          {email && (
-            <button onClick={() => copyToClipboard(email)}>
-              <img src={Copy} alt="copy" className="w-4 h-4" />
-            </button>
-          )}
+          {/* Glass Social Links */}
+          <div className="flex items-center gap-3 md:pb-2">
+            {github ? (
+              <a
+                href={github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-700/60 border border-slate-700/50 backdrop-blur-sm transition-all text-slate-300 hover:text-white shadow-sm"
+                title="GitHub"
+              >
+                <GitBranch className="w-5 h-5" />
+              </a>
+            ) : null}
+
+            {linkedIn ? (
+              <a
+                href={linkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800/40 hover:bg-[#0A66C2]/20 border border-slate-700/50 hover:border-[#0A66C2]/30 backdrop-blur-sm transition-all text-slate-300 hover:text-[#0A66C2] shadow-sm"
+                title="LinkedIn"
+              >
+                <LinkedinIcon className="w-5 h-5" />
+              </a>
+            ) : null}
+          </div>
         </div>
 
-        {(withUsername || isMyProfile) && (
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <img src={Phone} alt="" className="w-5 h-5" />
-              <p className="text-[#99A1AF] text-sm leading-5">
-                {phone || 'No phone number'}
-              </p>
-            </div>
+        {/* Main Content */}
+        <div className="flex flex-col gap-y-5 w-full">
+          {/* Header Info */}
+          <div>
+            <h2 className="text-white font-bold text-2xl md:text-3xl tracking-tight drop-shadow-sm">
+              {displayName}
+            </h2>
+            <p className="text-slate-400 text-sm mt-1 font-medium tracking-wide uppercase">
+              Software Developer
+            </p>
+          </div>
 
-            {phone && (
-              <button onClick={() => copyToClipboard(phone)}>
-                <img src={Copy} alt="copy" className="w-4 h-4" />
-              </button>
+          {/* Glass Tech Stacks */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {techStacks && techStacks.length > 0 ? (
+              techStacks.map((t) => (
+                <span
+                  key={t}
+                  className="bg-slate-800/40 text-slate-300 border border-slate-700/50 backdrop-blur-md rounded-lg px-3 py-1 text-sm font-medium capitalize"
+                >
+                  {t}
+                </span>
+              ))
+            ) : (
+              <span className="text-slate-500 text-sm italic">
+                No tech stacks provided
+              </span>
             )}
           </div>
-        )}
 
-        {(withUsername || isMyProfile) && (
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <img src={Telegram} alt="" className="w-5 h-5" />
-              <p className="text-[#99A1AF] text-sm leading-5">
-                {telegramUsername || 'No Telegram username'}
-              </p>
+          {/* Bio */}
+          <p className="text-slate-300 text-[15px] leading-relaxed max-w-3xl font-light">
+            {displayAbout}
+          </p>
+
+          <hr className="border-slate-700/50 my-2" />
+
+          {/* Gray Glass Contact Info Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+            {/* Email */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm group hover:bg-slate-700/40 transition-colors">
+              <div className="flex items-center gap-3 overflow-hidden">
+                <div className="p-1.5 rounded-lg bg-slate-700/50">
+                  <img
+                    src={Email}
+                    alt="Email"
+                    className="w-4 h-4 opacity-70 filter invert"
+                  />
+                </div>
+                <p className="text-slate-300 text-sm truncate">
+                  {displayEmail}
+                </p>
+              </div>
+              {email && (
+                <button
+                  onClick={() => copyToClipboard(email)}
+                  className="p-1.5 rounded-lg hover:bg-slate-600/50 transition-colors"
+                  title="Copy Email"
+                >
+                  <img
+                    src={Copy}
+                    alt="copy"
+                    className="w-4 h-4 opacity-50 filter invert hover:opacity-100 transition-opacity"
+                  />
+                </button>
+              )}
             </div>
+
+            {/* Phone */}
+            {(withUsername || isMyProfile) && (
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm group hover:bg-slate-700/40 transition-colors">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="p-1.5 rounded-lg bg-slate-700/50">
+                    <img
+                      src={Phone}
+                      alt="Phone"
+                      className="w-4 h-4 opacity-70 filter invert"
+                    />
+                  </div>
+                  <p className="text-slate-300 text-sm truncate">
+                    {phone || 'No phone number'}
+                  </p>
+                </div>
+                {phone && (
+                  <button
+                    onClick={() => copyToClipboard(phone)}
+                    className="p-1.5 rounded-lg hover:bg-slate-600/50 transition-colors"
+                    title="Copy Phone"
+                  >
+                    <img
+                      src={Copy}
+                      alt="copy"
+                      className="w-4 h-4 opacity-50 filter invert hover:opacity-100 transition-opacity"
+                    />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Telegram */}
+            {(withUsername || isMyProfile) && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-700/40 transition-colors">
+                <div className="p-1.5 rounded-lg bg-slate-700/50">
+                  <img
+                    src={Telegram}
+                    alt="Telegram"
+                    className="w-4 h-4 opacity-70 filter invert"
+                  />
+                </div>
+                <p className="text-slate-300 text-sm truncate">
+                  {telegramUsername || 'No Telegram username'}
+                </p>
+              </div>
+            )}
           </div>
-        )}
-
-        <p className="text-white text-sm h-10 line-clamp-2 mt-2">
-          {displayAbout}
-        </p>
+        </div>
       </div>
-
-      <ProfileActions
-        devProfile={user as DevProfileType}
-        onCopy={handleShareProfile}
-        truncate={truncate}
-        className="absolute right-3 top-3 h-10"
-        isMyProfile={isMyProfile}
-        shareUrl={shareUrl}
-      />
     </div>
   );
 }
