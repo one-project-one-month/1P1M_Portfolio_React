@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Dialog } from '@radix-ui/themes';
+import { Edit2 } from 'lucide-react';
 import { useState } from 'react';
 import type { DevProfileType } from '../types/user-profile.type';
 import { ShareProfileDialog } from './share-profile-dialog';
@@ -26,20 +27,20 @@ export const ProfileActions = ({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   return (
-    <div
-      className={cn(
-        'w-full md:max-w-3/12 py-2 md:py-4 flex flex-wrap gap-3 md:gap-4 md:justify-end',
-        className,
-      )}
-    >
+    <div className={cn('flex items-center gap-3 transition-all', className)}>
       {isMyProfile && (
         <Dialog.Root
           open={editDialogOpen}
           onOpenChange={(isOpen) => setEditDialogOpen(isOpen)}
         >
           <Dialog.Trigger>
-            <Button className="bg-transparent px-4 border border-[#9C39FC] w-full sm:w-auto">
-              Edit profile
+            <Button
+              variant="secondary"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md shadow-sm transition-all duration-300 rounded-xl px-4 py-2 flex items-center gap-2 h-10"
+            >
+              <Edit2 className="w-4 h-4 opacity-70" />
+              <span className="hidden sm:inline-block">Edit Profile</span>
+              <span className="sm:hidden">Edit</span>
             </Button>
           </Dialog.Trigger>
           <UserEditDialog
@@ -49,6 +50,11 @@ export const ProfileActions = ({
         </Dialog.Root>
       )}
 
+      {/* 
+        Note: You may also want to apply similar glassmorphism 
+        classes to the trigger button inside ShareProfileDialog 
+        to keep the UI perfectly consistent! 
+      */}
       <ShareProfileDialog
         shareUrl={shareUrl}
         onCopy={onCopy}
