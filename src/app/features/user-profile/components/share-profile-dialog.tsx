@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, IconButton, Tooltip } from '@radix-ui/themes';
-import { Copy, X } from 'lucide-react';
+import { Copy, Share2, X } from 'lucide-react';
 
 interface ShareProfileDialogProps {
   onCopy: (text: string) => void;
@@ -16,8 +16,18 @@ export const ShareProfileDialog = ({
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button className="px-4">Share profile</Button>
+        {/* Trigger enhanced to perfectly match the Edit Profile button */}
+        <Button
+          variant="secondary"
+          className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md shadow-sm transition-all duration-300 rounded-xl px-4 py-2 flex items-center gap-2 h-10"
+        >
+          <Share2 className="w-4 h-4 opacity-70" />
+          <span className="hidden sm:inline-block">Share profile</span>
+          <span className="sm:hidden">Share</span>
+        </Button>
       </Dialog.Trigger>
+
+      {/* Background color and internal styling reverted to original */}
       <Dialog.Content
         size="2"
         maxWidth="450px"

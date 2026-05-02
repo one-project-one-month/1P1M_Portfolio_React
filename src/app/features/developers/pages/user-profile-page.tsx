@@ -111,7 +111,7 @@ const UserProfilePage = () => {
               <h1 className="text-white text-xl mb-6 font-semibold">
                 Project Portfolios
               </h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 mb-36 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projectLists.length > 0 ? (
                   projectLists.map((pro) => (
                     <ProjectCard
